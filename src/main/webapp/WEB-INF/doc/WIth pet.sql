@@ -1,5 +1,5 @@
 /**********************************/
-/* Table Name: 회원 */
+/* Table Name: 회원 */ 김준석 테스트
 /**********************************/
 CREATE TABLE member(
 		MEMBERNO                      		NUMBER(10)		 NOT NULL		 PRIMARY KEY,
