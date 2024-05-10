@@ -193,9 +193,9 @@ COMMENT ON COLUMN PETTYPE.PETKIND is '반려동물 품종';
 /**********************************/
 CREATE TABLE Pet(
 		PETNO                         		NUMBER(10)		 NOT NULL		 PRIMARY KEY,
-		PETNAME                       		VARCHAR2(20)		 NOT NULL,
-		PETAGE                        		VARCHAR2(10)		 NOT NULL,
-		PETTYPENO                     		VARCHAR2(10)		 NOT NULL,
+		PETNAME                       		VARCHAR2(30)		 NOT NULL,
+		PETAGE                        		NUMBER(2)		 NOT NULL,
+		PETTYPENO                     		NUMBER(10)		 NOT NULL,
 		MEMBERNO                      		NUMBER(10)		 NOT NULL,
   FOREIGN KEY (PETTYPENO) REFERENCES PETTYPE (PETTYPENO),
   FOREIGN KEY (MEMBERNO) REFERENCES member (MEMBERNO)
@@ -257,10 +257,10 @@ CREATE TABLE MATECOMMUNITY(
 		TITLE                         		VARCHAR2(300)		 NOT NULL,
 		CONTENT                       		VARCHAR2(1000)		 NOT NULL,
 		CNT                           		NUMBER(10)		 NOT NULL,
-		STARTINGP                     		VARCHAR2(30)		 NOT NULL,
-		WALKINGM                      		NUMBER(10)		 NOT NULL,
+		STARTINGP                     		VARCHAR2(100)		 NOT NULL,
+		WALKINGM                      		NUMBER(3)		 NOT NULL,
 		WDATE                         		DATE		 NOT NULL,
-		PETTYPENO                     		VARCHAR2(10)		 NOT NULL,
+		PETTYPENO                     		number(10)		 NOT NULL,
 		MEMBERNO                      		NUMBER(10)		 NOT NULL,
   FOREIGN KEY (PETTYPENO) REFERENCES PETTYPE (PETTYPENO),
   FOREIGN KEY (MEMBERNO) REFERENCES member (MEMBERNO)
@@ -305,7 +305,7 @@ COMMENT ON COLUMN MATEAPPLY.MCOMMUNITYNO is '글번호';
 CREATE TABLE MATEREVIEW(
 		RNO                           		NUMBER(10)		 NOT NULL		 PRIMARY KEY,
 		REVIEWCOMMENT                 		VARCHAR2(1000)		 NOT NULL,
-		REVIEWGRADE                   		VARCHAR2(10)		 NOT NULL,
+		REVIEWGRADE                   		number(2)		 NOT NULL,
 		RDATE                         		DATE		 NOT NULL,
 		MEMBERNO                      		NUMBER(10)		 NULL ,
 		MCOMMUNITYNO                  		NUMBER(10)		 NULL ,
@@ -349,7 +349,7 @@ COMMENT ON COLUMN FACILITYREVIEW.CULTUREFNO is '문화시설번호';
 /* Table Name: 반려동물 */
 /**********************************/
 CREATE TABLE PETPROFILE(
-		PETNO                         		NUMBER(10)		 NOT NULL		 PRIMARY KEY,
+		PETPROFILENO                         		NUMBER(10)		 NOT NULL		 PRIMARY KEY,
 		FILENAME                      		VARCHAR2(100)		 NOT NULL,
 		FILESIZE                      		VARCHAR2(100)		 NOT NULL,
 		THUMBFILE                     		VARCHAR2(100)		 NOT NULL,
@@ -358,7 +358,7 @@ CREATE TABLE PETPROFILE(
 );
 
 COMMENT ON TABLE PETPROFILE is '반려동물';
-COMMENT ON COLUMN PETPROFILE.PETNO is '프로필 사진 번호';
+COMMENT ON COLUMN PETPROFILE.PETPROFILENO is '프로필 사진 번호';
 COMMENT ON COLUMN PETPROFILE.FILENAME is '파일이름';
 COMMENT ON COLUMN PETPROFILE.FILESIZE is '파일 크기';
 COMMENT ON COLUMN PETPROFILE.THUMBFILE is '썸네일 파일';
