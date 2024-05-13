@@ -12,9 +12,7 @@ public class MemberCont {
   @Qualifier("dev.mvc.member.MemberProc")
   private MemberProcInter memberProc;
   
-  public MemberCont() {
-    
-  }
+  public MemberCont() {}
   
   
 }
