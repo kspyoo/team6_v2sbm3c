@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -36,9 +37,15 @@ public class OpenAPIController {
     @GetMapping("/getdata")
     @ResponseBody
     public String getdata() {
-        List<OpenAPIDTO> list = OpenAPI.getData(1, 3000); // 3000개까지는 서버 에러 없이 출력 가능
+        List<OpenAPIDTO> list = new ArrayList<OpenAPIDTO>();
+        List<OpenAPIDTO> list_all = new ArrayList<OpenAPIDTO>();
 
-        return list.size() + "개" + list.toString();
+        for (int i = 1; i < 8; i++) { //23929
+            list = OpenAPI.getData(i, 3000); // 3000개까지는 서버 에러 없이 출력 가능
+            list_all.addAll(list);
+        }
+
+        return list_all.size() + "개" + list_all.toString();
     }
 
 }
