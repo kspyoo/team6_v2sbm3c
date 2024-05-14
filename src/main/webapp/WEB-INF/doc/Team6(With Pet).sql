@@ -12,21 +12,22 @@ CREATE TABLE member(
     BIRTHDAY                          DATE     NOT NULL,
     PHONE                             VARCHAR2(14)     NOT NULL,
     ADDR_CODE                         VARCHAR2(8)    NOT NULL,
+    ADDR_MAIN                         VARCHAR2(30)    NOT NULL,
     ADDR_DETAIL                       VARCHAR2(30)     NOT NULL,
     JOINDATE                          DATE     NOT NULL,
     STATUS                            VARCHAR2(10)     DEFAULT 0     NOT NULL
 );
 
-CREATE SEQUENCE member_MEMBERNO_SEQ NOMAXVALUE NOCACHE NOORDER NOCYCLE;
+DROP SEQUENCE member_seq;
 
-CREATE TRIGGER member_MEMBERNO_TRG
-BEFORE INSERT ON member
-FOR EACH ROW
-BEGIN
-IF :NEW.MEMBERNO IS NOT NULL THEN
-  SELECT member_MEMBERNO_SEQ.NEXTVAL INTO :NEW.MEMBERNO FROM DUAL;
-END IF;
-END;
+CREATE SEQUENCE member_seq
+  START WITH 1              -- 시작 번호
+  INCREMENT BY 1          -- 증가값
+  MAXVALUE 9999999999 -- 최대값: 9999999 --> NUMBER(7) 대응
+  CACHE 2                       -- 2번은 메모리에서만 계산
+  NOCYCLE;                     -- 다시 1부터 생성되는 것을 방지
+
+
 
 COMMENT ON TABLE member is '회원';
 COMMENT ON COLUMN member.MEMBERNO is '회원번호';
@@ -37,9 +38,22 @@ COMMENT ON COLUMN member.GENDER is '성별';
 COMMENT ON COLUMN member.BIRTHDAY is '생년월일';
 COMMENT ON COLUMN member.PHONE is '전화번호';
 COMMENT ON COLUMN member.ADDR_CODE is '우편번호';
+COMMENT ON COLUMN member.ADDR_MAIN is '주소';
 COMMENT ON COLUMN member.ADDR_DETAIL is '상세주소';
 COMMENT ON COLUMN member.JOINDATE is '가입일';
 COMMENT ON COLUMN member.STATUS is '계정 상태';
+
+ALTER TABLE member ADD ADDR_MAIN VARCHAR2(30) NOT NULL;
+
+commit;
+
+SELECT * FROM member;
+
+SELECT memberno
+FROM member
+WHERE id="admin";
+
+
 
 
 /**********************************/

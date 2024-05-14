@@ -2,19 +2,45 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="dev.mvc.member.MemberDAOInter">
+  <!-- 아이디 중복 확인-->
+  <select id="checkID" resultType="int" parameterType="String">
+    SELECT COUNT(id) as cnt
+    FROM member
+    WHERE id=#{id}
+  </select>
+
   <!-- 회원 가입 -->
   <insert id="create" parameterType="dev.mvc.member.MemberVO">
-    INSERT INTO member(memberno, id, passwd, name, gender, birthday, phone, addr_code, addr_detail, joindate, status)
-    VALUES (member_seq.nextval, #{id}, #{passwd}, #{name}, #{gender}, #{birthday}, #{phone}, #{addr_code}, #{addr_detail}, #{joindate}, #{status}
+    INSERT INTO member(memberno, id, passwd, name, gender, birthday, phone, addr_code, addr_main, addr_detail, joindate, status)
+    VALUES (member_seq.nextval, #{id}, #{passwd}, #{name}, #{gender}, #{birthday}, #{phone}, #{addr_code}, #{addr_main},#{addr_detail}, sysdate, #{status})
   </insert>
 
-  <!-- 회원 전체 목록 -->
-  <select id="list" resultType="dev.mvc.member.MemberVO">
-    SELECT memberno, id, passwd, name, gender, birthday, phone, addr_code, addr_detail, joindate, status
+  <!-- id(이메일)로 회원 정보 조회 -->
+  <select id="readById" resultType="dev.mvc.member.MemberVO" parameterType="String">
+    SELECT memberno, id, passwd, name, gender, birthday, phone, addr_code, addr_main, addr_detail, joindate, status
     FROM member
-    ORDER BY grade ASC, id ASC
+    WHERE id = #{id}
+  </select>
+
+  <!-- 로그인 -->
+  <select id="login" resultType="int" parameterType="HashMap">
+    SELECT COUNT(memberno) as cnt
+    FROM member
+    WHERE id=#{id} AND passwd=#{passwd}
   </select>
   
+  <!-- 회원 정보 수정 -->
+  <update id="update" parameterType="dev.mvc.member.MemberVO">
+    UPDATE member 
+    SET name=#{name},phone=#{phone}, addr_code=#{addr_code}, addr_main=#{addr_main}, addr_detail=#{addr_detail}
+    WHERE memberno=#{memberno}
+  </update>
   
+   <!-- memberno로 회원 정보 조회 -->
+  <select id="read" resultType="dev.mvc.member.MemberVO" parameterType="int">
+    SELECT memberno, id, passwd, name, gender, birthday, phone, addr_code, addr_main, addr_detail, joindate, status
+    FROM member
+    WHERE memberno = #{memberno}
+  </select>  
 
 </mapper>

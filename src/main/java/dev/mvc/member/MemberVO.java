@@ -35,12 +35,16 @@ public class MemberVO {
   private String phone = "";
   /** 우편번호 */
   private String addr_code = "";
+  /** 주소 */
+  private String addr_main = "";
   /** 상세주소 */
   private String addr_detail = "";
   /** 가입일 */
   private String joindate = "";
-  /** 계정 상태 */
-  private String status = "";
+  /** 계정 상태
+   * 1 : 정상 회원, 2 : 휴면 계정, 3 : 탈퇴 회원
+   * */
+  private String status = ""; 
   
   
 }
