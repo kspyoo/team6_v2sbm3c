@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="dev.mvc.matecommunity.MateCommunityDAOInter">
+    <!-- 산책메이트 커뮤니티 게시글 작성 -->
+    <insert id="create" parameterType="dev.mvc.matecommunity.MateCommunityVO">
+        INSERT INTO MATECOMMUNITY(MCOMMUNITYNO, TITLE, CONTENT, VIEWCNT, STARTINGP, WALKINGM, WDATE, STATUS, SEARCHTAG, PETTYPENO, MEMBERNO)
+        VALUES (MATECOMMUNITY_SEQ.nextval, #{title}, #{content}, 0 , #{startingP}, #{walkingM}, sysdate, 0, #{searchTag}, #{petTypeNo}, #{memberNo})
+    </insert>
+
+    <!-- 게시글 전체 목록, 페이징 -->
+    <select id="list_all" resultType="dev.mvc.matecommunity.MateCommunityVO" parameterType="Map">
+        SELECT MCOMMUNITYNO, TITLE, CONTENT, VIEWCNT, STARTINGP, WALKINGM, WDATE, STATUS, SEARCHTAG, PETTYPENO, MEMBERNO, r
+        FROM (
+            SELECT MCOMMUNITYNO, TITLE, CONTENT, VIEWCNT, STARTINGP, WALKINGM, WDATE, STATUS, SEARCHTAG, PETTYPENO, MEMBERNO, rownum AS r
+            FROM (
+                SELECT MCOMMUNITYNO, TITLE, CONTENT, VIEWCNT, STARTINGP, WALKINGM, WDATE, STATUS, SEARCHTAG, PETTYPENO, MEMBERNO
+                FROM MATECOMMUNITY
+                <choose>
+                    <when test="searchWord != null or searchWord != ''"> <!-- 검색하지 않는 경우 -->
+                        WHERE UPPER(title) LIKE '%' || UPPER(#{searchWord}) || '%'
+                        OR UPPER(content) LIKE '%' || UPPER(#{searchWord}) || '%'
+                        OR UPPER(STARTINGP) LIKE '%' || UPPER(#{searchWord}) || '%'
+                        OR UPPER(SEARCHTAG) LIKE '%' || UPPER(#{searchWord}) || '%'
+                    </when>
+                </choose>
+                ORDER BY WDATE desc
+            )
+        ) WHERE r &gt;= #{start_num} AND r &lt;= #{end_num}
+    </select>
+
+    <!-- 게시글 카테고리 목록, 페이징 -->
+    <select id="list_all_by_petTypeNo" resultType="dev.mvc.matecommunity.MateCommunityVO" parameterType="Map">
+        SELECT MCOMMUNITYNO, TITLE, CONTENT, VIEWCNT, STARTINGP, WALKINGM, WDATE, STATUS, PETTYPENO, MEMBERNO, r
+        FROM (
+            SELECT MCOMMUNITYNO, TITLE, CONTENT, VIEWCNT, STARTINGP, WALKINGM, WDATE, STATUS, PETTYPENO, MEMBERNO, rownum AS r
+            FROM (
+                SELECT MCOMMUNITYNO, TITLE, CONTENT, VIEWCNT, STARTINGP, WALKINGM, WDATE, STATUS, PETTYPENO, MEMBERNO
+                FROM MATECOMMUNITY
+                WHERE PETTYPENO=#{petTypeNo}
+                <choose>
+                    <when test="searchWord != null or searchWord != ''"> <!-- 검색하지 않는 경우 -->
+                        AND (UPPER(title) LIKE '%' || UPPER(#{searchWord}) || '%'
+                        OR UPPER(content) LIKE '%' || UPPER(#{searchWord}) || '%'
+                        OR UPPER(STARTINGP) LIKE '%' || UPPER(#{searchWord}) || '%'
+                        OR UPPER(SEARCHTAG) LIKE '%' || UPPER(#{searchWord}) || '%')
+                    </when>
+                </choose>
+                ORDER BY WDATE desc
+            )
+        )WHERE r &gt;= #{start_num} AND r &lt;= #{end_num}
+    </select>
+
+    <select id="read_content" parameterType="int" resultType="dev.mvc.matecommunity.MateCommunityVO">
+        SELECT MCOMMUNITYNO, TITLE, CONTENT, VIEWCNT, STARTINGP, WALKINGM, WDATE, STATUS, PETTYPENO, MEMBERNO
+        FROM MATECOMMUNITY
+        WHERE MCOMMUNITYNO=#{mCommunityNo}
+    </select>
+
+    <!-- 글 수정 -->
+    <update id="update_content" parameterType="Map">
+        UPDATE MATECOMMUNITY
+        SET title=#{title},
+            content=#{content},
+            SEARCHTAG=#{searchTag},
+            STARTINGP=#{startingP},
+            WALKINGM=#{walkingM}
+        WHERE MCOMMUNITYNO = #{mCommunityNo}
+    </update>
+
+    <!--  게시글 조회수 1증가  -->
+    <update id="viewCnt_up" parameterType="int">
+        UPDATE MATECOMMUNITY
+        SET VIEWCNT= VIEWCNT+1
+        WHERE MCOMMUNITYNO=#{mCommunityNo}
+    </update>
+
+    <!--  게시글 모집 상태 변경(모집완료)  -->
+    <update id="recruit_finish" parameterType="int">
+        UPDATE MATECOMMUNITY
+        SET STATUS = 1
+        WHERE MCOMMUNITYNO=#{mCommunityNo}
+    </update>
+
+    <!--  게시글 모집 상태 변경(모집중)  -->
+    <update id="recruit_start" parameterType="int">
+        UPDATE MATECOMMUNITY
+        SET STATUS = 1
+        WHERE MCOMMUNITYNO=#{mCommunityNo}
+    </update>
+
+    <!-- 게시글 삭제 -->
+    <delete id="delete_content" parameterType="int">
+        DELETE
+        FROM MATECOMMUNITY
+        WHERE MCOMMUNITYNO = #{mCommunityNo}
+    </delete>
+</mapper>
