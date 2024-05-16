@@ -20,13 +20,13 @@
     <colgroup>
       <col style='width: 20%;'/>
       <col style='width: 30%;'/>
-      <col style='width: 30%;'/>
+        <col style='width: 30%;'/>
       <col style='width: 20%;'/>
     </colgroup>
     <tr>
       <th class='th_bs'> </th>
       <th class='th_bs'>관리자 ID</th>
-      <th class='th_bs'>관리자 패스워드</th>
+      <th class='th_bs'>기타</th>
       <th class='th_bs'> </th>
      </tr>
        
@@ -34,8 +34,7 @@
     <tr th:each="masterVO, status:${list}">
      <td class='td_basic'>
       </td>
-      <td class='td_left'><a th:href="@{|./read?masterno=${masterVO.memberno}|}"th:text="${masterVO.masterid}"></a></td>
-      <td class='td_left'><a th:href="@{|./read?masterno=${memberVO.memberno}|}"th:text="${memberVO.mname}"></a></td>
+      <td class='td_left'><a th:href="@{|./read?masterno=${masterVO.masterno}|}"th:text="${masterVO.masterid}"></a></td>
 
       <td class='td_basic'>
         <a th:href="@{|./read?masterno=${masterVO.masterno}|}"><img src='/master/images/update.png' title='수정' class="icon"></a>

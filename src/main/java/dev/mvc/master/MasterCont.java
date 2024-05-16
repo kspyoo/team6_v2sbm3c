@@ -13,7 +13,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import dev.mvc.master.MasterVO;
+
+import jakarta.servlet.http.HttpSession;
 
 @RequestMapping("/master")
 @Controller
@@ -83,6 +84,29 @@ public class MasterCont {
 
     return "master/list";
   }
+  
+  
+  /**
+   * 조회
+   * @param session
+   * @param model
+   * @param masterno
+   * @return
+   */
+  @GetMapping(value="/read")
+  public String read(HttpSession session, Model model, int masterno) {
+
+      
+      MasterVO masterVO = this.masterProc.read(masterno);
+      model.addAttribute("masterVO", masterVO);
+      
+      return "master/read";  // templates/member/read.html
+            
+  }
+  
+ 
+  
+  
 
   /**
    * 관리자 삭제
@@ -116,6 +140,18 @@ public class MasterCont {
       model.addAttribute("code", "delete_fail");
       return "master/msg"; // /templates/master/msg
     }
+  }
+  
+  /**
+   * 로그아웃
+   * @param model
+   * @param memberno 회원 번호
+   * @return 회원 정보
+   */
+  @GetMapping(value="/logout")
+  public String logout(HttpSession session, Model model) {
+    session.invalidate();  // 모든 세션 변수 삭제
+    return "redirect:/";
   }
 
 }

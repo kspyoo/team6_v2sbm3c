@@ -9,7 +9,7 @@
     WHERE masterid=#{masterid}
   </select>
   
-  <insert id="create" parameterType="dev.mvc.master.masterVO">
+  <insert id="create" parameterType="dev.mvc.master.MasterVO">
     INSERT INTO master(masterno, masterid, masterpasswd)
     VALUES (master_seq.nextval, #{masterid}, #{masterpasswd})
   </insert>

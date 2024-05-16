@@ -13,13 +13,13 @@ public class MasterProc implements MasterProcInter{
 
   @Override
   public int checkID(String id) {
-    int cnt=this.checkID(id);
+    int cnt=this.masterDAO.checkID(id);
     return cnt;
   }
 
   @Override
   public int create(MasterVO masterVO) {
-    int cnt= this.create(masterVO);
+    int cnt= this.masterDAO.create(masterVO);
     return cnt;
   }
 
@@ -31,37 +31,37 @@ public class MasterProc implements MasterProcInter{
 
   @Override
   public MasterVO read(int masterno) {
-    MasterVO masterVO= this.read(masterno);
+    MasterVO masterVO= this.masterDAO.read(masterno);
     return masterVO;
   }
 
   @Override
   public int update(MasterVO masterVO) {
-    int cnt = this.update(masterVO);
+    int cnt = this.masterDAO.update(masterVO);
     return cnt;
   }
 
   @Override
   public int delete(int masterno) {
-    int cnt= this.delete(masterno);
+    int cnt= this.masterDAO.delete(masterno);
     return cnt;
   }
 
   @Override
   public int passwd_check(HashMap<String, Object> map) {
-    int cnt = this.passwd_check(map);
+    int cnt = this.masterDAO.passwd_check(map);
     return cnt;
   }
 
   @Override
   public int passwd_update(HashMap<String, Object> map) {
-    int cnt = this.passwd_update(map);
+    int cnt = this.masterDAO.passwd_update(map);
     return cnt;
   }
 
   @Override
   public int login(HashMap<String, Object> map) {
-    int cnt = this.login(map);
+    int cnt = this.masterDAO.login(map);
     return cnt;
   }
 

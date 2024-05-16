@@ -32,7 +32,7 @@ public class CulturefacilityCont {
   */
   @GetMapping(value = "/create") // http://localhost:1521/culturefacility/create
   public String create(CulturefacilityVO culturefacilityVO) {
-    return "/culturefacility/create"; // /templates/cate/create.html
+    return "/culturefacility/create";
   }
 
   /**
