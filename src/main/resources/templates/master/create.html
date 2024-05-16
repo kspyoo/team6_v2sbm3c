@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+
+<html layout:decorate="~{layout}">
+<!-- layout.html 상속-->
+
+<div layout:fragment="content">
+	<script>
+		window.onload = () => {
+			document.querySelector('#masterid').addEventListener('keypress', (event) => {
+				// document.getElementById('passwd').addEventListener('keypress', (event) => {
+				if (event.key === 'Enter') { // === :  값만 비교하는 것이 아닌 타입까지 확인
+					document.getElementById('btn_checkID').focus();
+				}
+			});
+
+			document.querySelector('#masterpasswd').addEventListener('keypress', (event) => {
+				// document.getElementById('passwd').addEventListener('keypress', (event) => {
+				if (event.key === 'Enter') {
+					document.getElementById('masterpasswd2').focus();
+				}
+			});
+
+			document.querySelector('#masterpasswd2').addEventListener('keypress', (event) => {
+				// document.getElementById('passwd').addEventListener('keypress', (event) => {
+				if (event.key === 'Enter') {
+					document.getElementById('btn_send').focus();
+				}
+			});
+
+		}
+
+		function checkID() {
+
+			let masterid = document.getElementById('masterid');
+			let masterid_msg = document.getElementById('masterid_msg');
+
+			if (masterid.value.trim().length == 0) {
+				masterid_msg.innerHTML = '관리자 ID 입력은 필수 입니다. ID(이메일)는 3자이상 권장합니다.';
+				masterid_msg.classList.add('span_warning');    // class 적용
+				masterid.focus();
+
+				return false;  // 회원 가입 진행 중지
+
+			} else {  // when ID is entered
+				masterid_msg.classList.remove('span_warning'); // class 삭제
+				//----------------------------------
+				//fetch관련시작
+				//---------------------------------
+				let masterid = document.getElementById('masterid');
+				let url = './checkID?id=' + id.value;
+
+				fetch(url, {
+					method: 'GET',
+					// headers: {
+					//   'Content-Type': 'application/json' // JSON 형식으로 데이터 전송을 알림
+					// },
+					// body: JSON.stringify(dataToSend) // JSON 데이터를 문자열로 변환하여 요청 본문에 포함
+				})
+					.then(response => response.json())
+					.then(rdata => {
+						if (rdata.cnt > 0) { // 아이디 중복
+							masterid_msg.innerHTML = '이미 사용중인 ID(이메일) 입니다. 다른 ID(이메일)을 지정해주세요.';
+							masterid_msg.classList.add('span_warning');
+							masterid.focus();
+
+						} else { // 아이디 중복 안됨.
+							masterid_msg.innerHTML = '사용 가능한 ID(이메일) 입니다.';
+							masterid_msg.classList.add('span_info');
+							document.getElementById('masterpasswd').focus();
+						}
+					})
+					.catch(error => { // 서버 다운등 통신 에러
+						console.error('Error:', error);
+					});
+
+				// 처리중 출력
+				id_msg.innerHTML = "<img src='/member/images/progress.gif' style='width: 5%;'>"; // static 기준
+
+				//----------------------------------
+				//fetch관련종료
+				//--------------------------------
+			}
+		}
+
+		function send() { // 회원 가입 처리
+			let masterid = document.getElementById('masterid');
+			let masterid_msg = document.getElementById('masterid_msg');
+
+			if (masterid.value.trim().length == 0) {
+				masterid_msg.innerHTML = '관리자 ID 입력은 필수 입니다. ID(이메일)는 3자이상 권장합니다.';
+				masterid_msg.classList.add('span_warning');    // class 적용
+				masterid.focus();
+
+				return false;  // 회원 가입 진행 중지
+
+			}
+
+			// 패스워드를 정상적으로 2번 입력했는지 확인
+			let masterpasswd = document.getElementById('mastepasswd');
+			let masterpasswd2 = document.getElementById('mastepasswd2');
+			let masterpasswd2_msg = document.getElementById('mastepasswd2_msg');
+
+			if (masterpasswd.value != masterpasswd2.value) {
+				masterpasswd2_msg.innerHTML = '입력된 패스워드가 일치하지 않습니다.';
+				masterpasswd2_msg.classList.add('span_warning');    // class 적용
+				masterpasswd.focus();  // 첫번째 패스워드로 focus 설정
+
+				return false;  // 회원 가입 진행 중지
+			}
+
+			document.getElementById('frm').submit(); // required="required" 작동 안됨.
+		}
+	</script>
+
+	<div class="title_line">회원 가입(*: 필수)</div>
+	<aside class="aside_right">
+		<a href="javascript:location.reload();">새로고침</a>
+		<span class='menu_divide'>│</span>
+		<a href='./create'>회원 가입</a>
+		<span class='menu_divide'>│</span>
+		<a href='./list'>목록</a>
+	</aside>
+
+	<div class='menu_line'></div>
+
+	<div style="width: 60%; margin: 0px auto ">
+		<form name="frm" id="frm" th:object="${masterVO}" method="post" action="/master/create">
+			<div>
+				<label for="masterid">관리자 아이디(이메일)*</label>
+				<input type="text" name="masterid" id="masterid" value="" autofocus="autofocus" class="form-control fom-control-sm"
+					style="width: 50%;" th:field="*{masterid}">
+				<button type='button' id="btn_checkID" onclick="checkID()" class="btn btn-primary btn-sm"
+					style="margin-top: 4px;">중복확인</button>
+				<span id='masterid_msg'></span>
+			</div>
+
+			<div class="form-group">
+				<label for="masterpasswd">관리자 패스워드*</label>
+				<input type='password' name='masterpasswd' id='masterpasswd' value='1234' required="required" placeholder="관리자 패스워드"
+					class="form-control form-control-sm" style="width:30%;">
+			</div>
+
+			<div class="form-group">
+				<label for"masterpasswd2">관리자 패스워드 확인*</label>
+				<input type='password' name='masterpasswd2' id='masterpasswd2' value='1234' required="required" placeholder="관리자패스워드 확인"
+					class="form-control form-control-sm" style="width:30%;">
+				<span id='masterpasswd2_msg'></span>
+			</div>
+
+	
+			<div class="content_body_bottom">
+				<button type="button" onclick="send();" class="btn btn-secondary btn-sm">가입</button>
+				<button type="button" onclick="history.back();" class="btn btn-secondary btn-sm">취소</button>
+			</div>
+
+		</form>
+	</div>
+
+</div>
+
+</html>

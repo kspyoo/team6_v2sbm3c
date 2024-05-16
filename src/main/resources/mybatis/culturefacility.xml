@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dev.mvc.culturefacility.CulturefacilityDAOInter">
+
+	<insert id="create" parameterType="dev.mvc.culturefacility.CulturefacilityVO">
+    INSERT INTO member(cultureno, cname ,raddress,lattitude, longitude, addr_code, phone, date, operatingtime, pa)
+    VALUES (member_seq.nextval,#{cname}, #{raddress}, #{lattitude}, #{longitude}, #{addr_code}, 
+                 #{phone}, sysdate, #{operatingtime}, #{pa})
+  </insert>
+
+	<select id="list" resultType="dev.mvc.culturefacility.CulturefacilityVO">
+  SELECT cname, raddress, lattitude, longitude, addr_code,phone,date, operatingtime,pa
+  FROM culturefacility
+  ORDER BY  cultureno ASC, cname ASC
+  </select>
+
+	<select id="read" resultType="dev.mvc.culturefacility.CulturefacilityVO">
+  SELECT cname, raddress, lattitude, longitude, addr_code,phone,date, operatingtime,pa
+  FROM culturefacility
+  WHERE cultureno = #{cultureno}
+  </select>
+
+	<update id="update" parameterType="dev.mvc.culturefacility.CulturefacilityVO">
+  UPDATE culturefacility
+  SET	#{cname}, #{raddress}, #{lattitude}, #{longitude}, #{addr_code},#{phone}, #{operatingtime}, #{pa}
+  WHERE cultureno = #{cultureno}
+  </update>
+
+	<delete id="delete" parameterType="int">
+    DELETE FROM culturefacility
+    WHERE cultureno = #{cultureno}
+  </delete>
+
+
+</mapper>
