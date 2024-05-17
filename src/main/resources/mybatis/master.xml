@@ -28,6 +28,13 @@
     WHERE masterno = #{masterno}
   </select>  
   
+    <!-- id(이메일)로 회원 정보 조회 -->
+  <select id="readById" resultType="dev.mvc.master.MasterVO" parameterType="String">
+    SELECT masterno, masterid, masterpasswd
+    FROM master
+    WHERE masterid = #{masterid}
+  </select>
+  
   
   <delete id="delete" parameterType="int">
     DELETE FROM master

@@ -34,6 +34,12 @@ public class MasterProc implements MasterProcInter{
     MasterVO masterVO= this.masterDAO.read(masterno);
     return masterVO;
   }
+  
+  @Override
+  public MasterVO readById(String masterid) {
+    MasterVO masterVO =this.masterDAO.readById(masterid);
+    return masterVO;
+  }
 
   @Override
   public int update(MasterVO masterVO) {
@@ -64,5 +70,7 @@ public class MasterProc implements MasterProcInter{
     int cnt = this.masterDAO.login(map);
     return cnt;
   }
+
+
 
 }

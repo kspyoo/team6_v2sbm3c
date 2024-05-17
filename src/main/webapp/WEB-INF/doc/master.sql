@@ -22,6 +22,8 @@ CREATE SEQUENCE master_seq
 INSERT INTO master(masterno, masterid, masterpasswd)                            
 VALUES (member_seq.nextval, 'admin', '1234')
 
+INSERT INTO master(masterno, masterid, masterpasswd)                            
+VALUES (member_seq.nextval, 'master', '1234')
 --목록--
 SELECT masterno, masterid, masterpasswd
 FROM master

@@ -47,7 +47,7 @@
 				//fetch관련시작
 				//---------------------------------
 				let masterid = document.getElementById('masterid');
-				let url = './checkID?id=' + id.value;
+				let url = './create/checkID?masterid=' + masterid.value;
 
 				fetch(url, {
 					method: 'GET',
@@ -96,9 +96,9 @@
 			}
 
 			// 패스워드를 정상적으로 2번 입력했는지 확인
-			let masterpasswd = document.getElementById('mastepasswd');
-			let masterpasswd2 = document.getElementById('mastepasswd2');
-			let masterpasswd2_msg = document.getElementById('mastepasswd2_msg');
+			let masterpasswd = document.getElementById('masterpasswd');
+			let masterpasswd2 = document.getElementById('masterpasswd2');
+			let masterpasswd2_msg = document.getElementById('masterpasswd2_msg');
 
 			if (masterpasswd.value != masterpasswd2.value) {
 				masterpasswd2_msg.innerHTML = '입력된 패스워드가 일치하지 않습니다.';
@@ -141,7 +141,7 @@
 			</div>
 
 			<div class="form-group">
-				<label for"masterpasswd2">관리자 패스워드 확인*</label>
+				<label for="masterpasswd2">관리자 패스워드 확인*</label>
 				<input type='password' name='masterpasswd2' id='masterpasswd2' value='1234' required="required" placeholder="관리자패스워드 확인"
 					class="form-control form-control-sm" style="width:30%;">
 				<span id='masterpasswd2_msg'></span>

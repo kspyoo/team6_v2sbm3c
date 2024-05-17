@@ -3,7 +3,7 @@ package dev.mvc.master;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import dev.mvc.master.MasterVO;
+
 
 public interface MasterDAOInter {
   
@@ -33,6 +33,13 @@ public interface MasterDAOInter {
    * @return
    */
   public MasterVO read(int masterno);
+  /**
+   * 관리자 아이디로 관리자정보 조회
+   * @param id
+   * @return
+   */
+  public MasterVO readById(String masterid);
+  
   /**
    * 수정 처리
    * @param masterVO
