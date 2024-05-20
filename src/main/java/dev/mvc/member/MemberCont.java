@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import dev.mvc.team6_v2sbm3c.MsgCont;
 import dev.mvc.tool.Security;
@@ -333,7 +334,7 @@ public class MemberCont {
   }
 
   @PostMapping("/findPasswdView")
-  public String findPasswd_proc(HttpSession session, Model model, String name, String phone, String id) {
+  public String findPasswd_proc(RedirectAttributes ra, HttpSession session, Model model, String name, String phone, String id) {
     HashMap<String, Object> map = new HashMap<String, Object>();
     map.put("name", name);
     map.put("phone", phone);
@@ -344,10 +345,7 @@ public class MemberCont {
     model.addAttribute("cnt", cnt);
 
     if (cnt == 1) {
-      MemberVO memberVO = this.memberProc.findPasswd(name, phone, id);
-
-      model.addAttribute("memberVO", memberVO);
-      
+      ra.addAttribute("id", id);
       return "redirect:/member/findPasswd";
     } else {
       model.addAttribute("code", "find_fail");
@@ -356,16 +354,16 @@ public class MemberCont {
   }
   
   @GetMapping("/findPasswd")
-  public String findPasswd() {
+  public String findPasswd(Model model,String id) {
+    model.addAttribute("id", id);
     return "/member/findPasswd";
   }
   
   @PostMapping("/findPasswd")
-  public String passwdChangeProc(HttpSession session, Model model, String passwd) {
-      int memberno = (int)session.getAttribute("memberno");
+  public String passwdChangeProc(HttpSession session, Model model, String passwd, String id) {
+      MemberVO memberVO = this.memberProc.readById(id);
       HashMap<String, Object> map = new HashMap<String, Object>();
-      System.out.println("변경X");
-      map.put("memberno", memberno);
+      map.put("memberno", memberVO.getMemberno());
       map.put("passwd", this.security.aesEncode(passwd));
 
       int passwd_change_cnt = this.memberProc.passwd_update(map);
@@ -373,13 +371,10 @@ public class MemberCont {
       if (passwd_change_cnt == 1) {
         model.addAttribute("code", "passwd_change_success");
         model.addAttribute("cnt", 1);
-        System.out.println("변경");
-      } else {
+    } else {
         model.addAttribute("code", "passwd_change_fail");
         model.addAttribute("cnt", 0);
-        System.out.println("변경X");
-      }
-
+    }
       return "member/msg";
   }
 
