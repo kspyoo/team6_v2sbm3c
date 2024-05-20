@@ -66,4 +66,18 @@ public interface MateCommunityDAOInter {
      * @return
      */
     public int delete_content(int mCommunityNo);
+
+    /**
+     * 모든 게시글 갯수
+     * @param map
+     * @return
+     */
+    public int list_all_count(String SearchWord);
+
+    /**
+     * 특정 카테고리의 게시글 갯수
+     * @param map
+     * @return
+     */
+    public int list_all_by_petTypeNo_count(Map<String,Object> map);
 }

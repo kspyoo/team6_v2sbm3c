@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>게시글 전체 조회</title>
+    <link href="/css/mateCommunity/list.css" rel="Stylesheet" type="text/css">
+</head>
+<body>
+<div>
+    <div class='title_line'>
+        산책 메이트 구하기 전체 게시글
+    </div>
+
+    <div>
+        <a href="/mateCommunity/list_all">
+            전체
+        </a>
+        <a th:href="@{|/mateCommunity/list_all_byPetTypeNo?petTypeNo=1|}">
+            강아지
+        </a>
+        <a th:href="@{|/mateCommunity/list_all_byPetTypeNo?petTypeNo=2|}">
+            고양이
+        </a>
+        <a th:href="@{|/mateCommunity/list_all_byPetTypeNo?petTypeNo=3|}">
+            기타
+        </a>
+    </div>
+
+    <aside class="aside_right">
+        <a href="javascript:location.reload();">새로고침</a>
+        <span class='menu_divide'>│</span>
+        <a href="./create?petTypeNo=0">글 등록</a>
+    </aside>
+    <div class="menu_line"></div>
+
+    <div>
+        <span>총 게시글 수 [[${mateCommunity_cnt}]]</span>
+    </div>
+
+    <table class="table table-hover" style="width: 70%; margin: 0px auto">
+        <colgroup>
+            <col style="width: 20%;"></col>
+            <col style="width: 30%;"></col>
+            <col style="width: 15%;"></col>
+            <col style="width: 15%;"></col>
+            <col style="width: 20%;"></col>
+            <!--            <col style="width: 15%;"></col>-->
+            <!--            <col style="width: 10%;"></col>-->
+        </colgroup>
+        <thead>
+        <tr>
+            <th class="th_bs" style='text-align: center; border-right: 1px solid;'>분류</th>
+            <th class="th_bs" style='text-align: center; border-right: 1px solid;'>제목</th>
+            <th class="th_bs" style='text-align: center; border-right: 1px solid;'>모집 인원</th>
+            <th class="th_bs" style='text-align: center; border-right: 1px solid;'>모집 상태</th>
+            <th class="th_bs" style='text-align: center; border-right: 1px solid;'>작성일</th>
+            <!--            <th class="th_bs" style='text-align: center;'>관리</th>-->
+            <!--            <th class="th_bs" style='text-align: center;'>기타</th>-->
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="mateCommunityVO:${list_all}" style="cursor: pointer;"
+            th:attr="onclick=|location.href='/mateCommunity/read?mCommunityNo=${mateCommunityVO.mCommunityNo}'|">
+            <td class="td_basic" style="text-align: center;">
+                <span th:if="${mateCommunityVO.petTypeNo == 1}">
+                    강아지
+                </span>
+                <span th:if="${mateCommunityVO.petTypeNo == 2}">
+                    고양이
+                </span>
+                <span th:if="${mateCommunityVO.petTypeNo == 3}">
+                    기타
+                </span>
+            </td>
+
+            <td class="td_left align-middle">
+                <span th:text="${mateCommunityVO.title}" style="font-weight: bold; margin-left: 10px;"></span>
+            </td>
+
+            <td class="td_left align-middle" style="text-align: center;">
+                <span th:text="${mateCommunityVO.walkingM}" ></span> 명
+            </td>
+
+            <td class="td_left align-middle" style="text-align: center;">
+                <span th:if="${mateCommunityVO.status == 1}" style="font-weight: bold;">모집완료</span>
+                <span th:if="${mateCommunityVO.status == 0}" style="font-weight: bold;">모집중</span>
+            </td>
+
+            <td class="td_left align-middle" style="text-align: center;">
+                <span th:id="'rdate'+${mateCommunityVO.mCommunityNo}" th:text="${mateCommunityVO.WDate.substring(0, 10)}" style="font-weight: normal"></span>
+            </td>
+
+<!--            <td class="td_bs" style="text-align: center;">-->
+<!--                <a th:href="@{|/mateCommunity/delete?mCommunityNo=${mateCommunityVO.mCommunityNo}|}" title="삭제">-->
+<!--                    <img src="/images/delete.png" class="icon">-->
+<!--                </a>-->
+<!--            </td>-->
+
+            <script th:inline="javascript">
+                window.addEventListener('load', function() {
+                    let today = new Date();
+
+                    let year = today.getFullYear();
+                    let month = ('0' + (today.getMonth() + 1)).slice(-2);
+                    let day = ('0' + today.getDate()).slice(-2);
+
+                    let dateString = year + '-' + month  + '-' + day;
+
+                    let rdate = document.getElementById('rdate'+[[${mateCommunityVO.mCommunityNo}]]).innerText;
+
+                    console.log(dateString, rdate);
+
+                    if (dateString==rdate){
+                        document.getElementById('rdate'+[[${mateCommunityVO.mCommunityNo}]]).innerHTML = [[${mateCommunityVO.WDate.substring(11, 16)}]];
+                    }
+                });
+            </script>
+        </tr>
+        </tbody>
+    </table>
+    <div th:if="${mateCommunity_cnt==0}">
+        <span>작성된 게시글이 없습니다.</span><br>
+        <span>첫 게시글을 작성해주세요!</span>
+    </div>
+    <div class="Bottom_menu" th:utext="${paging}"></div>
+
+</div>
+</div>
+</body>
+</html>

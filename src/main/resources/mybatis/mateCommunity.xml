@@ -4,17 +4,17 @@
 <mapper namespace="dev.mvc.matecommunity.MateCommunityDAOInter">
     <!-- 산책메이트 커뮤니티 게시글 작성 -->
     <insert id="create" parameterType="dev.mvc.matecommunity.MateCommunityVO">
-        INSERT INTO MATECOMMUNITY(MCOMMUNITYNO, TITLE, CONTENT, VIEWCNT, STARTINGP, WALKINGM, WDATE, STATUS, SEARCHTAG, PETTYPENO, MEMBERNO)
-        VALUES (MATECOMMUNITY_SEQ.nextval, #{title}, #{content}, 0 , #{startingP}, #{walkingM}, sysdate, 0, #{searchTag}, #{petTypeNo}, #{memberNo})
+        INSERT INTO MATECOMMUNITY(MCOMMUNITYNO, TITLE, CONTENT, VIEWCNT, STARTINGP, STARTINGDETAIL, WALKINGM, WDATE, ASSEMBLETIME, STATUS, SEARCHTAG, PETTYPENO, MEMBERNO)
+        VALUES (MATECOMMUNITY_SEQ.nextval, #{title}, #{content}, 0 , #{startingP}, #{startingDetail}, #{walkingM}, sysdate, #{assembleTime}, 0, #{searchTag}, #{petTypeNo}, #{memberNo})
     </insert>
 
     <!-- 게시글 전체 목록, 페이징 -->
     <select id="list_all" resultType="dev.mvc.matecommunity.MateCommunityVO" parameterType="Map">
-        SELECT MCOMMUNITYNO, TITLE, CONTENT, VIEWCNT, STARTINGP, WALKINGM, WDATE, STATUS, SEARCHTAG, PETTYPENO, MEMBERNO, r
+        SELECT MCOMMUNITYNO, TITLE, CONTENT, VIEWCNT, STARTINGP, STARTINGDETAIL, WALKINGM, WDATE, ASSEMBLETIME, STATUS, SEARCHTAG, PETTYPENO, MEMBERNO, r
         FROM (
-            SELECT MCOMMUNITYNO, TITLE, CONTENT, VIEWCNT, STARTINGP, WALKINGM, WDATE, STATUS, SEARCHTAG, PETTYPENO, MEMBERNO, rownum AS r
+            SELECT MCOMMUNITYNO, TITLE, CONTENT, VIEWCNT, STARTINGP, STARTINGDETAIL, WALKINGM, WDATE, ASSEMBLETIME, STATUS, SEARCHTAG, PETTYPENO, MEMBERNO, rownum AS r
             FROM (
-                SELECT MCOMMUNITYNO, TITLE, CONTENT, VIEWCNT, STARTINGP, WALKINGM, WDATE, STATUS, SEARCHTAG, PETTYPENO, MEMBERNO
+                SELECT MCOMMUNITYNO, TITLE, CONTENT, VIEWCNT, STARTINGP, STARTINGDETAIL, WALKINGM, WDATE, ASSEMBLETIME, STATUS, SEARCHTAG, PETTYPENO, MEMBERNO
                 FROM MATECOMMUNITY
                 <choose>
                     <when test="searchWord != null or searchWord != ''"> <!-- 검색하지 않는 경우 -->
@@ -24,18 +24,18 @@
                         OR UPPER(SEARCHTAG) LIKE '%' || UPPER(#{searchWord}) || '%'
                     </when>
                 </choose>
-                ORDER BY WDATE desc
+                ORDER BY MCOMMUNITYNO desc
             )
         ) WHERE r &gt;= #{start_num} AND r &lt;= #{end_num}
     </select>
 
     <!-- 게시글 카테고리 목록, 페이징 -->
     <select id="list_all_by_petTypeNo" resultType="dev.mvc.matecommunity.MateCommunityVO" parameterType="Map">
-        SELECT MCOMMUNITYNO, TITLE, CONTENT, VIEWCNT, STARTINGP, WALKINGM, WDATE, STATUS, PETTYPENO, MEMBERNO, r
+        SELECT MCOMMUNITYNO, TITLE, CONTENT, VIEWCNT, STARTINGP, STARTINGDETAIL, WALKINGM, WDATE, ASSEMBLETIME, STATUS, SEARCHTAG, PETTYPENO, MEMBERNO, r
         FROM (
-            SELECT MCOMMUNITYNO, TITLE, CONTENT, VIEWCNT, STARTINGP, WALKINGM, WDATE, STATUS, PETTYPENO, MEMBERNO, rownum AS r
+            SELECT MCOMMUNITYNO, TITLE, CONTENT, VIEWCNT, STARTINGP, STARTINGDETAIL, WALKINGM, WDATE, ASSEMBLETIME, STATUS, SEARCHTAG, PETTYPENO, MEMBERNO, rownum AS r
             FROM (
-                SELECT MCOMMUNITYNO, TITLE, CONTENT, VIEWCNT, STARTINGP, WALKINGM, WDATE, STATUS, PETTYPENO, MEMBERNO
+                SELECT MCOMMUNITYNO, TITLE, CONTENT, VIEWCNT, STARTINGP, STARTINGDETAIL, WALKINGM, WDATE, ASSEMBLETIME, STATUS, SEARCHTAG, PETTYPENO, MEMBERNO
                 FROM MATECOMMUNITY
                 WHERE PETTYPENO=#{petTypeNo}
                 <choose>
@@ -52,7 +52,7 @@
     </select>
 
     <select id="read_content" parameterType="int" resultType="dev.mvc.matecommunity.MateCommunityVO">
-        SELECT MCOMMUNITYNO, TITLE, CONTENT, VIEWCNT, STARTINGP, WALKINGM, WDATE, STATUS, PETTYPENO, MEMBERNO
+        SELECT MCOMMUNITYNO, TITLE, CONTENT, VIEWCNT, STARTINGP, STARTINGDETAIL, WALKINGM, WDATE, ASSEMBLETIME, STATUS, SEARCHTAG, PETTYPENO, MEMBERNO
         FROM MATECOMMUNITY
         WHERE MCOMMUNITYNO=#{mCommunityNo}
     </select>
@@ -64,7 +64,9 @@
             content=#{content},
             SEARCHTAG=#{searchTag},
             STARTINGP=#{startingP},
-            WALKINGM=#{walkingM}
+            STARTINGDETAIL=#{startingDetail},
+            WALKINGM=#{walkingM},
+            ASSEMBLETIME=#{assembleTime}
         WHERE MCOMMUNITYNO = #{mCommunityNo}
     </update>
 
@@ -95,4 +97,33 @@
         FROM MATECOMMUNITY
         WHERE MCOMMUNITYNO = #{mCommunityNo}
     </delete>
+
+    <!--  모든 게시글 갯수  -->
+    <select id="list_all_count" resultType="int" parameterType="String">
+        SELECT COUNT(*)
+        FROM MATECOMMUNITY
+        <choose>
+            <when test="searchWord != null or searchWord != ''"> <!-- 검색하지 않는 경우 -->
+                WHERE (UPPER(title) LIKE '%' || UPPER(#{searchWord}) || '%'
+                OR UPPER(content) LIKE '%' || UPPER(#{searchWord}) || '%'
+                OR UPPER(STARTINGP) LIKE '%' || UPPER(#{searchWord}) || '%'
+                OR UPPER(SEARCHTAG) LIKE '%' || UPPER(#{searchWord}) || '%')
+            </when>
+        </choose>
+    </select>
+
+    <!--  특정 카테고리의 게시글 갯수  -->
+    <select id="list_all_by_petTypeNo_count" resultType="int" parameterType="Map">
+        SELECT COUNT(*)
+        FROM MATECOMMUNITY
+        where PETTYPENO = #{petTypeNo}
+        <choose>
+            <when test="searchWord != null or searchWord != ''"> <!-- 검색하지 않는 경우 -->
+                AND (UPPER(title) LIKE '%' || UPPER(#{searchWord}) || '%'
+                OR UPPER(content) LIKE '%' || UPPER(#{searchWord}) || '%'
+                OR UPPER(STARTINGP) LIKE '%' || UPPER(#{searchWord}) || '%'
+                OR UPPER(SEARCHTAG) LIKE '%' || UPPER(#{searchWord}) || '%')
+            </when>
+        </choose>
+    </select>
 </mapper>
