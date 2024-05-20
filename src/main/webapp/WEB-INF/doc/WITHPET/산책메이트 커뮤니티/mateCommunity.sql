@@ -9,8 +9,10 @@ CREATE TABLE MATECOMMUNITY(
     CONTENT                           VARCHAR2(1000)     NOT NULL,
     VIEWCNT                               NUMBER(10)     default 10  NOT NULL,
     STARTINGP                         VARCHAR2(100)    NOT NULL,
+    STARTINGDETAIL                   VARCHAR2(100)    NOT NULL,
     WALKINGM                          NUMBER(3)    NOT NULL,
     WDATE                             DATE     NOT NULL,
+    ASSEMBLETIME                      VARCHAR(30)     NOT NULL,
     STATUS                            number(1) default 0 not null ,
     SEARCHTAG                         varchar2(200)  not null,
     PETTYPENO                         number(10)     NOT NULL,
@@ -25,8 +27,10 @@ COMMENT ON COLUMN MATECOMMUNITY.TITLE is '제목';
 COMMENT ON COLUMN MATECOMMUNITY.CONTENT is '내용';
 COMMENT ON COLUMN MATECOMMUNITY.VIEWCNT is '조회수';
 COMMENT ON COLUMN MATECOMMUNITY.STARTINGP is '출발지점';
+COMMENT ON COLUMN MATECOMMUNITY.STARTINGDETAIL is '상세지점';
 COMMENT ON COLUMN MATECOMMUNITY.WALKINGM is '구하는 산책 인원';
 COMMENT ON COLUMN MATECOMMUNITY.WDATE is '작성일자';
+COMMENT ON COLUMN MATECOMMUNITY.ASSEMBLETIME is '집합날짜&시간';
 COMMENT ON COLUMN MATECOMMUNITY.STATUS is '모집 상태'; -- 모집중 : 0, 모집 완료 : 1
 COMMENT ON COLUMN MATECOMMUNITY.SEARCHTAG is '검색태그';
 COMMENT ON COLUMN MATECOMMUNITY.PETTYPENO is '분류 번호';

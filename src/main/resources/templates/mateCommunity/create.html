@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="/css/mateCommunity/create.css" rel="Stylesheet" type="text/css">
+</head>
+<body>
+<div>
+    <div class='title_line'>산책 메이트 구하기</div>
+
+    <aside class="aside_right">
+        <a href="javascript:location.reload();">새로고침</a>
+        <span class='menu_divide'>│</span>
+        <a href="./list_all">전체 게시글 목록</a>
+<!--        <span class='menu_divide'>│</span>-->
+<!--        <a th:href="@{|./list_by_cateno_grid?cateno=${cateVO.cateno}|}">갤러리형</a>-->
+    </aside>
+
+    <div class='menu_line'></div>
+
+    <form name='frm' id="frm" method='post' th:object="${mateCommunityVO}" action='./create' style="width: 60%; margin: 0 auto;">
+<!--        <input type="hidden" name="memberNo" th:value="${memberNo}">-->
+        <input type="hidden" name="memberNo" th:value="${memberNo}">
+
+        <div>
+            <label>제목</label>
+            <input type='text' name='title' value='주말 오지 탐험' required="required" id="title"
+                   autofocus="autofocus" class="form-control" style='width: 100%;'>
+        </div>
+
+        <div>
+            <span><label for="petTypeNo">게시판 종류</label></span>
+            <select name="petTypeNo" id="petTypeNo">
+<!--                <option value="select" th:selected="${petTypeNo}==0">게시판을 선택해주세요.</option>-->
+                <option value="1" th:selected="${petTypeNo}==1 or ${petTypeNo}==0">강아지 산책메이트</option>
+                <option value="2" th:selected="${petTypeNo}==2">고양이 산책메이트</option>
+                <option value="3" th:selected="${petTypeNo}==3">기타 반려동물 산책메이트</option>
+            </select>
+        </div>
+
+        <div>
+            <label>참가인원</label>
+            <input type="number" name="walkingM" required="required" style='width: 100%;' value="1" id="walkingM">
+        </div>
+
+        <div>
+            <label>집합위치</label>
+            <input type="text" name="startingP" required="required" style='width: 100%;' id="startingP" readonly>
+            <button type="button" onclick="DaumPostcode()"> 주소 위치 검색 </button>
+            <label>상세위치</label>
+            <input type="text" name="startingDetail" required style='width: 100%;' id="startingDetail">
+        </div>
+
+        <div class="assemble_date_time">
+            <input type="hidden" name="assembleTime" id="assembleTime">
+            <div>
+                <label>집합날짜 & 시간</label>
+            </div>
+            <span>
+                <input type="date" style='width: 30%;' id="assembleDate" required name="assembleDate" >
+            </span>
+            <span>
+                <input type="radio" name="amOrPm" value="AM" checked> AM
+                <input type="radio" name="amOrPm" value="PM"> PM
+            </span>
+            <span>
+                <select name="hour" id="hour">
+                    <option value="1" selected>01</option>
+                </select>
+            </span>
+            <span> 시 </span>
+            <span>
+                <select id="minute">
+                    <option value="00" selected>00</option>
+                    <option value="30">30</option>
+                </select>
+            </span>
+            <span> 분 </span>
+        </div>
+
+        <div>
+            <label>내용</label>
+            <textarea name='content' required="required" class="form-control" rows="12" style='width: 100%;'>오지 탐험은 언제나 즐거운 시간이었어요! </textarea>
+        </div>
+
+        <div>
+            <label>검색어</label>
+            <input type='text' name='searchTag' class="form-control" style='width: 100%;'>
+        </div>
+
+        <div class="content_body_bottom">
+            <button type="button" onclick="send()" class="btn btn-secondary btn-sm" style="width: 50%; margin: 20px auto">등록 하기</button>
+            <button type="button" onclick="history.back()">취소</button>
+        </div>
+
+    </form>
+</div>
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+<script>
+    //본 예제에서는 도로명 주소 표기 방식에 대한 법령에 따라, 내려오는 데이터를 조합하여 올바른 주소를 구성하는 방법을 설명합니다.
+    function DaumPostcode() {
+        new daum.Postcode({
+            oncomplete: function(data) {
+                // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
+                document.getElementById("startingP").value = data.roadAddress;
+            }
+        }).open();
+    }
+
+    function send(){
+        // // 날짜
+        let date = document.querySelector('#assembleDate').value;
+        console.log(date);
+
+        // 오전 또는 오후
+        let amOrPm = document.querySelector('input[name="amOrPm"]:checked').value;
+        // 시
+        let hour = document.querySelector('#hour');
+        let hour_result = hour.options[hour.selectedIndex].value;
+        // 분
+        let minute = document.querySelector('#minute');
+        let minute_result = minute.options[minute.selectedIndex].value;
+
+        // document.getElementById('assembleTime').textContent= String(date) + " " + String(amOrPm) + " " + String(hour) + " : " + String(minute);
+
+        document.getElementById('assembleTime').value = String(date) + " " + String(amOrPm) + String(hour_result) + ":" + String(minute_result);
+
+        document.getElementById('frm').submit();
+    }
+
+    window.onload = () => {
+        let assembleDate = document.querySelector('#assembleDate');
+        assembleDate.value = new Date().toISOString().substring(0, 10);
+
+        let offset = 1000 * 60 * 60 * 9 // 9시간 밀리세컨트 값
+        let today = new Date(Date.now() + offset)
+
+        assembleDate.setAttribute('min', today.toISOString().substring(0,10));
+
+        today.setMonth(today.getMonth()+1)
+        today.setDate(today.getDate()-1)
+        assembleDate.setAttribute('max', today.toISOString().substring(0,10));
+
+        let time = document.querySelector("#hour");
+        for (let i = 1; i < 13; i++){
+            if(i < 10) {
+                time.options[i] = new Option('0' + i, String(i));
+            }else{
+                time.options[i] = new Option(i+'', String(i));
+            }
+        }
+
+    }
+</script>
+</body>
+</html>

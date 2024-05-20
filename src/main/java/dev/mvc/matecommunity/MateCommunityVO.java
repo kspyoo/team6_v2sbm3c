@@ -16,10 +16,14 @@ public class MateCommunityVO {
     private int viewCnt;
     // 시작지점
     private String startingP;
+    // 상세시작지점
+    private String startingDetail;
     // 메이트 인원
     private int walkingM;
     // 게시글 작성일자
     private String wDate;
+    // 집합 시간
+    private String assembleTime;
     // 모집 상태
     private int status;
     // 게시글 검색태그
