@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+
+<html layout:decorate="~{layout}">
+<!--layout.html 상속-->
+<div layout:fragment="content">
+  <div class="title_line">게시판 등록</div>
+  <form name="frm" th:object="${communityVO}" method="post" action="/community/create">
+
+    <div th:replace="~{errors::errorsFragment}"></div>
+
+    <div>
+      <label>제목</label>
+      <input type="text" name="title" value="" autofocus="autofocus" class="form-control form-control-sm"
+        style="width: 50%;" th:field="*{title}">
+    </div>
+    <div>
+      <label>내용</label>
+      <input type="text" name="content" value="" autofocus="autofocus" class="form-control form-control-sm"
+        style="width: 50%;" th:field="*{content}">
+    </div>
+    <div>
+      <label>태그</label>
+      <input type="text" name="tag" value="" autofocus="autofocus" class="form-control form-control-sm"
+        style="width: 50%;" th:field="*{tag}">
+    </div>
+     <div>
+      <input type="hidden" name="memberno" value="" autofocus="autofocus" class="form-control form-control-sm"
+        style="width: 50%;" th:field="*{memberno}">
+    </div>
+    
+     <div>
+      <input type="hidden" name="ctypeno" value="" autofocus="autofocus" class="form-control form-control-sm"
+        style="width: 50%;" th:field="*{ctypeno}">
+    </div>
+    
+
+
+    <div class="content_body_bottom">
+      <button type="submit" class="btn btn-secondary btn-sm">등록</button>
+      <button type="button" onclick="location.href='./list_all'" class="btn btn-secondary btn-sm">목록</button>
+    </div>
+
+  </form>
+</div>
+
+</html>

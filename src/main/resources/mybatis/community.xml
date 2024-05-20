@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dev.mvc.community.CommunityDAOInter">
+  <insert id="create" parameterType="dev.mvc.community.CommunityVO">
+  INSERT INTO COMMUNITY(communityno,title,content,vcnt,rcnt,writedate,tag,memberno,ctypeno)
+  VALUES(COMMUNITY_SEQ.nextval,#{title},#{content},#{vcnt},#{rcnt},sysdate,#{tag},#{memberno},#{ctypeno})
+  </insert>
+  <select id="list" resultType="dev.mvc.community.CommunityVO">
+    SELECT communityno,title,content,vcnt,rcnt,writedate,tag,memberno,ctypeno
+    FROM community
+    ORDER BY communityno ASC
+
+  </select>
+</mapper>

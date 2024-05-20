@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dev.mvc.catecommunity.CateCommunityDAOInter">
+  <insert id="create" parameterType="dev.mvc.catecommunity.CateCommunityVO">
+    INSERT INTO COMMUNITYCATE(CTYPENO, CNT, TYPENAME, MASTERNO)
+    VALUES(COMMUNITYCATE_SEQ.nextval,0,#{typename}, #{masterno})
+  </insert>
+  <select id="list" resultType="dev.mvc.catecommunity.CateCommunityVO">
+  SELECT ctypeno, cnt, typename, masterno
+  FROM communitycate
+  ORDER BY ctypeno ASC
+  </select>
+
+</mapper>

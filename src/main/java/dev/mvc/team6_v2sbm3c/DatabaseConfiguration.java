@@ -2,6 +2,7 @@ package dev.mvc.team6_v2sbm3c;
 
 import javax.sql.DataSource;
 
+
 import org.mybatis.spring.annotation.MapperScan;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
@@ -19,7 +20,14 @@ import com.zaxxer.hikari.HikariDataSource;
 @Configuration
 @PropertySource("classpath:/application.properties")  // 설정 파일 위치
 
+
 @MapperScan(basePackages= {"dev.mvc.member","dev.mvc.matecommunity", "dev.mvc.culturefacility","dev.mvc.master"}) // DAO interface를 찾는 위치
+
+@MapperScan(basePackages= {"dev.mvc.member","dev.mvc.culturefacility","dev.mvc.master"}) // DAO interface를 찾는 위치
+
+@MapperScan(basePackages= {"dev.mvc.member","dev.mvc.matecommunity", "dev.mvc.culturefacility","dev.mvc.community","dev.mvc.catecommunity"}) // DAO interface를 찾는 위치
+
+
 
 public class DatabaseConfiguration {
     

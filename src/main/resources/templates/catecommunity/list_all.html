@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+
+<html layout:decorate="~{layout}"><!--layout.html 상속-->
+<div layout:fragment="content">
+  <div class="title_line">게시판 글 목록</div>
+<table class="table table-hover">
+<colgroup>
+    <col style='width: 34%;'/>
+    <col style='width: 33%;'/>
+    <col style='width: 33%;'/>
+  </colgroup>
+  <thead>
+    <tr>
+      <th class="th_bs">게시판 종류 번호</th>
+      <th class="th_bs">게시글 수</th>
+      <th class="th_bs">게시판 이름</th>
+    </tr>
+  </thead>
+  <tbody>
+  <tr th:each="cateCommunityVO:${list}">
+  <td class="td_bs"><a th:href="@{|./read/${cateCommunityVO.ctypeno}|}" style="display: block;" th:text="${cateCommunityVO.ctypeno}"></a></td>
+  <td class="td_bs"><a th:href="@{|./read/${cateCommunityVO.cnt}|}" style="display: block;" th:text="${cateCommunityVO.cnt}"></a></td>
+  <td class="td_bs"><a th:href="@{|./read/${cateCommunityVO.typename}|}" style="display: block;" th:text="${cateCommunityVO.typename}"></a></td>
+  </tr>
+  </tbody>
+</table>
+
+</div>
+</html>
