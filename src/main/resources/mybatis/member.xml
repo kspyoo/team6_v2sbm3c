@@ -48,5 +48,48 @@
     DELETE FROM member
     WHERE memberno=#{memberno}
   </delete>
+  
+  <!-- 아이디 찾기 -->
+  <select id="findId" resultType="dev.mvc.member.MemberVO">
+    SELECT id
+    FROM member
+    WHERE name=#{name} AND phone=#{phone}
+  </select>  
+  
+    <!-- 아이디 유효성 검사 -->
+  <select id="findIdCheck" resultType="int">
+    SELECT COUNT(memberno)
+    FROM member
+    WHERE name = #{name} AND phone = #{phone}
+  </select>
+  
+    <!-- 비밀번호 찾기 -->
+  <select id="findPasswd" resultType="dev.mvc.member.MemberVO">
+    SELECT passwd
+    FROM member
+    WHERE name=#{name} AND phone=#{phone} AND id=#{id}
+  </select>  
+  
+    <!-- 비밀번호 유효성 검사 -->
+  <select id="findPasswdCheck" resultType="int">
+    SELECT COUNT(memberno)
+    FROM member
+    WHERE name = #{name} AND phone = #{phone} AND id=#{id}
+  </select>
+  
+    <!--  현재 패스워드 검사 -->
+  <select id="passwd_check" parameterType="HashMap" resultType="int">
+    SELECT COUNT(memberno) as cnt
+    FROM member
+    WHERE memberno=#{memberno} AND passwd=#{passwd}
+  </select>
+   
+  <!-- 패스워드 변경 -->
+  <update id="passwd_update" parameterType="HashMap">
+    UPDATE member
+    SET passwd=#{passwd}
+    WHERE memberno=#{memberno}
+  </update>
+
 
 </mapper>

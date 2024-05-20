@@ -2,6 +2,8 @@ package dev.mvc.member;
 
 import java.util.HashMap;
 
+import org.apache.ibatis.annotations.Param;
+
 public interface MemberDAOInter {
   /**
    * 중복 아이디 검사
@@ -49,5 +51,52 @@ public interface MemberDAOInter {
    * @return
    */
   public int delete(int memberno);
+  
+  /**
+   * 아이디 찾기
+   * @param name
+   * @param phone
+   * @return
+   */
+  public MemberVO findId(@Param("name") String name, @Param("phone") String phone);
+  
+  /**
+   * 아이디 찾기
+   * @param 
+   * @return
+   */
+  public int findIdCheck(HashMap<String, Object> map);
+  
+  /**
+   * 비밀번호 찾기
+   * @param name
+   * @param phone
+   * @return
+   */
+  public MemberVO findPasswd(@Param("name") String name, @Param("phone") String phone, @Param("id") String id);
+  
+  /**
+   * 비밀번호 찾기
+   * @param 
+   * @return
+   */
+  public int findPasswdCheck(HashMap<String, Object> map);
+  
+  /**
+   * 현재 패스워드 검사
+   * @param map
+   * @return 0: 일치하지 않음, 1: 일치함
+   */
+  public int passwd_check(HashMap<String, Object> map);
+  
+  /**
+   * 패스워드 변경
+   * @param map
+   * @return 변경된 패스워드 갯수
+   */
+  public int passwd_update(HashMap<String, Object> map);
+  
 }
+
+
 

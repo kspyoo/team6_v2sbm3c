@@ -36,8 +36,8 @@
 							<li class="nav-item" th:if="${session.memberno != null}">
 								<a class="nav-link" href="/member/passwd_update_form">비밀 번호 변경</a>
 							</li>
-							<li class="nav-item"><a class="nav-link" href="#">아이디 찾기</a></li>
-							<li class="nav-item"><a class="nav-link" href="#">비밀번호 찾기</a></li>
+							<li class="nav-item"><a class="nav-link" href="/member/findIdView">아이디 찾기</a></li>
+							<li class="nav-item"><a class="nav-link" href="/member/findPasswdView">비밀번호 찾기</a></li>
 							<li class="nav-item" th:if="${session.memberno!=null}"><a class="nav-link" href="#">로그인 내역</a></li>
 						</ul>
 					</li>
