@@ -55,12 +55,16 @@
 
   <div class='menu_line'></div>
   
-  <div style="width: 60%; margin: 0px auto ">
+
+  <div style="width:60%;margin:auto;">
+    <img src="/test1.jpg" >
+  </div>
+  <div style="width: 60%; margin: 0px auto">
     <form name="frm" id="frm" th:object="${memberVO}" method="post" action="/member/update">
       <input type="hidden" name="memberno" th:value="${memberVO.memberno}">
       
-      <div class="form-group">
-        <label for="mname">성명*</label>
+      <div class="form-group" style="border-bottom : 2px solid #ddd;" >
+        <label for="name">성명*</label>
         <input type='text' name='name' id='name' th:value='${memberVO.name}' required="required" 
                    placeholder="성명" class="form-control form-control-sm" style="width: 30%;">
         <span id='mname_msg'></span>
@@ -94,7 +98,7 @@
       </div>   
 
 <!-- ------------------------------ DAUM 우편번호 API 시작 ------------------------------ -->
-    <div>
+  <div>
 <div id="wrap" style="display:none;border:1px solid;width:500px;height:300px;margin:5px 0;position:relative">
 <img src="//t1.daumcdn.net/postcode/resource/images/close.png" id="btnFoldWrap" style="cursor:pointer;position:absolute;right:0px;top:-1px;z-index:1" onclick="foldDaumPostcode()" alt="접기 버튼">
 </div>
@@ -186,7 +190,8 @@
       <div class="content_body_bottom">
         <button type="button" onclick="send();" class="btn btn-secondary btn-sm">저장</button>
         <button type="button" onclick="history.back();" class="btn btn-secondary btn-sm">취소</button>
-        <button type="button" th:onclick="location.href=@{|'./delete?memberno=' + ${memberVO.memberno}|}" class="btn btn-secondary btn-sm">삭제</button>
+        <button type="button" th:attr="onclick=|location.href='./delete?memberno=${memberVO.memberno}'|" class="btn btn-secondary btn-sm">삭제</button>
+
 
       </div>
 

@@ -242,7 +242,43 @@ public class MemberCont {
     return "member/read";
   }
   
-
+  /**
+   * 삭제
+   * @param model
+   * @param memberno 회원 번호
+   * @return 회원 정보
+   */
+  @GetMapping(value="/delete")
+  public String delete(Model model, int memberno) {
+    MemberVO memberVO = this.memberProc.read(memberno);
+    model.addAttribute("memberVO", memberVO);
+    
+    return "member/delete"; 
+  }
+  
+  /**
+   * 회원 Delete process
+   * @param model
+   * @param memberno 삭제할 레코드 번호
+   * @return
+   */
+  @PostMapping(value="/delete")
+  public String delete_process(HttpSession session,Model model, Integer memberno) {
+    int cnt = this.memberProc.delete(memberno);
+    
+    if (cnt == 1) {
+      model.addAttribute("code","delete_success");
+      session.invalidate();
+      return "member/msg";
+    } else {
+      model.addAttribute("code", "delete_fail");
+      return "member/msg";
+    }
+  }
+  
+  
+  
+  
   
   
 }

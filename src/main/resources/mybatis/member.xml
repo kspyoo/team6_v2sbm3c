@@ -42,5 +42,11 @@
     FROM member
     WHERE memberno = #{memberno}
   </select>  
+  
+  <!-- 회원 탈퇴 -->
+  <delete id="delete" parameterType="int">
+    DELETE FROM member
+    WHERE memberno=#{memberno}
+  </delete>
 
 </mapper>

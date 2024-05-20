@@ -51,7 +51,7 @@ SELECT * FROM member;
 
 SELECT memberno
 FROM member
-WHERE id="admin";
+WHERE id='admin';
 
 
 

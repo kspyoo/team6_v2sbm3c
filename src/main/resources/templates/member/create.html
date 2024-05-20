@@ -160,14 +160,13 @@
   <div style="width: 60%; margin: 0px auto ">
     <form name="frm" id="frm" th:object="${memberVO}" method="post" action="/member/create">
       <div>
-        <label for="id">아이디(이메일)*</label>
+        <th scope="row"><em>* </em><label for="id">아이디(이메일)</label>
         <input type="text" name="id" id="id" value="" autofocus="autofocus"
                class="form-control fom-control-sm" style="width: 50%;" th:field="*{id}">
         <button type='button' id="btn_checkID" onclick="checkID()" 
                      class="btn btn-primary btn-sm" style="margin-top: 4px;">중복확인</button>
-        <span id='id_msg'></span>  
+        <span id='id_msg'></span> 
       </div>
-      
       <div class="form-group">
         <label for="passwd">패스워드*</label> 
         <input type='password' name='passwd' id='passwd' value='1234' required="required" 
@@ -187,26 +186,21 @@
                    placeholder="성명" class="form-control form-control-sm" style="width: 30%;">
         <span id='name_msg'></span>
       </div>   
-      
-      <input type='checkbox'
-         name='gender' 
-         value='man'
-         onclick='checkOnlyOne(this)'/> 남
-      <input type='checkbox' 
-         name='gender' 
-         value='woman' 
-         onclick='checkOnlyOne(this)'/> 녀
-         
+      <br>성별<br>
+      <input type='radio' name='gender' value='male'/> 남   
+      <input type='radio' name='gender' value='female'/> 녀
+       <br>
+       
        <div class="form-group">
         <label for="birthday">생년월일*</label>
-        <input type='text' name='birthday' id='birthday' value='2024-05-14' required="required" 
+        <input type='date' name='birthday' id='birthday' value='2024-05-14' required="required" 
                   placeholder="생년월일" class="form-control form-control-sm" style="width: 30%;">
         예) 2024-05-14
       </div>
   
       <div class="form-group">
         <label for="phone">전화 번호*</label>
-        <input type='text' name='phone' id='phone' value='010-1234-5678' required="required" 
+        <input type='tel' name='phone' id='phone' value='010-1234-5678' required="required" 
                   placeholder="전화번호" class="form-control form-control-sm" style="width: 30%;">
         예) 010-0000-0000
       </div>

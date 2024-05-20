@@ -42,4 +42,11 @@ public interface MemberProcInter {
    * @return
    */
   public MemberVO read(int memberno);
+  
+  /**
+   * 회원 삭제 처리
+   * @param memberno
+   * @return
+   */
+  public int delete(int memberno);
 }
