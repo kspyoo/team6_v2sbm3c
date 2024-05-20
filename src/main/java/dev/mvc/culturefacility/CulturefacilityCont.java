@@ -10,15 +10,16 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import dev.mvc.culturefacility.CulturefacilityVO;
 import jakarta.validation.Valid;
 
+@RequestMapping("culturefacility")
 @Controller
 public class CulturefacilityCont {
   @Autowired
-  @Qualifier("dev.mvc.Culturefacility.CulturefacilityProc")
+  @Qualifier("dev.mvc.culturefacility.CulturefacilityProc")
   private CulturefacilityProcInter CulturefacilityProc;
 
   public CulturefacilityCont() {

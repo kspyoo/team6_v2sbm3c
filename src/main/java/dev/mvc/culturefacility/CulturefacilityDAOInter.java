@@ -3,8 +3,6 @@ package dev.mvc.culturefacility;
 import java.util.ArrayList;
 
 
-
-
 public interface CulturefacilityDAOInter {
  
 
@@ -25,7 +23,7 @@ public interface CulturefacilityDAOInter {
    * 문화시설 전체 목록
    * @return
    */
-  public ArrayList<CulturefacilityVO> list();
+  public ArrayList<CulturefacilityVO> list_all();
   
   /**
    * 수정 처리

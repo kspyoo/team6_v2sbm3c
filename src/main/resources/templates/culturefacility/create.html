@@ -3,7 +3,7 @@
 <html layout:decorate="~{layout}">
 <!--layout.html 상속-->
 <div layout:fragment="content">
-	<div class="title_line">문화시설</div>
+	<div class="title_line" style=margin-bottom:20px ;>문화시설</div>
 	<form name="frm" th:object="${culturefacilityVO}" method="post" action="/culturefacility/create">
 
 		<div th:replace="~{errors::errorsFragment}"></div>

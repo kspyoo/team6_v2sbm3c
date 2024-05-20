@@ -60,6 +60,16 @@
 						</ul>
 					</li>
 
+					<li class="nav-item dropdown">
+						<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
+							data-bs-toggle="dropdown" aria-expanded="false" th:text="문화시설">
+						</a>
+						<ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+							<li class="nav-item"><a class="nav-link" href="/culturefacility/create">문화시설 등록</a></li>
+							<li class="nav-item"><a class="nav-link" href="/culturefacility/list_all">문화시설 목록</a></li>
+						</ul>
+					</li>
+
 					<li class="nav-item">
 						<span th:if="${session.memberno == null}"><a class="nav-link" href="/member/login"
 								th:text="@{|로그인|}"></a></span>

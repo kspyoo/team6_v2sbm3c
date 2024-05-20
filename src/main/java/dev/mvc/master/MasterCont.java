@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import dev.mvc.member.MemberVO;
+import dev.mvc.master.MasterVO;
 import dev.mvc.tool.Security;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -38,8 +38,8 @@ public class MasterCont {
 
   @GetMapping(value = "/checkID")
   @ResponseBody
-  public String checkID(String id) {
-    int cnt = this.masterProc.checkID(id);
+  public String checkID(String masterid) {
+    int cnt = this.masterProc.checkID(masterid);
 
     JSONObject obj = new JSONObject();
     obj.put("cnt", cnt);

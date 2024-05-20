@@ -1,68 +1,68 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <!-- SB가 자동으로 구현하여 연동하는 interface -->
-<mapper namespace="dev.mvc.master.MasterDAOInter"> <!-- SB가 자동으로 구현하여 연동하는 interface -->
+<mapper namespace="dev.mvc.master.MasterDAOInter">
+	<!-- SB가 자동으로 구현하여 연동하는 interface -->
 
-  <select id="checkID" resultType="int" parameterType="String">
+	<select id="checkID" resultType="int" parameterType="String">
     SELECT COUNT(masterid) as cnt
     FROM master
     WHERE masterid=#{masterid}
   </select>
-  
-  <insert id="create" parameterType="dev.mvc.master.MasterVO">
+
+	<insert id="create" parameterType="dev.mvc.master.MasterVO">
     INSERT INTO master(masterno, masterid, masterpasswd)
     VALUES (master_seq.nextval, #{masterid}, #{masterpasswd})
   </insert>
 
- 
-  <select id="list" resultType="dev.mvc.master.MasterVO">
+
+	<select id="list" resultType="dev.mvc.master.MasterVO">
     SELECT masterno, masterid, masterpasswd
     FROM master
     ORDER BY  masterno ASC, masterid ASC
   </select>
-  
-  <!-- masterno로 관리자 정보 조회 -->
-  <select id="read" resultType="dev.mvc.master.MasterVO" parameterType="int">
+
+	<!-- masterno로 관리자 정보 조회 -->
+	<select id="read" resultType="dev.mvc.master.MasterVO" parameterType="int">
     SELECT masterno, masterid, masterpasswd
     FROM master
     WHERE masterno = #{masterno}
-  </select>  
-  
-    <!-- id(이메일)로 회원 정보 조회 -->
-  <select id="readById" resultType="dev.mvc.master.MasterVO" parameterType="String">
+  </select>
+
+	<!-- id(이메일)로 회원 정보 조회 -->
+	<select id="readById" resultType="dev.mvc.master.MasterVO" parameterType="String">
     SELECT masterno, masterid, masterpasswd
     FROM master
     WHERE masterid = #{masterid}
   </select>
-  
-  
-  <delete id="delete" parameterType="int">
+
+
+	<delete id="delete" parameterType="int">
     DELETE FROM master
     WHERE masterno=#{masterno}
   </delete>
 
-  <!-- 로그인 -->
-  <select id="login" resultType="int" parameterType="HashMap">
+	<!-- 로그인 -->
+	<select id="login" resultType="int" parameterType="HashMap">
     SELECT COUNT(masterno) as cnt
     FROM master
     WHERE masterid=#{masterid} AND masterpasswd=#{masterpasswd}
   </select>
-  
-  <!--  현재 패스워드 검사 -->
-  <select id="passwd_check" resultType="int">
-    SELECT COUNT(masterno) as cnt
-    FROM master
-    WHERE masterno=#{masterno} AND masterpasswd=#{masterpasswd}
-  </select>
-   
-  <!-- 패스워드 변경 -->
-  <update id="passwd_update" parameterType="HashMap">
+
+	<!--  현재 패스워드 검사 -->
+	<select id="passwd_check" resultType="int" parameterType="HashMap">
+  SELECT COUNT(masterno) as cnt
+  FROM master
+  WHERE masterno=#{masterno} AND masterpasswd=#{masterpasswd}
+</select>
+
+
+	<!-- 패스워드 변경 -->
+	<update id="passwd_update" parameterType="HashMap">
     UPDATE master
     SET masterpasswd=#{masterpasswd}
     WHERE masterno=#{masterno}
   </update>
-  
 
-  
+
 </mapper>
-

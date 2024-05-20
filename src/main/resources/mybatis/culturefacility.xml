@@ -3,28 +3,29 @@
 <mapper namespace="dev.mvc.culturefacility.CulturefacilityDAOInter">
 
 	<insert id="create" parameterType="dev.mvc.culturefacility.CulturefacilityVO">
-    INSERT INTO member(cultureno, cname ,raddress,lattitude, longitude, addr_code, phone, date, operatingtime, pa)
-    VALUES (member_seq.nextval,#{cname}, #{raddress}, #{lattitude}, #{longitude}, #{addr_code}, 
+    INSERT INTO culturefacility(cultureno, cname ,raddress,lattitude, longitude, addr_code, phone, date, operatingtime, pa)
+    VALUES (culturefacility_seq.nextval,#{cname}, #{raddress}, #{lattitude}, #{longitude}, #{addr_code}, 
                  #{phone}, sysdate, #{operatingtime}, #{pa})
   </insert>
 
-	<select id="list" resultType="dev.mvc.culturefacility.CulturefacilityVO">
-  SELECT cname, raddress, lattitude, longitude, addr_code,phone,date, operatingtime,pa
-  FROM culturefacility
-  ORDER BY  cultureno ASC, cname ASC
+	<select id="list_all" resultType="dev.mvc.culturefacility.CulturefacilityVO">
+		SELECT cname, raddress,lattitude,longitude,addr_code,phone,date,operatingtime,pa
+		FROM culturefacility
+		ORDER BY cultureno ASC
   </select>
 
 	<select id="read" resultType="dev.mvc.culturefacility.CulturefacilityVO">
-  SELECT cname, raddress, lattitude, longitude, addr_code,phone,date, operatingtime,pa
-  FROM culturefacility
-  WHERE cultureno = #{cultureno}
+  	SELECT cname, raddress, lattitude, longitude, addr_code,phone,date, operatingtime,pa
+  	FROM culturefacility
+  	WHERE cultureno = #{cultureno}
   </select>
 
-	<update id="update" parameterType="dev.mvc.culturefacility.CulturefacilityVO">
+<update id="update" parameterType="dev.mvc.culturefacility.CulturefacilityVO">
   UPDATE culturefacility
-  SET	#{cname}, #{raddress}, #{lattitude}, #{longitude}, #{addr_code},#{phone}, #{operatingtime}, #{pa}
+  SET cname = #{cname}, raddress = #{raddress}, lattitude = #{lattitude}, longitude = #{longitude}, addr_code = #{addr_code},
+      phone = #{phone}, operatingtime = #{operatingtime}, pa = #{pa}
   WHERE cultureno = #{cultureno}
-  </update>
+</update>
 
 	<delete id="delete" parameterType="int">
     DELETE FROM culturefacility

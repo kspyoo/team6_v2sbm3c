@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-@Component("dev.mvc.Culturefacility.CulturefacilityProc")
+@Component("dev.mvc.culturefacility.CulturefacilityProc")
 public class CulturefacilityProc implements CulturefacilityProcInter  {
   
   @Autowired
@@ -30,7 +30,7 @@ public class CulturefacilityProc implements CulturefacilityProcInter  {
 
   @Override
   public ArrayList<CulturefacilityVO> list_all() {
-    ArrayList<CulturefacilityVO> list=this.culturefacilityDAO.list();
+    ArrayList<CulturefacilityVO> list=this.culturefacilityDAO.list_all();
     return list;
   }
 
