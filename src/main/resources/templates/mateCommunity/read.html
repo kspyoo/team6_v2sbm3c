@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="/css/mateCommunity/create.css" rel="Stylesheet" type="text/css">
+</head>
+<body>
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=da5a9ceca7aa487be04c54d6d13472a4&libraries=services"></script>
+<div>
+    <div class='title_line'>
+        <span th:if="${petTypeNo == 1}">
+            강아지
+        </span>
+        <span th:if="${petTypeNo == 2}">
+            고양이
+        </span>
+        <span th:if="${petTypeNo == 3}">
+            기타 반려동물
+        </span>
+        산책 메이트 구하기
+    </div>
+
+    <aside class="aside_right">
+        <a href="javascript:location.reload();">새로고침</a>
+        <span class='menu_divide'> │ </span>
+        <a href="./list_all" th:if="${petTypeNo==0}">전체 게시글 목록</a>
+        <a th:href="@{|/mateCommunity/list_all_byPetTypeNo?petTypeNo=${petTypeNo}|}" th:if="${petTypeNo!=0}">00카테고리 게시글 목록</a>
+        <!--    <span class='menu_divide'>│</span>-->
+        <!--    <a th:href="@{|./create?petTypeNo=${petTypeNo}|}">글 등록</a>-->
+    </aside>
+    <div class="menu_line"></div>
+
+    <div style="width: 70%;">
+        <div>
+            제목 | <span th:text="${mateCommunityVO.title}"></span>
+            작성일 | <span th:text="${mateCommunityVO.WDate}"></span>
+            조회수 | <span th:text="${mateCommunityVO.viewCnt}"></span>
+        </div>
+        <div>
+            집합시간 | <span th:text="${mateCommunityVO.assembleTime}"></span>
+            집합위치 | <span th:text="${mateCommunityVO.startingP}"></span>&nbsp;
+            <span th:text="${mateCommunityVO.startingDetail}"></span>
+            모인인원 / 집합인원 | <span> - </span> / <span th:text="${mateCommunityVO.walkingM}"></span>
+            <span th:if="${mateCommunityVO.status == 0}">모집중</span>
+            <span th:if="${mateCommunityVO.status == 1}">모집완료</span>
+        </div>
+        <div>
+            <div style="white-space: pre-wrap;" th:text="${mateCommunityVO.content}"></div>
+            <div>
+                <span th:text="${mateCommunityVO.searchTag}" style="color: deepskyblue"></span>
+            </div>
+        </div>
+        <div>
+            <div id="static_map" style="width: 40%; height: 350px; margin: 0px auto"></div>
+            <div>
+                상세 주소 - <span th:text="${mateCommunityVO.startingDetail}"></span>
+            </div>
+        </div>
+
+    </div>
+
+</DIV>
+<script>
+    var mapContainer = document.getElementById('static_map'), // 지도를 표시할 div
+        mapOption = {
+            center: new kakao.maps.LatLng(33.450701, 126.570667), // 지도의 중심좌표
+            level: 4 // 지도의 확대 레벨
+        };
+
+    // 지도를 생성합니다
+    var map = new kakao.maps.Map(mapContainer, mapOption);
+
+    // 주소-좌표 변환 객체를 생성합니다
+    var geocoder = new kakao.maps.services.Geocoder();
+
+    // 주소로 좌표를 검색합니다
+    geocoder.addressSearch(`[[${mateCommunityVO.startingP}]]`, function(result, status) {
+
+        // 정상적으로 검색이 완료됐으면
+        if (status === kakao.maps.services.Status.OK) {
+
+            var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
+
+            // 결과값으로 받은 위치를 마커로 표시합니다
+            var marker = new kakao.maps.Marker({
+                map: map,
+                position: coords
+            });
+
+            // 인포윈도우로 장소에 대한 설명을 표시합니다
+            var infowindow = new kakao.maps.InfoWindow({
+                content: '<div style="width:150px;text-align:center;padding:6px 0;">집합위치</div>'
+            });
+            infowindow.open(map, marker);
+
+            // 지도의 중심을 결과값으로 받은 위치로 이동시킵니다
+            map.setCenter(coords);
+        }
+    });
+</script>
+</body>
+</html>
