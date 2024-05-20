@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+
+<html layout:decorate="~{layout}">
+<!--layout.html 상속-->
+<div layout:fragment="content">
+  <div class="title_line">카테고리 게시판 등록</div>
+  <form name="frm" th:object="${cateCommunityVO}" method="post" action="/catecommunity/create">
+
+  
+    <div>
+      <label>게시판 번호</label>
+      <input type="text" name="ctypeno" value="" autofocus="autofocus" class="form-control form-control-sm"
+        style="width: 50%;" th:field="*{ctypeno}">
+    </div>
+    <div>
+      <label>게시판 이름</label>
+      <input type="text" name="typename" value="" autofocus="autofocus" class="form-control form-control-sm"
+        style="width: 50%;" th:field="*{typename}">
+    </div>
+
+    <div>
+      <label>게시글 수</label>
+      <input type="text" name="cnt" value="" autofocus="autofocus" class="form-control form-control-sm"
+        style="width: 50%;" th:field="*{cnt}">
+      </div>
+
+    <div>
+      <label>관리자 번호</label>
+      <input type="text" name="masterno" value="" autofocus="autofocus" class="form-control form-control-sm"
+        style="width: 50%;" th:field="*{masterno}">
+      </div>
+
+
+    <div class="content_body_bottom">
+      <button type="submit" class="btn btn-secondary btn-sm">등록</button>
+      <button type="button" onclick="location.href='./list_all'" class="btn btn-secondary btn-sm">목록</button>
+    </div>
+
+  </form>
+</div>
+
+</html>

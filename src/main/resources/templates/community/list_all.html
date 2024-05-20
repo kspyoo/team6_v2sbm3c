@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+
+<html layout:decorate="~{layout}"><!--layout.html 상속-->
+<div layout:fragment="content">
+  <a href="./create" >게시판 글 등록</a>
+  <div class="title_line">게시판 글 목록</div>
+
+<table class="table table-hover">
+
+<colgroup>
+    <col style='width: 20%;'/>
+    <col style='width: 20%;'/>
+    <col style='width: 20%;'/>
+    <col style='width: 20%;'/>
+    <col style='width: 20%;'/>
+  </colgroup>
+  <thead>
+    <tr>
+      <th class="th_bs">제목</th>
+      <th class="th_bs">내용</th>
+      <th class="th_bs">좋아요수</th>
+      <th class="th_bs">조회수</th>
+      <th class="th_bs">태그</th>
+    </tr>
+  </thead>
+  <tbody>
+  <tr th:each="communityVO:${list}">
+  <td class="td_bs"><a th:href="@{|./read/${communityVO.communityno}|}" style="display: block;" th:text="${communityVO.title}"></a></td>
+  <td class="td_bs"><a th:href="@{|./read/${communityVO.communityno}|}" style="display: block;" th:text="${communityVO.content}"></a></td>
+  <td class="td_bs"><a th:href="@{|./read/${communityVO.communityno}|}" style="display: block;" th:text="${communityVO.rcnt}"></a></td>
+  <td class="td_bs"><a th:href="@{|./read/${communityVO.communityno}|}" style="display: block;" th:text="${communityVO.vcnt}"></a></td>
+  <td class="td_bs"><a th:href="@{|./read/${communityVO.communityno}|}" style="display: block;" th:text="${communityVO.tag}"></a></td>
+   </td>
+  </tr>
+  </tbody>
+</table>
+
+</div>
+</html>

@@ -1,3 +1,4 @@
+DROP TABLE COMMUNITYCATE;
 /**********************************/
 /* Table Name: 일반 게시판 카테고리 */
 /**********************************/
@@ -15,10 +16,52 @@ COMMENT ON COLUMN COMMUNITYCATE.CNT is '게시글 수';
 COMMENT ON COLUMN COMMUNITYCATE.TYPENAME is '게시판 이름';
 COMMENT ON COLUMN COMMUNITYCATE.MASTERNO is '관리자번호';
 
+DROP SEQUENCE COMMUNITYCATE_SEQ;
+
+CREATE SEQUENCE COMMUNITYCATE_SEQ
+  START WITH 1         
+  INCREMENT BY 1       
+  MAXVALUE 9999999999  
+  CACHE 2             
+  NOCYCLE;            
+
+
+-- CREATE
+INSERT INTO COMMUNITYCATE(CTYPENO, CNT, TYPENAME, MASTERNO)
+VALUES(COMMUNITYCATE_SEQ.nextval, 0,'일반게시판', 9);
+
+SELECT * FROM communitycate;
+
+COMMIT;
+
+-- READ: 목록
+SELECT ctypeno, cnt, typename, masterno
+FROM communitycate
+ORDER BY ctypeno ASC;
+
+-- READ: 조회
+SELECT ctypeno, cnt, typename, masterno
+FROM communitycate
+WHERE ctypeno=1;
+
+-- UPDATE: 수정
+UPDATE communitycate
+SET typename='test' 
+WHERE ctypeno=2;
+
+SELECT * FROM communitycate;
+
+COMMIT;
+
+-- DELETE: 삭제
+DELETE FROM communitycate WHERE ctypeno=2;
+
+SELECT * FROM communitycate;
 
 /**********************************/
 /* Table Name: 일반 커뮤니티 */
 /**********************************/
+DROP TABLE COMMUNITY;
 CREATE TABLE COMMUNITY(
     COMMUNITYNO                       NUMBER(10)     NOT NULL    PRIMARY KEY,
     TITLE                             VARCHAR2(100)    NOT NULL,
@@ -44,6 +87,43 @@ COMMENT ON COLUMN COMMUNITY.TAG is '검색태그';
 COMMENT ON COLUMN COMMUNITY.MEMBERNO is '회원번호';
 COMMENT ON COLUMN COMMUNITY.CTYPENO is '게시판 종류 번호';
 
+DROP SEQUENCE COMMUNITY_SEQ;
+CREATE SEQUENCE COMMUNITY_SEQ
+  START WITH 1         
+  INCREMENT BY 1       
+  MAXVALUE 9999999999  
+  CACHE 2             
+  NOCYCLE;            
+
+-- CREATE
+INSERT INTO COMMUNITY(communityno,title,content,vcnt,rcnt,writedate,tag,memberno,ctypeno)
+VALUES(COMMUNITY_SEQ.nextval,'test','테스트입니다',1,1,sysdate,'tagtest',1,3);
+
+SELECT * FROM community;
+
+-- READ: 목록
+    SELECT communityno,title,content,vcnt,rcnt,writedate,tag,memberno,ctypeno
+    FROM community
+    ORDER BY communityno ASC;
+
+-- READ: 조회
+SELECT communityno,title,content,vcnt,rcnt,writedate,tag,memberno,ctypeno
+FROM community
+WHERE communityno=2;
+
+-- UPDATE: 수정
+UPDATE community
+SET  title ='test1',content='테스트 수정입니다',vcnt=2,rcnt=3,writedate=sysdate,tag='수정태그',memberno=2,ctypeno=3
+WHERE communityno=2;
+
+SELECT * FROM community;
+
+COMMIT;
+
+-- DELETE: 삭제
+DELETE FROM community WHERE communityno=1;
+
+SELECT * FROM community;
 
 /**********************************/
 /* Table Name: 댓글 */
@@ -64,6 +144,8 @@ COMMENT ON COLUMN REPLY.CONTENT is '내용';
 COMMENT ON COLUMN REPLY.RDATE is '등록일';
 COMMENT ON COLUMN REPLY.COMMUNITYNO is '글 번호';
 COMMENT ON COLUMN REPLY.MEMBERNO is '회원번호';
+
+
 
 
 /**********************************/
