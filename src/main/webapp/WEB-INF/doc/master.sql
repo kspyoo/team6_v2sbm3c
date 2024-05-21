@@ -1,3 +1,5 @@
+DROP TABLE master;
+
 CREATE TABLE MASTER(
 		MASTERNO                      		NUMBER(10)		 NOT NULL		 PRIMARY KEY,
 		MASTERID                      		VARCHAR2(30)		 NOT NULL,
@@ -28,5 +30,9 @@ VALUES (member_seq.nextval, 'master', '1234')
 SELECT masterno, masterid, masterpasswd
 FROM master
 ORDER BY masterid ASC;
+
+--삭제--
+DELETE FROM master
+WHERE masterno=10;
      
              
