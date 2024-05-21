@@ -16,6 +16,7 @@ CREATE TABLE member(
     ADDR_DETAIL                       VARCHAR2(30)     NOT NULL,
     JOINDATE                          DATE     NOT NULL,
     STATUS                            VARCHAR2(10)     DEFAULT 0     NOT NULL
+    
 );
 
 DROP SEQUENCE member_seq;

@@ -19,14 +19,6 @@ CREATE TABLE member(
 
 CREATE SEQUENCE member_MEMBERNO_SEQ NOMAXVALUE NOCACHE NOORDER NOCYCLE;
 
-CREATE TRIGGER member_MEMBERNO_TRG
-BEFORE INSERT ON member
-FOR EACH ROW
-BEGIN
-IF :NEW.MEMBERNO IS NOT NULL THEN
-  SELECT member_MEMBERNO_SEQ.NEXTVAL INTO :NEW.MEMBERNO FROM DUAL;
-END IF;
-END;
 
 COMMENT ON TABLE member is '회원';
 COMMENT ON COLUMN member.MEMBERNO is '회원번호';
@@ -124,7 +116,7 @@ CREATE TABLE Memberprofile(
     FILENAME                          VARCHAR2(100)    NOT NULL,
     FILESIZE                          VARCHAR2(100)    NOT NULL,
     THUMBFILE                         VARCHAR2(100)    NOT NULL,
-    MEMBERNO                          NUMBER(10)     NULL ,
+    MEMBERNO                          NUMBER(10)     NOT NULL ,
   FOREIGN KEY (MEMBERNO) REFERENCES member (MEMBERNO)
 );
 
@@ -134,4 +126,11 @@ COMMENT ON COLUMN Memberprofile.FILENAME is '파일명';
 COMMENT ON COLUMN Memberprofile.FILESIZE is '파일사이즈';
 COMMENT ON COLUMN Memberprofile.THUMBFILE is '썸네일 파일';
 COMMENT ON COLUMN Memberprofile.MEMBERNO is '회원번호';
+
+
+SELECT memberno, id, passwd, name, gender, birthday, phone, addr_code, addr_main, addr_detail, joindate, status
+FROM member
+WHERE name='하정우' AND phone='010-1234-5678';
+
+
 

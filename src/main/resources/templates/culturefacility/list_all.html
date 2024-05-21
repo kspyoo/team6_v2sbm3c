@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 
+<<<<<<< HEAD
 <html layout:decorate="~{layout}"> <!-- layout.html 상속-->
 <div layout:fragment="content">
   <div class="title_line">문화시설</div>
@@ -38,3 +39,53 @@
 
 
 
+=======
+<html layout:decorate="~{layout}"><!--layout.html 상속-->
+<div layout:fragment="content">
+  <div class="title_line">문화시설 등록</div>
+<table class="table table-hover">
+<colgroup>
+    <col style='width: 11%;'/>
+    <col style='width: 11%;'/>
+    <col style='width: 11%;'/>
+    <col style='width: 11%;'/>    
+    <col style='width: 11%;'/>
+    <col style='width: 11%;'/>
+    <col style='width: 11%;'/>
+    <col style='width: 11%;'/>
+    <col style='width: 11%;'/>
+  </colgroup>
+  <thead>
+    <tr>
+      <th class="th_bs">문화시설 번호</th>
+      <th class="th_bs">문화시설 이름</th>
+      <th class="th_bs">도로명 주소</th>
+      <th class="th_bs">위도</th>
+      <th class="th_bs">경도</th>
+      <th class="th_bs">우편번호</th>
+      <th class="th_bs">전화번호</th>
+      <th class="th_bs">운영시간</th>
+      <th class="th_bs">주차가능여부</th>
+    </tr>
+  </thead>
+  <tbody>
+  <tr th:each="culturefacilityVO:${list}">
+  <td class="td_bs" th:text="${culturefacilityVO.culturefno}"></td>
+  <td class="td_bs"><a th:href="@{|./read/${culturefacilityVO.culturefno}|}" style="display: block;" th:text="${culturefacilityVO.cname}"></a></td>
+  <td class="td_bs"><a th:href="@{|./read/${culturefacilityVO.culturefno}|}" style="display: block;" th:text="${culturefacilityVO.raddress}"></a></td>
+  <td class="td_bs"><a th:href="@{|./read/${culturefacilityVO.culturefno}|}" style="display: block;" th:text="${culturefacilityVO.latitude}"></a></td>
+  <td class="td_bs"><a th:href="@{|./read/${culturefacilityVO.culturefno}|}" style="display: block;" th:text="${culturefacilityVO.longitude}"></a></td>
+  <td class="td_bs"><a th:href="@{|./read/${culturefacilityVO.culturefno}|}" style="display: block;" th:text="${culturefacilityVO.addr_code}"></a></td>
+  <td class="td_bs"><a th:href="@{|./read/${culturefacilityVO.culturefno}|}" style="display: block;" th:text="${culturefacilityVO.phone}"></a></td>
+  <td class="td_bs"><a th:href="@{|./read/${culturefacilityVO.culturefno}|}" style="display: block;" th:text="${culturefacilityVO.operatingtime}"></a></td>
+  <td class="td_bs"><a th:href="@{|./read/${culturefacilityVO.culturefno}|}" style="display: block;" th:text="${culturefacilityVO.pa}"></a></td>
+
+  <td class="td_bs">
+   </td>
+  </tr>
+  </tbody>
+</table>
+
+</div>
+</html>
+>>>>>>> d94e9ffa03e492d5b434f0c630d4c58e1529e967

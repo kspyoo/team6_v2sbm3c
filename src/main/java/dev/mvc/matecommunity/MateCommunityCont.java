@@ -114,7 +114,17 @@ public class MateCommunityCont {
 
     @PostMapping("/create")
     public String create(MateCommunityVO mateCommunityVO){
+        String[] tag_list = mateCommunityVO.getSearchTag().split(" ");
+        StringBuffer tags = new StringBuffer();
 
+        for (String tag: tag_list){
+            tags.append("#");
+            tags.append(tag);
+            tags.append(" ");
+        }
+
+        System.out.println(tags.toString().trim());
+        mateCommunityVO.setSearchTag(tags.toString().trim());
         int result = this.mateCommunityProc.create(mateCommunityVO);
 
         if (result == 1){
@@ -124,6 +134,22 @@ public class MateCommunityCont {
         }
 
         return "redirect:/mateCommunity/list_all";
+    }
+
+    @GetMapping("/read")
+    public String read(Model model, int mCommunityNo, HttpSession session,
+                       @RequestParam(name = "petTypeNo", defaultValue = "0") int petTypeNo,
+                       @RequestParam(name = "searchWord", defaultValue = "") String searchWord,
+                       @RequestParam(name = "now_page", defaultValue = "1") int now_page){
+        MateCommunityVO mateCommunityVO= this.mateCommunityProc.read_content(mCommunityNo);
+        this.mateCommunityProc.viewCnt_up(mCommunityNo);
+
+        model.addAttribute("mateCommunityVO", mateCommunityVO);
+        model.addAttribute("searchWord", searchWord);
+        model.addAttribute("now_page", now_page);
+        model.addAttribute("petTypeNo", petTypeNo);
+
+        return "mateCommunity/read";
     }
 
 }

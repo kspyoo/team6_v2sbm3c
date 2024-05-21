@@ -208,7 +208,7 @@ public String create(Model model, CulturefacilityVO culturefacilityVO
       
       return "culturefacility/update";  // /templates/cate/update.html
     }
-    4
+    
     int cnt = this.CulturefacilityProc.update(culturefacilityVO);
 //    System.out.println("-> cnt: " + cnt);
 

@@ -11,8 +11,6 @@
 
     <aside class="aside_right">
         <a href="javascript:location.reload();">새로고침</a>
-        <span class='menu_divide'>│</span>
-        <a href="./list_all">전체 게시글 목록</a>
 <!--        <span class='menu_divide'>│</span>-->
 <!--        <a th:href="@{|./list_by_cateno_grid?cateno=${cateVO.cateno}|}">갤러리형</a>-->
     </aside>
@@ -41,7 +39,8 @@
 
         <div>
             <label>참가인원</label>
-            <input type="number" name="walkingM" required="required" style='width: 100%;' value="1" id="walkingM">
+            <input type="number" name="walkingM" required="required" style='width: 100%;' value="1" id="walkingM"
+            min="1" max="999">
         </div>
 
         <div>
@@ -86,7 +85,7 @@
 
         <div>
             <label>검색어</label>
-            <input type='text' name='searchTag' class="form-control" style='width: 100%;'>
+            <input type='text' name='searchTag' class="form-control" style='width: 100%;' id="searchTag">
         </div>
 
         <div class="content_body_bottom">
@@ -97,61 +96,6 @@
     </form>
 </div>
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
-<script>
-    //본 예제에서는 도로명 주소 표기 방식에 대한 법령에 따라, 내려오는 데이터를 조합하여 올바른 주소를 구성하는 방법을 설명합니다.
-    function DaumPostcode() {
-        new daum.Postcode({
-            oncomplete: function(data) {
-                // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
-                document.getElementById("startingP").value = data.roadAddress;
-            }
-        }).open();
-    }
-
-    function send(){
-        // // 날짜
-        let date = document.querySelector('#assembleDate').value;
-        console.log(date);
-
-        // 오전 또는 오후
-        let amOrPm = document.querySelector('input[name="amOrPm"]:checked').value;
-        // 시
-        let hour = document.querySelector('#hour');
-        let hour_result = hour.options[hour.selectedIndex].value;
-        // 분
-        let minute = document.querySelector('#minute');
-        let minute_result = minute.options[minute.selectedIndex].value;
-
-        // document.getElementById('assembleTime').textContent= String(date) + " " + String(amOrPm) + " " + String(hour) + " : " + String(minute);
-
-        document.getElementById('assembleTime').value = String(date) + " " + String(amOrPm) + String(hour_result) + ":" + String(minute_result);
-
-        document.getElementById('frm').submit();
-    }
-
-    window.onload = () => {
-        let assembleDate = document.querySelector('#assembleDate');
-        assembleDate.value = new Date().toISOString().substring(0, 10);
-
-        let offset = 1000 * 60 * 60 * 9 // 9시간 밀리세컨트 값
-        let today = new Date(Date.now() + offset)
-
-        assembleDate.setAttribute('min', today.toISOString().substring(0,10));
-
-        today.setMonth(today.getMonth()+1)
-        today.setDate(today.getDate()-1)
-        assembleDate.setAttribute('max', today.toISOString().substring(0,10));
-
-        let time = document.querySelector("#hour");
-        for (let i = 1; i < 13; i++){
-            if(i < 10) {
-                time.options[i] = new Option('0' + i, String(i));
-            }else{
-                time.options[i] = new Option(i+'', String(i));
-            }
-        }
-
-    }
-</script>
+<script src="/js/mateCommunity/create.js"></script>
 </body>
 </html>

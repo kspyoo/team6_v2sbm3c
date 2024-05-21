@@ -2,6 +2,7 @@ package dev.mvc.member;
 
 import java.util.HashMap;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -67,5 +68,43 @@ public class MemberProc implements MemberProcInter {
     int cnt = this.memberDAO.delete(memberno);
     return cnt;
   }
+
+  @Override
+  public MemberVO findId(@Param("name") String name, @Param("phone") String phone) {
+    MemberVO memberVO = this.memberDAO.findId(name,phone);
+    return memberVO;
+  }
+  
+  @Override
+  public int findIdCheck(HashMap<String, Object> map) {
+    int cnt = this.memberDAO.findIdCheck(map);
+    return cnt;
+  }
+  
+  @Override
+  public MemberVO findPasswd(@Param("name") String name, @Param("phone") String phone, @Param("id") String id) {
+    MemberVO memberVO = this.memberDAO.findId(name,phone);
+    return memberVO;
+  }
+  
+  @Override
+  public int findPasswdCheck(HashMap<String, Object> map) {
+    int cnt = this.memberDAO.findIdCheck(map);
+    return cnt;
+  }
+  
+  @Override
+  public int passwd_check(HashMap<String, Object> map) {
+    int cnt = this.memberDAO.passwd_check(map);
+    return cnt;
+  }
+
+  @Override
+  public int passwd_update(HashMap<String, Object> map) {
+    int cnt = this.memberDAO.passwd_update(map);
+    return cnt;
+  }
+  
+
 
 }
