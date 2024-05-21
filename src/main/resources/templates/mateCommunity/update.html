@@ -8,51 +8,49 @@
 <body>
 <link href="/css/mateCommunity/create.css" rel="Stylesheet" type="text/css">
 <div>
-    <div class='title_line'>산책 메이트 모집글 작성</div>
+    <div class='title_line'>산책메이트 모집글 수정</div>
 
     <aside class="aside_right">
         <a href="javascript:location.reload();">새로고침</a>
         <span class='menu_divide'> │ </span>
-        <a href="./list_all" th:if="${petTypeNo==0}">산책메이트 찾기</a>
-        <a th:href="@{|/mateCommunity/list_all_byPetTypeNo?petTypeNo=${petTypeNo}|}" th:if="${petTypeNo!=0}">산책메이트 찾기</a>
+        <a href="./list_all" th:if="${petTypeNo==0}">모집글 목록</a>
+        <a th:href="@{|/mateCommunity/list_all_byPetTypeNo?petTypeNo=${petTypeNo}|}" th:if="${petTypeNo!=0}">모집글 목록</a>
     </aside>
 
     <div class='menu_line'></div>
 
-    <form name='frm' id="frm" method='post' th:object="${mateCommunityVO}" action='./create' style="width: 60%; margin: 0 auto;">
+    <form name='frm' id="frm" method='post' th:object="${mateCommunityVO}" th:action='@{|./update?current_petTypeNo=${petTypeNo}|}' style="width: 60%; margin: 0 auto;">
 <!--        <input type="hidden" name="memberNo" th:value="${memberNo}">-->
-        <input type="hidden" name="memberNo" th:value="${memberNo}">
+        <input type="hidden" name="mCommunityNo" th:value="${mateCommunityVO.MCommunityNo}">
 
         <div>
             <label>제목</label>
-            <input type='text' name='title' value='산책메이트 구해요!!' required="required" id="title"
+            <input type='text' name='title' th:value='${mateCommunityVO.title}' required="required" id="title"
                    autofocus="autofocus" class="form-control" style='width: 100%;'>
         </div>
 
-        <div>
-            <span><label for="petTypeNo">반려동물</label></span>
-            <select name="petTypeNo" id="petTypeNo">
-<!--                <option value="select" th:selected="${petTypeNo}==0">게시판을 선택해주세요.</option>-->
-                <option value="1" th:selected="${petTypeNo}==1 or ${petTypeNo}==0">강아지 산책메이트</option>
-                <option value="2" th:selected="${petTypeNo}==2">고양이 산책메이트</option>
-                <option value="3" th:selected="${petTypeNo}==3">기타 반려동물 산책메이트</option>
-            </select>
-        </div>
+<!--        <div>-->
+<!--            <span><label for="petTypeNo">게시판 종류</label></span>-->
+<!--            <select name="petTypeNo" id="petTypeNo">-->
+<!--&lt;!&ndash;                <option value="select" th:selected="${petTypeNo}==0">게시판을 선택해주세요.</option>&ndash;&gt;-->
+<!--                <option value="1" th:selected="${mateCommunityVO.petTypeNo}==1 or ${mateCommunityVO.petTypeNo}==0">강아지 산책메이트</option>-->
+<!--                <option value="2" th:selected="${mateCommunityVO.petTypeNo}==2">고양이 산책메이트</option>-->
+<!--                <option value="3" th:selected="${mateCommunityVO.petTypeNo}==3">기타 반려동물 산책메이트</option>-->
+<!--            </select>-->
+<!--        </div>-->
 
         <div>
             <label>참가인원</label>
-            <input type="number" name="walkingM" required="required" style='width: 100%;' value="1" id="walkingM"
+            <input type="number" name="walkingM" required="required" style='width: 100%;' th:value="${mateCommunityVO.walkingM}" id="walkingM"
             min="1" max="999">
         </div>
 
         <div>
             <label>집합위치</label>
-            <input type="text" name="startingP" required="required" style='width: 100%;' id="startingP" readonly
-            value="서울 종로구 종로12길 15">
+            <input type="text" name="startingP" required="required" style='width: 100%;' id="startingP" readonly th:value="${mateCommunityVO.startingP}">
             <button type="button" onclick="DaumPostcode()"> 주소 위치 검색 </button>
             <label>상세위치</label>
-            <input type="text" name="startingDetail" required style='width: 100%;' id="startingDetail"
-            value="편의점앞">
+            <input type="text" name="startingDetail" required style='width: 100%;' id="startingDetail" th:value="${mateCommunityVO.startingDetail}">
         </div>
 
         <div class="assemble_date_time">
@@ -84,23 +82,25 @@
 
         <div>
             <label>내용</label>
-            <textarea name='content' required="required" class="form-control" rows="12" style='width: 100%;' id="content" >함께 산책해요</textarea>
+            <textarea name='content' required="required" class="form-control" rows="12" style='width: 100%;'
+            th:text="${mateCommunityVO.content.trim()}" id="content">
+            </textarea>
         </div>
 
         <div>
             <label>검색어</label>
             <input type='text' name='searchTag' class="form-control" style='width: 100%;' id="searchTag"
-            value="종로 광화문 청계천 친구">
+            th:value="${mateCommunityVO.searchTag.trim() == null ? '' : mateCommunityVO.searchTag}">
         </div>
 
         <div class="content_body_bottom">
-            <button type="button" onclick="send()" class="btn btn-secondary btn-sm" style="width: 50%; margin: 20px auto">등록</button>
+            <button type="button" onclick="send()" class="btn btn-secondary btn-sm" style="width: 50%; margin: 20px auto">수정</button>
             <button type="button" onclick="history.back()">취소</button>
         </div>
 
     </form>
 </div>
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
-<script src="/js/mateCommunity/create.js"></script>
+<script src="/js/mateCommunity/update.js"></script>
 </body>
 </html>

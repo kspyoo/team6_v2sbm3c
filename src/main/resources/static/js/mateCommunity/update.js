@@ -59,23 +59,13 @@ function send(){
     let minute = document.querySelector('#minute');
     let minute_result = minute.options[minute.selectedIndex].value;
 
-    // document.getElementById('assembleTime').textContent= String(date) + " " + String(amOrPm) + " " + String(hour) + " : " + String(minute);
-
     document.getElementById('assembleTime').value = String(date) + " " + String(amOrPm) + String(hour_result) + ":" + String(minute_result);
-
-    // let searchTags = document.getElementById('searchTag');
-    // let searchTag_list = searchTags.value.split(' ');
-    // searchTags.value = null;
-    //
-    // for (let i=0 ; i < searchTag_list.length ; i++){
-    //     searchTags.value += '#' + searchTag_list[i] + " ";
-    // }
 
     document.getElementById('frm').submit();
 }
 
 window.onload = () => {
-    let assembleDate = document.querySelector('#assembleDate');
+    let assembleDate = document.getElementById('assembleDate');
     assembleDate.value = new Date().toISOString().substring(0, 10);
 
     let offset = 1000 * 60 * 60 * 9 // 9시간 밀리세컨트 값

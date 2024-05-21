@@ -1,11 +1,7 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-    <link href="/css/mateCommunity/create.css" rel="Stylesheet" type="text/css">
-</head>
-<body>
+<html layout:decorate="~{layout}"> <!-- layout.html 상속 -->
+<div layout:fragment="content" style="margin-top: 100px;">
+<link href="/css/mateCommunity/create.css" rel="Stylesheet" type="text/css">
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=da5a9ceca7aa487be04c54d6d13472a4&libraries=services"></script>
 <div>
     <div class='title_line'>
@@ -18,14 +14,18 @@
         <span th:if="${petTypeNo == 3}">
             기타 반려동물
         </span>
-        산책 메이트 구하기
+        산책 메이트 모집글
     </div>
 
     <aside class="aside_right">
         <a href="javascript:location.reload();">새로고침</a>
         <span class='menu_divide'> │ </span>
-        <a href="./list_all" th:if="${petTypeNo==0}">전체 게시글 목록</a>
-        <a th:href="@{|/mateCommunity/list_all_byPetTypeNo?petTypeNo=${petTypeNo}|}" th:if="${petTypeNo!=0}">00카테고리 게시글 목록</a>
+        <a href="./list_all" th:if="${petTypeNo==0}">모집글 목록</a>
+        <a th:href="@{|/mateCommunity/list_all_byPetTypeNo?petTypeNo=${petTypeNo}|}" th:if="${petTypeNo!=0}">모집글 목록</a>
+        <span class='menu_divide'>│</span>
+        <a th:href="@{|./update?mCommunityNo=${mateCommunityVO.MCommunityNo}&petTypeNo=${petTypeNo}|}">수정</a>
+        <span class='menu_divide'>│</span>
+        <button id="delete_btn" th:href="@{|./delete?mCommunityNo=${mateCommunityVO.MCommunityNo}|}">삭제</button>
         <!--    <span class='menu_divide'>│</span>-->
         <!--    <a th:href="@{|./create?petTypeNo=${petTypeNo}|}">글 등록</a>-->
     </aside>
@@ -33,17 +33,18 @@
 
     <div style="width: 70%;">
         <div>
-            제목 | <span th:text="${mateCommunityVO.title}"></span>
-            작성일 | <span th:text="${mateCommunityVO.WDate}"></span>
-            조회수 | <span th:text="${mateCommunityVO.viewCnt}"></span>
+            제목 | <span th:text="${mateCommunityVO.title}" style="font-weight: bold"></span>
+            작성일 | <span th:text="${mateCommunityVO.WDate}" style="font-weight: bold"></span>
+            조회수 | <span th:text="${mateCommunityVO.viewCnt}" style="font-weight: bold"></span>
         </div>
         <div>
-            집합시간 | <span th:text="${mateCommunityVO.assembleTime}"></span>
-            집합위치 | <span th:text="${mateCommunityVO.startingP}"></span>&nbsp;
-            <span th:text="${mateCommunityVO.startingDetail}"></span>
-            모인인원 / 집합인원 | <span> - </span> / <span th:text="${mateCommunityVO.walkingM}"></span>
-            <span th:if="${mateCommunityVO.status == 0}">모집중</span>
-            <span th:if="${mateCommunityVO.status == 1}">모집완료</span>
+            집합시간 | <span th:text="${mateCommunityVO.assembleTime}" style="font-weight: bold"></span>
+            집합위치 | <span th:text="${mateCommunityVO.startingP}" style="font-weight: bold"></span>&nbsp;
+            <span th:text="${mateCommunityVO.startingDetail}" style="font-weight: bold"></span>
+            모인인원 / 집합인원 | <span> - </span> / <span th:text="${mateCommunityVO.walkingM}" style="font-weight: bold"></span>
+            신청현황 |
+            <span th:if="${mateCommunityVO.status == 0}" style="font-weight: bold">모집중</span>
+            <span th:if="${mateCommunityVO.status == 1}" style="font-weight: bold">모집완료</span>
         </div>
         <div>
             <div style="white-space: pre-wrap;" th:text="${mateCommunityVO.content}"></div>
@@ -52,10 +53,14 @@
             </div>
         </div>
         <div>
+            집합위치
             <div id="static_map" style="width: 40%; height: 350px; margin: 0px auto"></div>
-            <div>
-                상세 주소 - <span th:text="${mateCommunityVO.startingDetail}"></span>
-            </div>
+<!--            <div>-->
+<!--                상세 주소 - <span th:text="${mateCommunityVO.startingDetail}"></span>-->
+<!--            </div>-->
+        </div>
+        <div>
+            <a th:href="@{|${mateCommunityVO.MCommunityNo}|}">산책 메이트 신청</a>
         </div>
 
     </div>
@@ -65,7 +70,7 @@
     var mapContainer = document.getElementById('static_map'), // 지도를 표시할 div
         mapOption = {
             center: new kakao.maps.LatLng(33.450701, 126.570667), // 지도의 중심좌표
-            level: 4 // 지도의 확대 레벨
+            level: 3 // 지도의 확대 레벨
         };
 
     // 지도를 생성합니다
@@ -90,7 +95,7 @@
 
             // 인포윈도우로 장소에 대한 설명을 표시합니다
             var infowindow = new kakao.maps.InfoWindow({
-                content: '<div style="width:150px;text-align:center;padding:6px 0;">집합위치</div>'
+                content: '<div style="width:150px;text-align:center;padding:6px 0;font-size: 10px;">[[${mateCommunityVO.startingDetail}]]</div>'
             });
             infowindow.open(map, marker);
 
@@ -99,5 +104,36 @@
         }
     });
 </script>
-</body>
-</html>
+<!--<script src="/js/mateCommunity/read.js" th:inline="javascript"></script>-->
+<script th:inline="javascript">
+    window.onload = () =>{
+        document.getElementById('delete_btn').addEventListener("click", () => {
+            let url = './delete';
+
+            fetch(url, {
+                method: 'POST',
+                headers:{
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(
+                    {mCommunityNo : [[${mateCommunityVO.mCommunityNo}]]}
+                )
+            })
+                .then(response => response.json())
+                .then(rdata => {
+                    console.log(rdata.cnt);
+                    if (rdata.cnt == 0) { // 패스워드 불일치
+                        alert("삭제 실패 했습니다.");
+                        return false;
+                    }else{
+                        alert("성공적으로 삭제 되었습니다.");
+                        location.href='/mateCommunity/list_all';
+                    }
+                })
+                .catch(error => { // 서버 다운등 통신 에러
+                    console.error('Error:', error);
+                });
+        });
+    }
+</script>
+</div>
