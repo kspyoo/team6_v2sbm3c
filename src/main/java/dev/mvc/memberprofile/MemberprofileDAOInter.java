@@ -2,9 +2,20 @@ package dev.mvc.memberprofile;
 
 public interface MemberprofileDAOInter {
   /**
-   * 파일 정보 수정
-   * @param contentsVO
-   * @return 처리된 레코드 갯수
+   * 사진 등록
+   * @return
+   */
+  public int create_file(MemberprofileVO memberprofileVO);
+  
+  /**
+   * 파일 수정
+   * @return
    */
   public int update_file(MemberprofileVO memberprofileVO);
+  
+  /**
+   * 파일 조회
+   * @return
+   */
+  public MemberprofileVO read_file(int memberno);
 }

@@ -1,5 +1,6 @@
 package dev.mvc.member;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.apache.ibatis.annotations.Param;
@@ -103,6 +104,12 @@ public class MemberProc implements MemberProcInter {
   public int passwd_update(HashMap<String, Object> map) {
     int cnt = this.memberDAO.passwd_update(map);
     return cnt;
+  }
+  
+  @Override
+  public ArrayList<MemberVO> list() {
+    ArrayList<MemberVO> list = this.memberDAO.list();
+    return list;
   }
   
 

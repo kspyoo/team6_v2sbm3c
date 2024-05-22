@@ -1,5 +1,6 @@
 package dev.mvc.member;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.apache.ibatis.annotations.Param;
@@ -95,4 +96,10 @@ public interface MemberProcInter {
    * @return 변경된 패스워드 갯수
    */
   public int passwd_update(HashMap<String, Object> map);
+  
+  /**
+   * 회원 전체 목록
+   * @return
+   */
+  public ArrayList<MemberVO> list();
 }
