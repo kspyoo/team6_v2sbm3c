@@ -32,6 +32,7 @@
 							<li class="nav-item"><a class="nav-link" href="/member/create">회원가입</a></li>
 							<li class="nav-item" th:if="${session.memberno != null}">
 								<a class="nav-link" th:href="@{|/member/read?memberno=${session.memberno}|}">회원 정보 수정</a>
+								<a class="nav-link" th:href="@{|/member/list?memberno=${session.memberno}|}">회원 목록 조회</a>
 							</li>
 							<li class="nav-item" th:if="${session.memberno != null}">
 								<a class="nav-link" href="/member/passwd_update_form">비밀 번호 변경</a>

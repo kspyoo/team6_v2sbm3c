@@ -111,26 +111,36 @@ COMMENT ON COLUMN PETPROFILE.PETNO is '반려동물번호';
 /**********************************/
 /* Table Name: 회원 프로필 사진 수정 */
 /**********************************/
+DROP TABLE Memberprofile;
+
 CREATE TABLE Memberprofile(
-    MPROFILENO                        NUMBER(10)     NOT NULL    PRIMARY KEY,
-    FILENAME                          VARCHAR2(100)    NOT NULL,
-    FILESIZE                          VARCHAR2(100)    NOT NULL,
-    THUMBFILE                         VARCHAR2(100)    NOT NULL,
-    MEMBERNO                          NUMBER(10)     NOT NULL ,
-  FOREIGN KEY (MEMBERNO) REFERENCES member (MEMBERNO)
+		MPROFILENO                    		NUMBER(10)		 NOT NULL		 PRIMARY KEY,
+		file1                         		VARCHAR2(10)		 ,
+		file1saved                    		VARCHAR2(100)		 ,
+		THUMBFILE                     		VARCHAR2(100)		 ,
+		FILESIZE                      		LONG		 ,
+		MEMBERNO                      		NUMBER(10)		 NOT NULL,
+    FOREIGN KEY (MEMBERNO) REFERENCES MEMBER (MEMBERNO)
 );
 
 COMMENT ON TABLE Memberprofile is '회원 프로필 사진 수정';
 COMMENT ON COLUMN Memberprofile.MPROFILENO is '회원사진번호';
-COMMENT ON COLUMN Memberprofile.FILENAME is '파일명';
-COMMENT ON COLUMN Memberprofile.FILESIZE is '파일사이즈';
+COMMENT ON COLUMN Memberprofile.file1MF  is '이미지파일';
+COMMENT ON COLUMN Memberprofile.size1_label is '메인이미지 크기';
+COMMENT ON COLUMN Memberprofile.file1 is '메인이미지';
+COMMENT ON COLUMN Memberprofile.file1saved  is '저장된 메인이미지';
 COMMENT ON COLUMN Memberprofile.THUMBFILE is '썸네일 파일';
+COMMENT ON COLUMN Memberprofile.FILESIZE is '파일사이즈';
 COMMENT ON COLUMN Memberprofile.MEMBERNO is '회원번호';
 
+DROP SEQUENCE memberprofile_seq;
 
-SELECT memberno, id, passwd, name, gender, birthday, phone, addr_code, addr_main, addr_detail, joindate, status
-FROM member
-WHERE name='하정우' AND phone='010-1234-5678';
+CREATE SEQUENCE memberprofile_seq
+  START WITH 1              -- 시작 번호
+  INCREMENT BY 1          -- 증가값
+  MAXVALUE 9999999999 -- 최대값: 9999999 --> NUMBER(7) 대응
+  CACHE 2                       -- 2번은 메모리에서만 계산
+  NOCYCLE;                     -- 다시 1부터 생성되는 것을 방지
 
 
 
