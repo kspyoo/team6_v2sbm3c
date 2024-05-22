@@ -1,3 +1,11 @@
+.title_line {
+    text-align: left;
+    border-bottom: solid 3px rgba(33, 150, 243, 0.95); !important;
+    width: 100%;
+    margin: 20px auto;
+    font-size: 20px;
+}
+
 .span_box_1 {
     text-align: center;
     font-size: 1em;
@@ -10,7 +18,7 @@
 
 .span_box_2 {
     text-align: center;
-    background-color: #ffb350d6;
+    background-color: rgba(33, 150, 243, 0.95);
     color: #FFFFFF;
     font-size: 1em;
     border: 1px;

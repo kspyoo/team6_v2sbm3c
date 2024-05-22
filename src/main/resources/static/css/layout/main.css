@@ -21,6 +21,10 @@
     color: white;
 }
 
+.btn-outline-info{
+    --bs-btn-active-color: white; !important;
+}
+
 .culture_facillity{
     width: 100%;
     background-color: rgba(81, 177, 253, 0.7);
@@ -47,3 +51,4 @@
     background-color: #89c9fe;
     border: 0px;
 }
+

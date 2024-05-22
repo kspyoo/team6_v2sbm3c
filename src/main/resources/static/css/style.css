@@ -303,25 +303,32 @@
     vertical-align: middle;
   }
 
-  /*a:link{  !* 방문전 상태 *!*/
-  /*  text-decoration: none; !* 밑줄 삭제 *!*/
-  /*  color: #555555;*/
-  /*}*/
+  a:link{  /* 방문전 상태 */
+    text-decoration: none; /* 밑줄 삭제 */
+    color: #555555;
+    /*color: black;*/
+  }
 
-  /*a:visited{  !* 방문후 상태 *!*/
-  /*  text-decoration: none; !* 밑줄 삭제 *!*/
-  /*  color: #555555;*/
-  /*}*/
+  a:visited{  /* 방문후 상태 */
+    text-decoration: none; /* 밑줄 삭제 */
+    color: #555555;
+    /*background-color: white;*/
+    /*color: black;*/
+  }
 
-  /*a:hover{  !* A 태그에 마우스가 올라간 상태 *!*/
-  /*  text-decoration: underline; !* 밑줄 출력 *!*/
-  /*  color: #7777FF;*/
-  /*}*/
+  a:hover{  /* A 태그에 마우스가 올라간 상태 */
+    text-decoration: underline; /* 밑줄 출력 */
+    color: #7777FF;
+    /*font-weight: 400;*/
+    /*color: #92C7FF;*/
+  }
 
-  /*a:active{  !* A 태그를 클릭한 상태 *!*/
-  /*  text-decoration: underline; !* 밑줄 출력 *!*/
-  /*  color: #7777FF;*/
-  /*}*/
+  a:active{  /* A 태그를 클릭한 상태 */
+    text-decoration: underline; /* 밑줄 출력 */
+    color: #7777FF;
+    /*background-color: rgb(0 0 0 / 18%);*/
+    /*color: #92C7FF;*/
+  }
 
   .menu_link:link{  /* 방문전 상태 */
     text-decoration: none; /* 밑줄 삭제 */

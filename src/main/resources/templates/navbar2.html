@@ -25,7 +25,7 @@
 				<div class="nav-item dropdown me-1 pe-1" th:if="${session.memberno == null}">
 					<a class="nav-link dropdown-toggle" href="#" id="dropdown1" data-bs-toggle="dropdown" aria-expanded="false">로그인 메뉴</a>
 					<ul class="dropdown-menu" aria-labelledby="dropdown1">
-						<li><a class="dropdown-item a_button" href="#">로그인</a></li>
+						<li><a class="dropdown-item a_button" href="/member/login">로그인</a></li>
 						<li><a class="dropdown-item a_button" href="#">회원가입</a></li>
 						<li><a class="dropdown-item a_button" href="#">아이디 찾기</a></li>
 						<li><a class="dropdown-item a_button" href="#">비밀번호 찾기</a></li>
@@ -35,7 +35,7 @@
 					<a class="nav-link dropdown-toggle" href="#" id="dropdown2" data-bs-toggle="dropdown" aria-expanded="false">000 님</a>
 					<ul class="dropdown-menu" aria-labelledby="dropdown2">
 						<li><a class="dropdown-item a_button" href="#">마이페이지</a></li>
-						<li><a class="dropdown-item a_button" href="#">로그아웃</a></li>
+						<li><a class="dropdown-item a_button" href="/member/logout">로그아웃</a></li>
 					</ul>
 				</div>
 <!--				<div class="nav-item dropdown me-5 pe-5" th:if="${session.name == 'admin'}">-->

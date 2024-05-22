@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 <html layout:decorate="~{layout}"> <!-- layout.html 상속 -->
-<div layout:fragment="content" style="margin-top: 100px">
+<div layout:fragment="content" style="padding-top: 20px;">
     <link href="/css/mateCommunity/list.css" rel="Stylesheet" type="text/css">
-    <div>
+    <div style="width:80%; margin: auto; height: auto; overflow: hidden">
         <div class='title_line'>
-            <span th:if="${petTypeNo == 1}">
+            <span th:if="${petTypeNo == 1}" style="font-size: 20px;">
                 강아지
             </span>
-            <span th:if="${petTypeNo == 2}">
+            <span th:if="${petTypeNo == 2}" style="font-size: 20px;">
                 고양이
             </span>
-            <span th:if="${petTypeNo == 3}">
+            <span th:if="${petTypeNo == 3}" style="font-size: 20px;">
                 기타 반려동물
             </span>
              산책 메이트 모집
@@ -39,10 +39,10 @@
         <div class="menu_line"></div>
 
         <div>
-            <span>총 게시글 수 [[${petTypeNo_count}]]</span>
+            <span>총 모집글 수 [[${petTypeNo_count}]]</span>
         </div>
 
-        <table class="table table-hover" style="width: 70%; margin: 0px auto">
+        <table class="table table-hover" style="margin: 20px auto">
             <colgroup>
                 <col style="width: 20%;"></col>
                 <col style="width: 30%;"></col>
@@ -58,14 +58,14 @@
                 <th class="th_bs" style='text-align: center; border-right: 1px solid;'>제목</th>
                 <th class="th_bs" style='text-align: center; border-right: 1px solid;'>모집 인원</th>
                 <th class="th_bs" style='text-align: center; border-right: 1px solid;'>모집 상태</th>
-                <th class="th_bs" style='text-align: center; border-right: 1px solid;'>작성일</th>
+                <th class="th_bs" style='text-align: center;'>작성일</th>
     <!--            <th class="th_bs" style='text-align: center;'>관리</th>-->
                 <!--            <th class="th_bs" style='text-align: center;'>기타</th>-->
             </tr>
             </thead>
             <tbody>
             <tr th:each="mateCommunityVO:${list_all_byPetTypeNo}" style="cursor: pointer;"
-                th:attr="onclick=|location.href='/mateCommunity/read?mCommunityNo=${mateCommunityVO.mCommunityNo}&petTypeNo=${petTypeNo}'|">
+                th:attr="onclick=|location.href='/mateCommunity/read?mCommunityNo=${mateCommunityVO.mCommunityNo}&petTypeNo=${petTypeNo}&now_page=${now_page}&searchWord=${searchWord}'|">
                 <td class="td_basic" style="text-align: center;">
                     <span th:if="${mateCommunityVO.petTypeNo == 1}">
                         강아지

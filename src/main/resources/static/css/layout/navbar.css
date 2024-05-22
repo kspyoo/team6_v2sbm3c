@@ -7,7 +7,57 @@
 .title{
     font-size: 36px;
     font-weight: bold;
-    color: rgba(33, 150, 243, 0.95);
+    color: rgba(33, 150, 243, 0.95); !important;
+    text-decoration-line: none; !important;
+}
+
+.title:link{
+    color: rgba(33, 150, 243, 0.95); !important;
+    font-weight: bold; !important;
+    text-decoration-line: none;
+}
+
+.title:visited{
+    color: rgba(33, 150, 243, 0.95); !important;
+    font-weight: bold; !important;
+    text-decoration-line: none;
+}
+
+.title:hover{
+    color: rgba(33, 150, 243, 0.95); !important;
+    font-weight: bold; !important;
+    text-decoration-line: none;
+}
+
+.title:active{
+    color: rgba(33, 150, 243, 0.95); !important;
+    background-color: white; !important;
+    font-weight: bold;!important;
+    text-decoration-line: none;
+}
+
+a:link{
+    color: rgba(33, 150, 243, 0.95); !important;
+    font-weight: bold; !important;
+    text-decoration-line: none;
+}
+
+a:visited{
+    color: rgba(33, 150, 243, 0.95); !important;
+    font-weight: bold; !important;
+    text-decoration-line: none;
+}
+
+a:hover{
+    color: rgba(33, 150, 243, 0.95); !important;
+    font-weight: bold; !important;
+    text-decoration-line: none;
+}
+
+a:active{
+    color: rgba(33, 150, 243, 0.95); !important;
+    background-color: white; !important;
+    font-weight: bold;!important;
     text-decoration-line: none;
 }
 
@@ -30,6 +80,6 @@
 }
 
 .a_button:active{
-    background-color: rgb(0 0 0 / 18%);
+    /*background-color: rgb(0 0 0 / 18%);*/
     color: #92C7FF;
 }
