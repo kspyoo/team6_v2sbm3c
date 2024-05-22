@@ -120,8 +120,8 @@ CREATE TABLE Memberprofile(
 		THUMBFILE                     		VARCHAR2(100)		 ,
 		FILESIZE                      		LONG		 ,
 		MEMBERNO                      		NUMBER(10)		 NOT NULL,
-    FOREIGN KEY (MEMBERNO) REFERENCES MEMBER (MEMBERNO)
-);
+    FOREIGN KEY (MEMBERNO) REFERENCES MEMBER (MEMBERNO) ON DELETE CASCADE);
+
 
 COMMENT ON TABLE Memberprofile is '회원 프로필 사진 수정';
 COMMENT ON COLUMN Memberprofile.MPROFILENO is '회원사진번호';
