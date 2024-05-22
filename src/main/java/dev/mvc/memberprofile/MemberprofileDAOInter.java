@@ -5,7 +5,7 @@ public interface MemberprofileDAOInter {
    * 사진 등록
    * @return
    */
-  public int create_file(MemberprofileVO memberprofileVO);
+  public int create_file(int memberno);
   
   /**
    * 파일 수정

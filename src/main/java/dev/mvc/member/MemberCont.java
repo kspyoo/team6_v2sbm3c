@@ -64,12 +64,12 @@ public class MemberCont {
    * @return
    */
   @GetMapping(value = "/create")
-  public String create_form(Model model, MemberVO memberVO) {
+  public String create_form(Model model, MemberVO memberVO, MemberprofileVO memberprofileVO) {
     return "member/create";
   }
 
   @PostMapping(value = "/create")
-  public String create_proc(Model model, MemberVO memberVO) {
+  public String create_proc(Model model, MemberVO memberVO, MemberprofileVO memberprofileVO) {
     int checkID_cnt = this.memberProc.checkID(memberVO.getId());
 
     if (checkID_cnt == 0) {
@@ -167,7 +167,8 @@ public class MemberCont {
       String id,
       String passwd,
       @RequestParam(value = "id_save", defaultValue = "") String id_save,
-      @RequestParam(value = "passwd_save", defaultValue = "") String passwd_save) {
+      @RequestParam(value = "passwd_save", defaultValue = "") String passwd_save,
+      MemberprofileVO memberprofileVO) {
     HashMap<String, Object> map = new HashMap<String, Object>();
     map.put("id", id);
     map.put("passwd", this.security.aesEncode(passwd));
@@ -176,9 +177,14 @@ public class MemberCont {
     System.out.println("-> login_proc cnt: " + cnt);
     model.addAttribute("cnt", cnt);
     if (cnt == 1) {
-
       MemberVO memberVO = this.memberProc.readById(id);
+      MemberprofileVO VOCheck = memberprofileProc.read_file(memberVO.getMemberno());
+      if (VOCheck == null) {
+        this.memberprofileProc.create_file(memberVO.getMemberno());
+        System.out.println("VOCheck == null");
+      }
       session.setAttribute("memberno", memberVO.getMemberno());
+      session.setAttribute("mprofileno",VOCheck.getMprofileno());
       session.setAttribute("id", memberVO.getId());
       session.setAttribute("name", memberVO.getName());
 
@@ -218,6 +224,7 @@ public class MemberCont {
       response.addCookie(ck_passwd_save);
 
       System.out.println("로그인 성공");
+      System.out.println("mprofileno : " + memberprofileVO.getMprofileno());
 
       return "redirect:/";
     } else {
@@ -254,15 +261,13 @@ public class MemberCont {
   @GetMapping(value = "/read")
   public String read(HttpSession session, Model model, int memberno,MemberprofileVO memberprofileVO) {
     MemberprofileVO VOCheck = this.memberprofileProc.read_file(memberno);
-    if (VOCheck == null) {
-        this.memberprofileProc.create_file(memberprofileVO);
-    }
     MemberVO memberVO = this.memberProc.read(memberno);
     model.addAttribute("memberVO", memberVO);
     
     // MemberProfileVO를 조회하여 모델에 추가
     memberprofileVO = this.memberprofileProc.read_file(memberno);
     model.addAttribute("memberprofileVO", memberprofileVO);
+    
     return "member/read";
   }
 
@@ -276,7 +281,10 @@ public class MemberCont {
   @GetMapping(value = "/delete")
   public String delete(Model model, int memberno) {
     MemberVO memberVO = this.memberProc.read(memberno);
+//    MemberprofileVO memberprofileVO = this.memberprofileProc.read_file(memberno);
     model.addAttribute("memberVO", memberVO);
+//    model.addAttribute("memberprofileVO",memberprofileVO);
+    
 
     return "member/delete";
   }
@@ -291,8 +299,8 @@ public class MemberCont {
   @PostMapping(value = "/delete")
   public String delete_process(HttpSession session, Model model, Integer memberno) {
     int cnt = this.memberProc.delete(memberno);
-
     if (cnt == 1) {
+      this.memberProc.delete_FK(memberno);
       model.addAttribute("code", "delete_success");
       session.invalidate();
       return "member/msg";

@@ -40,9 +40,9 @@ public class MemberprofileCont {
   @PostMapping(value="/update_file")
   public String update_file(RedirectAttributes ra, MemberprofileVO memberprofileVO, MemberVO memberVO, int memberno) {
       MemberprofileVO VOCheck = this.memberprofileProc.read_file(memberno);
-      if (VOCheck == null) {
-          this.memberprofileProc.create_file(memberprofileVO);
-      }
+//      if (VOCheck == null) {
+//          this.memberprofileProc.create_file(memberprofileVO);
+//      }
 
       MemberprofileVO memberprofileVO_old = memberprofileProc.read_file(memberprofileVO.getMemberno());
 

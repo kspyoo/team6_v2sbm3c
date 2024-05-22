@@ -49,6 +49,12 @@
     WHERE memberno=#{memberno}
   </delete>
   
+  <!-- 자식테이블 삭제 -->
+  <delete id="delete_FK" parameterType="int">
+    DELETE FROM memberprofile 
+    WHERE memberno=#{memberno}
+  </delete>
+  
   <!-- 아이디 찾기 -->
   <select id="findId" resultType="dev.mvc.member.MemberVO">
     SELECT id
@@ -96,6 +102,8 @@
     FROM member
     ORDER BY id ASC
   </select>
+  
+  
   
 
 

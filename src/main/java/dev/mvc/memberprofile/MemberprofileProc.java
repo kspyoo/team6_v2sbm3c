@@ -9,8 +9,8 @@ public class MemberprofileProc implements MemberprofileProcInter{
   private MemberprofileDAOInter memberprofileDAO;
 
   @Override
-  public int create_file(MemberprofileVO memberprofileVO) {
-    int cnt = this.memberprofileDAO.create_file(memberprofileVO);
+  public int create_file(int memberno) {
+    int cnt = this.memberprofileDAO.create_file(memberno);
     return cnt;
   }
 

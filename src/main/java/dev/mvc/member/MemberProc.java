@@ -69,6 +69,12 @@ public class MemberProc implements MemberProcInter {
     int cnt = this.memberDAO.delete(memberno);
     return cnt;
   }
+  
+  @Override
+  public int delete_FK(int memberno) {
+    int cnt = this.memberDAO.delete(memberno);
+    return cnt;
+  }
 
   @Override
   public MemberVO findId(@Param("name") String name, @Param("phone") String phone) {

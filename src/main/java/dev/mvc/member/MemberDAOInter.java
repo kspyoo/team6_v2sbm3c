@@ -54,6 +54,13 @@ public interface MemberDAOInter {
   public int delete(int memberno);
   
   /**
+   * 자식테이블 삭제
+   * @param memberno
+   * @return
+   */
+  public int delete_FK(int memberno);
+  
+  /**
    * 아이디 찾기
    * @param name
    * @param phone

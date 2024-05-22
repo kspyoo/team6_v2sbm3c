@@ -8,7 +8,7 @@ CREATE TABLE member(
     ID                                VARCHAR2(30)     NOT NULL,
     PASSWD                            VARCHAR2(50)     NOT NULL,
     NAME                              VARCHAR2(15)     NOT NULL,
-    GENDER                            VARCHAR2(5)    NOT NULL,
+    GENDER                            VARCHAR2(10)    NOT NULL,
     BIRTHDAY                          DATE     NOT NULL,
     PHONE                             VARCHAR2(14)     NOT NULL,
     ADDR_CODE                         VARCHAR2(8)    NOT NULL,
@@ -120,7 +120,8 @@ CREATE TABLE Memberprofile(
 		THUMBFILE                     		VARCHAR2(100)		 ,
 		FILESIZE                      		LONG		 ,
 		MEMBERNO                      		NUMBER(10)		 NOT NULL,
-    FOREIGN KEY (MEMBERNO) REFERENCES MEMBER (MEMBERNO) ON DELETE CASCADE);
+    FOREIGN KEY (MEMBERNO) REFERENCES MEMBER (MEMBERNO) ON DELETE CASCADE
+    );
 
 
 COMMENT ON TABLE Memberprofile is '회원 프로필 사진 수정';
@@ -142,5 +143,6 @@ CREATE SEQUENCE memberprofile_seq
   CACHE 2                       -- 2번은 메모리에서만 계산
   NOCYCLE;                     -- 다시 1부터 생성되는 것을 방지
 
+ALTER TABLE member MODIFY (gender VARCHAR2(10));
 
 
