@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 
 <html layout:decorate="~{layout}">
-<<<<<<< HEAD
 <!-- layout.html 상속-->
 <div layout:fragment="content">
 	<div class="title_line">
@@ -33,29 +32,10 @@
 			<div th:if="${#fields.hasErrors('cname')}" class="alert alert-danger" role="alert" style="margin-top: 5px;">
 				<div th:each="err : ${#lists.sort(#fields.errors('cname'))}" th:text="${err}"></div>
 			</div>
-=======
-<!--layout.html 상속-->
-<div layout:fragment="content">
-	<div class="title_line">문화시설 정보 수정</div>
-	<form name="frm" th:object="${culturefacilityVO}" method="post" action="/culturefacilityVO/create">
-		<input type="hidden" name="cultureno" th:value="${culturefacilityVO.cultureno}">
-		<div th:replace="~{errors::errorsFragment}"></div>
-
-		<div>
-			<label>문화시설 이름</label>
-			<input type="text" name="name" th:value="${culturefacilityVO.cname}" autofocus="autofocus"
-				class="form-control form-control-sm" style="width: 50%;" th:field="*{name}">
-		</div>
-		<div>
-			<label>도로명 주소</label>
-			<input type="text" name="raddress" th:value="${culturefacilityVO.raddress}" class="form-control form-control-sm"
-				style="width: 50%;" th:field="*{raddress}">
->>>>>>> d94e9ffa03e492d5b434f0c630d4c58e1529e967
 		</div>
 		<div>
 			<label>위도</label>
 			<input type="text" name="latitude" th:value="${culturefacilityVO.latitude}" autofocus="autofocus"
-<<<<<<< HEAD
 				class="form-control fom-control-sm" th:field="*{latitude}" required>
 			<div th:if="${#fields.hasErrors('latitude')}" class="alert alert-danger" role="alert" style="margin-top: 5px;">
 				<div th:each="err : ${#lists.sort(#fields.errors('latitude'))}" th:text="${err}"></div>
@@ -131,48 +111,6 @@
 	<!-- /templates/cate/list_all_component.html 파일의 list_all_fragment import -->
 	<div th:replace="~{culturefacility/list_all_component::list_all_fragment}"></div>
 
-=======
-				class="form-control form-control-sm" style="width: 50%;" th:field="*{latitude}">
-		</div>
-		<div>
-			<label>경도</label>
-			<input type="text" name="longitude" th:value="${culturefacilityVO.longitude}" class="form-control form-control-sm"
-				style="width: 50%;" th:field="*{seqno}">
-		</div>
-		<div>
-			<label>우편번호</label>
-			<input type="text" name="addr_code" th:value="${culturefacilityVO.addr_code}" autofocus="autofocus"
-				class="form-control form-control-sm" style="width: 50%;" th:field="*{addr_code}"> 
-		</div>
-
-		<div>
-			<label>전화번호</label>
-			<input type="text" name="phone" th:value="${culturefacilityVO.phone}" autofocus="autofocus"
-				class="form-control form-control-sm" style="width: 50%;" th:field="*{phone}">
-		</div>
-
-		<div>
-			<label>운영시간</label>
-			<input type="text" name="operatingtime" th:value="${culturefacilityVO.operatingtime}" autofocus="autofocus"
-				class="form-control form-control-sm" style="width: 50%;" th:field="*{operatingtime}"> 
-		</div>
-
-
-		<div>
-			<label>주차가능여부</label>
-			<input type="text" name="pa" th:value="${culturefacilityVO.pa}" autofocus="autofocus"
-				class="form-control form-control-sm" style="width: 50%;" th:field="*{pa}"> 
-		</div>
-
-
-
-		<div class="content_body_bottom">
-			<button type="submit" class="btn btn-secondary btn-sm">저장</button>
-			<button type="button" onclick="location.href='/culturefacility/list_all'" class="btn btn-secondary btn-sm">목록</button>
-		</div>
-
-	</form>
->>>>>>> d94e9ffa03e492d5b434f0c630d4c58e1529e967
 </div>
 
 </html>
