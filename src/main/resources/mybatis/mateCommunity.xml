@@ -58,7 +58,7 @@
     </select>
 
     <!-- 글 수정 -->
-    <update id="update_content" parameterType="Map">
+    <update id="update_content" parameterType="dev.mvc.matecommunity.MateCommunityVO">
         UPDATE MATECOMMUNITY
         SET title=#{title},
             content=#{content},

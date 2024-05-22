@@ -2,14 +2,22 @@
 
 <html layout:decorate="~{layout}"> <!-- layout.html 상속-->
 <div layout:fragment="content">
+<<<<<<< HEAD
+  <div class="title_line">문화시설 > 알림</div>
+=======
   <div class="title_line">문화시설 등록 알림</div>
+>>>>>>> d94e9ffa03e492d5b434f0c630d4c58e1529e967
   <div class="message">
     <fieldset class="fieldset_basic">
       <ul>
         <li th:switch="${code}" class="li_none">
           <div th:case="create_success">
             <span class="span_success">문화시설을 등록했습니다.</span><br>
+<<<<<<< HEAD
+            등록된 문화시설: <span th:text="${cname}"></span> 
+=======
             등록된 문화시설: <span th:text="${cname}"></span>
+>>>>>>> d94e9ffa03e492d5b434f0c630d4c58e1529e967
           </div>
           <div th:case="create_fail">
             <span class="span_fail">문화시설 등록에 실패했습니다.</span><br>
@@ -26,11 +34,19 @@
           <div th:case="delete_success">
             <span class="span_success">문화시설 삭제에 성공했습니다.</span><br>
             삭제된 문화시설: <span th:text="${cname}"></span> 
+<<<<<<< HEAD
+           
+=======
+>>>>>>> d94e9ffa03e492d5b434f0c630d4c58e1529e967
           </div>
           <div th:case="delete_fail">
             <span class="span_fail">문화시설 삭제에 실패했습니다.</span><br>
             삭제 실패된 문화시설: <span th:text="${cname}"></span>
+<<<<<<< HEAD
+          
+=======
          
+>>>>>>> d94e9ffa03e492d5b434f0c630d4c58e1529e967
           </div>
         </li>
         
@@ -39,11 +55,24 @@
             <button type="button" onclick="history.back()" class="btn btn-secondary btn-sm">다시 시도</button>
           </div>
           <div th:if="${cnt != 0}">
+<<<<<<< HEAD
+            <button type="button" onclick="location.href='./list_search'" class="btn btn-secondary btn-sm">전체 목록</button>
+=======
             <button type="button" onclick="location.href='./list_all'" class="btn btn-secondary btn-sm">전체 목록</button>
+>>>>>>> d94e9ffa03e492d5b434f0c630d4c58e1529e967
           </div>
         </li>
       </ul>
     </fieldset>
   </div>
 </div>
+<<<<<<< HEAD
 </html>
+
+
+
+
+
+=======
+</html>
+>>>>>>> d94e9ffa03e492d5b434f0c630d4c58e1529e967

@@ -1,0 +1,49 @@
+.bottom_menu{
+    height: 100px;
+    text-align: center;
+}
+
+.func_info{
+    width: 80%;
+    margin: 50px auto;
+}
+
+.func_title{
+    text-align: left;
+    font-size: 24px;
+    margin-bottom: 20px;
+    margin-left: 2.5%;
+    font-weight: 600;
+    color: rgba(33, 150, 243, 0.95);
+}
+
+.btn-outline-info:hover{
+    color: white;
+}
+
+.culture_facillity{
+    width: 100%;
+    background-color: rgba(81, 177, 253, 0.7);
+    padding-bottom: 1%;
+}
+
+.func_curture{
+    text-align: left;
+    font-size: 24px;
+    margin-bottom: 20px;
+    padding-top: 2%;
+    margin-left: 11.5%;
+    font-weight: 600;
+    color: white;
+}
+
+.culture_facillity_imgs {
+    width: 80%;
+    margin: 55px auto;
+}
+
+.culture_facillity_img {
+    width: 14rem;
+    background-color: #89c9fe;
+    border: 0px;
+}

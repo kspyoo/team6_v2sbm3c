@@ -1,5 +1,6 @@
 package dev.mvc.culturefacility;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,13 +20,13 @@ public class CulturefacilityVO {
 //  MASTERNO                          NUMBER(10)     NULL , -- 관리자 번호
 
   /** 문화시설번호 */
-  private int cutlureno;
+  private int culturefno;
   /** 문화시설이름 */
   private String cname = "";
   /** 도로명주소 */
   private String raddress = "";
   /** 위도 */
-  private String lattitude = "";
+  private String latitude = "";
   /** 경도 */
   private String longitude = "";
   /** 우편번호 */
@@ -33,7 +34,7 @@ public class CulturefacilityVO {
   /** 전화번호 */
   private String phone = "";
   /** 휴무일 */
-  private String date = "";
+  private String closeddays = "";
   /** 운영시간 */
   private String operatingtime = "";
   /** 주차가능여부 */

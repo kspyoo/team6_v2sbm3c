@@ -269,8 +269,8 @@ public class MateCommunityProc implements MateCommunityProcInter {
     }
 
     @Override
-    public int update_content(Map<String, Object> map) {
-        return mateCommunityDAO.update_content(map);
+    public int update_content(MateCommunityVO mateCommunityVO) {
+        return mateCommunityDAO.update_content(mateCommunityVO);
     }
 
     @Override

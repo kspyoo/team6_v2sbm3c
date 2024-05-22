@@ -1,0 +1,79 @@
+<div th:fragment="navbarFragment">
+<link href="/css/layout/navbar.css" rel="Stylesheet" type="text/css">
+	<nav class="navbar navbar-expand-lg nav_bar_style fixed-top pt-4 pb-4" aria-label="Eighth navbar example" style="background-color: white";>
+		<div class="container">
+			<a class="title" href="/">WITHPET</a>
+			<button class="navbar-toggler collapsed me-5" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample07" aria-controls="navbarsExample07" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+
+			<div class="navbar-collapse collapse" id="navbarsExample07" style="">
+				<ul class="navbar-nav ms-auto mb-2 mb-lg-0 me-3">
+<!--					<li class="nav-item">-->
+<!--						<a class="nav-link active a_button" aria-current="page" href="#">함께 갈 수 있는곳</a>-->
+<!--					</li>-->
+					<li class="nav-item">
+						<a class="nav-link a_button" aria-current="page" href="#">함께 갈 수 있는곳</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link a_button" aria-current="page" href="/mateCommunity/list_all">산책 메이트</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link a_button" aria-current="page" href="#">정보 공유</a>
+					</li>
+				</ul>
+				<div class="nav-item dropdown me-1 pe-1" th:if="${session.memberno == null}">
+					<a class="nav-link dropdown-toggle" href="#" id="dropdown1" data-bs-toggle="dropdown" aria-expanded="false">로그인 메뉴</a>
+					<ul class="dropdown-menu" aria-labelledby="dropdown1">
+						<li><a class="dropdown-item a_button" href="#">로그인</a></li>
+						<li><a class="dropdown-item a_button" href="#">회원가입</a></li>
+						<li><a class="dropdown-item a_button" href="#">아이디 찾기</a></li>
+						<li><a class="dropdown-item a_button" href="#">비밀번호 찾기</a></li>
+					</ul>
+				</div>
+				<div class="nav-item dropdown me-5 pe-5" th:if="${session.memberno != null && session.name != 'admin'}">
+					<a class="nav-link dropdown-toggle" href="#" id="dropdown2" data-bs-toggle="dropdown" aria-expanded="false">000 님</a>
+					<ul class="dropdown-menu" aria-labelledby="dropdown2">
+						<li><a class="dropdown-item a_button" href="#">마이페이지</a></li>
+						<li><a class="dropdown-item a_button" href="#">로그아웃</a></li>
+					</ul>
+				</div>
+<!--				<div class="nav-item dropdown me-5 pe-5" th:if="${session.name == 'admin'}">-->
+<!--					<a class="nav-link dropdown-toggle" href="#" id="dropdown3" data-bs-toggle="dropdown" aria-expanded="false">000 관리자님</a>-->
+<!--					<ul class="dropdown-menu" aria-labelledby="dropdown3">-->
+<!--						<li><a class="dropdown-item" href="#">마이페이지</a></li>-->
+<!--						<li><a class="dropdown-item" href="#">로그아웃</a></li>-->
+<!--					</ul>-->
+<!--				</div>-->
+				<div class="nav-item dropdown me-5 pe-5">
+					<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
+					   data-bs-toggle="dropdown" aria-expanded="false" th:text="관리자">
+					</a>
+					<ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+						<li class="nav-item"><a class="dropdown-item a_button" href="/master/create">관리자 회원가입</a></li>
+						<li class="nav-item" th:if="${session.masterno == null}">
+							<a class="dropdown-item a_button" href="/master/login" th:text="@{|관리자 로그인|}"></a>
+						</li>
+						<li class="nav-item" th:if="${session.masterno != null}">
+							<a class="dropdown-item a_button" href="/master/logout" th:text="@{|${session.masterid} 관리자 로그아웃|}"></a>
+						</li>
+						<li class="nav-item" th:if="${session.masterno != null}">
+							<a class="dropdown-item a_button" href="/master/list">관리자 목록</a>
+						</li>
+
+					</ul>
+				</div>
+
+				<div class="nav-item dropdown me-5 pe-5" th:if="${session.name == 'admin'}">
+					<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
+					   data-bs-toggle="dropdown" aria-expanded="false" th:text="문화시설">
+					</a>
+					<ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+						<li class="nav-item"><a class="nav-link" href="/culturefacility/create">문화시설 등록</a></li>
+						<li class="nav-item"><a class="nav-link" href="/culturefacility/list_search">문화시설 목록</a></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</nav>
+</div>

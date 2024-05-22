@@ -13,6 +13,8 @@ function empty_check(){
     let startingP = document.getElementById('startingP');
     let startingDetail = document.getElementById('startingDetail');
     let walkingM = document.getElementById('walkingM');
+    let content = document.getElementById('content');
+    let searchTag = document.getElementById('searchTag');
 
     if (title.value.trim() == ""){
         alert('제목을 입력해주세요!')
@@ -23,11 +25,19 @@ function empty_check(){
         return false;
     } else if (startingDetail.value.trim() == ""){
         alert('상세위치를 입력해주세요!')
-        title.focus();
+        startingDetail.focus();
         return false;
     } else if (walkingM.value.trim() == "" || walkingM.value <= 0){
         alert('집합인원 설정해주세요!')
-        title.focus();
+        walkingM.focus();
+        return false;
+    } else if (content.value.trim() == "") {
+        alert('내용을 입력해주세요!')
+        content.focus();
+        return false;
+    } else if (searchTag.value.trim() == ""){
+        alert('검색태그를 최소 한개이상 입력해주세요!')
+        searchTag.focus();
         return false;
     }
 }

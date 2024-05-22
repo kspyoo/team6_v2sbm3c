@@ -1,6 +1,39 @@
 <!DOCTYPE html>
 
 <html layout:decorate="~{layout}">
+<<<<<<< HEAD
+<!-- layout.html 상속-->
+<div layout:fragment="content">
+	<div class="title_line">
+		문화시설 >
+		<span th:text="${culturefacilityVO.cname}" class="title_line_text"></span>
+		수정
+	</div>
+	<aside class="aside_right">
+		<a th:href="@{|/culturefacility/list_search?word=${word}&now_page=${now_page}|}">목록</a>
+		<span class="menu_devide">│</span>
+		<a th:href="@{|/culturefacility/delete/${culturefacilityVO.culturefno}?word=${word}&now_page=${now_page}|}">삭제</a>
+		<span class="menu_devide">│</span>
+		<a href="/culturefacility/create">등록</a>
+		<span class="menu_devide">│</span>
+		<a href="javascript: location.reload();">새로 고침</a>
+	</aside>
+	<div class="menu_line"></div>
+
+	<form name="frm" th:object="${culturefacilityVO}" method="post" action="/culturefacility/update"
+		style="width: 50%; margin: 5px auto;">
+		<input type="hidden" name="culturefno" th:value="${culturefacilityVO.culturefno}">
+		<input type="hidden" name="word" th:value="${word}">
+		<input type="hidden" name="now_page" th:value="${now_page}">
+
+		<div>
+			<label>문화시설이름</label>
+			<input type="text" name="cname" th:value="${culturefacilityVO.cname}" autofocus="autofocus"
+				class="form-control fom-control-sm" th:field="*{cname}" required>
+			<div th:if="${#fields.hasErrors('cname')}" class="alert alert-danger" role="alert" style="margin-top: 5px;">
+				<div th:each="err : ${#lists.sort(#fields.errors('cname'))}" th:text="${err}"></div>
+			</div>
+=======
 <!--layout.html 상속-->
 <div layout:fragment="content">
 	<div class="title_line">문화시설 정보 수정</div>
@@ -17,10 +50,88 @@
 			<label>도로명 주소</label>
 			<input type="text" name="raddress" th:value="${culturefacilityVO.raddress}" class="form-control form-control-sm"
 				style="width: 50%;" th:field="*{raddress}">
+>>>>>>> d94e9ffa03e492d5b434f0c630d4c58e1529e967
 		</div>
 		<div>
 			<label>위도</label>
 			<input type="text" name="latitude" th:value="${culturefacilityVO.latitude}" autofocus="autofocus"
+<<<<<<< HEAD
+				class="form-control fom-control-sm" th:field="*{latitude}" required>
+			<div th:if="${#fields.hasErrors('latitude')}" class="alert alert-danger" role="alert" style="margin-top: 5px;">
+				<div th:each="err : ${#lists.sort(#fields.errors('latitude'))}" th:text="${err}"></div>
+			</div>
+		</div>
+		<div>
+			<label>경도</label>
+			<input type="text" name="longitude" th:value="${culturefacilityVO.longitude}" autofocus="autofocus"
+				class="form-control fom-control-sm" th:field="*{longitude}" required>
+			<div th:if="${#fields.hasErrors('longitude')}" class="alert alert-danger" role="alert" style="margin-top: 5px;">
+				<div th:each="err : ${#lists.sort(#fields.errors('longitude'))}" th:text="${err}"></div>
+			</div>
+		</div>
+		<div>
+			<label>도로명주소</label>
+			<input type="text" name="raddress" th:value="${culturefacilityVO.raddress}" class="form-control fom-control-sm"
+				th:field="*{raddress}" required>
+			<div th:if="${#fields.hasErrors('raddress')}" class="alert alert-danger" role="alert" style="margin-top: 5px;">
+				<div th:each="err : ${#lists.sort(#fields.errors('raddress'))}" th:text="${err}"></div>
+			</div>
+		</div>
+		<div>
+			<label>우편번호</label>
+			<input type="text" name="addr_code" th:value="${culturefacilityVO.addr_code}" class="form-control fom-control-sm"
+				th:field="*{addr_code}" required>
+			<div th:if="${#fields.hasErrors('addr_code')}" class="alert alert-danger" role="alert" style="margin-top: 5px;">
+				<div th:each="err : ${#lists.sort(#fields.errors('addr_code'))}" th:text="${err}"></div>
+			</div>
+		</div>
+		<div>
+			<label>전화번호</label>
+			<input type="text" name="phone" th:value="${culturefacilityVO.phone}" class="form-control fom-control-sm"
+				th:field="*{phone}" required>
+			<div th:if="${#fields.hasErrors('phone')}" class="alert alert-danger" role="alert" style="margin-top: 5px;">
+				<div th:each="err : ${#lists.sort(#fields.errors('phone'))}" th:text="${err}"></div>
+			</div>
+		</div>
+		<div>
+			<label>휴무일</label>
+			<input type="text" name="closeddays" th:value="${culturefacilityVO.closeddays}"
+				class="form-control fom-control-sm" th:field="*{closeddays}" required> 
+			<div th:if="${#fields.hasErrors('closeddays')}" class="alert alert-danger" role="alert" style="margin-top: 5px;">
+				<div th:each="err : ${#lists.sort(#fields.errors('closeddays'))}" th:text="${err}"></div>
+			</div>
+		</div>
+		<div>
+			<label>운영시간</label>
+			<input type="text" name="operatingtime" th:value="${culturefacilityVO.operatingtime}"
+				class="form-control fom-control-sm" th:field="*{operatingtime}" required> 
+			<div th:if="${#fields.hasErrors('operatingtime')}" class="alert alert-danger" role="alert"
+				style="margin-top: 5px;">
+				<div th:each="err : ${#lists.sort(#fields.errors('operatingtime'))}" th:text="${err}"></div>
+			</div>
+		</div>
+		<div>
+			<label>주차가능여부</label>
+			<input type="text" name="pa" th:value="${culturefacilityVO.pa}" class="form-control fom-control-sm"
+				th:field="*{pa}" required> 
+			<div th:if="${#fields.hasErrors('pa')}" class="alert alert-danger" role="alert" style="margin-top: 5px;">
+				<div th:each="err : ${#lists.sort(#fields.errors('pa'))}" th:text="${err}"></div>
+			</div>
+		</div>
+
+		<div class="content_body_bottom">
+			<button type="submit" class="btn btn-secondary btn-sm">저장</button>
+			<button type="button"
+				th:attr="onclick=|location.href='/culturefacility/list_search?word=${word}&now_page=${now_page}'|"
+				class="btn btn-secondary btn-sm">취소</button>
+		</div>
+
+	</form>
+
+	<!-- /templates/cate/list_all_component.html 파일의 list_all_fragment import -->
+	<div th:replace="~{culturefacility/list_all_component::list_all_fragment}"></div>
+
+=======
 				class="form-control form-control-sm" style="width: 50%;" th:field="*{latitude}">
 		</div>
 		<div>
@@ -61,6 +172,7 @@
 		</div>
 
 	</form>
+>>>>>>> d94e9ffa03e492d5b434f0c630d4c58e1529e967
 </div>
 
 </html>
