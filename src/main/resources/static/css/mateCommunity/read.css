@@ -40,3 +40,14 @@ input[type='date']::-webkit-calendar-picker-indicator{
 .title_line{
     border-bottom-color: rgba(33, 150, 243, 0.95);
 }
+
+.btn-outline-info{
+    width: 60%;
+    --bs-btn-hover-color: #fff;
+    --bs-btn-active-color: #fff;
+}
+
+.recruit_btns{
+    text-align: center;
+    margin: 30px auto 15px;
+}

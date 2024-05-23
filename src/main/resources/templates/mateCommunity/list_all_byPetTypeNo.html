@@ -2,7 +2,7 @@
 <html layout:decorate="~{layout}"> <!-- layout.html 상속 -->
 <div layout:fragment="content" style="padding-top: 20px;">
     <link href="/css/mateCommunity/list.css" rel="Stylesheet" type="text/css">
-    <div style="width:80%; margin: auto; height: auto; overflow: hidden">
+    <div id="list_all" style="width:80%; margin: auto; height: auto; overflow: hidden">
         <div class='title_line'>
             <span th:if="${petTypeNo == 1}" style="font-size: 20px;">
                 강아지
@@ -35,6 +35,10 @@
             <a href="javascript:location.reload();">새로고침</a>
             <span class='menu_divide'>│</span>
             <a th:href="@{|./create?petTypeNo=${petTypeNo}|}">글 등록</a>
+            <span class='menu_divide'>│</span>
+            <a th:href="@{|/mateApply/applyList?petTypeNo=${petTypeNo}&now_page=${now_page}|}">내 신청내역</a>
+            <span class='menu_divide'>│</span>
+            <a th:href="@{|/mateApply/applyList|}">내가 작성한 게시글</a>
         </aside>
         <div class="menu_line"></div>
 
@@ -123,11 +127,17 @@
             </tr>
             </tbody>
         </table>
-        <div th:if="${petTypeNo_count==0}">
+        <div th:if="${petTypeNo_count==0}" style="text-align: center; padding: 160px;">
             <span>작성된 게시글이 없습니다.</span><br>
             <span>첫 게시글을 작성해주세요!</span>
         </div>
         <div class="Bottom_menu" th:utext="${paging}"></div>
-
+        <script th:inline="javascript">
+            window.onload = () =>{
+                if([[${list_all_byPetTypeNo.size()}]] < 10){
+                    document.getElementById('list_all').style.height = "641.898px";
+                }
+            }
+        </script>
     </div>
 </div>

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html layout:decorate="~{layout}"> <!-- layout.html 상속 -->
 <div layout:fragment="content" style="padding-top: 20px;">
-<link href="/css/mateCommunity/create.css" rel="Stylesheet" type="text/css">
+<link href="/css/mateCommunity/read.css" rel="Stylesheet" type="text/css">
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=da5a9ceca7aa487be04c54d6d13472a4&libraries=services"></script>
 <div style="width:80%; margin: auto; height: auto; overflow: hidden">
     <div class='title_line'>
@@ -26,8 +26,10 @@
         <a th:href="@{|./update?mCommunityNo=${mateCommunityVO.MCommunityNo}&petTypeNo=${petTypeNo}|}">수정</a>
         <span class='menu_divide'>│</span>
         <button id="delete_btn" th:href="@{|./delete?mCommunityNo=${mateCommunityVO.MCommunityNo}|}">삭제</button>
-        <!--    <span class='menu_divide'>│</span>-->
-        <!--    <a th:href="@{|./create?petTypeNo=${petTypeNo}|}">글 등록</a>-->
+        <span class='menu_divide'>│</span>
+        <a th:href="@{|/mateApply/recruitList?mCommunityNo=${mateCommunityVO.MCommunityNo}&now_page=${now_page}|}">받은 신청</a>
+        <span class='menu_divide'>│</span>
+        <a th:href="@{|/mateApply/recruitList?mCommunityNo=${mateCommunityVO.MCommunityNo}&now_page=${now_page}|}">모인 인원</a>
     </aside>
     <aside class="aside_right" th:unless="${session.memberno==mateCommunityVO.memberNo}">
         <a href="javascript:location.reload();">새로고침</a>
@@ -39,8 +41,9 @@
 
     <div>
         <div class="row mb-3 text-center pb-3" style="border-bottom: 3px solid rgba(33, 150, 243, 0.95);">
-            <div th:text="${mateCommunityVO.title}" style="font-weight: bold; text-align: left;" class="col-md-5"></div>
-            <div class="col-md-5" style="text-align: right;"><span>작성일 | </span><span th:text="${mateCommunityVO.WDate}" style="font-weight: bold;"></span></div>
+            <div th:text="${mateCommunityVO.title}" style="font-weight: bold; text-align: left;" class="col-md-4"></div>
+            <div class="col-md-4" style="text-align: right;"><span>작성일 | </span><span th:text="${mateCommunityVO.WDate}" style="font-weight: bold;"></span></div>
+            <div class="col-md-2" style="text-align: right;"><span>작성자 | </span><span th:text="${mateCommunityVO.name}" style="font-weight: bold;"></span></div>
             <div class="col-md-2" style="text-align: right;"><span>조회수 | </span><span th:text="${mateCommunityVO.viewCnt}" style="font-weight: bold;"></span></div>
         </div>
 
@@ -50,22 +53,40 @@
                 <span th:text="${mateCommunityVO.searchTag}" style="color: deepskyblue"></span>
             </div>
         </div>
+        <div class="menu_line mt-2 mb-2"></div>
         <div>
             <div class="row mb-3 text-center">
                 <div class="col-md-3" style="text-align: left;"><span>집합시간 | </span><span th:text="${mateCommunityVO.assembleTime}"></span></div>
                 <div class="col-md-3" style="text-align: left;"><span>집합위치 | </span><span th:text="${mateCommunityVO.startingP}" style="font-weight: bold"></span>&nbsp;<span th:text="${mateCommunityVO.startingDetail}" style="font-weight: bold" ></span>
                 </div>
-                <div class="col-md-3" style="text-align: right;"><span>모인인원 / 집합인원 | </span><span> - </span> / <span th:text="${mateCommunityVO.walkingM}" style="font-weight: bold"></span></div>
+                <div class="col-md-3" style="text-align: right;"><span>모인인원 / 집합인원 | </span><span th:text="${mateCommunityVO.acceptCnt}"></span> 명 / <span th:text="${mateCommunityVO.walkingM}" style="font-weight: bold"></span> 명</div>
                 <div class="col-md-3" style="text-align: right;"><span>신청현황 | </span> <span th:if="${mateCommunityVO.status == 0}" style="font-weight: bold">모집중</span><span th:if="${mateCommunityVO.status == 1}" style="font-weight: bold">모집완료</span></div>
             </div>
 
-            <div id="static_map" style="width: 40%; height: 350px; margin: 0px auto"></div>
+            <div id="static_map" style="width: 80%; height: 350px; margin: 20px auto"></div>
 <!--            <div>-->
 <!--                상세 주소 - <span th:text="${mateCommunityVO.startingDetail}"></span>-->
 <!--            </div>-->
         </div>
-        <div>
-            <a th:href="@{|${mateCommunityVO.MCommunityNo}|}">산책 메이트 신청</a>
+
+<!--        [[${session.memberno}]]-->
+        <div th:if="${session.memberno == null}" class="recruit_btns w-50">
+<!--            로그인이 안되어있을때-->
+            <button type="button" onclick="location.href='/member/login'" id="login_need" class="btn btn-lg btn-outline-info">로그인</button>
+        </div>
+        <div th:if="${mateCommunityVO.memberNo != session.memberno && session.memberno != null}" class="recruit_btns w-50">
+<!--            작성자가 아니고 모집마감이 되어있을때-->
+            <button type="button" id="finish" th:if="${mateCommunityVO.status == 1}" class="btn btn-lg btn-outline-info ">모집 마감</button>
+<!--            작성자가 아니고 모집신청을 했으며 모집마감이 안되어있는경우-->
+            <button type="button" id="recruit_wait" th:if="${isRecruited == 1 &&  mateCommunityVO.status == 0}" class="btn btn-lg btn-outline-info">수락 대기중</button>
+<!--            작성자가 아니고 로그인이 되어있으며 모집마감이 되어있지 않은 경우-->
+            <button type="button" id="recruit" th:if="${isRecruited == 0 && mateCommunityVO.status == 0}" class="btn btn-lg btn-outline-info w-70">산책 메이트 신청</button>
+        </div>
+        <div th:if="${mateCommunityVO.memberNo == session.memberno}" class="recruit_btns w-50">
+<!--            작성자이며 마감이 되지 않은 경우-->
+            <button type="button" id="recruit_finish" th:if="${mateCommunityVO.status == 0}" class="btn btn-lg btn-outline-info">산책 메이트 신청 마감</button>
+<!--            작성자이며 마감이 된경우-->
+            <button type="button" id="recruit_start" th:if="${mateCommunityVO.status == 1}" class="btn btn-lg btn-outline-info">산책 메이트 신청 모집시작</button>
         </div>
 
     </div>
@@ -112,33 +133,141 @@
 <!--<script src="/js/mateCommunity/read.js" th:inline="javascript"></script>-->
 <script th:inline="javascript">
     window.onload = () =>{
-        document.getElementById('delete_btn').addEventListener("click", () => {
-            let url = './delete';
+        // 글 작성자가 본인일 경우 삭제버튼 활성화
+        if(document.getElementById('delete_btn') != null) {
+            document.getElementById('delete_btn').addEventListener("click", () => {
+                let url = './delete';
 
-            fetch(url, {
-                method: 'POST',
-                headers:{
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(
-                    {mCommunityNo : [[${mateCommunityVO.mCommunityNo}]]}
-                )
-            })
-                .then(response => response.json())
-                .then(rdata => {
-                    console.log(rdata.cnt);
-                    if (rdata.cnt == 0) { // 패스워드 불일치
-                        alert("삭제 실패 했습니다.");
-                        return false;
-                    }else{
-                        alert("성공적으로 삭제 되었습니다.");
-                        location.href='/mateCommunity/list_all';
-                    }
+                fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(
+                        {mCommunityNo: [[${mateCommunityVO.mCommunityNo}]]}
+                    )
                 })
-                .catch(error => { // 서버 다운등 통신 에러
-                    console.error('Error:', error);
-                });
-        });
+                    .then(response => response.json())
+                    .then(rdata => {
+                        console.log(rdata.cnt);
+                        if (rdata.cnt == 0) {
+                            alert("삭제 실패 했습니다.");
+                            return false;
+                        } else {
+                            alert("성공적으로 삭제 되었습니다.");
+                            location.href = '/mateCommunity/list_all';
+                        }
+                    })
+                    .catch(error => { // 서버 다운등 통신 에러
+                        console.error('Error:', error);
+                    });
+            });
+        }
+        if(document.getElementById('recruit') != null) {
+            document.getElementById('recruit').addEventListener('click', () => {
+                if(confirm('신청하시겠습니까?')) {
+                    let url = '/mateApply/recruit?mCommunityNo=' + [[${mateCommunityVO.mCommunityNo}]];
+
+                    fetch(url, {
+                        method: 'GET'
+                    })
+                        .then(response => response.json())
+                        .then(rdata => {
+                            console.log(rdata.cnt);
+                            if (rdata == 0 || rdata == null) { // 패스워드 불일치
+                                alert("신청 실패 했습니다.");
+                                return false;
+                            } else {
+                                alert("신청 되었습니다.");
+                                location.reload();
+                            }
+                        })
+                        .catch(error => { // 서버 다운등 통신 에러
+                            console.error('Error:', error);
+                        });
+                }
+            });
+        }
+
+        if(document.getElementById('recruit_wait') != null) {
+            document.getElementById('recruit_wait').addEventListener('click', () => {
+                if(confirm('수락 대기중입니다. 취소하시겠습니까?')) {
+                    let url = '/mateApply/delete?mCommunityNo=' + [[${mateCommunityVO.mCommunityNo}]];
+
+                    fetch(url, {
+                        method: 'GET'
+                    })
+                        .then(response => response.json())
+                        .then(rdata => {
+                            console.log(rdata);
+                            if (rdata == 0 || rdata == null) { // 패스워드 불일치
+                                alert("신청 취소에 실패 했습니다.");
+                                return false;
+                            } else {
+                                alert("신청 취소 되었습니다.");
+                                location.reload();
+                            }
+                        })
+                        .catch(error => { // 서버 다운등 통신 에러
+                            console.error('Error:', error);
+                        });
+                }
+            });
+        }
+
+        if(document.getElementById('recruit_finish') != null){
+            document.getElementById('recruit_finish').addEventListener('click', () => {
+                let url = '/mateCommunity/recruit_finish?mCommunityNo=' + [[${mateCommunityVO.mCommunityNo}]];
+
+                fetch(url, {
+                    method: 'GET'
+                })
+                    .then(response => response.json())
+                    .then(rdata => {
+                        console.log(rdata);
+                        if (rdata == 0 || rdata == null) { // 패스워드 불일치
+                            alert("상태변경에 실패 했습니다.");
+                            return false;
+                        } else {
+                            alert("모집상태가 변경 되었습니다.");
+                            location.reload();
+                        }
+                    })
+                    .catch(error => { // 서버 다운등 통신 에러
+                        console.error('Error:', error);
+                    });
+            });
+        }
+
+        if(document.getElementById('recruit_start') != null){
+            document.getElementById('recruit_start').addEventListener('click', () => {
+                let url = '/mateCommunity/recruit_start?mCommunityNo=' + [[${mateCommunityVO.mCommunityNo}]];
+
+                fetch(url, {
+                    method: 'GET'
+                })
+                    .then(response => response.json())
+                    .then(rdata => {
+                        console.log(rdata);
+                        if (rdata == 0 || rdata == null) { // 패스워드 불일치
+                            alert("상태변경에 실패 했습니다.");
+                            return false;
+                        } else {
+                            alert("모집상태가 변경 되었습니다.");
+                            location.reload();
+                        }
+                    })
+                    .catch(error => { // 서버 다운등 통신 에러
+                        console.error('Error:', error);
+                    });
+            });
+        }
+
+        if(document.getElementById('finish') != null){
+            document.getElementById('finish').addEventListener('click', () => {
+                alert('모집 마감 되었습니다.')
+            });
+        }
     }
 </script>
 </div>
