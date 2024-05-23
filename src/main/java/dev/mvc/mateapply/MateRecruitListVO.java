@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class MateApplyVO {
+public class MateRecruitListVO { // 내 게시글 신청 목록
     //ANO, ASTATUS, ADATE, MEMBERNO, MCOMMUNITYNO
     // 신청 번호
     private int aNo;
@@ -17,4 +17,6 @@ public class MateApplyVO {
     private int memberNo;
     // 게시글 번호
     private int mCommunityNo;
+    // 회원 이름
+    private String name;
 }

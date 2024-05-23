@@ -1,8 +1,99 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="dev.mvc.mateapply.MateApplyDAOInter">
+    <!-- 모집 신청 여부 -->
+    <select id="isRecruited" parameterType="Map">
+        select count(Ano)
+        from MATEAPPLY
+        where MEMBERNO = #{memberNo} and MCOMMUNITYNO = #{mCommunityNo}
+    </select>
+
+    <!-- 모집 신청 -->
     <insert id="create" parameterType="dev.mvc.mateapply.MateApplyVO">
         insert into MATEAPPLY(ANO, ASTATUS, ADATE, MEMBERNO, MCOMMUNITYNO)
-        values (MATECOMMUNITY_SEQ.nextval,'WAITING', sysdate, #{memberNo}, #{mCommunityNo});
+        values (MATECOMMUNITY_SEQ.nextval, 'WAITING', sysdate, #{memberNo}, #{mCommunityNo})
     </insert>
+
+    <!-- 신청 취소 -->
+    <delete id="delete" parameterType="Map">
+        delete
+        from MATEAPPLY
+        where MEMBERNO = #{memberNo} and MCOMMUNITYNO = #{mCommunityNo}
+    </delete>
+
+    <!-- 내가 신청한 내역 -->
+    <select id="applyList" parameterType="Map" resultType="dev.mvc.mateapply.MateApplyListVO">
+        select ANO, ASTATUS, ADATE, MEMBERNO, MCOMMUNITYNO, TITLE, ASSEMBLETIME, r
+        from
+            (select ANO, ASTATUS, ADATE, MEMBERNO, MCOMMUNITYNO, TITLE, ASSEMBLETIME, rownum AS r
+            from
+                (select ma.ANO, ma.ASTATUS, ma.ADATE, ma.MEMBERNO, mc.MCOMMUNITYNO, mc.TITLE, mc.ASSEMBLETIME
+                from MATEAPPLY ma, MATECOMMUNITY mc
+                where ma.MEMBERNO = #{memberNo} AND ma.MCOMMUNITYNO = mc.MCOMMUNITYNO
+                order by ANO)
+            )
+        where r &gt;= #{start_num} and r &lt;= #{end_num}
+    </select>
+
+    <!-- 내 신청내역 수 -->
+    <select id="applyListCnt" parameterType="int" resultType="int">
+        select count(*)
+        from MATEAPPLY
+        where MEMBERNO = #{memberNo}
+    </select>
+
+    <!-- 내글에 들어온 신청 목록 -->
+    <select id="recruitList" parameterType="Map" resultType="dev.mvc.mateapply.MateRecruitListVO">
+        select ANO, ASTATUS, ADATE, MEMBERNO, MCOMMUNITYNO, NAME, r
+        from
+            (select ANO, ASTATUS, ADATE, MEMBERNO, MCOMMUNITYNO, NAME, rownum AS r
+             from
+                 (select ma.ANO, ma.ASTATUS, ma.ADATE, ma.MEMBERNO, ma.MCOMMUNITYNO, m.NAME
+                  from MATEAPPLY ma, MEMBER m
+                  where ma.MCOMMUNITYNO = #{mCommunityNo} AND ma.MEMBERNO = m.MEMBERNO
+                  order by ANO)
+            )
+        where r &gt;= #{start_num} and r &lt;= #{end_num}
+    </select>
+
+    <!-- 내글에 온 신청 수 -->
+    <select id="recruitListCnt" parameterType="int" resultType="int">
+        select count(*)
+        from MATEAPPLY
+        where MCOMMUNITYNO = #{mCommunityNo}
+    </select>
+
+    <!-- 신청 수락 -->
+    <update id="recruitAccept" parameterType="int">
+        update MATEAPPLY
+        set ASTATUS = 'ACCEPTED'
+        where ANO = #{aNo}
+    </update>
+
+    <!-- 신청 거부 -->
+    <update id="recruitDenied" parameterType="int">
+        update MATEAPPLY
+        set ASTATUS = 'DENIED'
+        where ANO = #{aNo}
+    </update>
+
+    <!-- 모집글의 모인 인원 수 조회 -->
+    <select id="checkMember" parameterType="int">
+        select count(ANO)
+        from MATEAPPLY
+        where ASTATUS = 'ACCEPTED' and MCOMMUNITYNO = #{mCommunityNo}
+    </select>
+
+    <!-- 전체 거부 -->
+    <update id="deniedAll" parameterType="int">
+        update MATEAPPLY
+        set ASTATUS = 'DENIED'
+        where MCOMMUNITYNO = #{mCommunityNo} and ASTATUS = 'WAITING'
+    </update>
+
+    <!-- 전체 삭제 -->
+    <delete id="delete_byCommunityNo" parameterType="int">
+        delete from MATEAPPLY
+        where MCOMMUNITYNO=#{mCommunityNo}
+    </delete>
 </mapper>
