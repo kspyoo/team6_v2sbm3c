@@ -76,7 +76,7 @@
 		<div>
 			<label>휴무일</label>
 			<input type="text" name="closeddays" th:value="${culturefacilityVO.closeddays}"
-				class="form-control fom-control-sm" th:field="*{closeddays}" required> 
+				class="form-control fom-control-sm" th:field="*{closeddays}" required>
 			<div th:if="${#fields.hasErrors('closeddays')}" class="alert alert-danger" role="alert" style="margin-top: 5px;">
 				<div th:each="err : ${#lists.sort(#fields.errors('closeddays'))}" th:text="${err}"></div>
 			</div>
@@ -84,7 +84,7 @@
 		<div>
 			<label>운영시간</label>
 			<input type="text" name="operatingtime" th:value="${culturefacilityVO.operatingtime}"
-				class="form-control fom-control-sm" th:field="*{operatingtime}" required> 
+				class="form-control fom-control-sm" th:field="*{operatingtime}" required>
 			<div th:if="${#fields.hasErrors('operatingtime')}" class="alert alert-danger" role="alert"
 				style="margin-top: 5px;">
 				<div th:each="err : ${#lists.sort(#fields.errors('operatingtime'))}" th:text="${err}"></div>
@@ -93,13 +93,15 @@
 		<div>
 			<label>주차가능여부</label>
 			<input type="text" name="pa" th:value="${culturefacilityVO.pa}" class="form-control fom-control-sm"
-				th:field="*{pa}" required> 
+				th:field="*{pa}" required>
 			<div th:if="${#fields.hasErrors('pa')}" class="alert alert-danger" role="alert" style="margin-top: 5px;">
 				<div th:each="err : ${#lists.sort(#fields.errors('pa'))}" th:text="${err}"></div>
 			</div>
 		</div>
 
 		<div class="content_body_bottom">
+			<button type="button" class="btn btn-secondary btn-sm"
+				th:onclick="@{|window.location='/culturefile/update_file?culturefno=${culturefacilityVO.culturefno}'|}">파일추가</button>
 			<button type="submit" class="btn btn-secondary btn-sm">저장</button>
 			<button type="button"
 				th:attr="onclick=|location.href='/culturefacility/list_search?word=${word}&now_page=${now_page}'|"

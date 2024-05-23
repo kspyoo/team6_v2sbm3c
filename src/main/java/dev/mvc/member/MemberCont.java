@@ -1,5 +1,6 @@
 package dev.mvc.member;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.json.JSONObject;
@@ -13,10 +14,16 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import dev.mvc.memberprofile.Memberprofile;
+import dev.mvc.memberprofile.MemberprofileProcInter;
+import dev.mvc.memberprofile.MemberprofileVO;
 import dev.mvc.team6_v2sbm3c.MsgCont;
 import dev.mvc.tool.Security;
+import dev.mvc.tool.Tool;
+import dev.mvc.tool.Upload;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -29,6 +36,10 @@ public class MemberCont {
   @Qualifier("dev.mvc.member.MemberProc")
   private MemberProcInter memberProc;
 
+  @Autowired
+  @Qualifier("dev.mvc.memberprofile.MemberprofileProc")
+  private MemberprofileProcInter memberprofileProc;
+  
   @Autowired
   Security security;
 
@@ -53,12 +64,12 @@ public class MemberCont {
    * @return
    */
   @GetMapping(value = "/create")
-  public String create_form(Model model, MemberVO memberVO) {
+  public String create_form(Model model, MemberVO memberVO, MemberprofileVO memberprofileVO) {
     return "member/create";
   }
 
   @PostMapping(value = "/create")
-  public String create_proc(Model model, MemberVO memberVO) {
+  public String create_proc(Model model, MemberVO memberVO, MemberprofileVO memberprofileVO) {
     int checkID_cnt = this.memberProc.checkID(memberVO.getId());
 
     if (checkID_cnt == 0) {
@@ -156,7 +167,8 @@ public class MemberCont {
       String id,
       String passwd,
       @RequestParam(value = "id_save", defaultValue = "") String id_save,
-      @RequestParam(value = "passwd_save", defaultValue = "") String passwd_save) {
+      @RequestParam(value = "passwd_save", defaultValue = "") String passwd_save,
+      MemberprofileVO memberprofileVO) {
     HashMap<String, Object> map = new HashMap<String, Object>();
     map.put("id", id);
     map.put("passwd", this.security.aesEncode(passwd));
@@ -165,9 +177,14 @@ public class MemberCont {
     System.out.println("-> login_proc cnt: " + cnt);
     model.addAttribute("cnt", cnt);
     if (cnt == 1) {
-
       MemberVO memberVO = this.memberProc.readById(id);
+      MemberprofileVO VOCheck = memberprofileProc.read_file(memberVO.getMemberno());
+      if (VOCheck == null) {
+        this.memberprofileProc.create_file(memberVO.getMemberno());
+        System.out.println("VOCheck == null");
+      }
       session.setAttribute("memberno", memberVO.getMemberno());
+      session.setAttribute("mprofileno",VOCheck.getMprofileno());
       session.setAttribute("id", memberVO.getId());
       session.setAttribute("name", memberVO.getName());
 
@@ -207,6 +224,7 @@ public class MemberCont {
       response.addCookie(ck_passwd_save);
 
       System.out.println("로그인 성공");
+      System.out.println("mprofileno : " + memberprofileVO.getMprofileno());
 
       return "redirect:/";
     } else {
@@ -241,11 +259,15 @@ public class MemberCont {
   }
 
   @GetMapping(value = "/read")
-  public String read(HttpSession session, Model model, int memberno) {
-
+  public String read(HttpSession session, Model model, int memberno,MemberprofileVO memberprofileVO) {
+    MemberprofileVO VOCheck = this.memberprofileProc.read_file(memberno);
     MemberVO memberVO = this.memberProc.read(memberno);
     model.addAttribute("memberVO", memberVO);
-
+    
+    // MemberProfileVO를 조회하여 모델에 추가
+    memberprofileVO = this.memberprofileProc.read_file(memberno);
+    model.addAttribute("memberprofileVO", memberprofileVO);
+    
     return "member/read";
   }
 
@@ -259,7 +281,10 @@ public class MemberCont {
   @GetMapping(value = "/delete")
   public String delete(Model model, int memberno) {
     MemberVO memberVO = this.memberProc.read(memberno);
+//    MemberprofileVO memberprofileVO = this.memberprofileProc.read_file(memberno);
     model.addAttribute("memberVO", memberVO);
+//    model.addAttribute("memberprofileVO",memberprofileVO);
+    
 
     return "member/delete";
   }
@@ -274,8 +299,8 @@ public class MemberCont {
   @PostMapping(value = "/delete")
   public String delete_process(HttpSession session, Model model, Integer memberno) {
     int cnt = this.memberProc.delete(memberno);
-
     if (cnt == 1) {
+      this.memberProc.delete_FK(memberno);
       model.addAttribute("code", "delete_success");
       session.invalidate();
       return "member/msg";
@@ -385,7 +410,7 @@ public class MemberCont {
    * @return
    */
   @GetMapping(value="/passwd_update_form")
-  public String passwd_update_form(HttpSession session, Model model) {
+  public String passwd_update_form(HttpSession session, Model model) { 
     int memberno = (int)session.getAttribute("memberno"); // session에서 가져오기
     
     MemberVO memberVO = this.memberProc.read(memberno);
@@ -454,4 +479,62 @@ public class MemberCont {
     }
     return "member/msg"; 
   }
+  
+//  @GetMapping(value="/update_file")
+//  public String update_file(HttpSession session, Model model, int memberno) {
+//    MemberVO memberVO = this.memberProc.read(memberno);
+//    model.addAttribute("memberno",memberno);
+//    
+//    
+//    
+//    return "/member/update_file";
+//  }
+//  
+//  @PostMapping(value="/update_file")
+//  public String update_file(HttpSession session, Model model, RedirectAttributes ra,
+//                                  MemberVO memberVO,MemberprofileVO memberprofileVO) {
+//    String file1 = "";
+//    String file1saved = "";
+//    String thumbfile = "";
+//    
+//    String upDir = Memberprofile.getUploadDir();
+//    MultipartFile mf = memberprofileVO.getFile1MF();
+//    
+//    file1 = mf.getOriginalFilename();
+//    
+//    long filesize = mf.getSize();
+//    if (filesize > 0) {
+//      if (Tool.checkUploadFile(file1) == true) {
+//        file1saved = Upload.saveFileSpring(mf, upDir);
+//        
+//        if(Tool.isImage(file1saved)) {
+//          thumbfile = Tool.preview(upDir, file1saved, 200, 150);
+//        }
+//        
+//        memberprofileVO.setFile1(file1);
+//        memberprofileVO.setFile1saved(file1saved);
+//        memberprofileVO.setThumbfile(thumbfile);
+//        memberprofileVO.setFilesize(filesize);
+//      } else {
+//        ra.addFlashAttribute("code","check_upload_file_fail");
+//        ra.addFlashAttribute("cnt",0); // 업로드 실패
+//        ra.addFlashAttribute("url","/memberprofile/msg");
+//        return "redirect:/member/msg";
+//      }
+//    } else { // 글만 등록
+//      
+//    }
+//    return "redirect:/member/msg";
+//  }
+  
+  @GetMapping(value="/list")
+  public String list(HttpSession session, Model model) {
+      ArrayList<MemberVO> list = this.memberProc.list();
+      
+      model.addAttribute("list", list);
+      
+      return "member/list"; 
+
+  }
+  
 }

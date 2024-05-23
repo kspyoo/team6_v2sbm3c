@@ -1,6 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="dev.mvc.member.MemberprofileDAOInter">
-
+<mapper namespace="dev.mvc.memberprofile.MemberprofileDAOInter">
+   <!-- 사진 등록 -->
+  <insert id="create_file" parameterType="int">
+    INSERT INTO memberprofile(mprofileno, memberno)
+    VALUES (memberprofile_seq.nextval,#{memberno})
+  </insert>
+  
+  <!-- 파일 수정 -->
+  <update id="update_file" parameterType="dev.mvc.memberprofile.MemberprofileVO">
+    UPDATE memberprofile
+    SET mprofileno=#{mprofileno}, file1=#{file1}, file1saved=#{file1saved}, thumbfile=#{thumbfile}, filesize=#{filesize}, memberno=#{memberno}
+    WHERE memberno = #{memberno} AND mprofileno=#{mprofileno}
+  </update>
+  
+  <!-- 일반적인 조회 -->
+  <select id="read_file" resultType="dev.mvc.memberprofile.MemberprofileVO" parameterType="int">
+    SELECT mprofileno, file1, file1saved, thumbfile, filesize, memberno
+    FROM memberprofile
+    WHERE memberno = #{memberno} 
+  </select>
+  
 </mapper>

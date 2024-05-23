@@ -19,8 +19,10 @@ import lombok.ToString;
 
 @Getter @Setter @ToString
 public class CulturefileVO {
-  /** 문화시설 번호 */
-  private int culturefno;
+  /** 문화시설 번호 FK */
+  private int culturefno=0;
+  
+  private int fano=0;
   
   /**
   이미지 파일
@@ -34,10 +36,16 @@ public class CulturefileVO {
   private long size1 = 0;
   /** 메인 이미지 */
   private String file1 = "";
+  
   /** 실제 저장된 메인 이미지 */
   private String file1saved = "";
   /** 메인 이미지 preview */
   private String thumbfile = "";
+  
+  private String getFile1() {
+    return (file1 != null) ? file1 : "";
+}
+
 
 
 }

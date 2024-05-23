@@ -68,10 +68,10 @@ public interface MateCommunityProcInter {
 
     /**
      * 게시글 수정
-     * @param map (제목, 내용, 검색태그, 시작지점, 모집 인원, 글번호)
+     * @param mateCommunityVO (제목, 내용, 검색태그, 시작지점, 모집 인원, 글번호)
      * @return
      */
-    public int update_content(Map<String, Object> map);
+    public int update_content(MateCommunityVO mateCommunityVO);
 
     /**
      * 조회수 증가

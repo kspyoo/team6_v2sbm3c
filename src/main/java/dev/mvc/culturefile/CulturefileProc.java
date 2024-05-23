@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component("dev.mvc.culturefile.CulturefileProc")
-public abstract class CulturefileProc implements CulturefileProcInter {
+public class CulturefileProc implements CulturefileProcInter {
   
   @Autowired
   private CulturefileDAOInter culturefileDAO;
@@ -25,6 +25,12 @@ public abstract class CulturefileProc implements CulturefileProcInter {
   public CulturefileVO read(int culturefno) {
     CulturefileVO culturefileVO = this.culturefileDAO.read(culturefno);
     return culturefileVO ;
+  }
+
+  @Override
+  public int delete(int fano) {
+    int cnt =this.culturefileDAO.delete(fano);
+    return cnt;
   }
   
   

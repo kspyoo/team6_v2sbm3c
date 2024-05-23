@@ -14,7 +14,7 @@ CREATE TABLE MATECOMMUNITY(
     WDATE                             DATE     NOT NULL,
     ASSEMBLETIME                      VARCHAR(30)     NOT NULL,
     STATUS                            number(1) default 0 not null ,
-    SEARCHTAG                         varchar2(200)  not null,
+    SEARCHTAG                         varchar2(200)  default ' ' null,
     PETTYPENO                         number(10)     NOT NULL,
     MEMBERNO                          NUMBER(10)     NOT NULL,
   FOREIGN KEY (PETTYPENO) REFERENCES PETTYPE (PETTYPENO),
@@ -52,7 +52,7 @@ values (MATECOMMUNITY_SEQ.nextval, '산책할사람 구해요!!!','강아지 산
 /**********************************/
 CREATE TABLE MATEAPPLY(
     ANO                               NUMBER(10)     NOT NULL    PRIMARY KEY,
-    ASTATUS                           VARCHAR2(15)     NOT NULL,
+    ASTATUS                           VARCHAR2(15)    default 'WAITING' NOT NULL,
     ADATE                             DATE     NOT NULL,
     MEMBERNO                          NUMBER(10)     NOT NULL,
     MCOMMUNITYNO                      NUMBER(10)     NOT NULL,
@@ -60,12 +60,23 @@ CREATE TABLE MATEAPPLY(
   FOREIGN KEY (MCOMMUNITYNO) REFERENCES MATECOMMUNITY (MCOMMUNITYNO)
 );
 
+DROP SEQUENCE MATEAPPLY_SEQ;
+CREATE SEQUENCE MATEAPPLY_SEQ
+    start with 1
+    increment by 1
+    maxvalue 9999999999
+    cache 2
+    nocycle;
+
 COMMENT ON TABLE MATEAPPLY is '산책 메이트 신청';
 COMMENT ON COLUMN MATEAPPLY.ANO is '신청 번호';
 COMMENT ON COLUMN MATEAPPLY.ASTATUS is '신청상태';
 COMMENT ON COLUMN MATEAPPLY.ADATE is '신청일자';
 COMMENT ON COLUMN MATEAPPLY.MEMBERNO is '회원번호';
 COMMENT ON COLUMN MATEAPPLY.MCOMMUNITYNO is '글번호';
+
+insert into MATEAPPLY(ANO, ASTATUS, ADATE, MEMBERNO, MCOMMUNITYNO)
+values (MATECOMMUNITY_SEQ.nextval,'WAITING', sysdate, 1, 7);
 
 
 /**********************************/

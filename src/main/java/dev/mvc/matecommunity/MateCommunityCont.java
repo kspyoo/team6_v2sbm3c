@@ -3,14 +3,12 @@ package dev.mvc.matecommunity;
 import dev.mvc.member.MemberProcInter;
 import dev.mvc.tool.Tool;
 import jakarta.servlet.http.HttpSession;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,6 +25,11 @@ public class MateCommunityCont {
     @Autowired
     @Qualifier("dev.mvc.member.MemberProc")
     private MemberProcInter memberProcInter;
+
+    @GetMapping("/")
+    public String main(){
+        return "index";
+    }
 
     @GetMapping("/list_all")
     public String list_all(Model model, HttpSession session,
@@ -105,7 +108,7 @@ public class MateCommunityCont {
     }
 
     @GetMapping("/create")
-    public String createForm(Model model, MateCommunityVO mateCommunityVO, HttpSession session, int petTypeNo){
+    public String createForm(Model model, HttpSession session, int petTypeNo){
         model.addAttribute("petTypeNo", petTypeNo);
         model.addAttribute("memberNo", 1);
 
@@ -114,13 +117,15 @@ public class MateCommunityCont {
 
     @PostMapping("/create")
     public String create(MateCommunityVO mateCommunityVO){
-        String[] tag_list = mateCommunityVO.getSearchTag().split(" ");
-        StringBuffer tags = new StringBuffer();
+        StringBuffer tags = new StringBuffer(" ");
 
-        for (String tag: tag_list){
-            tags.append("#");
-            tags.append(tag);
-            tags.append(" ");
+        if (String.valueOf(mateCommunityVO.getSearchTag()).trim() != "" || String.valueOf(mateCommunityVO.getSearchTag()) != "null") {
+            String[] tag_list = mateCommunityVO.getSearchTag().split(" ");
+            for (String tag: tag_list){
+                tags.append("#");
+                tags.append(tag);
+                tags.append(" ");
+            }
         }
 
         System.out.println(tags.toString().trim());
@@ -141,8 +146,8 @@ public class MateCommunityCont {
                        @RequestParam(name = "petTypeNo", defaultValue = "0") int petTypeNo,
                        @RequestParam(name = "searchWord", defaultValue = "") String searchWord,
                        @RequestParam(name = "now_page", defaultValue = "1") int now_page){
-        MateCommunityVO mateCommunityVO= this.mateCommunityProc.read_content(mCommunityNo);
         this.mateCommunityProc.viewCnt_up(mCommunityNo);
+        MateCommunityVO mateCommunityVO= this.mateCommunityProc.read_content(mCommunityNo);
 
         model.addAttribute("mateCommunityVO", mateCommunityVO);
         model.addAttribute("searchWord", searchWord);
@@ -150,6 +155,78 @@ public class MateCommunityCont {
         model.addAttribute("petTypeNo", petTypeNo);
 
         return "mateCommunity/read";
+    }
+
+    @GetMapping("/update")
+    public String updateForm(Model model, int mCommunityNo,
+                         @RequestParam(name = "petTypeNo", defaultValue = "0") int petTypeNo){
+
+        MateCommunityVO mateCommunityVO = this.mateCommunityProc.read_content(mCommunityNo);
+
+        StringBuffer tags = new StringBuffer();
+
+        if (mateCommunityVO.getSearchTag().trim() != "") {
+            String[] searchTags = mateCommunityVO.getSearchTag().split("#");
+            for (String tag: searchTags){
+                tags.append(tag);
+            }
+        }
+
+        System.out.println(tags.toString().trim());
+        mateCommunityVO.setSearchTag(tags.toString().trim());
+
+        model.addAttribute("mateCommunityVO", mateCommunityVO);
+        model.addAttribute("petTypeNo", petTypeNo);
+
+        System.out.println(petTypeNo);
+
+        return "mateCommunity/update";
+    }
+
+    @PostMapping("/update")
+    public String update(Model model, MateCommunityVO mateCommunityVO,
+                         @RequestParam(name = "current_petTypeNo", defaultValue = "0") int current_petTypeNo){
+        StringBuffer tags = new StringBuffer(" ");
+        if (String.valueOf(mateCommunityVO.getSearchTag()).trim() != "" || String.valueOf(mateCommunityVO.getSearchTag()) != "null") {
+            String[] tag_list = mateCommunityVO.getSearchTag().split(" ");
+            for (String tag: tag_list){
+                tags.append("#");
+                tags.append(tag);
+                tags.append(" ");
+            }
+        }
+
+        mateCommunityVO.setSearchTag(tags.toString().trim());
+
+        int result = this.mateCommunityProc.update_content(mateCommunityVO);
+
+        if (result == 1){
+            System.out.println("글 수정 성공");
+        }else{
+            System.out.println("글 수정 실패");
+        }
+
+        if(current_petTypeNo == 0) {
+            return "redirect:/mateCommunity/read?mCommunityNo=" + mateCommunityVO.getMCommunityNo();
+        }else{
+            return "redirect:/mateCommunity/read?petTypeNo=" + current_petTypeNo + "&mCommunityNo=" + mateCommunityVO.getMCommunityNo();
+        }
+    }
+
+    @PostMapping("/delete")
+    @ResponseBody
+    public String delete(@RequestBody String json_src){
+        JSONObject jsonObject = new JSONObject(json_src);
+        int mCommunityNo = (int) jsonObject.get("mCommunityNo");
+
+        int cnt = this.mateCommunityProc.delete_content(mCommunityNo);
+
+        JSONObject json = new JSONObject();
+        json.put("cnt", cnt);
+
+        System.out.println(cnt);
+
+        return json.toString();
     }
 
 }

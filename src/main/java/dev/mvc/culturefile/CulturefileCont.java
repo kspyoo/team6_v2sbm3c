@@ -3,132 +3,120 @@ package dev.mvc.culturefile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
 
 import dev.mvc.tool.Tool;
 import dev.mvc.tool.Upload;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
-@RequestMapping(value= "/culturefile")
 @Controller
 public class CulturefileCont {
-  
   @Autowired
   @Qualifier("dev.mvc.culturefile.CulturefileProc")
   private CulturefileProcInter culturefileProc;
-
   
-  
-  
-  public CulturefileCont() {
-    System.out.println("-> CulturefileCont created.");
+  public CulturefileCont(){
+    System.out.println("--> CulturefileCont created.");
   }
-
   
-  @PostMapping(value = "/create")
-  public String create(HttpServletRequest request, HttpSession session,
-                        Model model, CulturefileVO culturefileVO,
-                        RedirectAttributes ra) {
-
+  /**
+    * 등록 폼
+    * @param culturefno 문화 파일 번호
+    * @return 뷰 이름과 모델을 담은 ModelAndView 객체
+    */
+  @GetMapping(value="/culturefile/update_file")
+  public ModelAndView create(@RequestParam("culturefno") int culturefno) {
+    ModelAndView mav = new ModelAndView();
+    mav.setViewName("/culturefile/update_file"); // webapp/culturefile/update_file.jsp
+    mav.addObject("culturefno", culturefno); // 매개변수 전달
+    return mav;
+  }
   
-      // ------------------------------------------------------------------------------
+  /**
+   * 등록 처리
+   * @param request HTTP 요청 객체
+   * @param culturefileVO 문화 파일 VO
+   * @param ra 리다이렉트 속성
+   * @param culturefno 문화 파일 번호
+   * @return 리다이렉트 URL
+   */
+  @PostMapping(value = "/culturefile/update_file")
+  public String create(HttpServletRequest request, 
+                       CulturefileVO culturefileVO,
+                       RedirectAttributes ra,
+                       @RequestParam(value = "culturefno", required = false, defaultValue = "0") int culturefno) {
       // 파일 전송 코드 시작
-      // ------------------------------------------------------------------------------
-      String file1 = ""; // 원본 파일명 image
-      String file1saved = ""; // 저장된 파일명, image
-      String thumbfile = ""; // preview image
+      String file1 = ""; // 원본 파일명
+      String file1saved = ""; // 저장된 파일명
+      String thumbfile = ""; // 미리보기 이미지
 
-      String upDir = Culturefile.getUploadDir(); // 파일을 업로드할 폴더 준비
+      String upDir = Culturefile.getUploadDir(); // 파일 업로드 폴더
       System.out.println("-> upDir: " + upDir);
 
-      // 전송 파일이 없어도 file1MF 객체가 생성됨.
-      // <input type='file' class="form-control" name='file1MF' id='file1MF'
-      // value='' placeholder="파일 선택">
       MultipartFile mf = culturefileVO.getFile1MF();
 
-      file1 = mf.getOriginalFilename(); // 원본 파일명 산출, 01.jpg
-      System.out.println("-> 원본 파일명 산출 file1: " + file1);
+      file1 = mf.getOriginalFilename(); // 원본 파일명
+      System.out.println("-> 원본 파일명 file1: " + file1);
 
       long size1 = mf.getSize(); // 파일 크기
-      if (size1 > 0) { // 파일 크기 체크, 파일을 올리는 경우
-        if (Tool.checkUploadFile(file1) == true) { // 업로드 가능한 파일인지 검사
-          // 파일 저장 후 업로드된 파일명이 리턴됨, spring.jsp, spring_1.jpg, spring_2.jpg...
-          file1saved = Upload.saveFileSpring(mf, upDir);
+      int upload_count = 0; // 업로드 횟수 초기화
+      if (size1 > 0) { // 파일 크기 체크
+          if (Tool.checkUploadFile(file1)) { // 업로드 가능한 파일인지 검사
+              file1saved = Upload.saveFileSpring(mf, upDir);
 
-          if (Tool.isImage(file1saved)) { // 이미지인지 검사
-            // thumb 이미지 생성후 파일명 리턴됨, width: 200, height: 150
-            thumbfile = Tool.preview(upDir, file1saved, 200, 150);
+              if (Tool.isImage(file1saved)) { // 이미지인지 검사
+                  thumbfile = Tool.preview(upDir, file1saved, 200, 150); // 썸네일 생성
+              }
+
+              culturefileVO.setFile1(file1); // 원본 파일명
+              culturefileVO.setFile1saved(file1saved); // 저장된 파일명
+              culturefileVO.setThumbfile(thumbfile); // 썸네일 파일명
+              culturefileVO.setSize1(size1); // 파일 크기
+              upload_count = 1; // 업로드 성공
+          } else { // 업로드 불가능한 파일 형식
+              ra.addFlashAttribute("code", "check_upload_file_fail"); // 업로드 실패 메시지
+              ra.addFlashAttribute("cnt", 0); // 업로드 실패
+              ra.addFlashAttribute("url", "/cult/msg"); // 메시지 URL
+              return "redirect:/culturefile/msg"; // 리다이렉트
           }
-
-          culturefileVO.setFile1(file1); // 순수 원본 파일명
-          culturefileVO.setFile1saved(file1saved); // 저장된 파일명(파일명 중복 처리)
-          culturefileVO.setThumbfile(thumbfile); // 원본이미지 축소판
-          culturefileVO.setSize1(size1); // 파일 크기
-
-        } else { // 전송 못하는 파일 형식
-          ra.addFlashAttribute("code", "check_upload_file_fail"); // 업로드 할 수 없는 파일
-          ra.addFlashAttribute("cnt", 0); // 업로드 실패
-          ra.addFlashAttribute("url", "/culturefile/msg"); // msg.html, redirect parameter 적용
-          return "redirect:/culturefile/msg"; // Post -> Get - param...
-        }
       } else { // 글만 등록하는 경우
-        System.out.println("-> 글만 등록");
+          System.out.println("-> 글만 등록");
       }
 
-      // ------------------------------------------------------------------------------
       // 파일 전송 코드 종료
-      // ------------------------------------------------------------------------------
 
-      // Call By Reference: 메모리 공유, Hashcode 전달
-      int culturefno = (int) session.getAttribute("culturefno"); // memberno FK
-      culturefileVO.setCulturefno(culturefno);
-      int cnt = this.culturefileProc.create(culturefileVO);
+      ra.addAttribute("culturefno", culturefno); // 리다이렉트 매개변수
+      ra.addAttribute("upload_count", upload_count); // 리다이렉트 매개변수
+      ra.addAttribute("url", "msg"); // 메시지 URL
+   
 
-      // ------------------------------------------------------------------------------
-      // PK의 return
-      // ------------------------------------------------------------------------------
-      // System.out.println("--> contentsno: " + contentsVO.getContentsno());
-      // mav.addObject("contentsno", contentsVO.getContentsno()); // redirect
-      // parameter 적용
-      // ------------------------------------------------------------------------------
-
-      if (cnt == 1) {
-        // type 1, 재업로드 발생
-        // return "<h1>파일 업로드 성공</h1>"; // 연속 파일 업로드 발생
-
-        // type 2, 재업로드 발생
-        // model.addAttribute("cnt", cnt);
-        // model.addAttribute("code", "create_success");
-        // return "contents/msg";
-
-        // type 3 권장
-        // return "redirect:/contents/list_all"; // /templates/contents/list_all.html
-
-        // System.out.println("-> contentsVO.getCateno(): " + contentsVO.getCateno());
-        // ra.addFlashAttribute("cateno", contentsVO.getCateno()); // controller ->
-        // controller: X
-
-        // ra.addAttribute("cateno", contentsVO.getCateno()); // controller -> controller: O
-        return "redirect:/contents/list_by_cateno";
-
-        // return "redirect:/contents/list_by_cateno?cateno=" + contentsVO.getCateno();
-        // // /templates/contents/list_by_cateno.html
-      } else {
-        ra.addFlashAttribute("code", "create_fail"); // DBMS 등록 실패
-        ra.addFlashAttribute("cnt", 0); // 업로드 실패
-        ra.addFlashAttribute("url", "/culturefile/msg"); // msg.html, redirect parameter 적용
-        return "redirect:/culturefile/msg"; // Post -> Get - param...
-      }
+      return "redirect:/culturefile/msg"; // 리다이렉트
   }
-  
 
   
   
+  
+  
+  
+  
+  
+  
+  
+  /**
+   * 새로고침 방지를 위한 메시지 출력
+   * @param url 메시지 URL
+   * @return 뷰 이름과 모델을 담은 ModelAndView 객체
+   */
+  @GetMapping(value="/culturefile/msg")
+  public ModelAndView msg(@RequestParam("url") String url) {
+    ModelAndView mav = new ModelAndView();
+    mav.setViewName("/culturefile/" + url); // URL을 통해 메시지 페이지 설정
+    return mav;
+  }  
 }
-

@@ -1,5 +1,6 @@
 package dev.mvc.member;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.apache.ibatis.annotations.Param;
@@ -53,6 +54,13 @@ public interface MemberDAOInter {
   public int delete(int memberno);
   
   /**
+   * 자식테이블 삭제
+   * @param memberno
+   * @return
+   */
+  public int delete_FK(int memberno);
+  
+  /**
    * 아이디 찾기
    * @param name
    * @param phone
@@ -95,6 +103,12 @@ public interface MemberDAOInter {
    * @return 변경된 패스워드 갯수
    */
   public int passwd_update(HashMap<String, Object> map);
+  
+  /**
+   * 회원 전체 목록
+   * @return
+   */
+  public ArrayList<MemberVO> list();
   
 }
 

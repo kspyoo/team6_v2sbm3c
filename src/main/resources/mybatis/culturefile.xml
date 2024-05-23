@@ -20,5 +20,6 @@
     FROM culturefile
     WHERE culturefno = #{culturefno}
   </select>
+  
 
 </mapper>

@@ -20,5 +20,12 @@ public interface CulturefileDAOInter {
    * @return
    */
   public CulturefileVO read(int culturefno);
+  
+  /**
+   * 삭제
+   * @param fa
+   * @return 삭제된 레코드 갯수
+   */
+  public int delete(int fano);
 
 }

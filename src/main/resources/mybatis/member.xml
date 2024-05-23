@@ -45,7 +45,13 @@
   
   <!-- 회원 탈퇴 -->
   <delete id="delete" parameterType="int">
-    DELETE FROM member
+    DELETE FROM member 
+    WHERE memberno=#{memberno}
+  </delete>
+  
+  <!-- 자식테이블 삭제 -->
+  <delete id="delete_FK" parameterType="int">
+    DELETE FROM memberprofile 
     WHERE memberno=#{memberno}
   </delete>
   
@@ -90,6 +96,16 @@
     SET passwd=#{passwd}
     WHERE memberno=#{memberno}
   </update>
+  
+  <select id="list" resultType="dev.mvc.member.MemberVO">
+    SELECT memberno, id, passwd, name, gender, birthday, phone, addr_code, addr_main, addr_detail, joindate, status
+    FROM member
+    ORDER BY id ASC
+  </select>
+  
+  
+  
+
 
 
 </mapper>
