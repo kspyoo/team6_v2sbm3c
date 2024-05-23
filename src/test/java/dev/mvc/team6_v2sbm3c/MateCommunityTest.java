@@ -1,5 +1,6 @@
 package dev.mvc.team6_v2sbm3c;
 
+import dev.mvc.matecommunity.MateCommunityJoinVO;
 import dev.mvc.matecommunity.MateCommunityProcInter;
 import dev.mvc.matecommunity.MateCommunityVO;
 import dev.mvc.member.MemberProcInter;
@@ -44,7 +45,7 @@ public class MateCommunityTest {
         //#{addr_code}, #{addr_main},#{addr_detail}, sysdate, #{status}
         MemberVO memberVO = memberProc.read(1);
 
-        MateCommunityVO result = mateCommunityProc.read_content(2);
+        MateCommunityJoinVO result = mateCommunityProc.read_content(2);
 
         System.out.println(result.getTitle());
     }

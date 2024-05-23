@@ -1,5 +1,7 @@
 package dev.mvc.matecommunity;
 
+import dev.mvc.mateapply.MateApplyProcInter;
+import dev.mvc.mateapply.MateApplyVO;
 import dev.mvc.member.MemberProcInter;
 import dev.mvc.tool.Tool;
 import jakarta.servlet.http.HttpSession;
@@ -26,11 +28,16 @@ public class MateCommunityCont {
     @Qualifier("dev.mvc.member.MemberProc")
     private MemberProcInter memberProcInter;
 
+    @Autowired
+    @Qualifier("dev.mvc.mateapply.MateApplyProc")
+    private MateApplyProcInter mateApplyProc;
+
     @GetMapping("/")
     public String main(){
         return "index";
     }
 
+    // 게시글 전체 리스트 조회 + 페이징 + 검색
     @GetMapping("/list_all")
     public String list_all(Model model, HttpSession session,
                            @RequestParam(name = "searchWord", defaultValue = "") String searchWord,
@@ -63,6 +70,41 @@ public class MateCommunityCont {
         return "mateCommunity/list_all";
     }
 
+    // 게시글 전체 리스트 조회 + 페이징 + 검색
+    @GetMapping("/my_list_all")
+    public String my_list_all(Model model, HttpSession session,
+                           @RequestParam(name = "searchWord", defaultValue = "") String searchWord,
+                           @RequestParam(name = "now_page", defaultValue = "1") int now_page){
+        searchWord = Tool.checkNull(searchWord).trim();
+
+//        ArrayList<PartCateVOMenu> menu = this.partCateProc.menu();
+//        model.addAttribute("menu", menu);
+
+        System.out.println((int) session.getAttribute("memberno"));
+        ArrayList<MateCommunityJoinVO> my_list_all = this.mateCommunityProc.my_list_all(now_page, MateCommunity.RECORD_PER_PAGE, (int) session.getAttribute("memberno"));
+        model.addAttribute("my_list_all", my_list_all);
+
+        // 특정 목록 카테고리 개수
+        int my_list_all_count = this.mateCommunityProc.my_list_all_count((int) session.getAttribute("memberno"));
+        model.addAttribute("my_list_all_count", my_list_all_count);
+
+        // 리스트 일련변호
+        // 레코드 갯수 - ((현재 페이지 - 1) * 페이지당 레코드 갯수)
+        int myListIndex = (my_list_all_count - ((now_page - 1) * MateCommunity.RECORD_PER_PAGE));
+        model.addAttribute("myListIndex", myListIndex);
+
+        // 페이징 버튼 목록
+        String paging = this.mateCommunityProc.list_all_pagingBox(
+                now_page, searchWord, "/mateCommunity/my_list_all", my_list_all_count, MateCommunity.RECORD_PER_PAGE, MateCommunity.PAGE_PER_BLOCK);
+
+        model.addAttribute("paging", paging);
+        model.addAttribute("searchWord", searchWord);
+        model.addAttribute("now_page", now_page);
+
+        return "mateCommunity/my_list_all";
+    }
+
+    // 게시글 카테고리마다 리스트 조회 + 페이징 + 검색
     @GetMapping("/list_all_byPetTypeNo")
     public String list_all_byPetTypeNo(Model model, HttpSession session, int petTypeNo,
                            @RequestParam(name = "searchWord", defaultValue = "") String searchWord,
@@ -107,6 +149,7 @@ public class MateCommunityCont {
         return "mateCommunity/list_all_byPetTypeNo";
     }
 
+    // 게시글 작성 폼
     @GetMapping("/create")
     public String createForm(Model model, HttpSession session, int petTypeNo){
         model.addAttribute("petTypeNo", petTypeNo);
@@ -115,6 +158,7 @@ public class MateCommunityCont {
         return "mateCommunity/create";
     }
 
+    // 게시글 작성
     @PostMapping("/create")
     public String create(MateCommunityVO mateCommunityVO){
         StringBuffer tags = new StringBuffer(" ");
@@ -141,27 +185,34 @@ public class MateCommunityCont {
         return "redirect:/mateCommunity/list_all";
     }
 
+    // 게시글 조회
     @GetMapping("/read")
     public String read(Model model, int mCommunityNo, HttpSession session,
                        @RequestParam(name = "petTypeNo", defaultValue = "0") int petTypeNo,
                        @RequestParam(name = "searchWord", defaultValue = "") String searchWord,
                        @RequestParam(name = "now_page", defaultValue = "1") int now_page){
+        int isRecruited = 0;
+        if(session.getAttribute("memberno") != null) {
+            isRecruited = this.mateApplyProc.isRecruited((int) session.getAttribute("memberno"), mCommunityNo);
+        }
         this.mateCommunityProc.viewCnt_up(mCommunityNo);
-        MateCommunityVO mateCommunityVO= this.mateCommunityProc.read_content(mCommunityNo);
+        MateCommunityJoinVO mateCommunityVO= this.mateCommunityProc.read_content(mCommunityNo);
 
         model.addAttribute("mateCommunityVO", mateCommunityVO);
         model.addAttribute("searchWord", searchWord);
         model.addAttribute("now_page", now_page);
         model.addAttribute("petTypeNo", petTypeNo);
+        model.addAttribute("isRecruited", isRecruited);
 
         return "mateCommunity/read";
     }
 
+    // 게시글 수정 폼
     @GetMapping("/update")
     public String updateForm(Model model, int mCommunityNo,
                          @RequestParam(name = "petTypeNo", defaultValue = "0") int petTypeNo){
 
-        MateCommunityVO mateCommunityVO = this.mateCommunityProc.read_content(mCommunityNo);
+        MateCommunityJoinVO mateCommunityVO = this.mateCommunityProc.read_content(mCommunityNo);
 
         StringBuffer tags = new StringBuffer();
 
@@ -183,6 +234,7 @@ public class MateCommunityCont {
         return "mateCommunity/update";
     }
 
+    // 게시글 수정
     @PostMapping("/update")
     public String update(Model model, MateCommunityVO mateCommunityVO,
                          @RequestParam(name = "current_petTypeNo", defaultValue = "0") int current_petTypeNo){
@@ -213,12 +265,14 @@ public class MateCommunityCont {
         }
     }
 
+    // 게시글 삭제
     @PostMapping("/delete")
     @ResponseBody
     public String delete(@RequestBody String json_src){
         JSONObject jsonObject = new JSONObject(json_src);
         int mCommunityNo = (int) jsonObject.get("mCommunityNo");
 
+        this.mateApplyProc.delete_byCommunityNo(mCommunityNo);
         int cnt = this.mateCommunityProc.delete_content(mCommunityNo);
 
         JSONObject json = new JSONObject();
@@ -229,4 +283,24 @@ public class MateCommunityCont {
         return json.toString();
     }
 
+    // 모집 종료로 상태 변경
+    @GetMapping("/recruit_finish")
+    @ResponseBody
+    public int  recruit_finish(int mCommunityNo, HttpSession session){
+        int cnt = this.mateCommunityProc.recruit_finish(mCommunityNo);
+        if (cnt == 1){
+            this.mateApplyProc.deniedAll(mCommunityNo);
+        }
+        System.out.println(cnt);
+        return cnt;
+    }
+
+    // 모집중으로 상태 변경
+    @GetMapping("/recruit_start")
+    @ResponseBody
+    public int recruit_start(int mCommunityNo, HttpSession session){
+        int cnt = this.mateCommunityProc.recruit_start(mCommunityNo);
+        System.out.println(cnt);
+        return cnt;
+    }
 }
