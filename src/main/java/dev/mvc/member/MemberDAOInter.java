@@ -110,6 +110,12 @@ public interface MemberDAOInter {
    */
   public ArrayList<MemberVO> list();
   
+  /**
+   * 회원 전체 목록
+   * @return
+   */
+  public ArrayList<MemberVO> list_no(int memberno);
+  
 }
 
 

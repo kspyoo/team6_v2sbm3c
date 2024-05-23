@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import dev.mvc.memberprofile.MemberprofileVO;
 import dev.mvc.tool.Security;
 
 
@@ -37,6 +38,8 @@ public class MemberProc implements MemberProcInter {
     memberVO.setPasswd(passwd_encoded);
     
     int cnt = this.memberDAO.create(memberVO);
+    
+    
     return cnt;
   }
   
@@ -72,7 +75,7 @@ public class MemberProc implements MemberProcInter {
   
   @Override
   public int delete_FK(int memberno) {
-    int cnt = this.memberDAO.delete(memberno);
+    int cnt = this.memberDAO.delete_FK(memberno);
     return cnt;
   }
 
@@ -115,6 +118,12 @@ public class MemberProc implements MemberProcInter {
   @Override
   public ArrayList<MemberVO> list() {
     ArrayList<MemberVO> list = this.memberDAO.list();
+    return list;
+  }
+  
+  @Override
+  public ArrayList<MemberVO> list_no(int memberno) {
+    ArrayList<MemberVO> list = this.memberDAO.list_no(memberno);
     return list;
   }
   

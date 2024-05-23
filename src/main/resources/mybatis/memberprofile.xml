@@ -22,4 +22,10 @@
     WHERE memberno = #{memberno} 
   </select>
   
+  <!-- 회원 탈퇴 -->
+  <delete id="delete_FK" parameterType="int">
+    DELETE FROM memberprofile 
+    WHERE memberno=#{memberno}
+  </delete>
+  
 </mapper>
