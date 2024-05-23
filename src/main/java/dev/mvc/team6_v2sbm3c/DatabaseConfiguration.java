@@ -23,7 +23,8 @@ import com.zaxxer.hikari.HikariDataSource;
 @MapperScan(basePackages= {"dev.mvc.member","dev.mvc.matecommunity",
                            "dev.mvc.culturefacility","dev.mvc.master", 
                            "dev.mvc.community","dev.mvc.catecommunity",
-                           "dev.mvc.memberprofile","dev.mvc.login"}) // DAO interface를 찾는 위치
+                           "dev.mvc.memberprofile","dev.mvc.login",
+                           "dev.mvc.memberprofile", "dev.mvc.mateapply"}) // DAO interface를 찾는 위치
 
 
 public class DatabaseConfiguration {
