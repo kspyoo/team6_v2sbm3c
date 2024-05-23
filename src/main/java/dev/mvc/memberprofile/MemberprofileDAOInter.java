@@ -18,4 +18,11 @@ public interface MemberprofileDAOInter {
    * @return
    */
   public MemberprofileVO read_file(int memberno);
+  
+  /**
+   * 자식테이블 삭제
+   * @param memberno
+   * @return
+   */
+  public int delete_FK(int memberno);
 }
