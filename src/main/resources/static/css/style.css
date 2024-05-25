@@ -115,6 +115,7 @@
   }
 
   .bottom_menu {
+    height: 100px;
     text-align: center;
     margin: 20px auto;
     clear: both;  /* 앞쪽 태그의 float 효과를 제거함. */
