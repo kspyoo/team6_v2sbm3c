@@ -177,8 +177,14 @@ commit;
 
 DELETE FROM login WHERE memberno=63;
 
+<<<<<<< HEAD
 SELECT A.SID , A.SERIAL# , object_name , A.SID || ', ' || A.SERIAL# AS KILL_TASK 
   FROM V$SESSION A 
  INNER JOIN V$LOCK B ON A.SID = B.SID 
  INNER JOIN DBA_OBJECTS C ON B.ID1 = C.OBJECT_ID 
  WHERE B.TYPE = 'TM' ;
+=======
+
+
+ALTER
+>>>>>>> df485a745291a6bd9a9a25236824d93d5fe63928
