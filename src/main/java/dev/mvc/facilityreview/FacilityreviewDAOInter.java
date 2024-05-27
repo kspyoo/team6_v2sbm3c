@@ -4,9 +4,16 @@ import java.util.ArrayList;
 import java.util.Map;
 
 public interface FacilityreviewDAOInter {
-  
+  /**
+   * 등록
+   * @param facilityreviewVO
+   * @return
+   */
   public int create(FacilityreviewVO facilityreviewVO);
-  
+  /**
+   * 
+   * @return
+   */
   public ArrayList<FacilityreviewVO> list();
   
   public ArrayList<FacilityreviewVO> list_by_culturefno(int culturefno);

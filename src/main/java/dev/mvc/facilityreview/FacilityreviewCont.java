@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -40,7 +41,7 @@ public class FacilityreviewCont {
   @ResponseBody
   @PostMapping(value = "/facilityreview/create",
                             produces = "text/plain;charset=UTF-8")
-  public String create(FacilityreviewVO facilityreviewVO) {
+  public String create(@RequestBody FacilityreviewVO facilityreviewVO) {
     int cnt = facilityreviewProc.create(facilityreviewVO);
     
     JSONObject obj = new JSONObject();
@@ -67,6 +68,9 @@ public class FacilityreviewCont {
     return mav;
   }
 
+  
+ 
+  
 /**
  * 
  * @param culturefno
@@ -75,7 +79,7 @@ public class FacilityreviewCont {
   @ResponseBody
   @GetMapping(value = "/facilityreview/list_by_culturefno",
               produces = "text/plain;charset=UTF-8")
-  public String list_by_culturefsno(int culturefno) {
+  public String list_by_culturefno(int culturefno) {
     ArrayList<FacilityreviewVO> list = facilityreviewProc.list_by_culturefno(culturefno);
     
     JSONObject obj = new JSONObject();
@@ -104,7 +108,8 @@ public class FacilityreviewCont {
  
     return obj.toString();     
   }
-  
+    
+ 
 //http://localhost:9091/contents/read.do
   /**
    * 조회

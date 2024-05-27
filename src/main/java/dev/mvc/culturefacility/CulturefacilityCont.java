@@ -116,6 +116,7 @@ public String create(Model model, CulturefacilityVO culturefacilityVO
                             @RequestParam(name="now_page", defaultValue="1") int now_page) {
     
     // word = Tool.checkNull(word);
+ 
     
     
     CulturefacilityVO culturefacilityVO = this.CulturefacilityProc.read(culturefno);
@@ -139,7 +140,7 @@ public String create(Model model, CulturefacilityVO culturefacilityVO
     model.addAttribute("no", no);
     
     return "culturefacility/read";  // /templates/cate/read.html
-    
+//    return "culturefacility/read_cookie_reply"
   }
   
   /**

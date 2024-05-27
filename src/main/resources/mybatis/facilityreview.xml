@@ -4,7 +4,7 @@
 
   <insert id="create">
     INSERT INTO facilityreview(rno, culturefno, memberno, reviewcomment, reviewgrade, rdate)
-    VALUES(facilityreview_seq.nextval, #{culturefno}, #{memberno}, #{reviewcomment}, #{reviewcomment}, sysdate)
+    VALUES(facilityreview_seq.nextval, #{culturefno}, #{memberno}, #{reviewcomment}, #{reviewgrade}, sysdate)
   </insert>
   
   <select id="list" resultType="dev.mvc.facilityreview.FacilityreviewVO">

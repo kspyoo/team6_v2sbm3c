@@ -4,7 +4,11 @@ import java.util.ArrayList;
 import java.util.Map;
 
 public interface FacilityreviewProcInter {
-  
+  /**
+   * 등록
+   * @param facilityreviewVO
+   * @return
+   */
   public int create(FacilityreviewVO facilityreviewVO);
   
   public ArrayList<FacilityreviewVO> list();

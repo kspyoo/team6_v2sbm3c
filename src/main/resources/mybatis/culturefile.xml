@@ -3,8 +3,8 @@
 <mapper namespace="dev.mvc.culturefile.CulturefileDAOInter">
 
 	<insert id="create" parameterType="dev.mvc.culturefile.CulturefileVO">
-    INSERT INTO culturefile(fano, size1 ,file1,file1saved, thumbfile,culturefno)
-    VALUES (culturefile_seq.nextval,#{size1}, #{file1}, #{file1saved}, #{thumbfile}, #{culturefno} )
+    INSERT INTO culturefile(fano,culturefno, size1 ,file1,file1saved, thumbfile)
+    VALUES (culturefile_seq.nextval,#{culturefno}, #{size1}, #{file1}, #{file1saved}, #{thumbfile})
   </insert>
 	
 	  <!-- 파일 수정 -->

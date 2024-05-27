@@ -82,7 +82,7 @@ public class CulturefileCont {
           } else { // 업로드 불가능한 파일 형식
               ra.addFlashAttribute("code", "check_upload_file_fail"); // 업로드 실패 메시지
               ra.addFlashAttribute("cnt", 0); // 업로드 실패
-              ra.addFlashAttribute("url", "/cult/msg"); // 메시지 URL
+              ra.addFlashAttribute("url", "/culture/msg"); // 메시지 URL
               return "redirect:/culturefile/msg"; // 리다이렉트
           }
       } else { // 글만 등록하는 경우
@@ -94,6 +94,8 @@ public class CulturefileCont {
       ra.addAttribute("culturefno", culturefno); // 리다이렉트 매개변수
       ra.addAttribute("upload_count", upload_count); // 리다이렉트 매개변수
       ra.addAttribute("url", "msg"); // 메시지 URL
+      ra.addFlashAttribute("code", "create_success"); // 업로드 성공 메시지
+      ra.addFlashAttribute("cnt", 1); // 업로드 성공
    
 
       return "redirect:/culturefile/msg"; // 리다이렉트

@@ -44,6 +44,15 @@ FROM member m,  facilityreview r
 WHERE m.memberno = r.memberno
 ORDER BY r.rno DESC;
 
+-- reply + member join + 특정 contentsno 별 목록
+SELECT m.id,
+           r.rno, r.culturefno, r.memberno, r.reviewcomment, r.reviewgrade, r.rdate
+FROM member m,  facilityreview r
+WHERE (m.memberno = r.memberno) AND r.culturefno=1
+ORDER BY r.rno DESC;
+
+
+
 
 
 
