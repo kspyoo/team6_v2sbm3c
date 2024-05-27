@@ -24,6 +24,12 @@ public class MemberprofileProc implements MemberprofileProcInter{
     MemberprofileVO memberprofileVO = this.memberprofileDAO.read_file(memberno);
     return memberprofileVO;
   }
+  
+  @Override
+  public int delete_FK(int memberno) {
+    int cnt = this.memberprofileDAO.delete_FK(memberno);
+    return cnt;
+  }
 
 
 }

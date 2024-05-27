@@ -1,7 +1,7 @@
 <html layout:decorate="~{layout}"> <!-- layout.html 상속 -->
 <div layout:fragment="content" style="padding-top: 20px;">
     <link href="/css/mateCommunity/list.css" rel="Stylesheet" type="text/css">
-    <div style="width:80%; margin: auto; height: auto; overflow: hidden">
+    <div id="list_all" style="width:80%; margin: auto; height: auto; overflow: hidden">
         <div class='title_line'>
             산책 메이트 모집
         </div>
@@ -25,6 +25,10 @@
             <a href="javascript:location.reload();">새로고침</a>
             <span class='menu_divide'>│</span>
             <a href="./create?petTypeNo=0">글 등록</a>
+            <span class='menu_divide'>│</span>
+            <a th:href="@{|/mateApply/applyList?now_page=${now_page}|}">내 신청내역</a>
+            <span class='menu_divide'>│</span>
+            <a th:href="@{|/mateCommunity/my_list_all|}">내가 작성한 게시글</a>
         </aside>
         <div class="menu_line"></div>
 
@@ -113,12 +117,18 @@
             </tr>
             </tbody>
         </table>
-        <div th:if="${mateCommunity_cnt==0}">
+        <div th:if="${mateCommunity_cnt==0}" style="text-align: center; padding: 160px;">
             <span>작성된 게시글이 없습니다.</span><br>
             <span>첫 게시글을 작성해주세요!</span>
         </div>
         <div class="Bottom_menu" th:utext="${paging}"></div>
-
+        <script th:inline="javascript">
+            window.onload = () =>{
+                if([[${list_all.size()}]] < 10){
+                    document.getElementById('list_all').style.height = "641.898px";
+                }
+            }
+        </script>
     </div>
 </div>
 </html>

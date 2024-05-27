@@ -261,10 +261,45 @@ public class MateCommunityProc implements MateCommunityProcInter {
         return mateCommunityDAO.list_all_by_petTypeNo_count(map);
     }
 
+    @Override
+    public ArrayList<MateCommunityJoinVO> my_list_all(int now_page, int record_per_page, int memberNo) {
+        // 페이지의 시작 번호
+        // ex) 현재페이지 : 2, 페이지당 게시글 갯수 : 3
+        // (2 - 1) * 3
+        // 1page -> 1,2,3
+        // 2page -> 4,5,6
+        int begin_of_page = (now_page - 1) * record_per_page;
+
+        // 해당 페이지의 시작 게시글 번호
+        // 2page -> 4 -> (3(begin_of_page)+1)
+        int start_num = begin_of_page + 1;
+
+        // 페이지의 마지막 리스트 번호
+        // 2page -> 6 -> ((3(begin_of_page)+3)
+        int end_num = begin_of_page + record_per_page;
+
+        /*
+        1 페이지: WHERE r >= 1 AND r <= 10
+        2 페이지: WHERE r >= 11 AND r <= 20
+        */
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("memberNo",memberNo);
+        map.put("start_num", start_num);
+        map.put("end_num", end_num);
+
+        ArrayList<MateCommunityJoinVO> myListAll = this.mateCommunityDAO.my_list_all(map);
+        return myListAll;
+    }
+
+    @Override
+    public int my_list_all_count(int memberNo) {
+        return this.mateCommunityDAO.my_list_all_count(memberNo);
+    }
+
     // ====================================================================================================
 
     @Override
-    public MateCommunityVO read_content(int mCommunityNo) {
+    public MateCommunityJoinVO read_content(int mCommunityNo) {
         return mateCommunityDAO.read_content(mCommunityNo);
     }
 

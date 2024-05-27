@@ -8,6 +8,22 @@
         VALUES (MATECOMMUNITY_SEQ.nextval, #{title}, #{content}, 0 , #{startingP}, #{startingDetail}, #{walkingM}, sysdate, #{assembleTime}, 0, #{searchTag}, #{petTypeNo}, #{memberNo})
     </insert>
 
+    <!-- 내가 작성한 게시글 전체 목록, 페이징 -->
+    <select id="my_list_all" resultType="dev.mvc.matecommunity.MateCommunityJoinVO" parameterType="Map">
+        SELECT MCOMMUNITYNO, TITLE, CONTENT, VIEWCNT, STARTINGP, STARTINGDETAIL, WALKINGM, WDATE, ASSEMBLETIME, STATUS, SEARCHTAG, PETTYPENO, MEMBERNO, acceptCnt, r
+        FROM (
+            SELECT MCOMMUNITYNO, TITLE, CONTENT, VIEWCNT, STARTINGP, STARTINGDETAIL, WALKINGM, WDATE, ASSEMBLETIME, STATUS, SEARCHTAG, PETTYPENO, MEMBERNO, acceptCnt, rownum AS r
+            FROM (
+                 SELECT mc.MCOMMUNITYNO, mc.TITLE, mc.CONTENT, mc.VIEWCNT, mc.STARTINGP, mc.STARTINGDETAIL, mc.WALKINGM, mc.WDATE, mc.ASSEMBLETIME, mc.STATUS, mc.SEARCHTAG, mc.PETTYPENO, mc.MEMBERNO,
+                        (select count(ANO) from MATEAPPLY ma where mc.MCOMMUNITYNO = ma.MCOMMUNITYNO and ma.ASTATUS='ACCEPTED') as acceptCnt
+                 FROM MATECOMMUNITY mc
+                 WHERE mc.MEMBERNO=#{memberNo}
+                 ORDER BY MCOMMUNITYNO desc
+            )
+        ) WHERE r &gt;= #{start_num} AND r &lt;= #{end_num}
+
+    </select>
+
     <!-- 게시글 전체 목록, 페이징 -->
     <select id="list_all" resultType="dev.mvc.matecommunity.MateCommunityVO" parameterType="Map">
         SELECT MCOMMUNITYNO, TITLE, CONTENT, VIEWCNT, STARTINGP, STARTINGDETAIL, WALKINGM, WDATE, ASSEMBLETIME, STATUS, SEARCHTAG, PETTYPENO, MEMBERNO, r
@@ -51,10 +67,12 @@
         )WHERE r &gt;= #{start_num} AND r &lt;= #{end_num}
     </select>
 
-    <select id="read_content" parameterType="int" resultType="dev.mvc.matecommunity.MateCommunityVO">
-        SELECT MCOMMUNITYNO, TITLE, CONTENT, VIEWCNT, STARTINGP, STARTINGDETAIL, WALKINGM, WDATE, ASSEMBLETIME, STATUS, SEARCHTAG, PETTYPENO, MEMBERNO
-        FROM MATECOMMUNITY
-        WHERE MCOMMUNITYNO=#{mCommunityNo}
+    <!-- 작성자 이름과 현재 모인 인원수를 게시글과 함께 조회 -->
+    <select id="read_content" parameterType="int" resultType="dev.mvc.matecommunity.MateCommunityJoinVO">
+        SELECT mc.MCOMMUNITYNO, mc.TITLE, mc.CONTENT, mc.VIEWCNT, mc.STARTINGP, mc.STARTINGDETAIL, mc.WALKINGM, mc.WDATE, mc.ASSEMBLETIME, mc.STATUS, mc.SEARCHTAG, mc.PETTYPENO, mc.MEMBERNO, m.NAME,
+               (select count(ANO) from MATEAPPLY ma where mc.MCOMMUNITYNO = ma.MCOMMUNITYNO and ma.ASTATUS='ACCEPTED') as acceptCnt
+        FROM MATECOMMUNITY mc, member m
+        WHERE MCOMMUNITYNO=#{mCommunityNo} and mc.MEMBERNO = m.MEMBERNO
     </select>
 
     <!-- 글 수정 -->
@@ -87,7 +105,7 @@
     <!--  게시글 모집 상태 변경(모집중)  -->
     <update id="recruit_start" parameterType="int">
         UPDATE MATECOMMUNITY
-        SET STATUS = 1
+        SET STATUS = 0
         WHERE MCOMMUNITYNO=#{mCommunityNo}
     </update>
 
@@ -125,5 +143,12 @@
                 OR UPPER(SEARCHTAG) LIKE '%' || UPPER(#{searchWord}) || '%')
             </when>
         </choose>
+    </select>
+
+    <!--  자신의 모든 게시글 갯수  -->
+    <select id="my_list_all_count" resultType="int" parameterType="int">
+        SELECT COUNT(*)
+        FROM MATECOMMUNITY
+        where MEMBERNO = #{memberNo}
     </select>
 </mapper>

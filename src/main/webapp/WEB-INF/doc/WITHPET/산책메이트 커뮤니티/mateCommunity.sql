@@ -47,6 +47,10 @@ CREATE SEQUENCE MATECOMMUNITY_SEQ
 insert into MATECOMMUNITY(MCOMMUNITYNO, TITLE, CONTENT, VIEWCNT, STARTINGP, WALKINGM, WDATE, STATUS, PETTYPENO, MEMBERNO)
 values (MATECOMMUNITY_SEQ.nextval, '산책할사람 구해요!!!','강아지 산책 같이해요',0,'송파구 잠실',3,sysdate,0,1,1);
 
+select mcommunityno, title, content, viewcnt, startingp, startingdetail, walkingm, wdate, assembletime, status, searchtag, pettypeno, memberno,
+       (select count(*) from MATEAPPLY ma where mc.MCOMMUNITYNO = ma.MCOMMUNITYNO) as recruitcnt
+from MATECOMMUNITY mc
+where MCOMMUNITYNO = 26;
 /**********************************/
 /* Table Name: 산책 메이트 신청 */
 /**********************************/
@@ -78,6 +82,16 @@ COMMENT ON COLUMN MATEAPPLY.MCOMMUNITYNO is '글번호';
 insert into MATEAPPLY(ANO, ASTATUS, ADATE, MEMBERNO, MCOMMUNITYNO)
 values (MATECOMMUNITY_SEQ.nextval,'WAITING', sysdate, 1, 7);
 
+select ANO, ASTATUS, ADATE, MEMBERNO, MCOMMUNITYNO, NAME, r
+from
+    (select ANO, ASTATUS, ADATE, MEMBERNO, MCOMMUNITYNO, NAME, rownum AS r
+     from
+         (select ma.ANO, ma.ASTATUS, ma.ADATE, ma.MEMBERNO, ma.MCOMMUNITYNO, m.NAME
+          from MATEAPPLY ma, MEMBER m
+          where MCOMMUNITYNO = 26 AND ma.MEMBERNO = m.MEMBERNO
+          order by ANO)
+    )
+where r <= 1 and r >= 1;
 
 /**********************************/
 /* Table Name: 산책 메이트 후기 */

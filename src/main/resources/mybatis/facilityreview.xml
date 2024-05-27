@@ -7,20 +7,20 @@
     VALUES(facilityreview_seq.nextval, #{culturefno}, #{memberno}, #{reviewcomment}, #{reviewcomment}, sysdate)
   </insert>
   
-  <select id="list" resultType="dev.mvc.facilityreivew.FacilityreivewVO">
+  <select id="list" resultType="dev.mvc.facilityreview.FacilityreviewVO">
     SELECT rno, culturefno, memberno, reviewcomment, reviewgrade, rdate
     FROM facilityreivew
     ORDER BY rno DESC
   </select>
 
-  <select id="list_by_culturefno" resultType="dev.mvc.facilityreivew.FacilityreivewVO" parameterType="int">
+  <select id="list_by_culturefno" resultType="dev.mvc.facilityreview.FacilityreviewVO" parameterType="int">
     SELECT rno, culturefno, memberno, reviewcomment, reviewgrade, rdate
     FROM facilityreview
     WHERE culturefno=#{culturefno}
     ORDER BY rno DESC
   </select>
 
-	 <select id="list_by_culturefno_join" resultType="dev.mvc.facilityreivew.FacilityreivewVO" parameterType="int">
+	 <select id="list_by_culturefno_join" resultType="dev.mvc.facilityreview.FacilityreviewVO" parameterType="int">
     SELECT m.id,
                r.rno, r.culturefno, r.memberno, r.reviewcomment, r.reviewgrade, r.rdate
     FROM member m,  facilityreview r
