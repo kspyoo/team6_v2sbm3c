@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -33,14 +34,14 @@ public class FacilityreviewCont {
   @Autowired
   @Qualifier("dev.mvc.culturefacility.CulturefacilityProc") // 이름지정
   private CulturefacilityProc culturefacilityProc;
+  
   public FacilityreviewCont(){
-    System.out.println("-> FacilityreviewCont created.");
+    System.out.println("-> FacilityreviewCont .");
   }
   
   
   @ResponseBody
-  @PostMapping(value = "/facilityreview/create",
-                            produces = "text/plain;charset=UTF-8")
+  @PostMapping(value = "/facilityreview/create")
   public String create(@RequestBody FacilityreviewVO facilityreviewVO) {
     int cnt = facilityreviewProc.create(facilityreviewVO);
     
@@ -52,20 +53,11 @@ public class FacilityreviewCont {
   }
   
   @GetMapping(value="/facilityreview/list")
-  public ModelAndView list(HttpSession session) {
-    ModelAndView mav = new ModelAndView();
-    
-  
-      ArrayList<FacilityreviewVO> list = facilityreviewProc.list();
-      
-      mav.addObject("list", list);
-      mav.setViewName("/facilityreview/list"); // /webapp/reply/list.jsp
-
-      mav.addObject("return_url", "/facilityreview/list"); // 로그인 후 이동할 주소 ★
-      mav.setViewName("redirect:/member/login"); // /WEB-INF/views/member/login_ck_form.jsp
-    
-    
-    return mav;
+  public String list(HttpSession session, Model model) {
+    ArrayList<FacilityreviewVO> list = facilityreviewProc.list();
+    model.addAttribute("list", list);
+    model.addAttribute("return_url", "/facilityreview/list"); // 로그인 후 이동할 주소 ★
+    return "redirect:/member/login"; // /WEB-INF/views/member/login_ck_form.jsp
   }
 
   
@@ -77,8 +69,7 @@ public class FacilityreviewCont {
  * @return
  */
   @ResponseBody
-  @GetMapping(value = "/facilityreview/list_by_culturefno",
-              produces = "text/plain;charset=UTF-8")
+  @GetMapping(value = "/facilityreview/list_by_culturefno")
   public String list_by_culturefno(int culturefno) {
     ArrayList<FacilityreviewVO> list = facilityreviewProc.list_by_culturefno(culturefno);
     
@@ -95,8 +86,7 @@ public class FacilityreviewCont {
  * @return
  */
   @ResponseBody
-  @GetMapping(value = "/facilityreview/list_by_culturefno_join",
-              produces = "text/plain;charset=UTF-8")
+  @GetMapping(value = "/facilityreview/list_by_culturefno_join")
   public String list_by_culturefno_join(int culturefno) {
     // String msg="JSON 출력";
     // return msg;
@@ -116,14 +106,14 @@ public class FacilityreviewCont {
    * @return
    */
   @GetMapping(value="/culturefacility/read")
-  public ModelAndView read_ajax(HttpServletRequest request, int culturefno) {
+  public String read_ajax(HttpServletRequest request,Model model, int culturefno) {
     // public ModelAndView read(int contentsno, int now_page) {
     // System.out.println("-> now_page: " + now_page);
     
-    ModelAndView mav = new ModelAndView();
+ 
 
     CulturefacilityVO culturefacilityVO  = this.culturefacilityProc.read(culturefno);
-    mav.addObject("CulturefacilityVO", culturefacilityVO); // request.setAttribute("contentsVO", contentsVO);
+    model.addAttribute("CulturefacilityVO", culturefacilityVO); // request.setAttribute("contentsVO", contentsVO);
     
     // 단순 read
     // mav.setViewName("/contents/read"); // /WEB-INF/views/contents/read.jsp
@@ -132,7 +122,7 @@ public class FacilityreviewCont {
     // mav.setViewName("/contents/read_cookie"); // /WEB-INF/views/contents/read_cookie.jsp
     
     // 댓글 기능 추가 
-    mav.setViewName("/contents/read_cookie_reply"); // /WEB-INF/views/contents/read_cookie_reply.jsp
+
     
     // -------------------------------------------------------------------------------
     // 쇼핑 카트 장바구니에 상품 등록전 로그인 폼 출력 관련 쿠기  
@@ -163,13 +153,13 @@ public class FacilityreviewCont {
     
     System.out.println("-> ck_id: " + ck_id);
     
-    mav.addObject("ck_id", ck_id); 
-    mav.addObject("ck_id_save", ck_id_save);
-    mav.addObject("ck_passwd", ck_passwd);
-    mav.addObject("ck_passwd_save", ck_passwd_save);
+    model.addAttribute("ck_id", ck_id); 
+    model.addAttribute("ck_id_save", ck_id_save);
+    model.addAttribute("ck_passwd", ck_passwd);
+    model.addAttribute("ck_passwd_save", ck_passwd_save);
     // -------------------------------------------------------------------------------
     
-    return mav;
+    return "/culturefacility/read_cookie_reply";
   }
   
 }

@@ -1,3 +1,15 @@
+<c:set var="culturefno" value="${culturefacilityVO.culturefno }" />
+<c:set var="cname" value="${culturefacilityVO.cname }" />
+<c:set var="raddress" value="${culturefacilityVO.raddress }" />        
+<c:set var="latitude" value="${culturefacilityVO.latitude }" />
+<c:set var="longitude" value="${culturefacilityVO.longitude }" />
+<c:set var="addr_code" value="${culturefacilityVO.addr_code }" />
+<c:set var="phone" value="${culturefacilityVO.phone }" />
+<c:set var="closeddays" value="${culturefacilityVO.closeddays }" />
+<c:set var="operatingtime" value="${culturefacilityVO.operatingtime }" />
+<c:set var="pa" value="${culturefacilityVO.pa }" />
+
+
 <!DOCTYPE html> 
 <html lang="ko"> 
 <head> 
