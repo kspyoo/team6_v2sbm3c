@@ -38,8 +38,8 @@
 
         <table class="table table-hover" style="margin: 20px auto">
             <colgroup>
-                <col style="width: 20%;"></col>
-                <col style="width: 30%;"></col>
+                <col style="width: 15%;"></col>
+                <col style="width: 35%;"></col>
                 <col style="width: 15%;"></col>
                 <col style="width: 15%;"></col>
                 <col style="width: 20%;"></col>
@@ -81,8 +81,7 @@
                 </td>
 
                 <td class="td_left align-middle" style="text-align: center;">
-                    <span th:if="${mateCommunityVO.status == 1}" style="font-weight: bold;">모집완료</span>
-                    <span th:if="${mateCommunityVO.status == 0}" style="font-weight: bold;">모집중</span>
+                    <span th:id="'current_status' + ${mateCommunityVO.MCommunityNo}" style="font-weight: bold"></span>
                 </td>
 
                 <td class="td_left align-middle" style="text-align: center;">
@@ -97,6 +96,19 @@
 
                 <script th:inline="javascript">
                     window.addEventListener('load', function() {
+                        // 집합 날짜가 현재 날짜보다 작을경우(과거)
+                        if (new Date([[${mateCommunityVO.assembleTime.split(" ")}]][0]) < new Date()){
+                            let status = document.getElementById('current_status' + [[${mateCommunityVO.MCommunityNo}]]);
+                            status.innerText = '모집 종료';
+                        } else{
+                            let status = document.getElementById('current_status' + [[${mateCommunityVO.MCommunityNo}]]);
+                            if ([[${mateCommunityVO.status}]] == 0){
+                                status.innerText = '모집중';
+                            } else if([[${mateCommunityVO.status}]] == 1) {
+                                status.innerText = '모집 마감';
+                            }
+                        }
+
                         let today = new Date();
 
                         let year = today.getFullYear();
