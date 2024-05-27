@@ -45,8 +45,10 @@ CREATE TABLE login(
     IP                                VARCHAR2(40)     NOT NULL,
     CONNDATE                          VARCHAR2(30)     NOT NULL,
     MEMBERNO                          NUMBER(10)     NOT NULL,
-  FOREIGN KEY (MEMBERNO) REFERENCES member (MEMBERNO)
+  FOREIGN KEY (MEMBERNO) REFERENCES member (MEMBERNO) ON DELETE CASCADE
 );
+
+commit;
 
 COMMENT ON TABLE login is '회원 로그인 내역';
 COMMENT ON COLUMN login.LOGINNO is '로그인번호';
@@ -173,6 +175,10 @@ VALUES (memberprofile_seq.nextval,61);
 
 commit;
 
-DELETE FROM login;
+DELETE FROM login WHERE memberno=63;
 
-ALTER
+SELECT A.SID , A.SERIAL# , object_name , A.SID || ', ' || A.SERIAL# AS KILL_TASK 
+  FROM V$SESSION A 
+ INNER JOIN V$LOCK B ON A.SID = B.SID 
+ INNER JOIN DBA_OBJECTS C ON B.ID1 = C.OBJECT_ID 
+ WHERE B.TYPE = 'TM' ;

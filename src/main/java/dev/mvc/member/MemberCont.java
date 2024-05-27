@@ -321,14 +321,20 @@ public class MemberCont {
    */
   @PostMapping(value = "/delete")
   public String delete_process(HttpSession session, Model model, Integer memberno) {
+    System.out.println("part1");
     int cnt = this.memberProc.delete(memberno);
-    
+    System.out.println("part2");
     if (cnt == 1) {
+      System.out.println("part3");
       model.addAttribute("code", "delete_success");
+      System.out.println("part4");
       session.invalidate();
+      System.out.println("part5");
       return "member/msg";
     } else {
+      System.out.println("part6");
       model.addAttribute("code", "delete_fail");
+      System.out.println("part7");
       return "member/msg";
     }
   }
