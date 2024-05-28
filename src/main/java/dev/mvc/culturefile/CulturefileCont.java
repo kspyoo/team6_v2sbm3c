@@ -13,8 +13,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import dev.mvc.culturefacility.CulturefacilityProc;
 import dev.mvc.culturefacility.CulturefacilityVO;
-import dev.mvc.member.MemberProcInter;
-import dev.mvc.member.MemberVO;
 import dev.mvc.tool.Tool;
 import dev.mvc.tool.Upload;
 import jakarta.servlet.http.HttpServletRequest;

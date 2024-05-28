@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import dev.mvc.culturefacility.CulturefacilityProc;
 import dev.mvc.culturefacility.CulturefacilityVO;
 import dev.mvc.member.MemberProc;
 import jakarta.servlet.http.Cookie;
@@ -28,6 +27,7 @@ public class FacilityreviewCont {
   @Autowired
   @Qualifier("dev.mvc.facilityreview.FacilityreviewProc") // 이름지정
   private FacilityreviewProcInter facilityreviewProc;
+  
   
   @Autowired
   @Qualifier("dev.mvc.member.MemberProc") // 이름지정
