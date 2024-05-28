@@ -24,4 +24,10 @@ public interface LoginProcInter {
    * @return
    */
   public int login_list_no(int loginno);
+  
+  /**
+   * @param loginVO
+   * @return
+   */
+  public int update_null(int memberno);
 }

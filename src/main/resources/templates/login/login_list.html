@@ -31,8 +31,10 @@
    
     <tr th:each="loginVO, status:${list}">
       <td class='td_left' th:text="${loginVO.conndate}">
-      <td class='td_left'><a th:href="@{|../member/read?memberno=${loginVO.memberno}&mprofileno=${loginVO.mprofileno}|}" th:text="${loginVO.id}"></a></td>
-      <td class='td_left'><a th:href="@{|../member/read?memberno=${loginVO.memberno}&mprofileno=${loginVO.mprofileno}|}" th:text="${loginVO.name}"></a></td>
+      <td class='td_left'><a th:href="@{|../member/read?memberno=${loginVO.memberno}&mprofileno=${loginVO.mprofileno}|}" th:text="${loginVO.id}"></a>
+      <span th:if="${loginVO.memberno == 0}">삭제된 아이디</span></td>
+      <td class='td_left'><a th:href="@{|../member/read?memberno=${loginVO.memberno}&mprofileno=${loginVO.mprofileno}|}" th:text="${loginVO.name}"></a>
+      <span th:if="${loginVO.memberno == 0}">삭제된 회원</span></td>
       <td class='td_left' th:text="${loginVO.ip}">
     </tr>
   </table>
