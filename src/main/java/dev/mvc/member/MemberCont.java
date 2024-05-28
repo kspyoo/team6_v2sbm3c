@@ -53,7 +53,6 @@ public class MemberCont {
 
   public MemberCont() {
   }
-
   @GetMapping(value = "/checkID")
   @ResponseBody
   public String checkID(String id) {
@@ -62,6 +61,17 @@ public class MemberCont {
     JSONObject obj = new JSONObject();
     obj.put("cnt", cnt);
     return obj.toString();
+  }
+  
+    @GetMapping(value = "/checkPhone")
+    @ResponseBody
+    public String checkPhone(String phone) {
+      int cnt = this.memberProc.checkPhone(phone);
+
+      JSONObject obj = new JSONObject();
+      obj.put("cnt", cnt);
+      System.out.println("error");
+      return obj.toString();
   }
 
   /**
@@ -79,7 +89,7 @@ public class MemberCont {
   @PostMapping(value = "/create")
   public String create_proc(Model model, MemberVO memberVO, MemberprofileVO memberprofileVO) {
     int checkID_cnt = this.memberProc.checkID(memberVO.getId());
-
+    
     if (checkID_cnt == 0) {
       memberVO.setStatus("1");
       int cnt = this.memberProc.create(memberVO);
@@ -95,6 +105,7 @@ public class MemberCont {
       }
       model.addAttribute("cnt", cnt);
     } else { // id 중복
+      System.out.println("checkID in create_proc");
       model.addAttribute("code", "create_fail");
       model.addAttribute("cnt", 0);
     }
@@ -243,7 +254,7 @@ public class MemberCont {
       ck_passwd_save.setMaxAge(60 * 60 * 24 * 30); // 30 day
       response.addCookie(ck_passwd_save);
 
-
+      
       return "redirect:/";
     } else {
       model.addAttribute("code", "login_fail");
@@ -321,20 +332,13 @@ public class MemberCont {
    */
   @PostMapping(value = "/delete")
   public String delete_process(HttpSession session, Model model, Integer memberno) {
-    System.out.println("part1");
     int cnt = this.memberProc.delete(memberno);
-    System.out.println("part2");
     if (cnt == 1) {
-      System.out.println("part3");
       model.addAttribute("code", "delete_success");
-      System.out.println("part4");
       session.invalidate();
-      System.out.println("part5");
       return "member/msg";
     } else {
-      System.out.println("part6");
       model.addAttribute("code", "delete_fail");
-      System.out.println("part7");
       return "member/msg";
     }
   }

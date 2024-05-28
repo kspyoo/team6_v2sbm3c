@@ -24,4 +24,9 @@ public interface LoginDAOInter {
    * @return
    */
   public int login_list_no(int loginno);
+  
+  /**
+   * @return
+   */
+  public int update_null(int memberno);
 }

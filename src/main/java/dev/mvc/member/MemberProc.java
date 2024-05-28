@@ -127,6 +127,10 @@ public class MemberProc implements MemberProcInter {
     return list;
   }
   
-
+  @Override
+  public int checkPhone(String phone) {
+    int cnt = this.memberDAO.checkPhone(phone);
+    return cnt;
+  }
 
 }

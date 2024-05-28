@@ -8,6 +8,13 @@
     FROM member
     WHERE id=#{id}
   </select>
+  
+  <!-- 전화번호로 회원가입 중복 확인-->
+  <select id="checkPhone" resultType="int" parameterType="String">
+    SELECT COUNT(phone) as cnt
+    FROM member
+    WHERE phone=#{phone}
+  </select>
 
   <!-- 회원 가입 -->
   <insert id="create" parameterType="dev.mvc.member.MemberVO" >

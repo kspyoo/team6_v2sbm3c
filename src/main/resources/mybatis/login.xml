@@ -15,11 +15,5 @@
     ORDER BY loginno DESC
   </select>
   
-  <!-- 로그인 내역 조회 -->
-  <select id="login_list_no" resultType="int">
-    SELECT memberno
-    FROM login
-    WHERE loginno=#{loginno}
-  </select>
   
 </mapper>

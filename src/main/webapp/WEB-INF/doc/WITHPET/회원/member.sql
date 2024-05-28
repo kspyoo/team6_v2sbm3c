@@ -11,14 +11,16 @@ CREATE TABLE member(
     GENDER                            VARCHAR2(10)    NOT NULL,
     BIRTHDAY                          DATE     NOT NULL,
     PHONE                             VARCHAR2(14)     NOT NULL,
-    ADDR_CODE                         VARCHAR2(8)    NOT NULL,
-    ADDR_MAIN                         VARCHAR2(30)   NOT NULL,
-    ADDR_DETAIL                       VARCHAR2(30)     NOT NULL,
+    ADDR_CODE                         VARCHAR2(8)    NULL,
+    ADDR_MAIN                         VARCHAR2(30)   NULL,
+    ADDR_DETAIL                       VARCHAR2(30)     NULL,
     JOINDATE                          DATE     NOT NULL,
     STATUS                            VARCHAR2(10)     DEFAULT 0     NOT NULL
 );
 
-SELECT * FROM member;
+
+
+
 
 CREATE SEQUENCE member_MEMBERNO_SEQ NOMAXVALUE NOCACHE NOORDER NOCYCLE;
 
@@ -44,7 +46,7 @@ CREATE TABLE login(
     LOGINNO                           NUMBER(10)     NOT NULL    PRIMARY KEY,
     IP                                VARCHAR2(40)     NOT NULL,
     CONNDATE                          VARCHAR2(30)     NOT NULL,
-    MEMBERNO                          NUMBER(10)     NOT NULL,
+    MEMBERNO                          NUMBER(10)     NULL,
   FOREIGN KEY (MEMBERNO) REFERENCES member (MEMBERNO) ON DELETE CASCADE
 );
 
@@ -156,10 +158,23 @@ CREATE SEQUENCE memberprofile_seq
   MAXVALUE 9999999999 -- 최대값: 9999999 --> NUMBER(7) 대응
   CACHE 2                       -- 2번은 메모리에서만 계산
   NOCYCLE;                     -- 다시 1부터 생성되는 것을 방지
+  
+INSERT INTO Memberprofile (MPROFILENO,memberno)
+VALUES (memberprofile_seq.nextval,1);
+  
+INSERT INTO Memberprofile (MPROFILENO,memberno)
+VALUES (memberprofile_seq.nextval,42);
 
+INSERT INTO Memberprofile (MPROFILENO,memberno)
+VALUES (memberprofile_seq.nextval,76);
+  
 ALTER TABLE member MODIFY (gender VARCHAR2(10));
 ALTER TABLE login MODIFY (conndate VARCHAR2(30));
 ALTER TABLE login MODIFY (ip VARCHAR2(40));
+ALTER TABLE login MODIFY (memberno NUMBER(10) NULL);
+ALTER TABLE member MODIFY (ADDR_DETAIL  VARCHAR2(30) NULL);
+
+
 
 SELECT l.loginno, l.ip, l.conndate, l.memberno, m.id, m.name
 FROM login l LEFT JOIN member m ON l.memberno = m.memberno
@@ -177,14 +192,29 @@ commit;
 
 DELETE FROM login WHERE memberno=63;
 
-<<<<<<< HEAD
-SELECT A.SID , A.SERIAL# , object_name , A.SID || ', ' || A.SERIAL# AS KILL_TASK 
-  FROM V$SESSION A 
- INNER JOIN V$LOCK B ON A.SID = B.SID 
- INNER JOIN DBA_OBJECTS C ON B.ID1 = C.OBJECT_ID 
- WHERE B.TYPE = 'TM' ;
-=======
+ALTER TABLE Memberprofile
+DROP CONSTRAINT SYS_C008015;
+
+ALTER TABLE Memberprofile
+DROP CONSTRAINT SYS_C008015;
+
+ALTER TABLE Memberprofile
+ADD CONSTRAINT SYS_C008015
+FOREIGN KEY (MEMBERNO)
+REFERENCES MEMBER (MEMBERNO)
+ON DELETE CASCADE;
 
 
-ALTER
->>>>>>> df485a745291a6bd9a9a25236824d93d5fe63928
+ALTER TABLE login
+DROP CONSTRAINT SYS_C008053;
+
+ALTER TABLE login
+ADD CONSTRAINT SYS_C008053
+FOREIGN KEY (MEMBERNO)
+REFERENCES MEMBER (MEMBERNO)
+ON DELETE SET NULL;
+
+ALTER TABLE login
+MODIFY memberno DEFAULT 0;
+
+

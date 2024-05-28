@@ -116,6 +116,13 @@ public interface MemberDAOInter {
    */
   public ArrayList<MemberVO> list_no(int memberno);
   
+  /**
+   * 중복 회원 검사
+   * @param phone
+   * @return 중복 아이디 갯수, 1: 중복, 0: 중복 없음
+   */
+  public int checkPhone(String phone);
+  
 }
 
 
