@@ -43,7 +43,7 @@ public class FacilityreviewCont {
   
   
   // 댓글 작성 페이지 매핑
-  @GetMapping("/facilityreview/create")
+  @GetMapping("/facilityreview/create/{culturefno}")
   public String create() {
       return "/facilityreview/create"; // templates/create.html
   }
