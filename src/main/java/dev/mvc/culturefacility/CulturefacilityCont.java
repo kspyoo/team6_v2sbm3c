@@ -1,6 +1,7 @@
 package dev.mvc.culturefacility;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -12,17 +13,24 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import dev.mvc.culturefacility.CulturefacilityVO;
+
+import dev.mvc.facilityreview.FacilityreviewVO;
 import dev.mvc.tool.Tool;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 
-@RequestMapping("culturefacility")
+@RequestMapping("/culturefacility")
 @Controller
 public class CulturefacilityCont {
   @Autowired
   @Qualifier("dev.mvc.culturefacility.CulturefacilityProc")
   private CulturefacilityProcInter CulturefacilityProc;
+  
+
+
   
   /** 페이지당 출력할 레코드 갯수, nowPage는 1부터 시작 */
   public int record_per_page = 10;
@@ -98,6 +106,8 @@ public String create(Model model, CulturefacilityVO culturefacilityVO
       return "culturefacility/msg"; // /templates/cate/msg.html
     }
   }
+  
+
     
   
    
@@ -336,6 +346,11 @@ public String create(Model model, CulturefacilityVO culturefacilityVO
     
     return "culturefacility/list_search"; // /cate/list_search.html
   }
+  
+
+  
+
+  
   
   
 }

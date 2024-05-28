@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#submitReview').on('click', function() {
+                var reviewData = {
+                    culturefno: $('#culturefno').val(),
+                    reviewcomment: $('#reviewcomment').val(),
+                    reviewgrade: $('#reviewgrade').val(),
+                    passwd: $('#passwd').val()
+                };
+
+                $.ajax({
+                    url: '/facilityreview/create',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(reviewData),
+                    success: function(response) {
+                        var res = JSON.parse(response);
+                        if (res.cnt > 0) {
+                            alert('댓글이 성공적으로 등록되었습니다.');
+                        } else {
+                            alert('댓글 등록에 실패했습니다. ' + res.msg);
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+   
+    <form>
+        <input type="hidden" id="culturefno" name="culturefno" value="1"> <!-- 해당 문화시설 번호 -->
+        <div>
+            <label for="reviewcomment">댓글 내용:</label>
+            <textarea id="reviewcomment" name="reviewcomment" rows="4" cols="50"></textarea>
+        </div>
+        <div>
+            <label for="reviewgrade">평점:</label>
+            <select id="reviewgrade">
+                <option value="1">1점</option>
+                <option value="2">2점</option>
+                <option value="3">3점</option>
+                <option value="4">4점</option>
+                <option value="5">5점</option>
+            </select>
+        </div>
+        <div>
+            <label for="passwd">비밀번호:</label>
+            <input type="password" id="passwd">
+        </div>
+        <div>
+            <button type="button" id="submitReview">댓글 등록</button>
+        </div>
+    </form>
+</body>
+</html>

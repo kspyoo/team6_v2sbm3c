@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>댓글 목록</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            var culturefno = 1; // 해당 문화시설 번호
+
+            $.ajax({
+                url: '/facilityreview/list_by_culturefno?culturefno=' + culturefno,
+                type: 'GET',
+                success: function(response) {
+                    var res = JSON.parse(response);
+                    var reviews = res.list;
+                    var html = '';
+                    for (var i = 0; i < reviews.length; i++) {
+                        html += '<div>';
+                        html += '<p>댓글 내용: ' + reviews[i].reviewcomment + '</p>';
+                        html += '<p>평점: ' + reviews[i].reviewgrade + '</p>';
+                        html += '<p>작성일: ' + reviews[i].rdate + '</p>';
+                        html += '</div>';
+                        html += '<hr>';
+                    }
+                    $('#reviewList').html(html);
+                }
+            });
+        });
+    </script>
+</head>
+<body>
+    <h1>댓글 목록</h1>
+    <div id="reviewList">
+        <!-- 댓글 목록이 여기에 표시됩니다. -->
+    </div>
+</body>
+</html>

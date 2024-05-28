@@ -3,6 +3,7 @@ package dev.mvc.culturefile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -10,6 +11,10 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import dev.mvc.culturefacility.CulturefacilityProc;
+import dev.mvc.culturefacility.CulturefacilityVO;
+import dev.mvc.member.MemberProcInter;
+import dev.mvc.member.MemberVO;
 import dev.mvc.tool.Tool;
 import dev.mvc.tool.Upload;
 import jakarta.servlet.http.HttpServletRequest;
@@ -21,6 +26,10 @@ public class CulturefileCont {
   @Qualifier("dev.mvc.culturefile.CulturefileProc")
   private CulturefileProcInter culturefileProc;
   
+  @Autowired
+  @Qualifier("dev.mvc.culturefacility.CulturefacilityProc")
+  private CulturefacilityProc culturefacilityProc;
+  
   public CulturefileCont(){
     System.out.println("--> CulturefileCont created.");
   }
@@ -31,11 +40,16 @@ public class CulturefileCont {
     * @return 뷰 이름과 모델을 담은 ModelAndView 객체
     */
   @GetMapping(value="/culturefile/update_file")
-  public ModelAndView create(@RequestParam("culturefno") int culturefno) {
-    ModelAndView mav = new ModelAndView();
-    mav.setViewName("/culturefile/update_file"); // webapp/culturefile/update_file.jsp
-    mav.addObject("culturefno", culturefno); // 매개변수 전달
-    return mav;
+  public String create(@RequestParam("culturefno") int culturefno,
+                       Model model,
+                       CulturefileVO culturefileVO) {
+    CulturefacilityVO culturefacilityVO = this.culturefacilityProc.read(culturefno);
+    model.addAttribute("culturefacilityVO",culturefacilityVO);
+    
+    culturefileVO = this.culturefileProc.read(culturefno);
+    model.addAttribute("culturefno", culturefno); // 매개변수 전달
+   
+    return  "/culturefile/update_file";
   }
   
   /**
@@ -51,7 +65,10 @@ public class CulturefileCont {
                        CulturefileVO culturefileVO,
                        RedirectAttributes ra,
                        @RequestParam(value = "culturefno", required = false, defaultValue = "0") int culturefno) {
-      // 파일 전송 코드 시작
+      
+    
+        
+    // 파일 전송 코드 시작
       String file1 = ""; // 원본 파일명
       String file1saved = ""; // 저장된 파일명
       String thumbfile = ""; // 미리보기 이미지
@@ -100,6 +117,8 @@ public class CulturefileCont {
 
       return "redirect:/culturefile/msg"; // 리다이렉트
   }
+  
+  
 
   
   

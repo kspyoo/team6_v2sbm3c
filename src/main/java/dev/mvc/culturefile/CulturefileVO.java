@@ -42,9 +42,10 @@ public class CulturefileVO {
   /** 메인 이미지 preview */
   private String thumbfile = "";
   
-  private String getFile1() {
+  public String getFile1() {
     return (file1 != null) ? file1 : "";
 }
+
 
 
 

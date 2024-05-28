@@ -2,41 +2,42 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="dev.mvc.facilityreview.Facilityreview.DAOInter">
 
-  <insert id="create">
+	<insert id="create">
     INSERT INTO facilityreview(rno, culturefno, memberno, reviewcomment, reviewgrade, rdate)
     VALUES(facilityreview_seq.nextval, #{culturefno}, #{memberno}, #{reviewcomment}, #{reviewgrade}, sysdate)
   </insert>
-  
-  <select id="list" resultType="dev.mvc.facilityreview.FacilityreviewVO">
+
+	<select id="list" resultType="dev.mvc.facilityreview.FacilityreviewVO">
     SELECT rno, culturefno, memberno, reviewcomment, reviewgrade, rdate
-    FROM facilityreivew
+    FROM facilityreview
     ORDER BY rno DESC
   </select>
 
-  <select id="list_by_culturefno" resultType="dev.mvc.facilityreview.FacilityreviewVO" parameterType="int">
+	<select id="list_by_culturefno" resultType="dev.mvc.facilityreview.FacilityreviewVO" parameterType="int">
     SELECT rno, culturefno, memberno, reviewcomment, reviewgrade, rdate
     FROM facilityreview
     WHERE culturefno=#{culturefno}
     ORDER BY rno DESC
-  </select>
+	</select>
 
-	 <select id="list_by_culturefno_join" resultType="dev.mvc.facilityreview.FacilityreviewVO" parameterType="int">
+
+	<select id="list_by_culturefno_join" resultType="dev.mvc.facilityreview.FacilityreviewVO" parameterType="int">
     SELECT m.id,
                r.rno, r.culturefno, r.memberno, r.reviewcomment, r.reviewgrade, r.rdate
     FROM member m,  facilityreview r
     WHERE (m.memberno = r.memberno) AND r.culturefno=#{culturefno}
     ORDER BY r.rno DESC
   </select>
-  
-   <!-- <select id="checkPasswd" parameterType="HashMap" resultType="int"> -->
-  <!-- <select id="checkPasswd" parameterType="ReplyVO" resultType="int"> -->
-  <select id="checkPasswd" parameterType="Map" resultType="int">
+
+	<!-- <select id="checkPasswd" parameterType="HashMap" resultType="int"> -->
+	<!-- <select id="checkPasswd" parameterType="ReplyVO" resultType="int"> -->
+	<select id="checkPasswd" parameterType="Map" resultType="int">
     SELECT COUNT(*) as cnt
     FROM facilityreview
     WHERE rno=#{rno} AND passwd=#{passwd}
   </select>
-  
-  <delete id="delete" parameterType="int">
+
+	<delete id="delete" parameterType="int">
     DELETE FROM facilityreview
     WHERE rno=#{rno}
   </delete>
