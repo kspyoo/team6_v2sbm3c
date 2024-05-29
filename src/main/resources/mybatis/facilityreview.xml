@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="dev.mvc.facilityreview.Facilityreview.DAOInter">
+<mapper namespace="dev.mvc.facilityreview.FacilityreviewDAOInter">
 
-	<insert id="create">
+	<insert id="create" parameterType="dev.mvc.facilityreview.FacilityreviewVO">
     INSERT INTO facilityreview(rno, culturefno, memberno, reviewcomment, reviewgrade, rdate)
     VALUES(facilityreview_seq.nextval, #{culturefno}, #{memberno}, #{reviewcomment}, #{reviewgrade}, sysdate)
   </insert>

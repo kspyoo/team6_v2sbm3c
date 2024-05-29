@@ -53,6 +53,10 @@ ORDER BY r.rno DESC;
 
 
 
+SELECT * FROM culturefacility 
+SELECT * FROM member 
+
+
 
 
 
