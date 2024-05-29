@@ -1,77 +1,51 @@
 <!DOCTYPE html>
 
-<<<<<<< HEAD
-<html layout:decorate="~{layout}"> <!-- layout.html 상속-->
-<div layout:fragment="content">
-  <div class='title_line'>
-    문화시설 > 
-    <span th:text="${culturefacilityVO.cname}" class="title_line_text"></span >
-    
-
-  </div>
-  <aside class="aside_right">
-    <a th:href="@{|/culturefacility/list_search?word=${word}&now_page=${now_page}|}">목록</a>
-    <span class="menu_devide">│</span>
-    <a th:href="@{|/culturefacility/update/${culturefacilityVO.culturefno}?word=${word}&now_page=${now_page}|}">수정</a>
-    <span class="menu_devide">│</span>
-    <a th:href="@{|/culturefacility/delete/${culturefacilityVO.culturefno}?word=${word}&now_page=${now_page}|}">삭제</a>
-    <span class="menu_devide">│</span>
-    <a href="/culturefacility/create">등록</a>
-    <span class="menu_devide">│</span>
-    <a href="javascript: location.reload();">새로 고침</a>
-  </aside>
-  <div class="menu_line"></div>
-  
-  <div class="container mt-3" style="width: 50%; margin: 5px auto;">
-    <ul class="list-group list-group-flush">
-      <li class="list-group-item">문화시설 이름: <span th:text="${culturefacilityVO.cname}"></span></li>
-      <li class="list-group-item">도로명 주소: <span th:text="${culturefacilityVO.raddress}"></span></li>
-      <li class="list-group-item">우편번호: <span th:text="${culturefacilityVO.addr_code}"></span></li>
-      <li class="list-group-item">전화번호: <span th:text="${culturefacilityVO.phone}"></span></li>
-      <li class="list-group-item">휴무일: <span th:text="${culturefacilityVO.closeddays}"></span></li>
-      <li class="list-group-item">운영시간: <span th:text="${culturefacilityVO.operatingtime}"></span></li>
-      <li class="list-group-item">주차가능여부: <span th:text="${culturefacilityVO.pa}"></span></li>
-    </ul>  
-  </div>
-
-  <!-- /templates/cate/list_all_component.html 파일의 list_all_fragment import -->
-  <div th:replace="~{culturefacility/list_all_component::list_all_fragment}"></div>
- 
-</div>
-</html>
-
-
-
-=======
 <html layout:decorate="~{layout}">
-<!--layout.html 상속-->
+<!-- layout.html 상속-->
 <div layout:fragment="content">
-	<div class="title_line">문화시설 조회</div>
 
-	<div class="container mt-3">
+
+
+	<div class='title_line'>
+		문화시설 >
+		<span th:text="${culturefacilityVO.cname}" class="title_line_text"></span>
+	</div>
+	<aside class="aside_right">
+		<a th:href="@{|/culturefacility/list_search?word=${word}&now_page=${now_page}|}">목록</a>
+		<span class="menu_devide">│</span>
+		<a th:href="@{|/culturefacility/update/${culturefacilityVO.culturefno}?word=${word}&now_page=${now_page}|}">수정</a>
+		<span class="menu_devide">│</span>
+		<a th:href="@{|/culturefacility/delete/${culturefacilityVO.culturefno}?word=${word}&now_page=${now_page}|}">삭제</a>
+		<span class="menu_devide">│</span>
+		<a href="/culturefacility/create">등록</a>
+		<span class="menu_devide">│</span>
+		<a th:href="@{|/facilityreview/create/${culturefacilityVO.culturefno}?word=${word}&now_page=${now_page}|}">후기 작성</a>
+		<span class="menu_devide">│</span>
+		<a href="javascript: location.reload();">새로 고침</a>
+		
+	</aside>
+	<div class="menu_line"></div>
+
+	<div class="container mt-3" style="width: 50%; margin: 5px auto;">
 		<ul class="list-group list-group-flush">
-			<li class="list-group-item">문화시설 번호: <span th:text="${culturefacilityVO.culturefno}"></span></li>
 			<li class="list-group-item">문화시설 이름: <span th:text="${culturefacilityVO.cname}"></span></li>
-			<li class="list-group-item">도로명주소: <span th:text="${culturefacilityVO.raddress}"></span></li>
-			<li class="list-group-item">위도: <span th:text="${culturefacilityVO.latitude}"></span></li>
-			<li class="list-group-item">경도: <span th:text="${culturefacilityVO.longitude}"></span></li>
+			<li class="list-group-item">도로명 주소: <span th:text="${culturefacilityVO.raddress}"></span></li>
 			<li class="list-group-item">우편번호: <span th:text="${culturefacilityVO.addr_code}"></span></li>
 			<li class="list-group-item">전화번호: <span th:text="${culturefacilityVO.phone}"></span></li>
+			<li class="list-group-item">휴무일: <span th:text="${culturefacilityVO.closeddays}"></span></li>
 			<li class="list-group-item">운영시간: <span th:text="${culturefacilityVO.operatingtime}"></span></li>
 			<li class="list-group-item">주차가능여부: <span th:text="${culturefacilityVO.pa}"></span></li>
 		</ul>
 	</div>
+	
 
-	<div class="content_body_bottom">
-		<button type="button" onclick="location.href='/cate/list_all'" class="btn btn-secondary btn-sm">목록</button>
-		<button type="button" th:onclick="|location.href='/cate/update/${cateVO.cateno}'|"
-			class="btn btn-secondary btn-sm">수정</button>
-		<button type="button" th:onclick="|location.href='/cate/delete/${cateVO.cateno}'|"
-			class="btn btn-secondary btn-sm">삭제</button>
-		<button type="button" onclick="location.href='/cate/create'" class="btn btn-secondary btn-sm">등록</button>
-	</div>
+	
+
+
+
+	<!-- /templates/cate/list_all_component.html 파일의 list_all_fragment import -->
+	<div th:replace="~{culturefacility/list_all_component::list_all_fragment}"></div>
 
 </div>
 
 </html>
->>>>>>> d94e9ffa03e492d5b434f0c630d4c58e1529e967

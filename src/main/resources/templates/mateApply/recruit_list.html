@@ -1,0 +1,142 @@
+<html layout:decorate="~{layout}"> <!-- layout.html 상속 -->
+<div layout:fragment="content" style="padding-top: 20px;">
+    <link href="/css/mateApply/recruit.css" rel="Stylesheet" type="text/css">
+    <div id="recruit_list" style="width:80%; margin: auto; height: auto; overflow: hidden">
+        <div class='title_line'>
+            내가 받은 신청내역
+        </div>
+
+        <aside class="aside_right">
+            <a href="javascript:location.reload();">새로고침</a>
+            <span class='menu_divide'>│</span>
+            <a th:href="@{|/mateCommunity/read?mCommunityNo=${mateCommunityVO.MCommunityNo}&now_page=${now_page}&searchWord=${searchWord}|}" th:if="${petTypeNo==0}">게시글로 돌아가기</a>
+        </aside>
+        <div class="menu_line"></div>
+
+        <div>
+            <span>받은 신청  [[${recruitList.size()}]] </span>
+        </div>
+
+        <table class="table table-hover" style="margin: 20px auto">
+            <colgroup>
+                <col style="width: 10%;"></col>
+                <col style="width: 30%;"></col>
+                <col style="width: 25%;"></col>
+                <col style="width: 20%;"></col>
+                <col style="width: 15%;"></col>
+                <!--            <col style="width: 15%;"></col>-->
+                <!--            <col style="width: 10%;"></col>-->
+            </colgroup>
+            <thead>
+            <tr>
+                <th class="th_bs" style='text-align: center; border-right: 1px solid;'>신청번호</th>
+                <th class="th_bs" style='text-align: center; border-right: 1px solid;'>신청자</th>
+                <th class="th_bs" style='text-align: center; border-right: 1px solid;'>신청 일자</th>
+                <th class="th_bs" style='text-align: center; border-right: 1px solid;'>상태</th>
+                <th class="th_bs" style='text-align: center;'>응답</th>
+                <!--            <th class="th_bs" style='text-align: center;'>관리</th>-->
+                <!--            <th class="th_bs" style='text-align: center;'>기타</th>-->
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="mateRecruitListVO:${recruitList}">
+                <td class="td_basic" style="text-align: center; vertical-align: middle;">
+                    <span th:text="${mateRecruitListVO.ANo}">
+                    </span>
+                </td>
+
+                <td class="td_left align-middle">
+                    <span th:text="${mateRecruitListVO.name}" style="font-weight: bold; margin-left: 10px;"></span>
+                </td>
+
+                <td class="td_left align-middle" style="text-align: center;">
+                    <span th:text="${mateRecruitListVO.ADate.substring(0,10)}" ></span>
+                </td>
+
+                <td class="td_left align-middle" style="text-align: center;">
+                    <span th:if="${mateRecruitListVO.AStatus == 'WAITING'}" style="font-weight: bold;">대기중</span>
+                    <span th:if="${mateRecruitListVO.AStatus == 'DENIED'}" style="font-weight: bold;">거절됨</span>
+                    <span th:if="${mateRecruitListVO.AStatus == 'ACCEPTED'}" style="font-weight: bold;">수락됨</span>
+                </td>
+
+                <td class="td_left align-middle" style="text-align: center;">
+                    <div class="dropdown">
+                        <button class="btn-outline-info btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            응답
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><button th:id="'accept'+${mateRecruitListVO.ANo}" class="dropdown-item" >수락</button></li>
+                            <li><button th:id="'denied'+${mateRecruitListVO.ANo}" class="dropdown-item" >거부</button></li>
+                        </ul>
+                    </div>
+                </td>
+                <script th:inline="javascript">
+                    window.addEventListener('load', function() {
+                        document.getElementById('accept'+[[${mateRecruitListVO.ANo}]]).addEventListener('click',()=>{
+                            if(confirm('수락 하시겠습니까?')){
+                                let url = '/mateApply/accept?aNo=' + [[${mateRecruitListVO.ANo}]];
+
+                                fetch(url, {
+                                    method: 'GET'
+                                })
+                                    .then(response => response.json())
+                                    .then(rdata => {
+                                        console.log(rdata);
+                                        if (rdata == 0 || rdata == null) { // 패스워드 불일치
+                                            alert("상태변경에 실패 했습니다.");
+                                            return false;
+                                        } else {
+                                            alert("신청 수락 되었습니다.");
+                                            location.reload();
+                                        }
+                                    })
+                                    .catch(error => { // 서버 다운등 통신 에러
+                                        console.error('Error:', error);
+                                    });
+                            }
+                        });
+
+                        document.getElementById('denied'+[[${mateRecruitListVO.ANo}]]).addEventListener('click',()=>{
+                            if(confirm('거부 하시겠습니까?')){
+                                let url = '/mateApply/denied?aNo=' + [[${mateRecruitListVO.ANo}]];
+
+                                fetch(url, {
+                                    method: 'GET'
+                                })
+                                    .then(response => response.json())
+                                    .then(rdata => {
+                                        console.log(rdata);
+                                        if (rdata == 0 || rdata == null) { // 패스워드 불일치
+                                            alert("상태변경에 실패 했습니다.");
+                                            return false;
+                                        } else {
+                                            alert("신청 거부 되었습니다.");
+                                            location.reload();
+                                        }
+                                    })
+                                    .catch(error => { // 서버 다운등 통신 에러
+                                        console.error('Error:', error);
+                                    });
+                            }
+                        });
+                    });
+                </script>
+            </tr>
+            </tbody>
+        </table>
+        <div th:if="${recruitList.size()==0}" style="text-align: center; padding: 150px;">
+            <span>받은 신청내역이 없습니다.</span><br>
+        </div>
+        <div class="Bottom_menu" th:utext="${paging}"></div>
+
+        <script th:inline="javascript">
+            window.onload = () =>{
+                if([[${recruitList.size()}]] < 10){
+                    document.getElementById('recruit_list').style.height = "641.898px";
+                }
+            }
+        </script>
+
+    </div>
+</div>
+</html>

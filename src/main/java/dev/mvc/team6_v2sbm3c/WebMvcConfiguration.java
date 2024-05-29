@@ -4,6 +4,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import dev.mvc.culturefile.Culturefile;
 import dev.mvc.memberprofile.Memberprofile;
 import dev.mvc.tool.Tool;
 
@@ -19,6 +20,9 @@ public class WebMvcConfiguration implements WebMvcConfigurer{
       
         // JSP 인식되는 경로: http://localhost:9091/contents/storage";
         registry.addResourceHandler("/member/storage/**").addResourceLocations("file:///" +  Memberprofile.getUploadDir());
+        
+        // JSP 인식되는 경로: http://localhost:9091/contents/storage";
+        registry.addResourceHandler("/culturefile/storage/**").addResourceLocations("file:///" +  Culturefile.getUploadDir());
         
         // JSP 인식되는 경로: http://localhost:9091/attachfile/storage";
         // registry.addResourceHandler("/contents/storage/**").addResourceLocations("file:///" +  Tool.getOSPath() + "/attachfile/storage/");

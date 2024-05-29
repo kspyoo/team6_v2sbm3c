@@ -46,5 +46,8 @@ public class MemberVO {
    * */
   private String status = ""; 
   
+  /** 회원 번호 */
+  private int mprofileno=0;
+  
   
 }

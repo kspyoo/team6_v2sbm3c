@@ -8,9 +8,16 @@
     FROM member
     WHERE id=#{id}
   </select>
+  
+  <!-- 전화번호로 회원가입 중복 확인-->
+  <select id="checkPhone" resultType="int" parameterType="String">
+    SELECT COUNT(phone) as cnt
+    FROM member
+    WHERE phone=#{phone}
+  </select>
 
   <!-- 회원 가입 -->
-  <insert id="create" parameterType="dev.mvc.member.MemberVO">
+  <insert id="create" parameterType="dev.mvc.member.MemberVO" >
     INSERT INTO member(memberno, id, passwd, name, gender, birthday, phone, addr_code, addr_main, addr_detail, joindate, status)
     VALUES (member_seq.nextval, #{id}, #{passwd}, #{name}, #{gender}, #{birthday}, #{phone}, #{addr_code}, #{addr_main},#{addr_detail}, sysdate, #{status})
   </insert>
@@ -49,9 +56,15 @@
     WHERE memberno=#{memberno}
   </delete>
   
+  <!-- 자식테이블 삭제 -->
+  <delete id="delete_FK" parameterType="int">
+    DELETE FROM memberprofile 
+    WHERE memberno=#{memberno}
+  </delete>
+  
   <!-- 아이디 찾기 -->
   <select id="findId" resultType="dev.mvc.member.MemberVO">
-    SELECT id
+    SELECT id, name
     FROM member
     WHERE name=#{name} AND phone=#{phone}
   </select>  
@@ -65,7 +78,7 @@
   
     <!-- 비밀번호 찾기 -->
   <select id="findPasswd" resultType="dev.mvc.member.MemberVO">
-    SELECT passwd
+    SELECT passwd, id, name
     FROM member
     WHERE name=#{name} AND phone=#{phone} AND id=#{id}
   </select>  
@@ -91,11 +104,21 @@
     WHERE memberno=#{memberno}
   </update>
   
+  <!-- 회원 목록 조회 -->
   <select id="list" resultType="dev.mvc.member.MemberVO">
     SELECT memberno, id, passwd, name, gender, birthday, phone, addr_code, addr_main, addr_detail, joindate, status
     FROM member
     ORDER BY id ASC
   </select>
+  
+    <!-- 회원 목록 조회 -->
+  <select id="list_no" resultType="dev.mvc.member.MemberVO">
+    SELECT memberno, id, passwd, name, gender, birthday, phone, addr_code, addr_main, addr_detail, joindate, status
+    FROM member
+    WHERE memberno=#{memberno}
+  </select>
+  
+  
   
 
 

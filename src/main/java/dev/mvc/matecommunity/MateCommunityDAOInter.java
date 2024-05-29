@@ -30,7 +30,7 @@ public interface MateCommunityDAOInter {
      * @param mCommunityNo
      * @return
      */
-    public MateCommunityVO read_content(int mCommunityNo);
+    public MateCommunityJoinVO read_content(int mCommunityNo);
 
     /**
      * 게시글 수정
@@ -80,4 +80,18 @@ public interface MateCommunityDAOInter {
      * @return
      */
     public int list_all_by_petTypeNo_count(Map<String,Object> map);
+
+    /**
+     * 자신의 모든 게시글
+     * @param map
+     * @return
+     */
+    public ArrayList<MateCommunityJoinVO> my_list_all(Map<String, Object> map);
+
+    /**
+     * 자신의 게시글 개수
+     * @param memberNo
+     * @return
+     */
+    public int my_list_all_count(int memberNo);
 }

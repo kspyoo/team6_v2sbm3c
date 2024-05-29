@@ -54,6 +54,13 @@ public interface MemberDAOInter {
   public int delete(int memberno);
   
   /**
+   * 자식테이블 삭제
+   * @param memberno
+   * @return
+   */
+  public int delete_FK(int memberno);
+  
+  /**
    * 아이디 찾기
    * @param name
    * @param phone
@@ -102,6 +109,19 @@ public interface MemberDAOInter {
    * @return
    */
   public ArrayList<MemberVO> list();
+  
+  /**
+   * 회원 전체 목록
+   * @return
+   */
+  public ArrayList<MemberVO> list_no(int memberno);
+  
+  /**
+   * 중복 회원 검사
+   * @param phone
+   * @return 중복 아이디 갯수, 1: 중복, 0: 중복 없음
+   */
+  public int checkPhone(String phone);
   
 }
 

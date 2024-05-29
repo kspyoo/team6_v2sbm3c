@@ -1,0 +1,149 @@
+<html layout:decorate="~{layout}"> <!-- layout.html 상속 -->
+<div layout:fragment="content" style="padding-top: 20px;">
+    <link href="/css/mateApply/my_apply_list.css" rel="Stylesheet" type="text/css">
+    <div id="apply_list" style="width:80%; margin: auto; height: auto; overflow: hidden">
+        <div class='title_line'>
+            나의 산책 메이트 신청내역
+        </div>
+
+        <aside class="aside_right">
+            <a href="javascript:location.reload();">새로고침</a>
+            <span class='menu_divide'>│</span>
+            <a th:href="@{|/mateCommunity/list_all|}" th:if="${petTypeNo==0}">모집글 목록</a>
+            <a th:href="@{|/mateCommunity/list_all_byPetTypeNo?petTypeNo=${petTypeNo}|}" th:if="${petTypeNo!=0}">모집글 목록</a>
+        </aside>
+        <div class="menu_line"></div>
+
+        <div>
+            <span>총 신청 내역  [[${applyList.size()}]]</span>
+        </div>
+
+        <table class="table table-hover" style="margin: 20px auto">
+            <colgroup>
+                <col style="width: 10%;"></col>
+                <col style="width: 30%;"></col>
+                <col style="width: 15%;"></col>
+                <col style="width: 15%;"></col>
+                <col style="width: 15%;"></col>
+                <col style="width: 15%;"></col>
+                <!--            <col style="width: 15%;"></col>-->
+                <!--            <col style="width: 10%;"></col>-->
+            </colgroup>
+            <thead>
+            <tr>
+                <th class="th_bs" style='text-align: center; border-right: 1px solid;'>신청번호</th>
+                <th class="th_bs" style='text-align: center; border-right: 1px solid;'>제목</th>
+                <th class="th_bs" style='text-align: center; border-right: 1px solid;'>신청 일자</th>
+                <th class="th_bs" style='text-align: center; border-right: 1px solid;'>집합 일자</th>
+                <th class="th_bs" style='text-align: center; border-right: 1px solid;'>상태</th>
+                <th class="th_bs" style='text-align: center;'>관리</th>
+                <!--            <th class="th_bs" style='text-align: center;'>관리</th>-->
+                <!--            <th class="th_bs" style='text-align: center;'>기타</th>-->
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="mateApplyListVO:${applyList}">
+                <td class="td_basic" style="text-align: center; vertical-align: middle;">
+                    <span th:text="${mateApplyListVO.ANo}">
+                    </span>
+                </td>
+
+                <td class="td_left align-middle" style="cursor: pointer"
+                    th:attr="onclick=|location.href='/mateCommunity/read?mCommunityNo=${mateApplyListVO.mCommunityNo}&now_page=${now_page}&searchWord=${searchWord}'|">
+                    <span th:text="${mateApplyListVO.title}" th:if="${mateApplyListVO.title.length() <= 20}" style="font-weight: bold; margin-left: 10px;"></span>
+                    <span th:text="@{|${mateApplyListVO.title.substring(0,20)}...|}" th:if="${mateApplyListVO.title.length() > 20}" style="font-weight: bold; margin-left: 10px;"></span>
+                </td>
+
+                <td class="td_left align-middle" style="text-align: center;">
+                    <span th:text="${mateApplyListVO.ADate.substring(0,10)}" ></span>
+                </td>
+
+                <td class="td_left align-middle" style="text-align: center;">
+                    <span th:text="${mateApplyListVO.assembleTime.substring(0,10)}" ></span>
+                </td>
+
+                <td class="td_left align-middle" style="text-align: center;">
+                    <span th:if="${mateApplyListVO.AStatus == 'WAITING'}" style="font-weight: bold;">대기중</span>
+                    <span th:if="${mateApplyListVO.AStatus == 'DENIED'}" style="font-weight: bold;">거절됨</span>
+                    <span th:if="${mateApplyListVO.AStatus == 'ACCEPTED'}" style="font-weight: bold;">수락됨</span>
+                </td>
+
+                <td class="td_left align-middle" style="text-align: center;">
+                    <div class="dropdown">
+                        <button class="btn btn-outline-info dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            관리
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><button th:id="'more'+${mateApplyListVO.ANo}" class="dropdown-item a_button">집합정보 더보기</button></li>
+                            <li><button th:id="'delete'+${mateApplyListVO.ANo}" class="dropdown-item a_button">신청 취소</button></li>
+                            <li><button th:id="'review'+${mateApplyListVO.ANo}" th:onclick="@{|/mateReview/create?mCommunityNo=${mateApplyListVO.MCommunityNo}|}"
+                                        class="dropdown-item a_button" th:if="${mateApplyListVO.AStatus=='ACCEPTED'}">후기작성</button></li>
+                        </ul>
+                    </div>
+<!--                    <button th:id="'delete'+${mateApplyListVO.ANo}" class="btn-outline-info btn">취소</button>-->
+                </td>
+                <script th:inline="javascript">
+                    window.addEventListener('load', function() {
+                        if(document.getElementById('delete'+[[${mateApplyListVO.ANo}]]) != null) {
+                            if (new Date([[${mateApplyListVO.assembleTime.split(" ")}]][0]) < new Date() && [[${mateApplyListVO.AStatus!='ACCEPTED'}]]) {
+                                let btn = document.getElementById('delete'+[[${mateApplyListVO.ANo}]]);
+                                btn.innerText='신청 삭제';
+                            } else if (new Date([[${mateApplyListVO.assembleTime.split(" ")}]][0]) < new Date() && [[${mateApplyListVO.AStatus=='ACCEPTED'}]]){
+                                let btn = document.getElementById('delete'+[[${mateApplyListVO.ANo}]]);
+                                btn.remove();
+                            }
+
+                            document.getElementById('delete'+[[${mateApplyListVO.ANo}]]).addEventListener('click', () => {
+                                if(confirm('신청내역을 삭제 하시겠습니까?')) {
+                                    let url = '/mateApply/delete?mCommunityNo=' + [[${mateApplyListVO.mCommunityNo}]] + "&memberNo" + [[${mateApplyListVO.memberNo}]];
+
+                                    fetch(url, {
+                                        method: 'GET'
+                                    })
+                                        .then(response => response.json())
+                                        .then(rdata => {
+                                            console.log(rdata);
+                                            if (rdata == 0 || rdata == null) { // 패스워드 불일치
+                                                alert("신청내역 삭제에 실패 했습니다.");
+                                                return false;
+                                            } else {
+                                                alert("신청내역이 삭제 되었습니다.");
+                                                location.reload();
+                                            }
+                                        })
+                                        .catch(error => { // 서버 다운등 통신 에러
+                                            console.error('Error:', error);
+                                        });
+                                }
+                            });
+                        }
+
+                        if(document.getElementById('review' + [[${mateApplyListVO.ANo}]]) != null) {
+                            if (new Date([[${mateApplyListVO.assembleTime.split(" ")}]][0]) > new Date()) {
+                                let review = document.getElementById('review' + [[${mateApplyListVO.ANo}]]);
+                                review.remove();
+                            }
+                        }
+                    });
+                </script>
+
+            </tr>
+            </tbody>
+        </table>
+        <div th:if="${applyList.size()==0}" style="text-align: center; padding: 150px;">
+            <span>신청내역이 없습니다.</span><br>
+            <span>산책 메이트를 찾아보세요!</span>
+        </div>
+        <div class="Bottom_menu" th:utext="${paging}"></div>
+
+        <script th:inline="javascript">
+            window.onload = () =>{
+                if([[${applyList.size()}]] < 10){
+                    document.getElementById('apply_list').style.height = "690px";
+                }
+            }
+        </script>
+
+    </div>
+</div>
+</html>

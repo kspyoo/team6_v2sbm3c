@@ -36,3 +36,7 @@ input[type='date']::-webkit-calendar-picker-indicator{
 /*input[type='date']:valid::before{*/
 /*    display: none;*/
 /*}*/
+
+.title_line{
+    border-bottom-color: rgba(33, 150, 243, 0.95);
+}

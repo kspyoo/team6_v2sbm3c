@@ -1,4 +1,5 @@
 DROP TABLE culturefacility;
+DROP TABLE CULTUREFACILITY CASCADE CONSTRAINTS;
 CREATE TABLE CULTUREFACILITY(
 		CULTUREFNO                    		NUMBER(10)		 NOT NULL		 PRIMARY KEY,
 		CNAME                         		VARCHAR2(200)		 NOT NULL,
@@ -39,23 +40,23 @@ CREATE SEQUENCE culturefacility_seq
 
 
  -- 등록 --
-INSERT INTO culturefacility(culturefno, cname, raddress, latitude, longitude, addr_code, phone, closedays, operatingtime, pa)
+INSERT INTO culturefacility(culturefno, cname, raddress, latitude, longitude, addr_code, phone, closeddays, operatingtime, pa)
 VALUES (culturefacility_seq.nextval, '문화시설이름1', '도로명 주소','위도', '경도', '우편번호', '전화번호', '휴무일', '운영시간', '주차가능여부');
 
-INSERT INTO culturefacility(culturefno, cname, raddress, latitude, longitude, addr_code, phone, closedays, operatingtime, pa)
+INSERT INTO culturefacility(culturefno, cname, raddress, latitude, longitude, addr_code, phone, closeddays, operatingtime, pa)
 VALUES (culturefacility_seq.nextval, '문화시설이름2', '도로명 주소','위도', '경도', '우편번호', '전화번호', '휴무일', '운영시간', '주차가능여부');
 
-INSERT INTO culturefacility(culturefno, cname, raddress, latitude, longitude, addr_code, phone, closedays, operatingtime, pa)
+INSERT INTO culturefacility(culturefno, cname, raddress, latitude, longitude, addr_code, phone, closeddays, operatingtime, pa)
 VALUES (culturefacility_seq.nextval, '문화시설이름3', '도로명 주소','위도', '경도', '우편번호', '전화번호', '휴무일', '운영시간', '주차가능여부');
 
-INSERT INTO culturefacility(culturefno, cname, raddress, latitude, longitude, addr_code, phone, closedays, operatingtime, pa)
+INSERT INTO culturefacility(culturefno, cname, raddress, latitude, longitude, addr_code, phone, closeddays, operatingtime, pa)
 VALUES (culturefacility_seq.nextval, '문화시설이름3', '주소','위도', '경도', '우편번호', '전화번호', '휴무일', '운영시간', '주차가능여부');
 
-INSERT INTO culturefacility(culturefno, cname, raddress, latitude, longitude, addr_code, phone, closedays, operatingtime, pa)
+INSERT INTO culturefacility(culturefno, cname, raddress, latitude, longitude, addr_code, phone, closeddays, operatingtime, pa)
 VALUES (culturefacility_seq.nextval, '문화시설이름3', '부산','위도', '경도', '우편번호', '전화번호', '휴무일', '운영시간', '주차가능여부');
 
 -- 전체 목록 --
-SELECT culturefno, cname,raddress, latitude, longitude, addr_code, phone, closedays, operatingtime, pa
+SELECT culturefno, cname,raddress, latitude, longitude, addr_code, phone, closeddays, operatingtime, pa
 FROM culturefacility
 ORDER BY culturefno DESC;
 

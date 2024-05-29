@@ -3,9 +3,9 @@
 
 <mapper namespace="dev.mvc.memberprofile.MemberprofileDAOInter">
    <!-- 사진 등록 -->
-  <insert id="create_file" parameterType="dev.mvc.memberprofile.MemberprofileVO">
-    INSERT INTO memberprofile(mprofileno, file1, file1saved, thumbfile, filesize, memberno)
-    VALUES (memberprofile_seq.nextval,#{file1},#{file1saved},#{thumbfile},#{filesize},#{memberno})
+  <insert id="create_file" parameterType="int">
+    INSERT INTO memberprofile(mprofileno, memberno)
+    VALUES (memberprofile_seq.nextval,#{memberno})
   </insert>
   
   <!-- 파일 수정 -->
@@ -21,5 +21,11 @@
     FROM memberprofile
     WHERE memberno = #{memberno} 
   </select>
+  
+  <!-- 회원 탈퇴 -->
+  <delete id="delete_FK" parameterType="int">
+    DELETE FROM memberprofile 
+    WHERE memberno=#{memberno}
+  </delete>
   
 </mapper>

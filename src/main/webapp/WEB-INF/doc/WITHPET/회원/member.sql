@@ -8,14 +8,19 @@ CREATE TABLE member(
     ID                                VARCHAR2(30)     NOT NULL,
     PASSWD                            VARCHAR2(50)     NOT NULL,
     NAME                              VARCHAR2(15)     NOT NULL,
-    GENDER                            VARCHAR2(5)    NOT NULL,
+    GENDER                            VARCHAR2(10)    NOT NULL,
     BIRTHDAY                          DATE     NOT NULL,
     PHONE                             VARCHAR2(14)     NOT NULL,
-    ADDR_CODE                         VARCHAR2(8)    NOT NULL,
-    ADDR_DETAIL                       VARCHAR2(30)     NOT NULL,
+    ADDR_CODE                         VARCHAR2(8)    NULL,
+    ADDR_MAIN                         VARCHAR2(30)   NULL,
+    ADDR_DETAIL                       VARCHAR2(30)     NULL,
     JOINDATE                          DATE     NOT NULL,
     STATUS                            VARCHAR2(10)     DEFAULT 0     NOT NULL
 );
+
+
+
+
 
 CREATE SEQUENCE member_MEMBERNO_SEQ NOMAXVALUE NOCACHE NOORDER NOCYCLE;
 
@@ -39,17 +44,28 @@ COMMENT ON COLUMN member.STATUS is '계정 상태';
 /**********************************/
 CREATE TABLE login(
     LOGINNO                           NUMBER(10)     NOT NULL    PRIMARY KEY,
-    IP                                VARCHAR2(10)     NOT NULL,
-    CONNDATE                          DATE     NOT NULL,
-    MEMBERNO                          NUMBER(10)     NOT NULL,
-  FOREIGN KEY (MEMBERNO) REFERENCES member (MEMBERNO)
+    IP                                VARCHAR2(40)     NOT NULL,
+    CONNDATE                          VARCHAR2(30)     NOT NULL,
+    MEMBERNO                          NUMBER(10)     NULL,
+  FOREIGN KEY (MEMBERNO) REFERENCES member (MEMBERNO) ON DELETE CASCADE
 );
+
+commit;
 
 COMMENT ON TABLE login is '회원 로그인 내역';
 COMMENT ON COLUMN login.LOGINNO is '로그인번호';
 COMMENT ON COLUMN login.IP is '접속 아이피';
 COMMENT ON COLUMN login.CONNDATE is '접속 일자';
 COMMENT ON COLUMN login.MEMBERNO is '회원번호';
+
+DROP SEQUENCE login_seq;
+
+CREATE SEQUENCE login_seq
+  START WITH 1              -- 시작 번호
+  INCREMENT BY 1          -- 증가값
+  MAXVALUE 9999999999 -- 최대값: 9999999 --> NUMBER(7) 대응
+  CACHE 2                       -- 2번은 메모리에서만 계산
+  NOCYCLE;                     -- 다시 1부터 생성되는 것을 방지
 
 
 /**********************************/
@@ -120,7 +136,8 @@ CREATE TABLE Memberprofile(
 		THUMBFILE                     		VARCHAR2(100)		 ,
 		FILESIZE                      		LONG		 ,
 		MEMBERNO                      		NUMBER(10)		 NOT NULL,
-    FOREIGN KEY (MEMBERNO) REFERENCES MEMBER (MEMBERNO) ON DELETE CASCADE);
+    FOREIGN KEY (MEMBERNO) REFERENCES MEMBER (MEMBERNO) ON DELETE CASCADE
+    );
 
 
 COMMENT ON TABLE Memberprofile is '회원 프로필 사진 수정';
@@ -141,6 +158,63 @@ CREATE SEQUENCE memberprofile_seq
   MAXVALUE 9999999999 -- 최대값: 9999999 --> NUMBER(7) 대응
   CACHE 2                       -- 2번은 메모리에서만 계산
   NOCYCLE;                     -- 다시 1부터 생성되는 것을 방지
+  
+INSERT INTO Memberprofile (MPROFILENO,memberno)
+VALUES (memberprofile_seq.nextval,1);
+  
+INSERT INTO Memberprofile (MPROFILENO,memberno)
+VALUES (memberprofile_seq.nextval,42);
 
+INSERT INTO Memberprofile (MPROFILENO,memberno)
+VALUES (memberprofile_seq.nextval,76);
+  
+ALTER TABLE member MODIFY (gender VARCHAR2(10));
+ALTER TABLE login MODIFY (conndate VARCHAR2(30));
+ALTER TABLE login MODIFY (ip VARCHAR2(40));
+ALTER TABLE login MODIFY (memberno NUMBER(10) NULL);
+ALTER TABLE member MODIFY (ADDR_DETAIL  VARCHAR2(30) NULL);
+
+
+
+SELECT l.loginno, l.ip, l.conndate, l.memberno, m.id, m.name
+FROM login l LEFT JOIN member m ON l.memberno = m.memberno
+ORDER BY l.loginno DESC;
+
+    SELECT l.loginno, l.ip, l.conndate, l.memberno, m.id, m.name
+    FROM login l , member m
+    WHERE l.memberno = m.memberno
+    ORDER BY l.loginno DESC;
+
+INSERT INTO memberprofile(mprofileno, memberno)
+VALUES (memberprofile_seq.nextval,61);
+
+commit;
+
+DELETE FROM login WHERE memberno=63;
+
+ALTER TABLE Memberprofile
+DROP CONSTRAINT SYS_C008015;
+
+ALTER TABLE Memberprofile
+DROP CONSTRAINT SYS_C008015;
+
+ALTER TABLE Memberprofile
+ADD CONSTRAINT SYS_C008015
+FOREIGN KEY (MEMBERNO)
+REFERENCES MEMBER (MEMBERNO)
+ON DELETE CASCADE;
+
+
+ALTER TABLE login
+DROP CONSTRAINT SYS_C008053;
+
+ALTER TABLE login
+ADD CONSTRAINT SYS_C008053
+FOREIGN KEY (MEMBERNO)
+REFERENCES MEMBER (MEMBERNO)
+ON DELETE SET NULL;
+
+ALTER TABLE login
+MODIFY memberno DEFAULT 0;
 
 

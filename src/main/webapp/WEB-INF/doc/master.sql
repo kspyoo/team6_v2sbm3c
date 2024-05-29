@@ -1,4 +1,5 @@
 DROP TABLE master;
+DROP TABLE master CASCADE CONSTRAINTS;
 
 CREATE TABLE MASTER(
 		MASTERNO                      		NUMBER(10)		 NOT NULL		 PRIMARY KEY,
@@ -13,6 +14,7 @@ COMMENT ON COLUMN MASTER.MASTERPASSWD is '관리자 비밀번호';
 
 DROP SEQUENCE master_seq;
 
+
 CREATE SEQUENCE master_seq
   START WITH 1              -- 시작 번호
   INCREMENT BY 1          -- 증가값
@@ -22,10 +24,10 @@ CREATE SEQUENCE master_seq
 
 --등록--
 INSERT INTO master(masterno, masterid, masterpasswd)                            
-VALUES (member_seq.nextval, 'admin', '1234')
+VALUES (master_seq.nextval, 'admin', '1234')
 
 INSERT INTO master(masterno, masterid, masterpasswd)                            
-VALUES (member_seq.nextval, 'master', '1234')
+VALUES (master_seq.nextval, 'master', '1234')
 --목록--
 SELECT masterno, masterid, masterpasswd
 FROM master

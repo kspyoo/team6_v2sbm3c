@@ -77,9 +77,11 @@
   }
 
   .menu_line {
-    width: 100%;
+    width: 80%;
     border-bottom: dotted 1px #777777;
-    margin: 2px 0px 10px 0px; /* top -> right -> bottom -> left */
+    margin: auto; /* top -> right -> bottom -> left */
+    height: auto;
+    overflow: hidden;
     clear: both;
   }
 
@@ -115,6 +117,7 @@
   }
 
   .bottom_menu {
+    height: 100px;
     text-align: center;
     margin: 20px auto;
     clear: both;  /* 앞쪽 태그의 float 효과를 제거함. */
@@ -131,6 +134,10 @@
   }
 
   .aside_right {
+    display: flex;
+    gap: 10px;
+    margin-right: 10%;
+    margin-top: 5px;
     float: right;
     font-size: 0.9em; /* 부모 글꼴 크기 대비 90%로 출력 */
   }
@@ -218,8 +225,8 @@
 
   .title_line {
     text-align: left;
-    border-bottom: solid 3px #555555;
-    width: 100%;
+    border-bottom: solid 3px  rgba(33, 150, 243, 0.95);
+    width: 80%;
     margin: 20px auto;
     font-size: 20px;
   }

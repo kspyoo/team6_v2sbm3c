@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout}">
+<!-- layout.html 상속-->
+<div layout:fragment="content">
+    <div class='title_line'>
+        문화시설 >
+        <span th:text="${culturefacilityVO.cname}" class="title_line_text"></span>
+    </div>
+    <aside class="aside_right">
+        <a th:href="@{|/culturefacility/list_search?word=${word}&now_page=${now_page}|}">목록</a>
+        <span class="menu_devide">│</span>
+        <a href="javascript: location.reload();">새로 고침</a>
+    </aside>
+    <div class="menu_line"></div>
+    <div class="container mt-3" style="width: 50%; margin: 5px auto;">
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">문화시설 이름: <span th:text="${culturefacilityVO.cname}"></span></li>
+            <li class="list-group-item">도로명 주소: <span th:text="${culturefacilityVO.raddress}"></span></li>
+            <li class="list-group-item">우편번호: <span th:text="${culturefacilityVO.addr_code}"></span></li>
+            <li class="list-group-item">전화번호: <span th:text="${culturefacilityVO.phone}"></span></li>
+            <li class="list-group-item">휴무일: <span th:text="${culturefacilityVO.closeddays}"></span></li>
+            <li class="list-group-item">운영시간: <span th:text="${culturefacilityVO.operatingtime}"></span></li>
+            <li class="list-group-item">주차가능여부: <span th:text="${culturefacilityVO.pa}"></span></li>
+        </ul>
+        
+    </div>
+     <div class="menu_line"></div>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+
+    <style>
+        /* 후기 목록 스타일링 */
+        #reviewList {
+            font-size: 14px; /* 후기 목록의 폰트 크기 조정 */
+        }
+
+        .review-card {
+            border: 1px solid #ddd; /* 카드 테두리 색상 */
+            border-radius: 5px; /* 카드 테두리 둥글게 */
+            padding: 15px; /* 카드 내부 여백 */
+            margin-bottom: 10px; /* 카드 사이 간격 */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* 카드 그림자 효과 */
+            background-color: #f9f9f9; /* 카드 배경색 */
+            width: 50%; /* 후기 요소의 너비를 절반으로 */
+            margin: 0 auto; /* 가운데 정렬 */
+        }
+
+        .review-card p {
+            margin: 5px 0; /* 후기 내용, 평점, 작성일의 간격 조정 */
+        }
+
+        .review-grade {
+            color: #ffa500; /* 평점 색상 (주황색) */
+            font-size: 18px; /* 평점 폰트 크기 */
+        }
+
+        .review-date {
+            color: #888; /* 작성일 색상 (회색) */
+            font-size: 12px; /* 작성일 폰트 크기 */
+        }
+
+        .load-more {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .load-more button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .load-more button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+$(document).ready(function() {
+    var culturefno = $('#culturefno').val(); // 해당 문화시설 번호
+    var reviewIndex = 0; // 현재 후기 인덱스
+    var reviewStep = 1; // 한번에 로드할 후기 수
+
+    // 후기 목록 로드
+    function loadReviews() {
+        $.ajax({
+            url: '/facilityreview/list_by_culturefno?culturefno=' + culturefno,
+            type: 'GET',
+            success: function(response) {
+                var res = JSON.parse(response);
+                var reviews = res.list;
+                var html = '';
+
+                for (var i = reviewIndex; i < reviewIndex + reviewStep && i < reviews.length; i++) {
+                    html += '<div class="review-card">';
+                    html += '<p>후기 내용: ' + reviews[i].reviewcomment + '</p>';
+                    html += '<p class="review-grade">평점: ' + '★'.repeat(reviews[i].reviewgrade) + '</p>';
+                    html += '<p class="review-date">작성일: ' + reviews[i].rdate + '</p>';
+                    html += '</div>';
+                }
+
+                $('#reviewList').append(html);
+
+                reviewIndex += reviewStep;
+                if (reviewIndex >= reviews.length) {
+                    $('#loadMoreButton').hide(); // 더 이상 로드할 댓글이 없으면 버튼 숨기기
+                }
+            }
+        });
+    }
+
+    loadReviews();
+
+    $('#loadMoreButton').on('click', function() {
+        loadReviews();
+    });
+
+    // 후기 등록 버튼 클릭 이벤트 핸들러
+    $('#submitReview').off('click').on('click', function() {
+        var reviewData = {
+            culturefno: $('#culturefno').val(),
+            reviewcomment: $('#reviewcomment').val(),
+            reviewgrade: $('#reviewgrade').val(),
+            passwd: $('#passwd').val(),
+            memberno: $('#memberno').val() // 수정된 부분: 회원 번호 추가
+        };
+
+        $.ajax({
+            url: '/facilityreview/create',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(reviewData),
+            success: function(response) {
+                var res = JSON.parse(response);
+                if (res.cnt > 0) {
+                    alert('후기가 성공적으로 등록되었습니다.');
+                    location.reload(); // 새로고침하여 등록된 후기를 표시
+                } else {
+                    alert('후기 등록에 실패했습니다. ' + res.msg);
+                }
+            }
+        });
+    });
+});
+
+    </script>
+</head>
+<body>
+    <div class="container mt-3" style="width: 50%; margin: 0 auto;"> 
+        <form>
+            <input type="hidden" id="culturefno" name="culturefno" th:value="${culturefacilityVO.culturefno }"> <!-- 해당 문화시설 번호 -->
+            <div>
+                <label for="reviewcomment">문화시설 후기 내용</label>
+                <br>
+                <textarea id="reviewcomment" name="reviewcomment" rows="6" cols="100"></textarea>
+            </div>
+            <div>
+                <label for="reviewgrade">문화시설 평점:</label>
+                <select id="reviewgrade">
+                    <option value="1">★</option>
+                    <option value="2">★★</option>
+                    <option value="3">★★★</option>
+                    <option value="4">★★★★</option>
+                    <option value="5">★★★★★</option>
+                </select>
+            </div>
+            <div>
+                <button type="button" id="submitReview">후기 등록</button>
+            </div>
+        </form>
+    </div>
+    <div id="reviewList">
+        <!-- 후기 목록이 여기에 표시됩니다. -->
+    </div>
+    <div class="load-more">
+        <button id="loadMoreButton">후기 더보기</button>
+    </div>
+</body>
+</html>

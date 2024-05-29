@@ -64,7 +64,7 @@ public interface MateCommunityProcInter {
      * @param mCommunityNo
      * @return
      */
-    public MateCommunityVO read_content(int mCommunityNo);
+    public MateCommunityJoinVO read_content(int mCommunityNo);
 
     /**
      * 게시글 수정
@@ -114,5 +114,22 @@ public interface MateCommunityProcInter {
      * @return
      */
     public int list_all_by_petTypeNo_count(Map<String,Object> map);
+
+    /**
+     * 자신의 모든 게시글
+     *
+     * @param now_page        현재 페이지 위치
+     * @param record_per_page 페이지당 게시글 수
+     * @param memberNo        조회할 회원번호
+     * @return
+     */
+    public ArrayList<MateCommunityJoinVO> my_list_all(int now_page, int record_per_page, int memberNo);
+
+    /**
+     * 자신의 게시글 개수
+     * @param memberNo
+     * @return
+     */
+    public int my_list_all_count(int memberNo);
 
 }

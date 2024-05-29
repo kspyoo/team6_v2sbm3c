@@ -61,7 +61,7 @@ function send(){
 
     // document.getElementById('assembleTime').textContent= String(date) + " " + String(amOrPm) + " " + String(hour) + " : " + String(minute);
 
-    document.getElementById('assembleTime').value = String(date) + " " + String(amOrPm) + String(hour_result) + ":" + String(minute_result);
+    document.getElementById('assembleTime').value = String(date) + " " + String(amOrPm) + " " + String(hour_result) + ":" + String(minute_result);
 
     // let searchTags = document.getElementById('searchTag');
     // let searchTag_list = searchTags.value.split(' ');
