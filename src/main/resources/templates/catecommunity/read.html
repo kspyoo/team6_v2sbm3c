@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+
+<html layout:decorate="~{layout}"> <!-- layout.html 상속-->
+<div layout:fragment="content">
+  <div class='title_line'>
+    <span class="title_line_text"></span >
+  </div>
+  <aside class="aside_right">
+    <a href="/catecommunity/list_all">목록</a>
+    <span class="menu_devide">│</span>
+    <a th:href="@{|/catecommunity/update/${cateCommunityVO.ctypeno}|}">수정</a>
+    <span class="menu_devide">│</span>
+    <a th:href="@{|/catecommunity/delete/${cateCommunityVO.ctypeno}|}">삭제</a> 
+    <span class="menu_devide">│</span>
+    <a href="/catecommunity/create">등록</a>
+    <span class="menu_devide">│</span>
+    <a href="javascript: location.reload();">새로 고침</a>
+  </aside>
+  <div class="menu_line"></div>
+  <div class="container mt-3" style="width: 50%; margin: 5px auto;">
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item">게시판 종류 번호: <span th:text="${cateCommunityVO.ctypeno}"></span></li>
+      <li class="list-group-item">게시글 수: <span th:text="${cateCommunityVO.cnt}"></span></li>
+      <li class="list-group-item">게시판 이름: <span th:text="${cateCommunityVO.typename}"></span></li>
+      <li class="list-group-item">관리자 번호: <span th:text="${cateCommunityVO.masterno}"></span></li>
+    </ul>  
+  </div>
+
+  
+ 
+</div>
+</html>
+
+
+

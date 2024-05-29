@@ -12,4 +12,10 @@ public interface CateCommunityProcInter {
    * 목록
    */
   public ArrayList<CateCommunityVO>list_all();
+  
+  public CateCommunityVO read(int ctypeno);
+  
+  public int update(CateCommunityVO cateCommunityVO);
+  
+  public int delete(int ctypeno);
 }

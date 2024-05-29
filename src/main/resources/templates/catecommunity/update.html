@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+
+<html layout:decorate="~{layout}">
+<div layout:fragment="content">
+  <div class="title_line">
+    카테고리  >
+    <span class="title_line_text"></span >
+    수정
+  </div>
+  <aside class="aside_right">
+    <a href="/catecommunity/list_all">목록</a>
+    <span class="menu_devide">│</span>
+    <a href="/catecommunity/update">수정</a>
+    <span class="menu_devide">│</span>
+    <a href="/catecommunity/delete">삭제</a>
+    <span class="menu_devide">│</span>
+    <a href="/catecommunity/create">등록</a>
+    <span class="menu_devide">│</span>
+    <a href="javascript: location.reload();">새로 고침</a>
+  </aside>
+  <div class="menu_line"></div>
+    
+  <form name="frm" th:object="${cateCommunityVO}" method="post" th:action="@{|/catecommunity/update/${cateCommunityVO.ctypeno}|}" style="width: 50%; margin: 5px auto;">
+    <input type="hidden" name="masterno" th:value="${cateCommunityVO.masterno}">
+    <input type="hidden" name="word" th:value="${word}">
+    <input type="hidden" name="now_page" th:value="${now_page}">
+    
+
+    
+    <div>
+      <label>게시판 종류 번호</label>
+      <input type="number" name="ctypeno" th:value="${cateCommunityVO.ctypeno}" 
+             class="form-control fom-control-sm" th:field="*{ctypeno}">
+      <div th:if="${#fields.hasErrors('ctypeno')}" class="alert alert-danger" role="alert" style="margin-top: 5px;">
+        <div th:each="err : ${#lists.sort(#fields.errors('ctypeno'))}" th:text="${err}"></div>
+      </div>  
+    </div>
+    <div>
+      <label>게시글 수</label>
+      <input type="number" name="cnt" th:value="${cateCommunityVO.cnt}" 
+             class="form-control fom-control-sm" th:field="*{cnt}">
+      <div th:if="${#fields.hasErrors('cnt')}" class="alert alert-danger" role="alert" style="margin-top: 5px;">
+        <div th:each="err : ${#lists.sort(#fields.errors('cnt'))}" th:text="${err}"></div>
+      </div>             
+    </div>
+    <div>
+      <label>게시판 이름</label>
+      <input type="text" name="typename" th:value="${cateCommunityVO.typename}" 
+             class="form-control fom-control-sm" th:field="*{typename}">
+      <div th:if="${#fields.hasErrors('typename')}" class="alert alert-danger" role="alert" style="margin-top: 5px;">
+        <div th:each="err : ${#lists.sort(#fields.errors('typename'))}" th:text="${err}"></div>
+      </div>
+    </div>
+    <div>
+      <label>관리자 번호</label>
+      <input type="hidden" name="masterno" th:value="${cateCommunityVO.masterno}" 
+             class="form-control fom-control-sm" th:field="*{masterno}">
+      <div th:if="${#fields.hasErrors('masterno')}" class="alert alert-danger" role="alert" style="margin-top: 5px;">
+        <div th:each="err : ${#lists.sort(#fields.errors('masterno'))}" th:text="${err}"></div>
+      </div>
+    </div>
+    <div class="content_body_bottom">
+      <button type="submit" class="btn btn-secondary btn-sm">저장</button>
+      <button type="button" th:attr="onclick=|location.href='/catecommunity/list_search?word=${word}&now_page=${now_page}'|" class="btn btn-secondary btn-sm">취소</button>      
+    </div>
+    
+  </form>  
+  
+    
+</div>
+</html>
+

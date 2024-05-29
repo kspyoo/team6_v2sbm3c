@@ -112,9 +112,9 @@ FROM community
 WHERE communityno=2;
 
 -- UPDATE: 수정
-UPDATE community
-SET  title ='test1',content='테스트 수정입니다',vcnt=2,rcnt=3,writedate=sysdate,tag='수정태그',memberno=2,ctypeno=3
-WHERE communityno=2;
+    UPDATE community
+    SET  title ='test1',content='테스트 수정입니다',vcnt=2,rcnt=3,writedate=sysdate,tag='수정태그',memberno=2,ctypeno=3
+    WHERE communityno=2;
 
 SELECT * FROM community;
 
@@ -124,7 +124,22 @@ COMMIT;
 DELETE FROM community WHERE communityno=1;
 
 SELECT * FROM community;
-
+ -- search_paging
+SELECT communityno,title,content,vcnt,rcnt,writedate,tag,memberno,ctypeno, r
+FROM(   
+        SELECT communityno,title,content,vcnt,rcnt,writedate,tag,memberno,ctypeno, rownum as r
+        FROM (
+            SELECT communityno,title,content,vcnt,rcnt,writedate,tag,memberno,ctypeno
+            FROM community             
+            WHERE UPPER(title)LIKE '%'||UPPER('test')||'%'OR UPPER(tag)LIKE '%' ||UPPER('test')
+            ORDER BY communityno ASC
+            )
+        );
+-- cnt        
+    SELECT COUNT(*) as cnt
+        FROM community
+          WHERE UPPER(title) LIKE '%' || UPPER('word') || '%' OR UPPER(tag) LIKE '%' || UPPER('word') || '%'  
+        ORDER BY communityno ASC;
 /**********************************/
 /* Table Name: 댓글 */
 /**********************************/
@@ -151,10 +166,12 @@ COMMENT ON COLUMN REPLY.MEMBERNO is '회원번호';
 /**********************************/
 /* Table Name: 일반 커뮤니티 첨부파일 */
 /**********************************/
+DROP TABLE COMMUNITYATTACHMENT;
+
 CREATE TABLE COMMUNITYATTACHMENT(
     CANO                              NUMBER(10)     NOT NULL    PRIMARY KEY,
     FILENAME                          VARCHAR2(100)    NOT NULL,
-    FILESIZE                          VARCHAR2(100)    NOT NULL,
+    FILESIZE                          number(10)    NOT NULL,
     THUMBFILE                         VARCHAR2(100)    NOT NULL,
     COMMUNITYNO                       NUMBER(10)     NULL ,
   FOREIGN KEY (COMMUNITYNO) REFERENCES COMMUNITY (COMMUNITYNO)
@@ -166,4 +183,35 @@ COMMENT ON COLUMN COMMUNITYATTACHMENT.FILENAME is '파일명';
 COMMENT ON COLUMN COMMUNITYATTACHMENT.FILESIZE is '파일사이즈';
 COMMENT ON COLUMN COMMUNITYATTACHMENT.THUMBFILE is '썸네일 파일';
 COMMENT ON COLUMN COMMUNITYATTACHMENT.COMMUNITYNO is '글 번호';
+
+DROP SEQUENCE COMMUNITYATTACHMENT_SEQ;
+CREATE SEQUENCE COMMUNITYATTACHMENT_SEQ
+  START WITH 1         
+  INCREMENT BY 1       
+  MAXVALUE 9999999999  
+  CACHE 2             
+  NOCYCLE;            
+
+INSERT INTO communityattachment(cano, filename, filesize, thumbfile,communityno)
+VALUES(COMMUNITYATTACHMENT_SEQ.nextval,'puppy.png',1000,'puppy.png',14);
+
+SELECT * FROM communityattachment;
+
+commit;
+
+
+ -- read
+SELECT cano, filename, filesize, thumbfile,communityno 
+FROM communityattachment
+ORDER BY communityno desc;
+
+-- update
+UPDATE communityattachment
+SET filename ='cat.png',thumbfile='cat.png'
+WHERE communityno = 14;
+
+SELECT * FROM communityattachment;
+
+--delete
+DELETE FROM communityattachment WHERE communityno=14;
 

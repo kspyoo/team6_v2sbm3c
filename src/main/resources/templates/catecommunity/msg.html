@@ -16,20 +16,20 @@
             등록 실패된 카테고리 게시판: <span th:text="${typename}}"></span> 
           </div>
           <div th:case="update_success">
-            <span class="span_success">문화시설 수정에 성공했습니다.</span><br>
-            수정된 문화시설: <span th:text="${cname}"></span> 
+            <span class="span_success">카테고리 수정에 성공했습니다.</span><br>
+            수정된 카테고리: <span th:text="${typename}"></span> 
           </div>
           <div th:case="update_fail">
-            <span class="span_fail">문화시설 수정에 실패했습니다.</span><br>
-            수정 실패된 문화시설: <span th:text="${cname}"></span> 
+            <span class="span_fail">카테고리 수정에 실패했습니다.</span><br>
+            수정 실패된 카테고리: <span th:text="${typename}"></span> 
           </div>
           <div th:case="delete_success">
-            <span class="span_success">문화시설 삭제에 성공했습니다.</span><br>
-            삭제된 문화시설: <span th:text="${cname}"></span> 
+            <span class="span_success">카테고리 삭제에 성공했습니다.</span><br>
+            카테고리 문화시설: <span th:text="${typename}"></span> 
           </div>
           <div th:case="delete_fail">
-            <span class="span_fail">문화시설 삭제에 실패했습니다.</span><br>
-            삭제 실패된 문화시설: <span th:text="${cname}"></span>
+            <span class="span_fail">카테고리 삭제에 실패했습니다.</span><br>
+            카테고리 실패된 문화시설: <span th:text="${typename}"></span>
          
           </div>
         </li>
@@ -39,7 +39,7 @@
             <button type="button" onclick="history.back()" class="btn btn-secondary btn-sm">다시 시도</button>
           </div>
           <div th:if="${cnt != 0}">
-            <button type="button" onclick="location.href='./list_all'" class="btn btn-secondary btn-sm">전체 목록</button>
+            <button type="button" onclick="location.href='/catecommunity/list_all'" class="btn btn-secondary btn-sm">전체 목록</button>
           </div>
         </li>
       </ul>

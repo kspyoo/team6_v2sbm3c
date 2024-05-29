@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
 <mapper namespace="dev.mvc.community.CommunityDAOInter">
   <insert id="create" parameterType="dev.mvc.community.CommunityVO">
   INSERT INTO COMMUNITY(communityno,title,content,vcnt,rcnt,writedate,tag,memberno,ctypeno)
@@ -9,6 +10,46 @@
     SELECT communityno,title,content,vcnt,rcnt,writedate,tag,memberno,ctypeno
     FROM community
     ORDER BY communityno ASC
-
   </select>
+  <select id="read" resultType="dev.mvc.community.CommunityVO" parameterType="int">
+    SELECT communityno,title,content,vcnt,rcnt,writedate,tag,memberno,ctypeno
+    FROM community
+    WHERE communityno=#{communityno}
+  </select>
+ <update id="update" parameterType="dev.mvc.community.CommunityVO">
+  UPDATE community
+  SET  title =#{title},content=#{content},writedate=sysdate,tag=#{tag}
+  WHERE communityno=#{communityno}
+ </update>
+ 
+ <delete id="delete" parameterType="int">
+ DELETE FROM community WHERE communityno=#{communityno}
+ </delete>
+ 
+<select id="list_search_paging" resultType="dev.mvc.community.CommunityVO" parameterType="HashMap">
+SELECT communityno,title,content,vcnt,rcnt,writedate,tag,memberno,ctypeno, r
+FROM(   
+      SELECT communityno,title,content,vcnt,rcnt,writedate,tag,memberno,ctypeno, rownum as r
+      FROM (
+            SELECT communityno,title,content,vcnt,rcnt,writedate,tag,memberno,ctypeno
+            FROM community   
+        <choose>     
+            <otherwise> 
+                WHERE UPPER(title)LIKE '%'||UPPER(#{word})||'%'OR UPPER(tag)LIKE '%' || UPPER(#{word})
+          </otherwise>
+        </choose>
+        ORDER BY communityno ASC  
+         )
+)
+WHERE <![CDATA[ r >= #{start_num} AND r <= #{end_num} ]]>
+     
+    <!-- 1 page: WHERE r >= 1 AND r <= 10; 
+          2 page: WHERE r >= 11 AND r <= 20;
+          3 page: WHERE r >= 21 AND r <= 30; -->
+</select>
+<select id="list_search_count" resultType="int" parameterType="HashMap">
+SELECT COUNT(*) as cnt
+        FROM community
+          WHERE UPPER(title) LIKE '%'||UPPER(#{word})||'%'OR UPPER(tag)LIKE '%' ||UPPER(#{word}) 
+</select>
 </mapper>

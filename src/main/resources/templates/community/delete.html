@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+
+<html layout:decorate="~{layout}">
+<!-- layout.html 상속-->
+<div layout:fragment="content">
+  <div class='title_line'>
+    <span class="title_line_text"></span>
+
+  </div>
+  <aside class="aside_right">
+    <a href="/community/list_all">목록</a>
+    <span class="menu_devide">│</span>
+    <a th:href="@{|/community/update/${communityVO.communityno}|}">수정</a>
+    <span class="menu_devide">│</span>
+    <a href="/community/delete">삭제</a>
+    <span class="menu_devide">│</span>
+    <a href="/community/create">등록</a>
+    <span class="menu_devide">│</span>
+    <a href="javascript: location.reload();">새로 고침</a>
+  </aside>
+
+  <div class='menu_line'></div>
+  <form name='frm' method='POST' th:object="${communityVO}" th:action="@{|/community/delete/${communityVO.communityno}|}">
+    <div class="msg_warning">게시글을 삭제하면 복구 할 수 없습니다.</div>
+    <label>제목</label>: <span th:text="${communityVO.title}"></span>
+
+
+    <div class="content_body_bottom">
+      <button type="submit" class="btn btn-secondary btn-sm">삭제</button>
+      <button type="button" onclick="location.href='/list_all'" class="btn btn-secondary btn-sm">취소</button>
+    </div>
+
+  </form>
+
+</div>
+
+</html>

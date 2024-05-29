@@ -10,5 +10,19 @@
   FROM communitycate
   ORDER BY ctypeno ASC
   </select>
-
+  <select id="read" resultType="dev.mvc.catecommunity.CateCommunityVO" parameterType="Integer">
+  SELECT ctypeno, cnt, typename, masterno
+  FROM communitycate
+  WHERE ctypeno=#{ctypeno}
+  </select>
+  <update id="update" parameterType="dev.mvc.catecommunity.CateCommunityVO">
+  UPDATE communitycate
+  SET ctypeno=#{ctypeno},typename=#{typename},cnt=#{cnt}
+  WHERE ctypeno=#{ctypeno}
+  </update>
+  <delete id="delete" parameterType="int">
+  DELETE 
+  FROM communitycate 
+  WHERE ctypeno=#{ctypeno}
+  </delete>
 </mapper>

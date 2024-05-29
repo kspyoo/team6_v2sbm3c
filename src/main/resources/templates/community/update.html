@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+
+<html layout:decorate="~{layout}">
+<!-- layout.html 상속-->
+<div layout:fragment="content">
+  <div class='title_line'>
+    <span class="title_line_text"></span>
+  </div>
+  <aside class="aside_right">
+    <a href="/community/list_all">목록</a>
+    <span class="menu_devide">│</span>
+    <a href="/community/update">수정</a>
+    <span class="menu_devide">│</span>
+    <a th:href="@{|/community/delete/${communityVO.communityno}|}">삭제</a>
+    <span class="menu_devide">│</span>
+    <a href="/community/create">등록</a>
+    <span class="menu_devide">│</span>
+    <a href="javascript: location.reload();">새로 고침</a>
+  </aside>
+
+  <div class='menu_line'></div>
+  <form name='frm' method='POST' th:object="${communityVO}" th:action="@{|/community/update/${communityVO.communityno}|}">
+
+    <div>
+      <label>제목</label>
+      <input type='text' name='title' th:value='${communityVO.title}' required="required" autofocus="autofocus"
+        class="form-control" style='width: 100%;'>
+    </div>
+    <div>
+      <label>내용</label>
+      <textarea name='content' required="required" class="form-control" rows="12" style='width: 100%;'
+        th:text='${communityVO.content}'></textarea>
+    </div>
+    <div>
+      <label>태그</label>
+      <input type='text' name='tag' th:value='${communityVO.tag}' required="required" class="form-control"
+        style='width: 100%;'>
+    </div>
+    <div>
+      <label>패스워드</label>
+      <input type='password' name='passwd' th:value='1234' required="required" class="form-control" style='width: 50%;'>
+    </div>
+    <div class="content_body_bottom">
+      <button type="submit" class="btn btn-secondary btn-sm">저장</button>
+      <button type="button" onclick="location.href='/list_all'" class="btn btn-secondary btn-sm">목록</button>
+    </div>
+
+  </form>
+
+</div>
+
+</html>

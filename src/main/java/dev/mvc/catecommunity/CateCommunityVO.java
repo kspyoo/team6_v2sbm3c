@@ -14,5 +14,5 @@ public class CateCommunityVO {
   private int ctypeno;
   private int cnt =0;
   private String typename ="";
-  private int masterno=1;
+  private int masterno;
 }

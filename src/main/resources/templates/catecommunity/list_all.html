@@ -19,8 +19,12 @@
   <tbody>
   <tr th:each="cateCommunityVO:${list}">
   <td class="td_bs"><a th:href="@{|./read/${cateCommunityVO.ctypeno}|}" style="display: block;" th:text="${cateCommunityVO.ctypeno}"></a></td>
-  <td class="td_bs"><a th:href="@{|./read/${cateCommunityVO.cnt}|}" style="display: block;" th:text="${cateCommunityVO.cnt}"></a></td>
-  <td class="td_bs"><a th:href="@{|./read/${cateCommunityVO.typename}|}" style="display: block;" th:text="${cateCommunityVO.typename}"></a></td>
+  <td class="td_bs"><a th:href="@{|./read/${cateCommunityVO.ctypeno}|}" style="display: block;" th:text="${cateCommunityVO.cnt}"></a></td>
+  <td class="td_bs"><a th:href="@{|./read/${cateCommunityVO.ctypeno}|}" style="display: block;" th:text="${cateCommunityVO.typename}"></a></td>
+ <td class="td_bs">
+  <a th:href="@{|/cate/update/${cateCommunityVO.ctypeno}?word=${word}&now_page=${now_page}|}"><img src="/image/cate/update.png" class="icon"></a>
+  <a th:href="@{|/cate/delete/${cateCommunityVO.ctypeno}?word=${word}&now_page=${now_page}|}"><img src="/image/cate/delete.png" class="icon"></a>
+ </td>
   </tr>
   </tbody>
 </table>
