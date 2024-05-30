@@ -8,4 +8,10 @@ public interface CateCommunityDAOInter {
   
   
   public ArrayList<CateCommunityVO>list();
+  
+  public CateCommunityVO read(int ctypeno);
+  
+  public int update(CateCommunityVO cateCommunityVO);
+  
+  public int delete(int ctypeno);
 }

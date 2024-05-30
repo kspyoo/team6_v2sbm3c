@@ -153,7 +153,7 @@ public class MateCommunityCont {
     @GetMapping("/create")
     public String createForm(Model model, HttpSession session, int petTypeNo){
         model.addAttribute("petTypeNo", petTypeNo);
-        model.addAttribute("memberNo", 1);
+        model.addAttribute("memberNo", session.getAttribute("memberno"));
 
         return "mateCommunity/create";
     }

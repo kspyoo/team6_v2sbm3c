@@ -31,7 +31,7 @@
 						<li><a class="dropdown-item a_button" href="/member/findPasswdView">비밀번호 찾기</a></li>
 					</ul>
 				</div>
-				<div class="nav-item dropdown me-1 pe-1" th:if="${session.memberno != null && session.name != 'admin'}">
+				<div class="nav-item dropdown me-5 pe-5" th:if="${session.memberno != null && session.name != 'admin'}">
 					<a class="nav-link dropdown-toggle" href="#" id="dropdown2" data-bs-toggle="dropdown" aria-expanded="false" th:text="${session.name} + 님"></a>
 					<ul class="dropdown-menu" aria-labelledby="dropdown2">
 

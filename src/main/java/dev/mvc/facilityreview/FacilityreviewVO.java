@@ -20,6 +20,7 @@ public class FacilityreviewVO {
   /** 등록일 */
   private String rdate;
   
+  
 
 
 }

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+
+<html layout:decorate="~{layout}">
+<div layout:fragment="content">
+  <div class="title_line">
+    카테고리  >
+    <span class="title_line_text"></span >
+    삭제
+  </div>
+  <aside class="aside_right">
+    <a href="/catecommunity/list_all">목록</a>
+    <span class="menu_devide">│</span>
+    <a href="/catecommunity/update">수정</a>
+    <span class="menu_devide">│</span>
+    <a href="/catecommunity/delete">삭제</a>
+    <span class="menu_devide">│</span>
+    <a href="/catecommunity/create">등록</a>
+    <span class="menu_devide">│</span>
+    <a href="javascript: location.reload();">새로 고침</a>
+  </aside>
+  <div class="menu_line"></div>
+    <form name='frm' method='POST' th:object="${cateCommunityVO}" th:action="@{|/catecommunity/delete/${cateCommunityVO.ctypeno}|}">
+    <input type="hidden" name="masterno" th:value="${cateCommunityVO.masterno}">
+    <div class="msg_warning">게시판을 삭제하면 복구 할 수 없습니다.</div>
+    <label>게시판 이름</label>: <span th:text="${cateCommunityVO.typename}"></span>
+
+
+    <div class="content_body_bottom">
+      <button type="submit" class="btn btn-secondary btn-sm">삭제</button>
+      <button type="button" onclick="location.href='/catecommunity/list_all'" class="btn btn-secondary btn-sm">취소</button>
+    </div>
+
+  </form>
+
+</div>
+
+</html>

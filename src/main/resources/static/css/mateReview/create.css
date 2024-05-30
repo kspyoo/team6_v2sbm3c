@@ -1,0 +1,121 @@
+input[type='radio'] {
+    display: none;
+}
+
+/* (체크박스, 텍스트) 정렬 맞추기 */
+.radio_label{
+
+}
+
+/* 체크박스 디자인 */
+/*.radio_icon::before{*/
+/*    content:'';*/
+/*    display: block;*/
+/*    margin-right: 5px;*/
+/*    display: inline-block;*/
+/*    width: 15px;*/
+/*    height: 15px;*/
+/*    box-sizing:border-box;*/
+/*    position: relative;*/
+/*    cursor: pointer;*/
+
+/*    background: url(./images/off.png)*/
+/*    no-repeat center;;*/
+/*    border:none;*/
+/*}*/
+
+/*.radio_icon::before {*/
+/*    border-radius: 50px;*/
+/*}*/
+
+/*!* checked *!*/
+/*.radio_label input:checked + .radio_icon::before{*/
+/*    !*   transition: all 0.15s ease; *!*/
+/*    background: url(./images/on.png)*/
+/*    no-repeat center;;*/
+/*    border:none;*/
+/*}*/
+
+.rating{
+    text-align: center;
+    width: 70%;
+    margin: auto;
+}
+
+
+.rating input {
+    display: none;
+}
+
+.rating label {
+    margin: 0px 2%;
+    cursor: pointer;
+    width: 30px;
+    height: 30px;
+    background-image: url(/image/mateReview/off.png);
+    background-size: cover;
+}
+
+/*.rating input:checked + label {*/
+/*    background-image: url(/css/mateReview/images/on.png);*/
+/*}*/
+
+.content_title{
+    font-size: 16px;
+    margin-top: 20px;
+}
+
+.content{
+    width: 50%;
+    font-size: 14px;
+    display: inline-flex;
+}
+
+.content_container{
+    width: 57%;
+    border: 2px solid #8FBFFA;
+    border-radius: 5px;
+    padding: 1% 0px;
+    margin: 20px auto;
+    text-align: center;
+}
+
+.content_div{
+    margin: 10px 0;
+    padding: 0px 25%;
+}
+
+.content_div_addr{
+    margin-top: 10px;
+    padding: 0px 25%;
+}
+
+.content_tt{
+    margin-top: 10px;
+}
+
+.review_comment{
+    width: 70%;
+    margin: 0px 15%;
+    border: 2px solid #8FBFFA;
+    border-radius: 5px;
+    padding: 1%;
+}
+
+.btn-outline-info{
+    --bs-btn-hover-color: white;
+}
+
+.send_btn{
+    width: 100%;
+    margin-top: 20px;
+}
+
+.bottom_btn{
+    width: 40%;
+    margin: auto;
+}
+
+textarea{
+    resize: none;
+}

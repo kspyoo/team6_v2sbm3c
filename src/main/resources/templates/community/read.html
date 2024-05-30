@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+
+<html layout:decorate="~{layout}"> <!-- layout.html 상속-->
+<div layout:fragment="content">
+  <div class='title_line'>
+    <span class="title_line_text"></span >
+    
+  </div>
+  <aside class="aside_right">
+    <a href="/community/list_all">목록</a>
+    <span class="menu_devide">│</span>
+    <a th:href="@{|/community/update/${communityVO.communityno}|}">수정</a>
+    <span class="menu_devide">│</span>
+    <a th:href="@{|/community/delete/${communityVO.communityno}|}">삭제</a> 
+    <span class="menu_devide">│</span>
+    <a href="/community/create">등록</a>
+    <span class="menu_devide">│</span>
+    <a href="javascript: location.reload();">새로 고침</a>
+  </aside>
+  <div class="menu_line"></div>
+  
+  <div class="container mt-3" style="width: 50%; margin: 5px auto;">
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item">글번호: <span th:text="${communityVO.communityno}"></span></li>
+      <li class="list-group-item">제목: <span th:text="${communityVO.title}"></span></li>
+      <li class="list-group-item">내용: <span th:text="${communityVO.content}"></span></li>
+      <li class="list-group-item">조회수: <span th:text="${communityVO.vcnt}"></span></li>
+      <li class="list-group-item">좋아요수: <span th:text="${communityVO.rcnt}"></span></li>
+      <li class="list-group-item">작성일자: <span th:text="${communityVO.writedate}"></span></li>
+      <li class="list-group-item">검색태그: <span th:text="${communityVO.tag}"></span></li>
+    </ul>  
+  </div>
+
+  
+ 
+</div>
+</html>
+
+
+

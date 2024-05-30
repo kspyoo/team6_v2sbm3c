@@ -1,0 +1,27 @@
+
+<div layout:fragment="file_upload_fragment">
+  <div class='title_line'></div>
+
+  <div class='menu_line'></div>
+  
+    
+    <form name="frm" th:object="${communityattachmentVO}" method="post" action="/communityattachment/create"enctype="multipart/form-data">
+    <div>
+       <label>이미지</label>
+       <input type='file' class="form-control" name='filename' id='filename' value='' placeholder="파일 선택">
+    </div>   
+    <div>
+       <label>썸네일 이미지</label>
+       <input type='file' class="form-control" name='thumbfile' id='thumbfile' value='' placeholder="첨부 파일 선택">
+    </div>   
+    <div class="content_body_bottom">
+      <button type="submit" class="btn btn-secondary btn-sm">등록</button>
+      <button type="button" th:attr="onclick=|location.href='./list_by_cateno_search_paging?cateno=${cateno}'|" class="btn btn-secondary btn-sm">취소</button>
+    </div>
+    
+  </form>
+
+</div>
+</html>
+
+  

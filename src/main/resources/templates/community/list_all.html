@@ -1,10 +1,13 @@
 <!DOCTYPE html>
 
 <html layout:decorate="~{layout}"><!--layout.html 상속-->
-<div layout:fragment="content">
-  <a href="./create" >게시판 글 등록</a>
-  <div class="title_line">게시판 글 목록</div>
 
+<div layout:fragment="content">
+
+ <a href="./create" >게시판 글 등록</a>
+ <div class="title_line">게시판 글 목록</div>
+  <div th:replace="~{community/list_search_component::list_search_fragment}"></div>
+  
 <table class="table table-hover">
 
 <colgroup>

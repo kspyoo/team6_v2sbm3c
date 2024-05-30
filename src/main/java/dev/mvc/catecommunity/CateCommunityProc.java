@@ -30,4 +30,22 @@ public class CateCommunityProc implements CateCommunityProcInter {
     return list;
   }
 
+  @Override
+  public CateCommunityVO read(int ctypeno) {
+    CateCommunityVO cateCommunityVO =this.catecommunityDAO.read(ctypeno);
+    return cateCommunityVO;
+  }
+
+  @Override
+  public int update(CateCommunityVO cateCommunityVO) {
+    int cnt = this.catecommunityDAO.update(cateCommunityVO);
+    return cnt;
+  }
+
+  @Override
+  public int delete(int ctypeno) {
+    int cnt = this.catecommunityDAO.delete(ctypeno);
+    return cnt;
+  }
+
 }

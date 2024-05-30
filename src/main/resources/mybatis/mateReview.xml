@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="dev.mvc.matereview.MateReviewDAOInter">
+    <!--  후기 작성  -->
+    <insert id="create" parameterType="dev.mvc.matereview.MateReviewVO">
+        insert into MATEREVIEW(RNO, REVIEWCOMMENT, REVIEWGRADE, RDATE, MEMBERNO, MCOMMUNITYNO)
+        VALUES (MATECOMMUNITY_SEQ.nextval, #{reviewComment}, #{reviewGrade}, sysdate, #{memberNo}, #{mCommunityNo})
+    </insert>
+
+    <!--  후기 읽기  -->
+    <select id="reviewRead" parameterType="int" resultType="dev.mvc.matereview.MateReviewVO">
+        select mr.RNO, mr.REVIEWCOMMENT, mr.REVIEWGRADE, mr.RDATE, m.MEMBERNO, mr.MCOMMUNITYNO, m.NAME
+        from MATEREVIEW mr, MEMBER m
+        where mr.RNO = #{rNo} and m.MEMBERNO = mr.MEMBERNO
+    </select>
+
+    <!--  특정 유저가 작성한 후기  -->
+    <select id="userReviewList" parameterType="Map" resultType="dev.mvc.matereview.MateReviewVO">
+        select rno, reviewcomment, reviewgrade, rdate, memberno, mcommunityno, r
+        from
+        (
+        select rno, reviewcomment, reviewgrade, rdate, memberno, mcommunityno, ROWNUM as r
+        from
+        (
+        select rno, reviewcomment, reviewgrade, rdate, memberno, mcommunityno
+        from MATEREVIEW
+        where MEMBERNO = #{memberrNo}
+        order by RNO
+        )
+        )
+        WHERE r &gt;= #{start_num} AND r &lt;= #{end_num}
+    </select>
+
+    <!--  특정 게시글에 작성한 후기  -->
+    <select id="mateReviewList" parameterType="Map" resultType="dev.mvc.matereview.MateReviewVO">
+        select rno, reviewcomment, reviewgrade, rdate, memberno, mcommunityno, r
+        from
+        (
+        select rno, reviewcomment, reviewgrade, rdate, memberno, mcommunityno, ROWNUM as r
+        from
+        (
+        select rno, reviewcomment, reviewgrade, rdate, memberno, mcommunityno
+        from MATEREVIEW
+        where MCOMMUNITYNO = #{mCommunityNo}
+        order by RNO
+        )
+        )
+        WHERE r &gt;= #{start_num} AND r &lt;= #{end_num}
+    </select>
+</mapper>

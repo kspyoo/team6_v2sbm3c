@@ -30,7 +30,7 @@
                 (select ma.ANO, ma.ASTATUS, ma.ADATE, ma.MEMBERNO, mc.MCOMMUNITYNO, mc.TITLE, mc.ASSEMBLETIME
                 from MATEAPPLY ma, MATECOMMUNITY mc
                 where ma.MEMBERNO = #{memberNo} AND ma.MCOMMUNITYNO = mc.MCOMMUNITYNO
-                order by ANO)
+                order by ANO desc)
             )
         where r &gt;= #{start_num} and r &lt;= #{end_num}
     </select>
