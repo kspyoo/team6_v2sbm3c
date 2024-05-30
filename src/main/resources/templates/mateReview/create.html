@@ -1,0 +1,111 @@
+@ -0,0 +1,110 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout}"> <!-- layout.html 상속 -->
+<div layout:fragment="content" style="padding-top: 20px;">
+  <link href="/css/mateReview/create.css" rel="Stylesheet" type="text/css">
+  <div style="width:61%; margin: auto;">
+    <div class="title_line">
+      <span style="font-size: 18px;"> 후기 작성 </span>
+    </div>
+
+    <div class="content_container">
+      <div class="content_tt">
+        <span class="content_title" th:text="${mateCommunityVO.title}"></span>
+      </div>
+      <div class="content_div">
+        <span class="content">집합 날짜</span><span class="content" th:text="${mateCommunityVO.assembleTime.substring(0,10)}" style="font-size: 14px;"></span>
+      </div>
+      <div class="content_div">
+        <span class="content">집합 인원</span><span class="content" style="font-size: 15px;">[[${mateCommunityVO.acceptCnt}]] / [[${mateCommunityVO.walkingM}]]</span>
+      </div>
+      <div class="content_div_addr">
+        <span class="content">집합 위치</span><span class="content" style="font-size: 13px;">[[${mateCommunityVO.startingP} + ${mateCommunityVO.startingDetail}]]</span>
+      </div>
+      <div class="content_div">
+        <span class="content">작성자</span><span class="content" th:text="${mateCommunityVO.name}" style="font-size: 14px;"></span>
+      </div>
+    </div>
+
+    <div>
+      <span style="font-size: 18px;">별점 및 내용</span>
+    </div>
+    <div class="menu_line"></div>
+    <form>
+      <div class="rating mb-3">
+        <input class="" type="radio" name="rating" value="1" id="radio1">
+        <label class="radio_label" for="radio1">
+          <!--                    <span class="radio_icon"></span>-->
+        </label>
+
+        <input class="" type="radio" name="rating" value="2" id="radio2">
+        <label class="radio_label" for="radio2">
+          <!--                    <span class="radio_icon"></span>-->
+        </label>
+
+        <input class="" type="radio" name="rating" value="3" id="radio3">
+        <label class="radio_label" for="radio3">
+          <!--                    <span class="radio_icon"></span>-->
+        </label>
+
+        <input class="" type="radio" name="rating" value="4" id="radio4">
+        <label class="radio_label" for="radio4">
+          <!--                    <span class="radio_icon"></span>-->
+        </label>
+
+        <input class="" type="radio" name="rating" value="5" id="radio5">
+        <label class="radio_label" for="radio5">
+          <!--                    <span class="radio_icon"></span>-->
+        </label>
+      </div>
+      <textarea name='reviewComment' required="required" class="review_comment" rows="12" style='width: 70%;' id="reviewComment"
+                placeholder="300자 이내로 작성해주세요.&#13;&#10;욕설 혹은 상대방을 비하하는 내용으로 작성하는 경우에는 삭제 조치 될수 있습니다."></textarea>
+      <div class="bottom_btn">
+        <button type="button" class="send_btn btn btn-lg btn-outline-info" id="send_btn">등록</button>
+      </div>
+    </form>
+  </div>
+  <script>
+    window.onload = () => {
+      let ratings = document.querySelectorAll('input[name="rating"]');
+      console.log(ratings);
+      let labels = document.querySelectorAll('label');
+
+      ratings.forEach((rating) => {
+        rating.addEventListener('change',() => {
+          for (let i=0; i<labels.length; i++){
+            // console.log(labels[i]);
+            labels[i].style.backgroundImage='url(/image/mateReview/off.png)';
+          }
+
+          for (let i=0; i<rating.value; i++){
+            // console.log(labels[i]);
+            labels[i].style.backgroundImage = 'url(/image/mateReview/on.png)';
+          }
+        })
+      })
+
+      document.getElementById('send_btn').addEventListener('click', ()=>{
+        let rating = document.querySelector('input[name="rating"]:checked');
+        console.log(rating);
+        if (rating == null){
+          alert('별점을 선택해주세요!');
+          return false;
+        }
+
+        let comment = document.getElementById('reviewComment')
+        if (comment.value.toString().trim().length <= 9){
+          alert('내용은 최소 10자 이상 작성해주세요!');
+          return false;
+        }
+
+        let url = "/mateReview/create";
+
+        fetch(url,{
+
+        })
+
+      })
+    }
+  </script>
+</div>
+</html>
