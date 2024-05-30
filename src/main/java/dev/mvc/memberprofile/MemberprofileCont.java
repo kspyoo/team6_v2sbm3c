@@ -39,10 +39,6 @@ public class MemberprofileCont {
   
   @PostMapping(value="/update_file")
   public String update_file(RedirectAttributes ra, MemberprofileVO memberprofileVO, MemberVO memberVO, int memberno) {
-      MemberprofileVO VOCheck = this.memberprofileProc.read_file(memberno);
-//      if (VOCheck == null) {
-//          this.memberprofileProc.create_file(memberprofileVO);
-//      }
 
       MemberprofileVO memberprofileVO_old = memberprofileProc.read_file(memberprofileVO.getMemberno());
 
@@ -52,8 +48,8 @@ public class MemberprofileCont {
 
       String upDir = Memberprofile.getUploadDir();
 
-      Tool.deleteFile(upDir, file1saved);
-      Tool.deleteFile(upDir, thumbfile);
+//      Tool.deleteFile(upDir, file1saved);
+//      Tool.deleteFile(upDir, thumbfile);
 
       String file1 = "";
       MultipartFile mf = memberprofileVO.getFile1MF();
@@ -73,7 +69,6 @@ public class MemberprofileCont {
           thumbfile="";
           filesize=0;
       }
-
       memberprofileVO.setFile1(file1);
       memberprofileVO.setFile1saved(file1saved);
       memberprofileVO.setThumbfile(thumbfile);

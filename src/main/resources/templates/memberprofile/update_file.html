@@ -49,6 +49,11 @@
             </div>
         </div>
         
+            <form name="fileForm" action="fileupload1" method="post" enctype="multipart/form-data">
+    <sec:csrfInput/>
+        <input multiple="multiple"  type="file" name="picFile" required="required">
+        <input type="submit" value="전송" />
+    </form>
         
 
       </li>

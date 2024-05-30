@@ -2,6 +2,7 @@ package dev.mvc.login;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import dev.mvc.member.MemberVO;
 
@@ -17,7 +18,7 @@ public interface LoginDAOInter {
    * 회원 전체 목록
    * @return
    */
-  public ArrayList<LoginVO> login_list();
+  public ArrayList<LoginMemberVO> login_list(String word);
   
   /**
    * 회원 전체 목록
@@ -29,4 +30,21 @@ public interface LoginDAOInter {
    * @return
    */
   public int update_null(int memberno);
+  
+  /**
+   * 검색 목록
+   * @param map
+   * @return
+   */
+  public ArrayList<LoginMemberVO> list_by_search_paging(Map<String, Object> map);
+  
+  /**
+   * 카테고리별 검색된 레코드 갯수
+   * @param map
+   * @return
+   */
+  public int list_by_search_count(String word);
+  
+  public LoginVO findnull();
+  
 }

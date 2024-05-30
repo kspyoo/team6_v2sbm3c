@@ -5,6 +5,8 @@ import java.util.HashMap;
 
 import org.apache.ibatis.annotations.Param;
 
+import dev.mvc.login.LoginVO;
+
 public interface MemberProcInter {
   /**
    * 중복 아이디 검사
@@ -122,4 +124,6 @@ public interface MemberProcInter {
    * @return 중복 아이디 갯수, 1: 중복, 0: 중복 없음
    */
   public int checkPhone(String phone);
+  
+  
 }

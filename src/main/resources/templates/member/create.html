@@ -195,17 +195,8 @@
   </script>
 
   <div class="title_line">회원 가입(*: 필수)</div>
-  <aside class="aside_right">
-    <a href="javascript:location.reload();">새로고침</a>
-    <span class='menu_divide'>│</span>
-    <a href='./create'>회원 가입</a>
-    <span class='menu_divide'>│</span>
-    <a href='./list'>목록</a>
-  </aside>
 
-  <div class='menu_line'></div>
-
-  <div style="width: 60%; margin: 0px auto ">
+  <div style="width: 70%; margin: 0px auto; ">
     <form name="frm" id="frm" th:object="${memberVO}" method="post" action="/member/create">
       <div>
         <th scope="row"><em>* </em><label for="id">아이디(이메일)</label>
@@ -260,7 +251,7 @@
       </div>
       <div class="form-group">
         <label for="addr_code">우편 번호</label>
-        <input type='text' name='addr_code' id='addr_code' value='' placeholder="우편번호"
+        <input type='text' name='addr_code' id='addr_code' value='' placeholder="우편번호(선택)"
           class="form-control form-control-sm" style="width: 30%;">
         <button type="button" id="btn_DaumPostcode" onclick="DaumPostcode()" class="btn btn-primary btn-sm"
           style="margin-top: 4px;">우편번호 찾기</button>
@@ -268,13 +259,13 @@
 
       <div class="form-group">
         <label for="addr_main" style="width: 100%;">주소</label>
-        <input type='text' name='addr_main' id='addr_main' value='' placeholder="주소"
+        <input type='text' name='addr_main' id='addr_main' value='' placeholder="주소(선택)"
           class="form-control form-control-sm" style="width : 30%">
       </div>
 
       <div class="form-group">
         <label for="addr_detail" style="width: 100%;">상세 주소</label>
-        <input type='text' name='addr_detail' id='addr_detail' value='' placeholder="상세 주소"
+        <input type='text' name='addr_detail' id='addr_detail' value='' placeholder="상세 주소(선택)"
           class="form-control form-control-sm" style="width : 30%">
       </div>
 
@@ -371,7 +362,7 @@
       </div>
       <!-- ------------------------------ DAUM 우편번호 API 종료 ------------------------------ -->
 
-      <div class="content_body_bottom">
+      <div class="content_body_bottom" >
         <button type="button" onclick="send();" class="btn btn-secondary btn-sm">가입</button>
         <button type="button" onclick="history.back();" class="btn btn-secondary btn-sm">취소</button>
       </div>
