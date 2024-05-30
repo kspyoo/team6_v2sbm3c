@@ -31,6 +31,7 @@ public class FacilityreviewCont {
   @Qualifier("dev.mvc.facilityreview.FacilityreviewProc") // 이름지정
   private FacilityreviewProcInter facilityreviewProc;
   
+  
   @Autowired
   @Qualifier("dev.mvc.member.MemberProc") // 이름지정
   private MemberProc memberProc;

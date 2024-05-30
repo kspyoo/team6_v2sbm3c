@@ -18,7 +18,7 @@ CREATE TABLE member(
     STATUS                            VARCHAR2(10)     DEFAULT 0     NOT NULL
 );
 
-
+SELECT COUNT(*) FROM login;
 
 
 
@@ -47,7 +47,7 @@ CREATE TABLE login(
     IP                                VARCHAR2(40)     NOT NULL,
     CONNDATE                          VARCHAR2(30)     NOT NULL,
     MEMBERNO                          NUMBER(10)     NULL,
-  FOREIGN KEY (MEMBERNO) REFERENCES member (MEMBERNO) ON DELETE CASCADE
+  FOREIGN KEY (MEMBERNO) REFERENCES member (MEMBERNO) ON DELETE SET NULL
 );
 
 commit;
@@ -217,4 +217,13 @@ ON DELETE SET NULL;
 ALTER TABLE login
 MODIFY memberno DEFAULT 0;
 
+UPDATE login 
+SET ip = '1'
+WHERE memberno IS NULL;
+
+SELECT COUNT(*) as cnt
+FROM login
+    WHERE (UPPER(ip) LIKE '%' || UPPER('하정') || '%' 
+          OR UPPER(conndate) LIKE '%' || UPPER('하정') || '%' 
+          OR UPPER(memberno) LIKE '%' || UPPER('하정') || '%') AND memberno != 0
 

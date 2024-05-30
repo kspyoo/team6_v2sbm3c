@@ -118,9 +118,6 @@
     WHERE memberno=#{memberno}
   </select>
   
-  
-  
-
 
 
 </mapper>

@@ -7,15 +7,11 @@
 
   <aside class="aside_right">
     <a href="javascript:location.reload();">새로고침</a>
-    <span class='menu_divide' >│</span> 
-    <a href='./create'>회원 가입</a>
-    <span class='menu_divide' >│</span> 
-    <a href='./list'>목록</a>
   </aside> 
    
   <div class='menu_line'></div>
        
-  <table class="table table-striped" style='width: 100%;'>
+  <table class="table table-striped" style='width: 90%; margin-left: auto'>
     <colgroup>
       <col style='width: 5%;'/>
       <col style='width: 10%;'/>
@@ -32,10 +28,9 @@
       <th class='th_bs'>주소</th>
       <th class='th_bs'>등록일</th>
       <th class='th_bs'></th>
-      <th class='th_bs'> </th>
     </tr>
      
-    <tr th:each="memberVO, status:${list}">
+    <tr th:each="memberVO, status:${list}" style="width: 100%;">
       <td class='td_left'><a th:href="@{|./read?memberno=${memberVO.memberno}&mprofileno=${memberVO.mprofileno}|}" th:text="${memberVO.id}"></a></td>
       <td class='td_left'><a th:href="@{|./read?memberno=${memberVO.memberno}&mprofileno=${memberVO.mprofileno}|}" th:text="${memberVO.name}"></a></td>
       <td class='td_basic' th:text="${memberVO.phone}"></td>
@@ -52,9 +47,6 @@
     </tr>
   </table>
    
-  <div class='bottom_menu'>
-    <button type='button' onclick="location.reload();" class="btn btn-primary btn-sm">새로 고침</button>
-  </div>
 
 </div>
 </html>

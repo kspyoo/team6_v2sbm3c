@@ -9,11 +9,68 @@
   </insert>
   
   <!-- 로그인 내역 조회 -->
-  <select id="login_list" resultType="dev.mvc.login.LoginVO">
-    SELECT loginno, ip, conndate,memberno
-    FROM login
-    ORDER BY loginno DESC
+  <select id="login_list" resultType="dev.mvc.login.LoginMemberVO" parameterType="String">
+    SELECT lg.loginno, lg.ip, lg.conndate, lg.memberno, mb.name, mb.id
+    FROM login lg
+    LEFT JOIN member mb ON lg.memberno = mb.memberno OR lg
+    <if test="word != null and word != ''">
+                            WHERE (UPPER(lg.ip) LIKE '%' || UPPER(#{word}) || '%' 
+                                  OR UPPER(lg.conndate) LIKE '%' || UPPER(#{word}) || '%' 
+                                  OR UPPER(mb.name) LIKE '%' || UPPER(#{word}) || '%' 
+                                  OR UPPER(mb.id) LIKE '%' || UPPER(#{word}) || '%') AND lg.memberno != 0   </if>
+    ORDER BY lg.loginno DESC
   </select>
+  
+    <!-- 카테고리별 검색 + 페이징 목록 -->
+  <select id="list_by_search_paging" resultType="dev.mvc.login.LoginMemberVO" parameterType="Map">
+   SELECT loginno, ip, conndate, memberno, name, id, r
+   FROM (
+              SELECT loginno, ip, conndate, memberno, name, id, rownum AS r
+              FROM (
+                        SELECT lg.loginno, lg.ip, lg.conndate, lg.memberno, mb.name, mb.id
+                        FROM login lg
+                        JOIN member mb ON lg.memberno = mb.memberno OR lg.memberno IS NULL
+                        <choose>
+                          <when test="word == null or word == ''"> <!-- 검색하지 않는 경우 -->
+                          </when>
+                          <otherwise>
+                            WHERE (UPPER(lg.ip) LIKE '%' || UPPER(#{word}) || '%' 
+                                  OR UPPER(lg.conndate) LIKE '%' || UPPER(#{word}) || '%' 
+                                  OR UPPER(mb.name) LIKE '%' || UPPER(#{word}) || '%' 
+                                  OR UPPER(mb.id) LIKE '%' || UPPER(#{word}) || '%') AND lg.memberno != 0
+                          </otherwise>
+                        </choose>
+                        ORDER BY lg.loginno DESC
+               )
+    )
+    WHERE r &gt; = #{start_num} AND r &lt; = #{end_num}
+  </select>
+  
+  <!-- 검색 레코드 갯수 -->
+  <select id="list_by_search_count" resultType="int" parameterType="String">
+      SELECT COUNT(*) as cnt
+      FROM (
+          SELECT lg.loginno, lg.ip, lg.conndate, lg.memberno, mb.name, mb.id
+          FROM login lg
+          LEFT JOIN member mb ON lg.memberno = mb.memberno 
+          <if test="word != null and word != ''">
+              WHERE (UPPER(lg.ip) LIKE '%' || UPPER(#{word}) || '%' 
+                  OR UPPER(lg.conndate) LIKE '%' || UPPER(#{word}) || '%' 
+                  OR UPPER(mb.name) LIKE '%' || UPPER(#{word}) || '%' 
+                  OR UPPER(mb.id) LIKE '%' || UPPER(#{word}) || '%') 
+                  AND lg.memberno != 0   
+          </if>
+          ORDER BY lg.loginno DESC
+      )
+  </select>
+  
+  <select id="findnull" resultType="dev.mvc.login.LoginVO">
+    SELECT loginno,ip,conndate,memberno
+    FROM login
+    WHERE memberno IS NULL
+  </select>
+  
+
   
   
 </mapper>

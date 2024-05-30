@@ -27,6 +27,9 @@
   <div style="width: 60%; margin: 0px auto ">
     <form name="frm" id="frm" th:object="${memberVO}" method="post" action="/member/delete">
       <input type="hidden" name="memberno" th:value="${memberVO.memberno}">
+      <input type="hidden" name="masterno" th:value="${masterVO.masterno}">
+      
+      <input th:text="${masterVO.masterno}">
       
       <div class="msg_warning">회원 정보는 삭제하면 복구 할 수 없습니다.<br>그래도 삭제하시겠습니까?</div>
       <div style='text-align: center;'>회원 이름: <span th:text="${memberVO.name}"></span></div>

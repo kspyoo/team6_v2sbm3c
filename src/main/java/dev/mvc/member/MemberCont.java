@@ -21,6 +21,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import dev.mvc.login.LoginCont;
 import dev.mvc.login.LoginProcInter;
 import dev.mvc.login.LoginVO;
+import dev.mvc.master.MasterVO;
 import dev.mvc.memberprofile.Memberprofile;
 import dev.mvc.memberprofile.MemberprofileProcInter;
 import dev.mvc.memberprofile.MemberprofileVO;
@@ -300,7 +301,6 @@ public class MemberCont {
     memberprofileVO = this.memberprofileProc.read_file(memberno);
     model.addAttribute("memberprofileVO", memberprofileVO);
     
-    System.out.println("ddddddddddd" + memberprofileVO);
     
     return "member/read";
   }
@@ -332,6 +332,8 @@ public class MemberCont {
    */
   @PostMapping(value = "/delete")
   public String delete_process(HttpSession session, Model model, Integer memberno) {
+    MasterVO masterVO = new MasterVO();
+    model.addAttribute("masterVO", masterVO);
     int cnt = this.memberProc.delete(memberno);
     if (cnt == 1) {
       model.addAttribute("code", "delete_success");
