@@ -75,4 +75,10 @@
         set REVIEWGRADE = #{reviewGrade}, REVIEWCOMMENT = #{reviewComment}
         where RNO = #{rNo}
     </update>
+
+    <select id="reviewIsWritten" parameterType="Map">
+        select count(*)
+        from MATEREVIEW
+        where MEMBERNO = #{memberNo} and MCOMMUNITYNO = #{mCommunityNo}
+    </select>
 </mapper>
