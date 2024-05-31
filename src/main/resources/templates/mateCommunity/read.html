@@ -77,21 +77,21 @@
 <!--        [[${session.memberno}]]-->
         <div th:if="${session.memberno == null}" class="recruit_btns w-50">
 <!--            로그인이 안되어있을때-->
-            <button type="button" onclick="location.href='/member/login'" id="login_need" class="btn btn-lg btn-outline-info">로그인</button>
+            <button type="button" onclick="location.href='/member/login'" id="login_need" class="btn btn-md btn-outline-info">로그인</button>
         </div>
         <div th:if="${mateCommunityVO.memberNo != session.memberno && session.memberno != null}" class="recruit_btns w-50">
 <!--            작성자가 아니고 모집마감이 되어있을때-->
-            <button type="button" id="finish" th:if="${mateCommunityVO.status == 1}" class="btn btn-lg btn-outline-info ">모집 마감</button>
+            <button type="button" id="finish" th:if="${mateCommunityVO.status == 1}" class="btn btn-md btn-outline-info ">모집 마감</button>
 <!--            작성자가 아니고 모집신청을 했으며 모집마감이 안되어있는경우-->
-            <button type="button" id="recruit_wait" th:if="${isRecruited == 1 &&  mateCommunityVO.status == 0}" class="btn btn-lg btn-outline-info">수락 대기중</button>
+            <button type="button" id="recruit_wait" th:if="${isRecruited == 1 &&  mateCommunityVO.status == 0}" class="btn btn-md btn-outline-info">수락 대기중</button>
 <!--            작성자가 아니고 로그인이 되어있으며 모집마감이 되어있지 않은 경우-->
-            <button type="button" id="recruit" th:if="${isRecruited == 0 && mateCommunityVO.status == 0}" class="btn btn-lg btn-outline-info w-70">산책 메이트 신청</button>
+            <button type="button" id="recruit" th:if="${isRecruited == 0 && mateCommunityVO.status == 0}" class="btn btn-md btn-outline-info w-70">산책 메이트 신청</button>
         </div>
         <div th:if="${mateCommunityVO.memberNo == session.memberno}" class="recruit_btns w-50">
 <!--            작성자이며 마감이 되지 않은 경우-->
-            <button type="button" id="recruit_finish" th:if="${mateCommunityVO.status == 0}" class="btn btn-lg btn-outline-info">산책 메이트 신청 마감</button>
+            <button type="button" id="recruit_finish" th:if="${mateCommunityVO.status == 0}" class="btn btn-md btn-outline-info">산책 메이트 신청 마감</button>
 <!--            작성자이며 마감이 된경우-->
-            <button type="button" id="recruit_start" th:if="${mateCommunityVO.status == 1}" class="btn btn-lg btn-outline-info">산책 메이트 신청 모집시작</button>
+            <button type="button" id="recruit_start" th:if="${mateCommunityVO.status == 1}" class="btn btn-md btn-outline-info">산책 메이트 신청 모집시작</button>
         </div>
 
     </div>
@@ -140,7 +140,7 @@
         // 집합 날짜가 현재 날짜보다 작을경우(과거)
         if (new Date([[${mateCommunityVO.assembleTime.split(" ")}]][0]) < new Date()){
             let btn = document.querySelector('.recruit_btns')
-            let tag = '<button type="button" id="finish" class="btn btn-lg btn-outline-info">모집 종료</button>'
+            let tag = '<button type="button" id="finish" class="btn btn-md btn-outline-info">모집 종료</button>'
             btn.firstElementChild.remove();
             btn.innerHTML = tag;
 

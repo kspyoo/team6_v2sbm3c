@@ -64,6 +64,30 @@
   </div>
   <script>
     window.onload = () => {
+      let memberNo = document.getElementById('memberNo');
+      memberNo = parseInt(memberNo.value);
+
+      let mCommunityNo = document.getElementById('mCommunityNo');
+      mCommunityNo = parseInt(mCommunityNo.value);
+
+      let url = "/mateReview/reviewCheck";
+      fetch(url,{
+        "method": "post",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({mCommunityNo})
+      })
+      .then((response) => response.json()) // 응답 문자열 추출
+      .then((data) => {
+        console.log(data);
+        if (data.cnt == 1){
+          alert('후기를 이미 작성 했습니다');
+          location.href='/mateApply/applyList';
+        }
+      });
+
+
       let ratings = document.querySelectorAll('input[name="rating"]');
       console.log(ratings);
       let labels = document.querySelectorAll('label');
@@ -96,15 +120,9 @@
           return false;
         }
 
-        let url = "/mateReview/create";
+        url = "/mateReview/create";
         rating = parseInt(rating.value);
         comment = comment.value;
-
-        let memberNo = document.getElementById('memberNo');
-        memberNo = parseInt(memberNo.value);
-
-        let mCommunityNo = document.getElementById('mCommunityNo');
-        mCommunityNo = parseInt(mCommunityNo.value);
 
         fetch(url,{
           "method": "post",
