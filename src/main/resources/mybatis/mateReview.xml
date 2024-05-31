@@ -9,43 +9,70 @@
     </insert>
 
     <!--  후기 읽기  -->
-    <select id="reviewRead" parameterType="int" resultType="dev.mvc.matereview.MateReviewVO">
-        select mr.RNO, mr.REVIEWCOMMENT, mr.REVIEWGRADE, mr.RDATE, m.MEMBERNO, mr.MCOMMUNITYNO, m.NAME
-        from MATEREVIEW mr, MEMBER m
+    <select id="reviewRead" parameterType="int" resultType="dev.mvc.matereview.MateReviewViewVO">
+        select mr.RNO, mr.REVIEWCOMMENT, mr.REVIEWGRADE, mr.RDATE, m.MEMBERNO, mr.MCOMMUNITYNO, m.NAME, mc.TITLE, mc.ASSEMBLETIME, mc.STARTINGP, mc.STARTINGDETAIL
+        from MATEREVIEW mr inner join MATECOMMUNITY mc on mc.MCOMMUNITYNO = mr.MCOMMUNITYNO inner join MEMBER m on m.MEMBERNO = mr.MEMBERNO
         where mr.RNO = #{rNo} and m.MEMBERNO = mr.MEMBERNO
     </select>
 
     <!--  특정 유저가 작성한 후기  -->
-    <select id="userReviewList" parameterType="Map" resultType="dev.mvc.matereview.MateReviewVO">
-        select rno, reviewcomment, reviewgrade, rdate, memberno, mcommunityno, r
+    <select id="myReviewList" parameterType="Map" resultType="dev.mvc.matereview.MyMateReviewVO">
+        select rno, reviewcomment, reviewgrade, rdate, memberno, mcommunityno, title, r
         from
         (
-        select rno, reviewcomment, reviewgrade, rdate, memberno, mcommunityno, ROWNUM as r
-        from
-        (
-        select rno, reviewcomment, reviewgrade, rdate, memberno, mcommunityno
+            select rno, reviewcomment, reviewgrade, rdate, memberno, mcommunityno, TITLE, ROWNUM as r
+            from
+            (
+                select mr.rno, mr.reviewcomment, mr.reviewgrade, mr.rdate, mr.memberno, mc.mcommunityno, mc.TITLE
+                from MATEREVIEW mr inner join MATECOMMUNITY mc on mr.MCOMMUNITYNO = mc.MCOMMUNITYNO
+                where mr.MEMBERNO = #{memberNo}
+                order by RNO desc
+            )
+        )
+        WHERE r &gt;= #{start_num} AND r &lt;= #{end_num}
+    </select>
+
+    <!--  내 후기 개수  -->
+    <select id="myReviewCount" parameterType="int">
+        select count(*)
         from MATEREVIEW
-        where MEMBERNO = #{memberrNo}
-        order by RNO
+        where MEMBERNO = #{memberNo}
+    </select>
+
+    <!--  특정 게시글에 작성한 후기  -->
+    <select id="mateReviewList" parameterType="Map" resultType="dev.mvc.matereview.MateReviewListVO">
+        select rno, reviewcomment, reviewgrade, rdate, memberno, mcommunityno, name, r
+        from
+        (
+        select rno, reviewcomment, reviewgrade, rdate, memberno, mcommunityno, name, ROWNUM as r
+        from
+        (
+        select mr.rno, mr.reviewcomment, mr.reviewgrade, mr.rdate, m.memberno, mr.mcommunityno, m.NAME
+        from MATEREVIEW mr inner join member m on m.MEMBERNO = mr.MEMBERNO
+        where MCOMMUNITYNO = #{mCommunityNo}
+        order by RNO desc
         )
         )
         WHERE r &gt;= #{start_num} AND r &lt;= #{end_num}
     </select>
 
-    <!--  특정 게시글에 작성한 후기  -->
-    <select id="mateReviewList" parameterType="Map" resultType="dev.mvc.matereview.MateReviewVO">
-        select rno, reviewcomment, reviewgrade, rdate, memberno, mcommunityno, r
-        from
-        (
-        select rno, reviewcomment, reviewgrade, rdate, memberno, mcommunityno, ROWNUM as r
-        from
-        (
-        select rno, reviewcomment, reviewgrade, rdate, memberno, mcommunityno
+    <!--  특정 게시물 후기 개수  -->
+    <select id="mateReviewListCount" parameterType="int">
+        select count(*)
         from MATEREVIEW
         where MCOMMUNITYNO = #{mCommunityNo}
-        order by RNO
-        )
-        )
-        WHERE r &gt;= #{start_num} AND r &lt;= #{end_num}
     </select>
+
+    <!--  삭제  -->
+    <delete id="delete" parameterType="int">
+        delete
+        from MATEREVIEW
+        where RNO = #{rNo}
+    </delete>
+
+    <update id="update" parameterType="Map">
+        update MATEREVIEW
+        set REVIEWGRADE = #{reviewGrade}, REVIEWCOMMENT = #{reviewComment}
+        where RNO = #{rNo}
+    </update>
 </mapper>

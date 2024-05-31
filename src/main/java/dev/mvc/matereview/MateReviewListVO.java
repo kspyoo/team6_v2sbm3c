@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class MateReviewVO {
+public class MateReviewListVO {
     //RNO, REVIEWCOMMENT, REVIEWGRADE, RDATE, MEMBERNO, MCOMMUNITYNO
     // 후기번호
     private int rNo;
@@ -19,4 +19,6 @@ public class MateReviewVO {
     private int memberNo;
     // 후기 작성한 산책 메이트 게시글
     private int mCommunityNo;
+    // 작성자 이름
+    private String name;
 }
