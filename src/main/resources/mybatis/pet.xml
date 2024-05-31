@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="dev.mvc.pet.PetDAOInter">
+    <insert id="create" parameterType="dev.mvc.pet.PetVO">
+        insert into PET(petno, petname, petage, petdetail, pettypeno, memberno)
+        values(PETTYPE_SEQ.nextval, #{petName}, #{petAge}, #{petDetail}, #{petTypeNo}, #{memberNo})
+    </insert>
+</mapper>

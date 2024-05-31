@@ -73,15 +73,25 @@ CREATE SEQUENCE login_seq
 /**********************************/
 CREATE TABLE PETTYPE(
     PETTYPENO                         NUMBER(10)     NOT NULL    PRIMARY KEY,
-    PETTYPE                           VARCHAR2(30)     NOT NULL,
-    PETKIND                           VARCHAR2(50)     NULL 
+    PETTYPE                           VARCHAR2(30)     NOT NULL
 );
 
 COMMENT ON TABLE PETTYPE is '반려동물 분류';
 COMMENT ON COLUMN PETTYPE.PETTYPENO is '분류 번호';
 COMMENT ON COLUMN PETTYPE.PETTYPE is '반려동물 종류';
-COMMENT ON COLUMN PETTYPE.PETKIND is '반려동물 품종';
 
+DROP SEQUENCE PETTYPE_SEQ;
+
+CREATE SEQUENCE PETTYPE_SEQ
+    START WITH 1              -- 시작 번호
+    INCREMENT BY 1          -- 증가값
+    MAXVALUE 9999999999 -- 최대값: 9999999 --> NUMBER(7) 대응
+    CACHE 2                       -- 2번은 메모리에서만 계산
+    NOCYCLE;                     -- 다시 1부터 생성되는 것을 방지
+
+insert into PETTYPE(PETTYPENO, PETTYPE) VALUES (PETTYPE_SEQ.nextval, '강아지');
+insert into PETTYPE(PETTYPENO, PETTYPE) VALUES (PETTYPE_SEQ.nextval, '고양이');
+insert into PETTYPE(PETTYPENO, PETTYPE) VALUES (PETTYPE_SEQ.nextval, '기타');
 
 /**********************************/
 /* Table Name: 반려동물 */
@@ -90,6 +100,7 @@ CREATE TABLE Pet(
     PETNO                             NUMBER(10)     NOT NULL    PRIMARY KEY,
     PETNAME                           VARCHAR2(30)     NOT NULL,
     PETAGE                            NUMBER(2)    NOT NULL,
+    PETDETAIL                         VARCHAR2(300)     NOT NULL,
     PETTYPENO                         NUMBER(10)     NOT NULL,
     MEMBERNO                          NUMBER(10)     NOT NULL,
   FOREIGN KEY (PETTYPENO) REFERENCES PETTYPE (PETTYPENO),
@@ -100,8 +111,18 @@ COMMENT ON TABLE Pet is '반려동물';
 COMMENT ON COLUMN Pet.PETNO is '반려동물번호';
 COMMENT ON COLUMN Pet.PETNAME is '반려동물이름';
 COMMENT ON COLUMN Pet.PETAGE is '반려동물나이';
+COMMENT ON COLUMN Pet.PETDETAIL is '반려동물상세정보';
 COMMENT ON COLUMN Pet.PETTYPENO is '분류 번호';
 COMMENT ON COLUMN Pet.MEMBERNO is '회원번호';
+
+DROP SEQUENCE PET_SEQ;
+
+CREATE SEQUENCE PET_SEQ
+    START WITH 1              -- 시작 번호
+    INCREMENT BY 1          -- 증가값
+    MAXVALUE 9999999999 -- 최대값: 9999999 --> NUMBER(7) 대응
+    CACHE 2                       -- 2번은 메모리에서만 계산
+    NOCYCLE;                     -- 다시 1부터 생성되는 것을 방지
 
 
 /**********************************/
