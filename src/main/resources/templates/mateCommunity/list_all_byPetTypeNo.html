@@ -31,14 +31,19 @@
             </a>
         </div>
 
-        <aside class="aside_right">
+        <aside class="aside_right" th:if="${session.memberno != null}">
             <a href="javascript:location.reload();">새로고침</a>
             <span class='menu_divide'>│</span>
             <a th:href="@{|./create?petTypeNo=${petTypeNo}|}">글 등록</a>
             <span class='menu_divide'>│</span>
+            <a th:href="@{|/mateApply/my_list_all|}">내 게시글</a>
+            <span class='menu_divide'>│</span>
             <a th:href="@{|/mateApply/applyList?petTypeNo=${petTypeNo}&now_page=${now_page}|}">내 신청내역</a>
             <span class='menu_divide'>│</span>
-            <a th:href="@{|/mateApply/my_list_all|}">내가 작성한 게시글</a>
+            <a th:href="@{|/mateReview/myList|}">내 후기 </a>
+        </aside>
+        <aside class="aside_right" th:if="${session.memberno == null}">
+            <a href="javascript:location.reload();">새로고침</a>
         </aside>
         <div class="menu_line"></div>
 

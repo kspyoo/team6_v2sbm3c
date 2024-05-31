@@ -69,8 +69,8 @@
                             <li><button th:id="'delete'+${mateCommunityVO.MCommunityNo}" class="dropdown-item a_button">수정</button></li>
                             <li><button th:id="'delete'+${mateCommunityVO.MCommunityNo}" class="dropdown-item a_button">마감</button></li>
                             <li><button th:id="'delete'+${mateCommunityVO.MCommunityNo}" class="dropdown-item a_button">모집 시작</button></li>
-                            <li><button th:id="'review'+${mateCommunityVO.MCommunityNo}" th:onclick="@{|/mateReview/create?mCommunityNo=${mateCommunityVO.MCommunityNo}|}"
-                                        class="dropdown-item a_button" style="display: none;">후기 조회</button></li>
+                            <li><button th:id="'review'+${mateCommunityVO.MCommunityNo}" class="dropdown-item a_button" style="display: none;"
+                                        th:onclick="@{|location.href='/mateReview/list?mCommunityNo=${mateCommunityVO.MCommunityNo}'|}">후기 조회</button></li>
                         </ul>
                     </div>
                     <!--                    <button th:id="'delete'+${mateApplyListVO.ANo}" class="btn-outline-info btn">취소</button>-->

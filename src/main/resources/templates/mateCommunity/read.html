@@ -26,16 +26,21 @@
         <a th:href="@{|./update?mCommunityNo=${mateCommunityVO.MCommunityNo}&petTypeNo=${petTypeNo}|}">수정</a>
         <span class='menu_divide'>│</span>
         <button id="delete_btn" th:href="@{|./delete?mCommunityNo=${mateCommunityVO.MCommunityNo}|}">삭제</button>
+<!--        <a id="delete_btn">삭제</a>-->
         <span class='menu_divide'>│</span>
         <a th:href="@{|/mateApply/recruitList?mCommunityNo=${mateCommunityVO.MCommunityNo}&now_page=${now_page}|}">받은 신청</a>
         <span class='menu_divide'>│</span>
         <a th:href="@{|/mateApply/recruitList?mCommunityNo=${mateCommunityVO.MCommunityNo}&now_page=${now_page}|}">모인 인원</a>
+        <span class='menu_divide'> │ </span>
+        <a th:href="@{|/mateReview/list?mCommunityNo=${mateCommunityVO.MCommunityNo}|}">후기 조회</a>
     </aside>
     <aside class="aside_right" th:unless="${session.memberno==mateCommunityVO.memberNo}">
         <a href="javascript:location.reload();">새로고침</a>
         <span class='menu_divide'> │ </span>
         <a th:href="@{|/mateCommunity/list_all?now_page=${now_page}&searchWord=${searchWord}|}" th:if="${petTypeNo==0}">모집글 목록</a>
         <a th:href="@{|/mateCommunity/list_all_byPetTypeNo?petTypeNo=${petTypeNo}&now_page=${now_page}&searchWord=${searchWord}|}" th:if="${petTypeNo!=0}">모집글 목록</a>
+        <span class='menu_divide'> │ </span>
+        <a th:href="@{|/mateReview/list?mCommunityNo=${mateCommunityVO.MCommunityNo}|}">후기</a>
     </aside>
     <div class="menu_line"></div>
 
@@ -98,7 +103,6 @@
             center: new kakao.maps.LatLng(33.450701, 126.570667), // 지도의 중심좌표
             level: 3 // 지도의 확대 레벨
         };
-
     // 지도를 생성합니다
     var map = new kakao.maps.Map(mapContainer, mapOption);
 
@@ -155,31 +159,33 @@
         // 글 작성자가 본인일 경우 삭제버튼 활성화
         if(document.getElementById('delete_btn') != null) {
             document.getElementById('delete_btn').addEventListener("click", () => {
-                let url = './delete';
+                if(confirm('게시물을 삭제 하시겠습니까?')) {
+                    let url = './delete';
 
-                fetch(url, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(
-                        {mCommunityNo: [[${mateCommunityVO.mCommunityNo}]]}
-                    )
-                })
-                    .then(response => response.json())
-                    .then(rdata => {
-                        console.log(rdata.cnt);
-                        if (rdata.cnt == 0) {
-                            alert("삭제 실패 했습니다.");
-                            return false;
-                        } else {
-                            alert("성공적으로 삭제 되었습니다.");
-                            location.href = '/mateCommunity/list_all';
-                        }
+                    fetch(url, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(
+                            {mCommunityNo: [[${mateCommunityVO.mCommunityNo}]]}
+                        )
                     })
-                    .catch(error => { // 서버 다운등 통신 에러
-                        console.error('Error:', error);
-                    });
+                        .then(response => response.json())
+                        .then(rdata => {
+                            console.log(rdata.cnt);
+                            if (rdata.cnt == 0) {
+                                alert("삭제 실패 했습니다.");
+                                return false;
+                            } else {
+                                alert("성공적으로 삭제 되었습니다.");
+                                location.href = '/mateCommunity/list_all';
+                            }
+                        })
+                        .catch(error => { // 서버 다운등 통신 에러
+                            console.error('Error:', error);
+                        });
+                }
             });
         }
         if(document.getElementById('recruit') != null) {

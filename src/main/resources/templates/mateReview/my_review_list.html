@@ -1,0 +1,133 @@
+<html layout:decorate="~{layout}"> <!-- layout.html 상속 -->
+<div layout:fragment="content" style="padding-top: 20px;">
+    <link href="/css/mateReview/review_list.css" rel="Stylesheet" type="text/css">
+    <div id="list_all" style="width:80%; margin: auto; height: auto; overflow: hidden">
+        <div class='title_line'>
+            내 후기
+        </div>
+
+        <aside class="aside_right">
+            <a href="javascript:location.reload();">새로고침</a>
+            <span class='menu_divide'>│</span>
+            <a th:href="@{|/mateApply/applyList|}">내 신청내역</a>
+        </aside>
+        <div class="menu_line"></div>
+
+        <div>
+            <span>후기 수 [[${listCount}]]</span>
+        </div>
+
+        <table class="table table-hover" style="margin: 20px auto">
+            <colgroup>
+                <col style="width: 30%;"></col>
+                <col style="width: 20%;"></col>
+                <col style="width: 15%;"></col>
+                <col style="width: 20%;"></col>
+                <col style="width: 15%;"></col>
+                <!--            <col style="width: 15%;"></col>-->
+                <!--            <col style="width: 10%;"></col>-->
+            </colgroup>
+            <thead>
+            <tr>
+                <th class="th_bs" style='text-align: center; border-right: 1px solid;'>게시글</th>
+                <th class="th_bs" style='text-align: center; border-right: 1px solid;'>후기내용</th>
+                <th class="th_bs" style='text-align: center; border-right: 1px solid;'>별점</th>
+                <th class="th_bs" style='text-align: center; border-right: 1px solid;'>작성일자</th>
+                <th class="th_bs" style='text-align: center;'>관리</th>
+                <!--            <th class="th_bs" style='text-align: center;'>관리</th>-->
+                <!--            <th class="th_bs" style='text-align: center;'>기타</th>-->
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="MyMateReviewVO:${myReviewList}" style="cursor: pointer;">
+
+                <td class="td_left align-middle" style="text-align: center;">
+                    <span th:text="${MyMateReviewVO.title}" style="font-weight: bold;" th:if="${MyMateReviewVO.title.length() <= 25}"></span>
+                    <span th:text="@{|${MyMateReviewVO.title}...|}" style="font-weight: bold;" th:if="${MyMateReviewVO.title.length() > 30}"></span>
+                </td>
+
+                <td class="td_basic" style="text-align: center; vertical-align: middle;" th:attr="onclick=|location.href='/mateReview/read?rNo=${MyMateReviewVO.RNo}&now_page=${now_page}'|">
+                    <span th:text="${MyMateReviewVO.reviewComment}" style="font-weight: bold;" th:if="${MyMateReviewVO.reviewComment.length() <= 15}"></span>
+                    <span th:text="@{|${MyMateReviewVO.reviewComment.substring(0,13)}...|}" style="font-weight: bold;" th:if="${MyMateReviewVO.reviewComment.length() > 15}"></span>
+                </td>
+
+                <td class="td_left align-middle" style="text-align: center;" th:id="'rating'+${MyMateReviewVO.RNo}">
+                    <span th:if="${MyMateReviewVO.reviewGrade >= 1}"><img src="/image/mateReview/on.png" style="width: 10%;"></span>
+                    <span th:unless="${MyMateReviewVO.reviewGrade >= 1}"><img src="/image/mateReview/off.png" style="width: 10%;"></span>
+                    <span th:if="${MyMateReviewVO.reviewGrade >= 2}"><img src="/image/mateReview/on.png" style="width: 10%;"></span>
+                    <span th:unless="${MyMateReviewVO.reviewGrade >= 2}"><img src="/image/mateReview/off.png" style="width: 10%;"></span>
+                    <span th:if="${MyMateReviewVO.reviewGrade >= 3}"><img src="/image/mateReview/on.png" style="width: 10%;"></span>
+                    <span th:unless="${MyMateReviewVO.reviewGrade >= 3}"><img src="/image/mateReview/off.png" style="width: 10%;"></span>
+                    <span th:if="${MyMateReviewVO.reviewGrade >= 4}"><img src="/image/mateReview/on.png" style="width: 10%;"></span>
+                    <span th:unless="${MyMateReviewVO.reviewGrade >= 4}"><img src="/image/mateReview/off.png" style="width: 10%;"></span>
+                    <span th:if="${MyMateReviewVO.reviewGrade >= 5}"><img src="/image/mateReview/on.png" style="width: 10%;"></span>
+                    <span th:unless="${MyMateReviewVO.reviewGrade >= 5}"><img src="/image/mateReview/off.png" style="width: 10%;"></span>
+                </td>
+
+                <td class="td_left align-middle" style="text-align: center;">
+                    <span th:text="${MyMateReviewVO.RDate.substring(0,10)}" ></span>
+                </td>
+
+                <td class="td_left align-middle" style="text-align: center;">
+<!--                    <button th:id="'delete'+${MyMateReviewVO.RNo}" class="btn btn-lg btn-outline-info">삭제</button>-->
+                    <div class="dropdown">
+                        <button class="btn btn-outline-info dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            관리
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><button th:id="'more'+${MyMateReviewVO.RNo}" th:attr="onclick=|location.href='/mateCommunity/read?mCommunityNo=${MyMateReviewVO.MCommunityNo}&now_page=${now_page}'|"
+                                        class="dropdown-item a_button">집합정보 더보기</button></li>
+                            <li><button th:id="'delete'+${MyMateReviewVO.RNo}" class="dropdown-item a_button">후기 삭제</button></li>
+                            <li><button th:id="'review'+${MyMateReviewVO.RNo}" th:attr="onclick=|location.href='/mateReview/update?rNo=${MyMateReviewVO.RNo}'|"
+                                        class="dropdown-item a_button">후기 수정</button></li>
+                        </ul>
+                    </div>
+                </td>
+                <script th:inline="javascript">
+                    window.addEventListener('load', function() {
+                        // if(document.getElementById('delete'+[[${MyMateReviewVO.RNo}]]) != null) {
+                        document.getElementById('delete'+[[${MyMateReviewVO.RNo}]]).addEventListener('click', () => {
+                            if(confirm('후기를 삭제 하시겠습니까?')) {
+                                let url = '/mateReview/delete?rNo=' + [[${MyMateReviewVO.RNo}]];
+
+                                fetch(url, {
+                                    method: 'GET'
+                                })
+                                    .then(response => response.json())
+                                    .then(rdata => {
+                                        console.log(rdata);
+                                        if (rdata.cnt == 0 || rdata.cnt == null) { // 패스워드 불일치
+                                            alert("삭제에 실패 했습니다.");
+                                            return false;
+                                        } else {
+                                            alert("삭제 되었습니다.");
+                                            location.reload();
+                                        }
+                                    })
+                                    .catch(error => { // 서버 다운등 통신 에러
+                                        console.error('Error:', error);
+                                    });
+                            }
+                        });
+                        // }
+                    });
+                </script>
+            </tr>
+            </tbody>
+        </table>
+        <div th:if="${listCount==0}" style="text-align: center; padding: 160px;">
+            <span>후기가 없습니다.</span><br>
+        </div>
+        <div class="Bottom_menu" th:utext="${paging}"></div>
+
+        <script th:inline="javascript">
+            window.onload = () =>{
+                if([[${myReviewList.size()}]] < 10){
+                    document.getElementById('list_all').style.height = "641.898px";
+
+                }
+            }
+        </script>
+    </div>
+</div>
+</html>

@@ -51,3 +51,9 @@ input[type='date']::-webkit-calendar-picker-indicator{
     text-align: center;
     margin: 30px auto 15px;
 }
+
+#delete_btn{
+    border: none;
+    background-color: white;
+    color: rgba(33, 150, 243, 0.95);
+}

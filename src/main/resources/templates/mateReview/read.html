@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout}"> <!-- layout.html 상속 -->
+<div layout:fragment="content" style="padding-top: 20px;">
+  <link href="/css/mateReview/create.css" rel="Stylesheet" type="text/css">
+  <div style="width:61%; margin: auto;">
+    <div class="title_line">
+      <span style="font-size: 20px;"> 후기 </span>
+    </div>
+
+    <div>
+      <span style="font-size: 18px; margin: 10px 0">게시글 정보</span>
+    </div>
+    <div class="menu_line"></div>
+    <div class="content_container">
+      <div class="content_tt">
+        <span class="content_title" th:text="${mateReviewVO.title}"></span>
+      </div>
+      <div class="content_div">
+        <span class="content">집합 날짜</span><span class="content" th:text="${mateReviewVO.assembleTime.substring(0,10)}" style="font-size: 14px;"></span>
+      </div>
+      <div class="content_div_addr">
+        <span class="content">집합 위치</span><span class="content" style="font-size: 13px;">[[${mateReviewVO.startingP}]]<br>[[${mateReviewVO.startingDetail}]]</span>
+      </div>
+    </div>
+
+    <div>
+      <span style="font-size: 18px;">별점 및 내용</span>
+    </div>
+    <div class="menu_line"></div>
+    <div  class="review_comment">
+      <div class="row mb-3">
+        <div class="col-md-6 themed-grid-col">
+          <span class="content" style="font-weight: bold">작성자 | </span><span class="content" th:text="${mateReviewVO.name}" style="font-size: 14px;"></span>
+        </div>
+        <div class="col-md-6 themed-grid-col">
+          <span th:if="${mateReviewVO.reviewGrade >= 1}"><img src="/image/mateReview/on.png" style="width: 12%;"></span>
+          <span th:unless="${mateReviewVO.reviewGrade >= 1}"><img src="/image/mateReview/off.png" style="width: 12%;"></span>
+          <span th:if="${mateReviewVO.reviewGrade >= 2}"><img src="/image/mateReview/on.png" style="width: 12%;"></span>
+          <span th:unless="${mateReviewVO.reviewGrade >= 2}"><img src="/image/mateReview/off.png" style="width: 12%;"></span>
+          <span th:if="${mateReviewVO.reviewGrade >= 3}"><img src="/image/mateReview/on.png" style="width: 12%;"></span>
+          <span th:unless="${mateReviewVO.reviewGrade >= 3}"><img src="/image/mateReview/off.png" style="width: 12%;"></span>
+          <span th:if="${mateReviewVO.reviewGrade >= 4}"><img src="/image/mateReview/on.png" style="width: 12%;"></span>
+          <span th:unless="${mateReviewVO.reviewGrade >= 4}"><img src="/image/mateReview/off.png" style="width: 12%;"></span>
+          <span th:if="${mateReviewVO.reviewGrade >= 5}"><img src="/image/mateReview/on.png" style="width: 12%;"></span>
+          <span th:unless="${mateReviewVO.reviewGrade >= 5}"><img src="/image/mateReview/off.png" style="width: 12%;"></span>
+        </div>
+      </div>
+      <div style="border-bottom: 2px solid #4f4f4f" class="mb-3"></div>
+      <div style='width: 70%; white-space: pre-wrap; word-break:break-all; height: 150px;' id="reviewComment"
+      th:text="${mateReviewVO.reviewComment}"></div>
+    </div>
+      <div class="bottom_btn" th:if="${mateReviewVO.memberNo == session.memberno}">
+        <button type="button" class="send_btn btn btn-lg btn-outline-info"
+                onclick="history.back()"th:attr="onclick=|location.href='/mateReview/myList?rNo=${mateReviewVO.RNo}'|">내 후기 목록</button>
+        <button type="button" class="send_btn btn btn-lg btn-outline-info"
+                th:attr="onclick=|location.href='/mateReview/update?rNo=${mateReviewVO.RNo}'|">수정하기</button>
+        <button type="button" class="send_btn btn btn-lg btn-outline-info" id="delete"
+                onclick="location.href='history.back()'">삭제하기</button>
+      </div>
+      <div class="bottom_btn" th:if="${mateReviewVO.memberNo != session.memberno}">
+        <button type="button" class="send_btn btn btn-lg btn-outline-info"
+                th:attr="onclick=|location.href='/mateReview/list?mCommunityNo=${mateReviewVO.MCommunityNo}'|">후기 목록으로</button>
+      </div>
+  </div>
+  <script th:inline="javascript">
+    window.addEventListener('load', function() {
+      document.getElementById('delete').addEventListener('click', () => {
+        if(confirm('후기를 삭제 하시겠습니까?')) {
+          let url = '/mateReview/delete?rNo=' + [[${mateReviewVO.RNo}]];
+
+          fetch(url, {
+            method: 'GET'
+          })
+                  .then(response => response.json())
+                  .then(rdata => {
+                    console.log(rdata);
+                    if (rdata.cnt == 0 || rdata.cnt == null) { // 패스워드 불일치
+                      alert("삭제에 실패 했습니다.");
+                      return false;
+                    } else {
+                      alert("삭제 되었습니다.");
+                      location.reload();
+                    }
+                  })
+                  .catch(error => { // 서버 다운등 통신 에러
+                    console.error('Error:', error);
+                  });
+        }
+      });
+    });
+  </script>
+</div>
+</html>
