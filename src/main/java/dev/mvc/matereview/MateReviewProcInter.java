@@ -86,4 +86,11 @@ public interface MateReviewProcInter {
      * @return
      */
     public int update(Map<String, Object> map);
+
+    /**
+     * 후기를 작성했는지 확인
+     * @param map
+     * @return
+     */
+    public int reviewIsWritten(Map<String,Object> map);
 }

@@ -227,4 +227,9 @@ public class MateReviewProc implements MateReviewProcInter{
     public int update(Map<String, Object> map){
         return this.mateReviewDAOInter.update(map);
     }
+
+    @Override
+    public int reviewIsWritten(Map<String, Object> map){
+        return this.mateReviewDAOInter.reviewIsWritten(map);
+    }
 }

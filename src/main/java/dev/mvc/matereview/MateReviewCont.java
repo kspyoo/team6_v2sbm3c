@@ -148,4 +148,22 @@ public class MateReviewCont {
 
         return json.toString();
     }
+
+    @PostMapping("/reviewCheck")
+    @ResponseBody
+    public String reviewIsWritten(@RequestBody String json_src, HttpSession session) {
+        JSONObject jsonObject = new JSONObject(json_src);
+        System.out.println(jsonObject.toString());
+
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("memberNo", session.getAttribute("memberno"));
+        map.put("mCommunityNo", (int) jsonObject.get("mCommunityNo"));
+
+        int cnt = this.mateReviewProc.reviewIsWritten(map);
+
+        JSONObject json = new JSONObject();
+        json.put("cnt", cnt);
+
+        return json.toString();
+    }
 }
