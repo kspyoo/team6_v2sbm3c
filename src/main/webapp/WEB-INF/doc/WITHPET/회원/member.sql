@@ -225,5 +225,5 @@ SELECT COUNT(*) as cnt
 FROM login
     WHERE (UPPER(ip) LIKE '%' || UPPER('하정') || '%' 
           OR UPPER(conndate) LIKE '%' || UPPER('하정') || '%' 
-          OR UPPER(memberno) LIKE '%' || UPPER('하정') || '%') AND memberno != 0
+          OR UPPER(memberno) LIKE '%' || UPPER('하정') || '%') AND memberno != 0;
 
