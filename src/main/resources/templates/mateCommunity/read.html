@@ -46,7 +46,7 @@
 
     <div>
         <div class="row mb-3 text-center pb-3" style="border-bottom: 3px solid rgba(33, 150, 243, 0.95);">
-            <div th:text="${mateCommunityVO.title}" style="font-weight: bold; text-align: left;" class="col-md-4"></div>
+            <div th:text="${mateCommunityVO.title}" style="font-weight: bolder; text-align: left; font-size: 16px;" class="col-md-4"></div>
             <div class="col-md-4" style="text-align: right;"><span>작성일 | </span><span th:text="${mateCommunityVO.WDate}" style="font-weight: bold;"></span></div>
             <div class="col-md-2" style="text-align: right;"><span>작성자 | </span><span th:text="${mateCommunityVO.name}" style="font-weight: bold;"></span></div>
             <div class="col-md-2" style="text-align: right;"><span>조회수 | </span><span th:text="${mateCommunityVO.viewCnt}" style="font-weight: bold;"></span></div>
@@ -61,10 +61,10 @@
         <div class="menu_line mt-2 mb-2"></div>
         <div>
             <div class="row mb-3 text-center">
-                <div class="col-md-3" style="text-align: left;"><span>집합시간 | </span><span th:text="${mateCommunityVO.assembleTime}"></span></div>
-                <div class="col-md-3" style="text-align: left;"><span>집합위치 | </span><span th:text="${mateCommunityVO.startingP}" style="font-weight: bold"></span>&nbsp;<span th:text="${mateCommunityVO.startingDetail}" style="font-weight: bold" ></span>
+                <div class="col-md-3" style="text-align: left;"><span>시간 | </span><span th:text="${mateCommunityVO.assembleTime}"></span></div>
+                <div class="col-md-3" style="text-align: left;"><span>위치 | </span><span th:text="${mateCommunityVO.startingP}" style="font-weight: bold"></span>&nbsp;<span th:text="${mateCommunityVO.startingDetail}" style="font-weight: bold" ></span>
                 </div>
-                <div class="col-md-3" style="text-align: right;"><span>모인인원 / 집합인원 | </span><span th:text="${mateCommunityVO.acceptCnt}"></span> 명 / <span th:text="${mateCommunityVO.walkingM}" style="font-weight: bold"></span> 명</div>
+                <div class="col-md-3" style="text-align: right;"><span>모집현황 | </span><span th:text="${mateCommunityVO.acceptCnt}"></span> 명 / <span th:text="${mateCommunityVO.walkingM}" style="font-weight: bold"></span> 명</div>
                 <div class="col-md-3" style="text-align: right;"><span>신청현황 | </span> <span id="current_status" style="font-weight: bold"></span></div>
             </div>
 

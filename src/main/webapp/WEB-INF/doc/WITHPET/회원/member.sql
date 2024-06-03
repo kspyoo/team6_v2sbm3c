@@ -96,11 +96,14 @@ insert into PETTYPE(PETTYPENO, PETTYPE) VALUES (PETTYPE_SEQ.nextval, '기타');
 /**********************************/
 /* Table Name: 반려동물 */
 /**********************************/
+DROP TABLE PET;
+
 CREATE TABLE Pet(
     PETNO                             NUMBER(10)     NOT NULL    PRIMARY KEY,
     PETNAME                           VARCHAR2(30)     NOT NULL,
-    PETAGE                            NUMBER(2)    NOT NULL,
-    PETDETAIL                         VARCHAR2(300)     NOT NULL,
+    PETBIRTH                            VARCHAR2(11)    NOT NULL,
+    PETGENDER                         char(1)       NOT NULL,
+    PETDETAIL                         VARCHAR2(300)    ,
     PETTYPENO                         NUMBER(10)     NOT NULL,
     MEMBERNO                          NUMBER(10)     NOT NULL,
   FOREIGN KEY (PETTYPENO) REFERENCES PETTYPE (PETTYPENO),
@@ -110,7 +113,8 @@ CREATE TABLE Pet(
 COMMENT ON TABLE Pet is '반려동물';
 COMMENT ON COLUMN Pet.PETNO is '반려동물번호';
 COMMENT ON COLUMN Pet.PETNAME is '반려동물이름';
-COMMENT ON COLUMN Pet.PETAGE is '반려동물나이';
+COMMENT ON COLUMN Pet.PETBIRTH is '반려동물생년월일';
+COMMENT ON COLUMN Pet.PETGENDER is '반려동물성별';
 COMMENT ON COLUMN Pet.PETDETAIL is '반려동물상세정보';
 COMMENT ON COLUMN Pet.PETTYPENO is '분류 번호';
 COMMENT ON COLUMN Pet.MEMBERNO is '회원번호';

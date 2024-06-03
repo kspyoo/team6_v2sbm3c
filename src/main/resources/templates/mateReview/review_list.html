@@ -39,8 +39,8 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="mateReviewListVO:${mateReviewList}" style="cursor: pointer;">
-                <td class="td_basic" style="text-align: center; vertical-align: middle;" th:attr="onclick=|location.href='/mateReview/read?rNo=${mateReviewListVO.RNo}&now_page=${now_page}'|">
+            <tr th:each="mateReviewListVO:${mateReviewList}">
+                <td class="td_basic" style="text-align: center; vertical-align: middle; cursor: pointer;" th:attr="onclick=|location.href='/mateReview/read?rNo=${mateReviewListVO.RNo}&now_page=${now_page}'|" >
                     <span th:text="${mateReviewListVO.reviewComment}" style="font-weight: bold;" th:if="${mateReviewListVO.reviewComment.length() <= 15}"></span>
                     <span th:text="@{|${mateReviewListVO.reviewComment.substring(0,13)}...|}" style="font-weight: bold;" th:if="${mateReviewListVO.reviewComment.length() > 15}"></span>
                 </td>
