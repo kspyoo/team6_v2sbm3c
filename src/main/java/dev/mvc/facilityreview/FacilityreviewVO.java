@@ -13,10 +13,6 @@ public class FacilityreviewVO {
   private int memberno;
   /** 댓글내용 */
   private String reviewcomment;
-  /** 평점 */
-  private String reviewgrade;
-  /** 패스워드 */
-  private String passwd;
   /** 등록일 */
   private String rdate;
   
