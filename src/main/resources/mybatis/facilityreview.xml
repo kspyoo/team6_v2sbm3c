@@ -3,43 +3,65 @@
 <mapper namespace="dev.mvc.facilityreview.FacilityreviewDAOInter">
 
 	<insert id="create" parameterType="dev.mvc.facilityreview.FacilityreviewVO">
-    INSERT INTO facilityreview(rno, culturefno, memberno, reviewcomment, reviewgrade, rdate)
-    VALUES(facilityreview_seq.nextval, #{culturefno}, #{memberno}, #{reviewcomment}, #{reviewgrade}, sysdate)
+    INSERT INTO facilityreview(rno, culturefno, memberno, reviewcomment, rdate)
+    VALUES(facilityreview_seq.nextval, #{culturefno}, #{memberno}, #{reviewcomment}, sysdate)
   </insert>
 
 	<select id="list" resultType="dev.mvc.facilityreview.FacilityreviewVO">
-    SELECT rno, culturefno, memberno, reviewcomment, reviewgrade, rdate
+    SELECT rno, culturefno, memberno, reviewcomment,rdate
     FROM facilityreview
     ORDER BY rno DESC
   </select>
 
 	<select id="list_by_culturefno" resultType="dev.mvc.facilityreview.FacilityreviewVO" parameterType="int">
-    SELECT rno, culturefno, memberno, reviewcomment, reviewgrade, rdate
+    SELECT rno, culturefno, memberno, reviewcomment, rdate
     FROM facilityreview
     WHERE culturefno=#{culturefno}
     ORDER BY rno DESC
 	</select>
 
 
-	<select id="list_by_culturefno_join" resultType="dev.mvc.facilityreview.FacilityreviewVO" parameterType="int">
-    SELECT m.id,
-               r.rno, r.culturefno, r.memberno, r.reviewcomment, r.reviewgrade, r.rdate
-    FROM member m,  facilityreview r
-    WHERE (m.memberno = r.memberno) AND r.culturefno=#{culturefno}
-    ORDER BY r.rno DESC
+	<select id="read" resultType="dev.mvc.facilityreview.FacilityreviewVO" parameterType="int">
+    SELECT rno, culturefno, memberno, reviewcomment,rdate
+    FROM facilityreview
+    WHERE rno = #{replyno}
   </select>
 
-	<!-- <select id="checkPasswd" parameterType="HashMap" resultType="int"> -->
-	<!-- <select id="checkPasswd" parameterType="ReplyVO" resultType="int"> -->
-	<select id="checkPasswd" parameterType="Map" resultType="int">
-    SELECT COUNT(*) as cnt
-    FROM facilityreview
-    WHERE rno=#{rno} AND passwd=#{passwd}
-  </select>
+	<update id="update" parameterType="dev.mvc.facilityreview.FacilityreviewVO">
+    UPDATE facilityreview
+    SET reviewcomment=#{reviewcomment}
+    WHERE rno=#{rno}
+  </update>
 
 	<delete id="delete" parameterType="int">
     DELETE FROM facilityreview
     WHERE rno=#{rno}
   </delete>
+
+
+	<select id="list_by_culturefno_join" resultType="dev.mvc.facilityreview.FacilityreviewVO" parameterType="int">
+    SELECT m.id,
+               r.rno, r.culturefno, r.memberno, r.reviewcomment, r.rdate
+    FROM member m,  facilityreview r
+    WHERE (m.memberno = r.memberno) AND r.culturefno=#{culturefno}
+    ORDER BY r.rno DESC
+  </select>
+  
+    <!-- 최신글 500건 -->
+  <select id="list_by_culturefno_join_500" resultType="dev.mvc.facilityreview.FacilityreviewVO" parameterType="int">
+    SELECT id, rno, culturefno, memberno, reviewcomment, rdate, r
+    FROM (
+          SELECT id, rno, culturefno,memberno, reviewcomment,rdate,rownum as r
+          FROM (
+                SELECT  m.id, 
+                         p.rno, p.culturefno, p.memberno, p.reviewcomment,p.rdate
+                FROM member m, facilityreview p       
+                WHERE (m.memberno = p.memberno) AND p.culturefno=#{culturefno}
+                ORDER BY p.rno DESC
+          )
+    )
+    WHERE r &lt;= 500
+  </select>
+
 
 </mapper>

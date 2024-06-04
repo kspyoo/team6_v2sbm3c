@@ -54,7 +54,7 @@ public class FacilityreviewCont {
    * @param facilityreviewVO
    * @return
    */
-  @PostMapping(value = "/create")
+  @PostMapping(value = "/facilityreview/create")
   @ResponseBody
   public String create(HttpSession session, @RequestBody FacilityreviewVO facilityreviewVO) {
     System.out.println("-> 수신 데이터:" + facilityreviewVO.toString());
@@ -77,7 +77,7 @@ public class FacilityreviewCont {
    * @param culturefno
    * @return
    */
-  @GetMapping(value = "/list_by_culturefno_join")
+  @GetMapping(value = "/facilityreview/list_by_culturefno_join")
   @ResponseBody
   public String list_by_culturefno_join(int culturefno) {
     List<FacilityreviewMemberVO> list = facilityreviewProc.list_by_culturefno_join_500(culturefno);
@@ -96,7 +96,7 @@ public class FacilityreviewCont {
    * @param rno
    * @return
    */
-  @GetMapping(value = "/read", produces = "application/json")
+  @GetMapping(value = "/facilityreview/read", produces = "application/json")
   @ResponseBody
   public String read(int rno) {
     FacilityreviewVO facilityreviewVO = this.facilityreviewProc.read(rno);
@@ -124,7 +124,7 @@ public class FacilityreviewCont {
    * @param facilityreviewVO
    * @return
    */
-  @PostMapping(value = "/update")
+  @PostMapping(value = "/facilityreview/update")
   @ResponseBody
   public String update(HttpSession session, @RequestBody FacilityreviewVO facilityreviewVO) {
     System.out.println("-> 수정할 수신 데이터:" + facilityreviewVO.toString());
@@ -149,7 +149,7 @@ public class FacilityreviewCont {
    * @param facilityreviewVO
    * @return
    */
-  @PostMapping(value = "/delete")
+  @PostMapping(value = "/facilityreview/delete")
   @ResponseBody
   public String delete(HttpSession session, @RequestBody FacilityreviewVO facilityreviewVO) {
     System.out.println("-> 삭제할 수신 데이터:" + facilityreviewVO.toString());
