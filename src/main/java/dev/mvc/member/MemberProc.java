@@ -99,7 +99,7 @@ public class MemberProc implements MemberProcInter {
   
   @Override
   public int findPasswdCheck(HashMap<String, Object> map) {
-    int cnt = this.memberDAO.findIdCheck(map);
+    int cnt = this.memberDAO.findPasswdCheck(map);
     return cnt;
   }
   

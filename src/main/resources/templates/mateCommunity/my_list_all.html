@@ -2,7 +2,7 @@
 <div layout:fragment="content" style="padding-top: 20px;">
     <link href="/css/mateCommunity/list.css" rel="Stylesheet" type="text/css">
     <div id="list_all" style="width:80%; margin: auto; height: auto; overflow: hidden">
-        <div class='title_line'>
+        <div class='title_line' style="margin-bottom: 20px;">
             내가 작성한 게시글
         </div>
 
@@ -69,8 +69,8 @@
                             <li><button th:id="'delete'+${mateCommunityVO.MCommunityNo}" class="dropdown-item a_button">수정</button></li>
                             <li><button th:id="'delete'+${mateCommunityVO.MCommunityNo}" class="dropdown-item a_button">마감</button></li>
                             <li><button th:id="'delete'+${mateCommunityVO.MCommunityNo}" class="dropdown-item a_button">모집 시작</button></li>
-                            <li><button th:id="'review'+${mateCommunityVO.MCommunityNo}" th:onclick="@{|/mateReview/create?mCommunityNo=${mateCommunityVO.MCommunityNo}|}"
-                                        class="dropdown-item a_button" style="display: none;">후기 조회</button></li>
+                            <li><button th:id="'review'+${mateCommunityVO.MCommunityNo}" class="dropdown-item a_button" style="display: none;"
+                                        th:onclick="@{|location.href='/mateReview/list?mCommunityNo=${mateCommunityVO.MCommunityNo}'|}">후기 조회</button></li>
                         </ul>
                     </div>
                     <!--                    <button th:id="'delete'+${mateApplyListVO.ANo}" class="btn-outline-info btn">취소</button>-->

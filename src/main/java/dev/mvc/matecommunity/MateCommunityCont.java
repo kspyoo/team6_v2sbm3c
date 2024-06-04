@@ -291,6 +291,7 @@ public class MateCommunityCont {
         if (cnt == 1){
             this.mateApplyProc.deniedAll(mCommunityNo);
         }
+
         System.out.println(cnt);
         return cnt;
     }

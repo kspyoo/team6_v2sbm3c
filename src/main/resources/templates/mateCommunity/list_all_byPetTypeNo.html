@@ -16,29 +16,43 @@
              산책 메이트 모집
         </div>
 
-        <div>
-            <a href="/mateCommunity/list_all">
+        <div class="row mb-3 text-center">
+            <a href="/mateCommunity/list_all" class="col-3 pt-3 themed-grid-col cate-off">
                 전체
             </a>
-            <a th:href="@{|/mateCommunity/list_all_byPetTypeNo?petTypeNo=1|}">
+            <a th:href="@{|/mateCommunity/list_all_byPetTypeNo?petTypeNo=1|}" class="col-3 pt-3 themed-grid-col cate-off" th:if="${petTypeNo!=1}">
                 강아지
             </a>
-            <a th:href="@{|/mateCommunity/list_all_byPetTypeNo?petTypeNo=2|}">
+            <a th:href="@{|/mateCommunity/list_all_byPetTypeNo?petTypeNo=1|}" class="col-3 pt-3 themed-grid-col cate-on" th:if="${petTypeNo==1}">
+                강아지
+            </a>
+            <a th:href="@{|/mateCommunity/list_all_byPetTypeNo?petTypeNo=2|}" class="col-3 pt-3 themed-grid-col cate-off" th:if="${petTypeNo!=2}">
                 고양이
             </a>
-            <a th:href="@{|/mateCommunity/list_all_byPetTypeNo?petTypeNo=3|}">
+            <a th:href="@{|/mateCommunity/list_all_byPetTypeNo?petTypeNo=2|}" class="col-3 pt-3 themed-grid-col cate-on" th:if="${petTypeNo==2}">
+                고양이
+            </a>
+            <a th:href="@{|/mateCommunity/list_all_byPetTypeNo?petTypeNo=3|}" class="col-3 pt-3 themed-grid-col cate-off" th:if="${petTypeNo!=3}">
+                기타
+            </a>
+            <a th:href="@{|/mateCommunity/list_all_byPetTypeNo?petTypeNo=3|}" class="col-3 pt-3 themed-grid-col cate-on" th:if="${petTypeNo==3}">
                 기타
             </a>
         </div>
 
-        <aside class="aside_right">
+        <aside class="aside_right" th:if="${session.memberno != null}">
             <a href="javascript:location.reload();">새로고침</a>
             <span class='menu_divide'>│</span>
             <a th:href="@{|./create?petTypeNo=${petTypeNo}|}">글 등록</a>
             <span class='menu_divide'>│</span>
+            <a th:href="@{|/mateApply/my_list_all|}">내 게시글</a>
+            <span class='menu_divide'>│</span>
             <a th:href="@{|/mateApply/applyList?petTypeNo=${petTypeNo}&now_page=${now_page}|}">내 신청내역</a>
             <span class='menu_divide'>│</span>
-            <a th:href="@{|/mateApply/my_list_all|}">내가 작성한 게시글</a>
+            <a th:href="@{|/mateReview/myList|}">내 후기 </a>
+        </aside>
+        <aside class="aside_right" th:if="${session.memberno == null}">
+            <a href="javascript:location.reload();">새로고침</a>
         </aside>
         <div class="menu_line"></div>
 

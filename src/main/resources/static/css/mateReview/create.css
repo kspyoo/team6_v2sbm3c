@@ -104,6 +104,7 @@ input[type='radio'] {
 
 .btn-outline-info{
     --bs-btn-hover-color: white;
+    --bs-btn-active-color: white;
 }
 
 .send_btn{

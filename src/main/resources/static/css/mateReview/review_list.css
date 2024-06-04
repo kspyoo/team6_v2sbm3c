@@ -1,9 +1,10 @@
-.title_line {
-    text-align: left;
-    border-bottom: solid 3px rgba(33, 150, 243, 0.95); !important;
-    width: 100%;
-    margin: 20px auto 0px;
-    font-size: 20px;
+.btn-lg{
+    --bs-btn-font-size: 0.85rem;
+}
+
+.btn-outline-info{
+    --bs-btn-hover-color: #fff;
+    --bs-btn-active-color: #fff;
 }
 
 .span_box_1 {
@@ -33,18 +34,3 @@
 #paging A:link {text-decoration:none; color:black; font-size: 1em;}
 #paging A:hover{text-decoration:none; background-color: #FFFFFF; color:black; font-size: 1em;}
 #paging A:visited {text-decoration:none;color:black; font-size: 1em;}
-
-.cate-on{
-    border-top: 5px solid #92C7FF;
-
-}
-
-.cate-off{
-    border-top: 0 solid;
-    transition: all 0.5s;
-}
-
-.cate-off:hover{
-    border-top: 5px solid #92C7FF;
-    transition: all 0.5s;
-}

@@ -74,7 +74,8 @@
                             관리
                         </button>
                         <ul class="dropdown-menu">
-                            <li><button th:id="'more'+${mateApplyListVO.ANo}" class="dropdown-item a_button">집합정보 더보기</button></li>
+                            <li><button th:id="'more'+${mateApplyListVO.ANo}" th:attr="onclick=|location.href='/mateCommunity/read?mCommunityNo=${mateApplyListVO.MCommunityNo}&now_page=${now_page}'|"
+                                        class="dropdown-item a_button">집합정보 더보기</button></li>
                             <li><button th:id="'delete'+${mateApplyListVO.ANo}" class="dropdown-item a_button">신청 취소</button></li>
                             <li><button th:id="'review'+${mateApplyListVO.ANo}" th:attr="onclick=|location.href='/mateReview/create?mCommunityNo=${mateApplyListVO.MCommunityNo}'|"
                                         class="dropdown-item a_button" th:if="${mateApplyListVO.AStatus=='ACCEPTED'}">후기작성</button></li>
