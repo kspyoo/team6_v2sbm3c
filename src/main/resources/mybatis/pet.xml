@@ -3,7 +3,37 @@
 
 <mapper namespace="dev.mvc.pet.PetDAOInter">
     <insert id="create" parameterType="dev.mvc.pet.PetVO">
-        insert into PET(petno, petname, petage, petdetail, pettypeno, memberno)
-        values(PETTYPE_SEQ.nextval, #{petName}, #{petAge}, #{petDetail}, #{petTypeNo}, #{memberNo})
+        insert into PET(petno, petname, petbirth, petgender, petdetail, pettypeno, memberno)
+        values(PETTYPE_SEQ.nextval, #{petName}, #{petBirth}, #{petGender}, #{petDetail}, #{petTypeNo}, #{memberNo})
     </insert>
+
+    <select id="myPetInfo" parameterType="int" resultType="dev.mvc.pet.PetVO">
+        select petno, petname, petbirth, petgender, petdetail, pettypeno, memberno
+        from PET
+        where PETNO = #{petNo}
+    </select>
+
+    <select id="myPetInfoList" parameterType="int" resultType="dev.mvc.pet.PetVO">
+        select petno, petname, petbirth, petgender, petdetail, pettypeno, memberno
+        from PET
+        where MEMBERNO = #{memberNo}
+    </select>
+
+    <select id="petInfoCnt" parameterType="int">
+        select count(*)
+        from PET
+        where MEMBERNO = #{memberNo}
+    </select>
+
+    <update id="update" parameterType="Map">
+        UPDATE PET
+        SET PETNAME = #{petName}, PETDETAIL = #{petDetail}
+        WHERE PETNO = #{petNo}
+    </update>
+
+    <delete id="delete" parameterType="int">
+        delete
+        from PET
+        where PETNO=#{petNo}
+    </delete>
 </mapper>
