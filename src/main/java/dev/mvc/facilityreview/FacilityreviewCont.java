@@ -59,7 +59,7 @@ public class FacilityreviewCont {
   public String create(HttpSession session, @RequestBody FacilityreviewVO facilityreviewVO) {
     System.out.println("-> 수신 데이터:" + facilityreviewVO.toString());
 
-    int memberno = (int) session.getAttribute("memberno"); // 보안성 향상
+    int memberno = (int)session.getAttribute("memberno"); // 보안성 향상
     facilityreviewVO.setMemberno(memberno);
 
     int cnt = this.facilityreviewProc.create(facilityreviewVO);
@@ -102,7 +102,8 @@ public class FacilityreviewCont {
     FacilityreviewVO facilityreviewVO = this.facilityreviewProc.read(rno);
 
     JSONObject row = new JSONObject();
-
+    
+    row.put("id", facilityreviewVO.getId()); 
     row.put("rno", facilityreviewVO.getRno());
     row.put("culturefno", facilityreviewVO.getCulturefno());
     row.put("memberno", facilityreviewVO.getMemberno());

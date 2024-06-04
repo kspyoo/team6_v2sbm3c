@@ -2,8 +2,9 @@ package dev.mvc.facilityreview;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
-@Getter@Setter
+@Getter@Setter@ToString
 public class FacilityreviewMemberVO {
   /**아이디(이메일)*/
   private String id = "";

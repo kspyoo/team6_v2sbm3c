@@ -5,6 +5,8 @@ import lombok.Setter;
 
 @Getter@Setter
 public class FacilityreviewVO {
+  /**아이디(이메일)*/
+  private String id = "";
   /** 댓글번호*/
   private int rno;
   /** 관련 글 번호*/
