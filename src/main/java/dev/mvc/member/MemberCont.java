@@ -21,6 +21,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import dev.mvc.login.LoginCont;
 import dev.mvc.login.LoginProcInter;
 import dev.mvc.login.LoginVO;
+import dev.mvc.master.MasterProcInter;
 import dev.mvc.master.MasterVO;
 import dev.mvc.memberprofile.Memberprofile;
 import dev.mvc.memberprofile.MemberprofileProcInter;
@@ -40,6 +41,11 @@ public class MemberCont {
   @Autowired
   @Qualifier("dev.mvc.member.MemberProc")
   private MemberProcInter memberProc;
+  
+  @Autowired
+  @Qualifier("dev.mvc.master.MasterProc")
+  private MasterProcInter masterProc;
+
 
   @Autowired
   @Qualifier("dev.mvc.memberprofile.MemberprofileProc")
@@ -295,7 +301,7 @@ public class MemberCont {
     MemberVO memberVO = this.memberProc.read(memberno);
     model.addAttribute("memberVO", memberVO);
     
-    System.out.println(this.memberProc.read(memberno));
+    System.out.println("this.memberProc.read(memberno) : " + this.memberProc.read(memberno));
     
     // MemberProfileVO를 조회하여 모델에 추가
     memberprofileVO = this.memberprofileProc.read_file(memberno);
@@ -313,12 +319,16 @@ public class MemberCont {
    * @return 회원 정보
    */
   @GetMapping(value = "/delete")
-  public String delete(Model model, int memberno) {
+  public String delete(Model model, int memberno, MasterVO masterVO) {
     MemberVO memberVO = this.memberProc.read(memberno);
+    
 //    MemberprofileVO memberprofileVO = this.memberprofileProc.read_file(memberno);
     model.addAttribute("memberVO", memberVO);
-//    model.addAttribute("memberprofileVO",memberprofileVO);
+    if(masterVO != null) {
+      System.out.println("masterVOno : " + masterVO.getMasterno());
+    }
     
+//    model.addAttribute("memberprofileVO",memberprofileVO);
 
     return "member/delete";
   }
@@ -331,13 +341,15 @@ public class MemberCont {
    * @return
    */
   @PostMapping(value = "/delete")
-  public String delete_process(HttpSession session, Model model, Integer memberno) {
-    MasterVO masterVO = new MasterVO();
-    model.addAttribute("masterVO", masterVO);
+  public String delete_process(HttpSession session, Model model, Integer memberno, MasterVO masterVO) {
     int cnt = this.memberProc.delete(memberno);
+    System.out.println("masterVO2 : " + masterVO);
     if (cnt == 1) {
       model.addAttribute("code", "delete_success");
-      session.invalidate();
+      if (masterVO.getMasterno() == 0 ) {
+        session.invalidate();
+      }
+//      
       return "member/msg";
     } else {
       model.addAttribute("code", "delete_fail");
@@ -400,7 +412,7 @@ public class MemberCont {
     map.put("phone", phone);
     map.put("id", id);
 
-    int cnt = this.memberProc.findIdCheck(map);
+    int cnt = this.memberProc.findPasswdCheck(map);
 
     model.addAttribute("cnt", cnt);
 
@@ -429,6 +441,7 @@ public class MemberCont {
       int passwd_change_cnt = this.memberProc.passwd_update(map);
       
       if (passwd_change_cnt == 1) {
+        
         model.addAttribute("code", "passwd_change_success");
         model.addAttribute("cnt", 1);
     } else {
@@ -503,10 +516,11 @@ public class MemberCont {
       map_new_passwd.put("passwd", this.security.aesEncode(passwd)); // 새로운 패스워드
       
       int passwd_change_cnt = this.memberProc.passwd_update(map_new_passwd);
-
+      MemberVO memberVO = this.memberProc.read(memberno);
       if (passwd_change_cnt == 1) {
+        model.addAttribute("memberVO",memberVO);
         model.addAttribute("code", "passwd_change_success");
-        model.addAttribute("cnt", 1);
+//        model.addAttribute("cnt", 1);
       } else {
         model.addAttribute("code", "passwd_change_fail");
         model.addAttribute("cnt", 0);
@@ -565,6 +579,8 @@ public class MemberCont {
   @GetMapping(value="/list")
   public String list(HttpSession session, Model model) {
       ArrayList<MemberVO> list = this.memberProc.list();
+      int masterno = (int) session.getAttribute("masterno"); 
+      MasterVO masterVO = this.masterProc.read(masterno);
       
       for (MemberVO memberVO : list) {
         int memberno = memberVO.getMemberno();
@@ -575,6 +591,7 @@ public class MemberCont {
       }
       
       model.addAttribute("list", list);
+      model.addAttribute("masterVO", masterVO);
       
       return "member/list"; 
 

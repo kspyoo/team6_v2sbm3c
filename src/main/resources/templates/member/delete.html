@@ -1,47 +1,48 @@
 <!DOCTYPE html>
 
-<html layout:decorate="~{layout}"> <!-- layout.html 상속-->
+<html layout:decorate="~{layout}">
+<!-- layout.html 상속-->
 
-<div layout:fragment="content">
+<div layout:fragment="content" style="width: 80%; margin: auto">
   <script>
     window.onload = () => {
-      
     }
-    
+
     function send() {
       document.getElementById('frm').submit(); //
     }    
   </script>
 
-  <div class="title_line">회원 정보 조회 및 수정(*: 필수) > <span th:text="@{|${memberVO.name} (${memberVO.id})|}"></span></div>
+  <div class="title_line">회원 삭제 > <span th:text="@{|${memberVO.name} (${memberVO.id})|}"></span></div>
   <aside class="aside_right">
     <a href="javascript:location.reload();">새로고침</a>
-    <span class='menu_divide' >│</span> 
-    <a href='./create'>회원 가입</a>
-    <span class='menu_divide' >│</span> 
-    <a href='./list'>목록</a>
-  </aside> 
+    <span class='menu_divide'>│</span>
+    <a th:href="@{|/mateCommunity/my_list_all|}">내가 작성한 게시글</a>
+    <span class='menu_divide'>│</span>
+    <a th:href="@{|/mateApply/applyList|}">내 신청내역</a>
+  </aside>
 
   <div class='menu_line'></div>
-  
+
   <div style="width: 60%; margin: 0px auto ">
     <form name="frm" id="frm" th:object="${memberVO}" method="post" action="/member/delete">
-      <input type="hidden" name="memberno" th:value="${memberVO.memberno}">
+      <input type="hidden" name="memberno" th:value="${memberVO.memberno}"> <!-- -->
       <input type="hidden" name="masterno" th:value="${masterVO.masterno}">
-      
-      <input th:text="${masterVO.masterno}">
-      
+
+      <span th:text="${masterVO.masterid}"
+
       <div class="msg_warning">회원 정보는 삭제하면 복구 할 수 없습니다.<br>그래도 삭제하시겠습니까?</div>
       <div style='text-align: center;'>회원 이름: <span th:text="${memberVO.name}"></span></div>
-      
+
       <div class="content_body_bottom">
         <button type="button" onclick="submit();" class="btn btn-secondary btn-sm">삭제</button>
-        <button type="button" onclick="history.back();" href="/member/logout" class="btn btn-secondary btn-sm">취소</button>
+        <button type="button" onclick="history.back();" href="/member/logout"
+          class="btn btn-secondary btn-sm">취소</button>
       </div>
 
     </form>
   </div>
-    
-</div>
-</html>
 
+</div>
+
+</html>
