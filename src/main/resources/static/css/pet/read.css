@@ -1,0 +1,92 @@
+.title_line{
+    border-bottom-color: rgba(33, 150, 243, 0.95);
+}
+
+.btn-outline-info{
+    width: 60%;
+    --bs-btn-hover-color: #fff;
+    --bs-btn-active-color: #fff;
+}
+
+.content_body_bottom {
+    clear: both;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    text-align: center;
+    width: 100%;
+    background-color: white;
+}
+
+input[type="radio"]{
+    display: none;
+}
+
+.check_type label{
+    content: url(/image/mateCommunity/uncheck.png);
+    width: 25px;
+}
+
+.check_type input:checked + label{
+    content: url(/image/mateCommunity/check.png);
+    width: 25px;
+}
+
+.addr .btn{
+    --bs-btn-bg: #0dcaf0;;
+    --bs-btn-color: white;
+    --bs-btn-hover-bg: #0dcaf0;
+    --bs-btn-hover-color: white;
+    --bs-btn-active-bg: #0dcaf0;
+    --bs-btn-active-color: white;
+}
+
+.select_type{
+    border: 1px solid #8FBFFA;
+    border-radius: 5px;
+    height: 30px;
+    text-align-last: center;
+}
+
+.time{
+    border: 1px solid #8FBFFA;
+    border-radius: 5px;
+    height: 25px;
+    padding: 0px 7px;
+}
+
+.form-control{
+    border: 1px solid #8FBFFA;
+}
+
+.birth{
+    border: 1px solid #8FBFFA;
+    border-radius: 5px;
+    height: 30px;
+    text-align-last: left;
+    width: 18%;
+}
+
+.gender{
+    border: 1px solid #8FBFFA;
+    border-radius: 5px;
+    height: 30px;
+    text-align-last: left;
+}
+
+.petType{
+    border: 1px solid #8FBFFA;
+    border-radius: 5px;
+    height: 30px;
+    text-align-last: left;
+}
+
+.img_box{
+    text-align: center;
+    margin: 0px auto;
+    width: 55%;
+}
+
+.img_container{
+    width: 60%;
+    margin: 0px auto;
+}
