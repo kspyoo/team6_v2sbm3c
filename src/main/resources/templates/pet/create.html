@@ -146,7 +146,7 @@
                     if (confirm('반려동물 사진을 등록 하시겠습니까?')){
                         location.href='/petProfile/create';
                     }else{
-                        location.href='/';
+                        location.href='/pet/list';
                     }
                 }else{
                     alert('등록 실패 했습니다.')
@@ -156,6 +156,25 @@
     }
 
     window.onload = () => {
+        // 회원이 접근했을 때 작성된 데이터가 없으면 생성 페이지로 이동
+        let url = "/pet/petInfoCnt";
+        fetch(url, {
+            "method": "GET",
+            "headers": {
+                "Content-Type": "application/json"
+            },
+        })
+            .then((response) => response.json()) // 응답 문자열 추출
+            .then((data) => {
+                if (parseInt(data.cnt) >= 3) {
+                    alert('반려동물 정보는 최대 3개까지 입력 가능합니다.')
+                    location.href = '/pet/list';
+                } else if (parseInt(data.cnt) == -1) {
+                    alert('잘못된 접근입니다. 로그인해 주세요.');
+                    location.href = '/member/login';
+                }
+            });
+
         let today = new Date();
         let this_year = today.getFullYear();
         let this_month = today.getUTCMonth()+1;

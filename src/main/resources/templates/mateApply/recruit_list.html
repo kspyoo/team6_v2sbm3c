@@ -46,7 +46,12 @@
                 </td>
 
                 <td class="td_left align-middle">
-                    <span th:text="${mateRecruitListVO.name}" style="font-weight: bold; margin-left: 10px;"></span>
+<!--                    <span th:text="${mateRecruitListVO.name}" style="font-weight: bold; margin-left: 10px;"></span>-->
+                    <a th:text="${mateRecruitListVO.name}" style="font-weight: bold; color: black; margin-left: 10px;"
+                       class="" type="button" data-bs-toggle="dropdown" aria-expanded="false"></a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item a_button" th:href="@{|/pet/list?memberNo=${mateRecruitListVO.memberNo}|}">반려동물 정보</a></li>
+                    </ul>
                 </td>
 
                 <td class="td_left align-middle" style="text-align: center;">

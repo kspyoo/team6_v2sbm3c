@@ -1,0 +1,135 @@
+<html layout:decorate="~{layout}"> <!-- layout.html 상속 -->
+<div layout:fragment="content" style="padding-top: 20px; width: 70%; margin: auto">
+<link href="/css/pet/read.css" rel="Stylesheet" type="text/css">
+<div>
+    <div class='title_line'>반려동물 정보 조회</div>
+
+    <aside class="aside_right">
+        <a href="javascript:location.reload();">새로고침</a>
+    </aside>
+
+    <div class='menu_line'></div>
+
+    <form name='frm' id="frm" method='' action='' style="width: 100%; margin: 0 auto;"
+        class="row">
+        <div class="mb-3 img_box">
+            <div class="img_container mb-3">
+                <img src="/image/pet/No_Image.png" style="width: 75%">
+            </div>
+<!--            <button type="button" id="change_image" class="btn btn-outline-info btn-md" style="width: 45%; margin-right: 1%">사진 추가하기</button>-->
+<!--            <button type="button" onclick="history.back()" class="btn btn-outline-info btn-md" style="width: 45%; margin-left: 1%">사진 조회하기</button>-->
+        </div>
+
+        <div class="mb-3 row">
+            <div>이름</div>
+            <div id="name" class="form-control"></div>
+        </div>
+
+        <div class="mb-3 row">
+            <label for="petType" class="col-2 pt-2" style="width: 10.333333%; text-align: center;">종 </label>
+            <div class="col-3 pt-1">
+                <div id="petType" class="petType form-control"></div>
+            </div>
+            <label for="gender" class="col-2 pt-2" style="width: 10.333333%; text-align: center;">성별 </label>
+            <div class="col-3 pt-1 ms-2">
+                <div class="gender form-control" id="gender">
+                </div>
+            </div>
+        </div>
+
+        <div class="assemble_date_time mb-3">
+            <label for="birth" class="me-2 pe-2">생년월일</label>
+            <div class="pt-1 row" style="width: 100%;" id="birth">
+                <div class="form-control col-2 birth" id="year">
+                </div>
+                <span class="col-1 pt-2" style="width: 4.333333%;"> . </span>
+                <div class="form-control col-1 birth" id="month" style="width: 11%;">
+                </div>
+                <span class="col-1 pt-2" style="width: 4.333333%;"> . </span>
+                <div class="form-control col-1 birth" id="day" style="width: 11%;">
+                </div>
+                <label for="age" class="col-2 pt-1" style="text-align: center;">나이(만)</label>
+                <div class="col-3">
+                    <div class="gender form-control" id="age">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="mb-3 row">
+            <label>상세 정보</label>
+            <div  class="form-control pt-3 pb-3" style='width: 100%; white-space: pre-wrap; word-break:break-all;' id="detail"></div>
+        </div>
+
+        <div class="content_body_bottom" id="button_container">
+            <button type="button" id="update_btn" class="btn btn-outline-info btn-md" style="width: 70%; margin: 0px auto">사진 보기</button>
+        </div>
+
+    </form>
+</div>
+    <script th:inline="javascript">
+        window.onload = () => {
+            if([[${petNo}]] == 0){
+                alert('잘못된 접근입니다.');
+                location.href='/';
+            }
+
+            url = "/pet/petInfo?petNo="+[[${petNo}]];
+            fetch(url, {
+                "method": "GET",
+                "headers": {
+                    "Content-Type": "application/json"
+                },
+            })
+            .then((response) => response.json()) // 응답 문자열 추출
+            .then((data) => {
+                if(data.petTypeNo==null){
+                    alert('반려동물 정보를 가져올 수 없습니다!')
+                    history.back();
+                }
+                document.getElementById('name').appendChild(document.createTextNode(data.petName));
+
+                if (data.petTypeNo == 1) {
+                    document.getElementById('petType').appendChild(document.createTextNode('강아지'));
+                } else if (data.petTypeNo == 2) {
+                    document.getElementById('petType').appendChild(document.createTextNode('고양이'));
+                } else if (data.petTypeNo == 3) {
+                    document.getElementById('petType').appendChild(document.createTextNode('기타'));
+                }
+
+                if (data.petGender == "M") {
+                    document.getElementById('gender').appendChild(document.createTextNode('수 (Male)'));
+                } else if (data.petGender == "F") {
+                    document.getElementById('gender').appendChild(document.createTextNode('암 (Female)'));
+                } else if (data.petGender == "E") {
+                    document.getElementById('gender').appendChild(document.createTextNode('기타 (ETC)'));
+                }
+
+                let birth = data.petBirth.toString();
+                birth = birth.split('-');
+
+                document.getElementById('year').appendChild(document.createTextNode(birth[0]));
+                document.getElementById('month').appendChild(document.createTextNode(birth[1]));
+                document.getElementById('day').appendChild(document.createTextNode(birth[2]));
+
+                document.getElementById('detail').appendChild(document.createTextNode(data.petDetail));
+
+                let today = new Date();
+
+                let age = today.getFullYear() - parseInt(birth[0]) + 1;
+                let man_age = 0;
+
+                if (new Date(today.getFullYear() + '-' + birth[1] + '-' + birth[2]) < today) {
+                    man_age = age - 1;
+                } else {
+                    man_age = age - 2;
+                }
+
+                document.getElementById('age').appendChild(document.createTextNode(age.toString() + "(" + man_age.toString() + ") 살"));
+            });
+        }
+    </script>
+</div>
+</body>
+</html>

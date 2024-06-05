@@ -2,23 +2,25 @@
 <div layout:fragment="content" style="padding-top: 20px; width: 70%; margin: auto">
 <link href="/css/pet/read.css" rel="Stylesheet" type="text/css">
 <div>
-    <div class='title_line'>반려동물 정보 조회</div>
+    <div class='title_line'>내 반려동물 정보 조회, 수정</div>
 
     <aside class="aside_right">
         <a href="javascript:location.reload();">새로고침</a>
+        <span class='menu_divide'>│</span>
+        <a href="./list">목록</a>
     </aside>
 
     <div class='menu_line'></div>
 
     <form name='frm' id="frm" method='' action='' style="width: 100%; margin: 0 auto;"
         class="row">
-        <input type="hidden" name="petNo" id="petNo" value="6">
+        <input type="hidden" name="petNo" id="petNo" th:value="${petNo}">
         <div class="mb-3 img_box">
             <div class="img_container mb-3">
                 <img src="/image/pet/No_Image.png" style="width: 100%">
             </div>
             <button type="button" id="change_image" class="btn btn-outline-info btn-md" style="width: 45%; margin-right: 1%">사진 추가하기</button>
-            <button type="button" onclick="history.back()" class="btn btn-outline-info btn-md" style="width: 45%; margin-left: 1%">사진 조회하기</button>
+            <button type="button" onclick="history.back()" class="btn btn-outline-info btn-md" style="width: 45%; margin-left: 1%">사진 관리</button>
         </div>
 
         <div class="mb-3 row">
@@ -65,193 +67,194 @@
             placeholder="간단한 반려동물의 소개를 작성해 주세요.(선택사항)" readonly>함께 산책해요</textarea>
         </div>
 
-        <div class="content_body_bottom">
+        <div class="content_body_bottom" id="button_container">
             <button type="button" id="update_btn" class="btn btn-outline-info btn-md" style="width: 45%; margin-right: 1%">수정</button>
             <button type="button" id="delete_btn" class="btn btn-outline-info btn-md" style="width: 45%; margin-left: 1%">삭제</button>
         </div>
 
     </form>
 </div>
-<script>
-    window.onload = () => {
-        // 회원이 접근했을때 작성된 데이터가 없으면 생성 페이지로 이동
-        let url = "/pet/petInfoCnt";
-        fetch(url,{
-            "method": "GET",
-            "headers": {
-                "Content-Type": "application/json"
-            },
-            // body: JSON.stringify({name, gender, birth, petType, petInfo})
-        })
-            .then((response) => response.json()) // 응답 문자열 추출
-            .then((data) => {
-                if (parseInt(data.cnt) == 0){
-                    if(confirm('등록된 반려동물 정보가 없습니다! 새로 등록하시겠습니까?')){
-                        location.href='/pet/create';
-                    }else{
-                        alert('메인페이지로 돌아갑니다.')
-                        location.href='/';
+    <script th:inline="javascript">
+        window.onload = () => {
+            // // 회원이 접근했을 때 작성된 데이터가 없으면 생성 페이지로 이동
+            // let url = "/pet/petInfoCnt";
+            // fetch(url, {
+            //     "method": "GET",
+            //     "headers": {
+            //         "Content-Type": "application/json"
+            //     },
+            // })
+            //     .then((response) => response.json()) // 응답 문자열 추출
+            //     .then((data) => {
+            //         if (parseInt(data.cnt) == 0) {
+            //             if (confirm('등록된 반려동물 정보가 없습니다! 새로 등록하시겠습니까?')) {
+            //                 location.href = '/pet/create';
+            //             } else {
+            //                 alert('메인페이지로 돌아갑니다.');
+            //                 location.href = '/';
+            //             }
+            //             return false;
+            //         } else if (parseInt(data.cnt) == -1) {
+            //             alert('잘못된 접근입니다. 로그인해 주세요.');
+            //             location.href = '/member/login';
+            //         }
+            //     });
+
+            // 반려동물 데이터가 한 건이라도 있으면 받아온 반려동물 데이터 번호를 통해 조회
+            url = "/pet/petInfo?petNo="+[[${petNo}]];
+            fetch(url, {
+                "method": "GET",
+                "headers": {
+                    "Content-Type": "application/json"
+                },
+            })
+                .then((response) => response.json()) // 응답 문자열 추출
+                .then((data) => {
+                    document.getElementById('name').value = data.petName;
+
+                    if (data.petTypeNo == 1) {
+                        document.getElementById('petType').appendChild(document.createTextNode('강아지'));
+                    } else if (data.petTypeNo == 2) {
+                        document.getElementById('petType').appendChild(document.createTextNode('고양이'));
+                    } else if (data.petTypeNo == 3) {
+                        document.getElementById('petType').appendChild(document.createTextNode('기타'));
                     }
-                    return false;
-                }else if (parseInt(data.cnt) == -1){
-                    alert('잘못된 접근입니다. 로그인해 주세요.');
-                    location.href='/member/login';
-                }
-            });
 
-        // 반려동물 데이터가 한건이라도 있으면 받아온 반려동물 데이터 번호를 통해 조회
-        url = "/pet/petInfo?petNo=6";
-        fetch(url,{
-            "method": "GET",
-            "headers": {
-                "Content-Type": "application/json"
-            },
-            // body: JSON.stringify({name, gender, birth, petType, petInfo})
-        })
-            .then((response) => response.json()) // 응답 문자열 추출
-            .then((data) => {
-                document.getElementById('name').value = data.petName;
+                    if (data.petGender == "M") {
+                        document.getElementById('gender').appendChild(document.createTextNode('수 (Male)'));
+                    } else if (data.petGender == "F") {
+                        document.getElementById('gender').appendChild(document.createTextNode('암 (Female)'));
+                    } else if (data.petGender == "E") {
+                        document.getElementById('gender').appendChild(document.createTextNode('기타 (ETC)'));
+                    }
 
-                if(data.petTypeNo == 1){
-                    document.getElementById('petType').appendChild(document.createTextNode('강아지'));
-                }else if(data.petTypeNo == 2){
-                    document.getElementById('petType').appendChild(document.createTextNode('고양이'));
-                }else if(data.petTypeNo == 3){
-                    document.getElementById('petType').appendChild(document.createTextNode('기타'));
-                }
+                    let birth = data.petBirth.toString();
+                    birth = birth.split('-');
 
-                if(data.petGender == "M"){
-                    document.getElementById('gender').appendChild(document.createTextNode('수(Male)'));
-                }else if(data.petGender == "F"){
-                    document.getElementById('gender').appendChild(document.createTextNode('암(Female)'));
-                }else if(data.petGender == "E"){
-                    document.getElementById('gender').appendChild(document.createTextNode('기타(ETC)'));
-                }
+                    document.getElementById('year').appendChild(document.createTextNode(birth[0]));
+                    document.getElementById('month').appendChild(document.createTextNode(birth[1]));
+                    document.getElementById('day').appendChild(document.createTextNode(birth[2]));
 
-                let birth = data.petBirth.toString()
-                birth = birth.split('-')
+                    document.getElementById('detail').innerText = data.petDetail;
+                    let today = new Date();
 
-                document.getElementById('year').appendChild(document.createTextNode(birth[0]));
-                document.getElementById('month').appendChild(document.createTextNode(birth[1]));
-                document.getElementById('day').appendChild(document.createTextNode(birth[2]));
+                    let age = today.getFullYear() - parseInt(birth[0]) + 1;
+                    let man_age = 0;
 
-                document.getElementById('detail').innerText = data.petDetail;
-                let today = new Date();
+                    if (new Date(today.getFullYear() + '-' + birth[1] + '-' + birth[2]) < today) {
+                        man_age = age - 1;
+                    } else {
+                        man_age = age - 2;
+                    }
 
-                let age = today.getFullYear() - parseInt(birth[0]) + 1;
-                let man_age = 0;
+                    document.getElementById('age').appendChild(document.createTextNode(age.toString() + "(" + man_age.toString() + ") 살"));
+                });
 
-                if (new Date(birth) > today){
-                    man_age = age - 1;
-                } else{
-                    man_age = age - 2;
-                }
+            const updateBtn = document.getElementById('update_btn');
+            const deleteBtn = document.getElementById('delete_btn');
 
-                document.getElementById('age').appendChild(document.createTextNode(man_age.toString()+"("+age.toString()+")" + " 살"));
+            updateBtn.addEventListener('click', handleUpdateClick);
+            deleteBtn.addEventListener('click', handleDeleteClick);
 
-            });
+            function handleUpdateClick() {
+                const nameTag = document.getElementById('name');
+                const detailTag = document.getElementById('detail');
 
-        // 수정 버튼을 누르면 수정 가능한 형태로 변형
-        document.getElementById('update_btn').addEventListener('click', ()=>{
-            let name_tag = document.getElementById('name');
-            let name = name_tag.value;
-            let detail_tag = document.getElementById('detail');
-            let detail = detail_tag.value;
+                const originalName = nameTag.value;
+                const originalDetail = detailTag.value;
 
-            name_tag.removeAttribute('readonly');
-            detail_tag.removeAttribute('readonly');
-            name_tag.style.removeProperty('background-color');
-            detail_tag.style.removeProperty('background-color');
+                // 입력제한을 삭제
+                nameTag.removeAttribute('readonly');
+                detailTag.removeAttribute('readonly');
+                nameTag.style.removeProperty('background-color');
+                detailTag.style.removeProperty('background-color');
 
-            let update_btn = document.getElementById('update_btn')
+                // 서버의 수정 로직과 연결이 된 버튼으로 변경
+                updateBtn.innerText = '저장';
+                updateBtn.id = 'send_btn';
+                updateBtn.removeEventListener('click', handleUpdateClick);
+                updateBtn.addEventListener('click', handleSaveClick);
 
-            update_btn.innerText='저장';
-            update_btn.id='send_btn';
+                // 삭제버튼을 취소 버튼으로 변경하고
+                // 취소를 눌렀을때 원래 상태로 변경시킴
+                deleteBtn.innerText = '취소';
+                deleteBtn.id = 'cancel_btn';
+                deleteBtn.removeEventListener('click', handleDeleteClick);
+                deleteBtn.addEventListener('click', () => {
+                    nameTag.setAttribute('readonly', 'readonly');
+                    nameTag.value = originalName;
+                    detailTag.setAttribute('readonly', 'readonly');
+                    detailTag.value = originalDetail;
+                    nameTag.style.backgroundColor = 'rgba(232,232,232,0.49)';
+                    detailTag.style.backgroundColor = 'rgba(232,232,232,0.49)';
 
-            let delete_btn = document.getElementById('delete_btn');
+                    updateBtn.innerText = '수정';
+                    updateBtn.id = 'update_btn';
+                    updateBtn.removeEventListener('click', handleSaveClick);
+                    updateBtn.addEventListener('click', handleUpdateClick);
 
-            delete_btn.innerText='취소';
-            delete_btn.id='cancel_btn';
+                    deleteBtn.innerText = '삭제';
+                    deleteBtn.id = 'delete_btn';
+                    deleteBtn.removeEventListener('click', arguments.callee);
+                    deleteBtn.addEventListener('click', handleDeleteClick);
+                });
+            }
 
-            // 취소 버튼을 누르면 입려된 데이터를 초기화하고 원래 값으로 지정
-            document.getElementById('cancel_btn').addEventListener('click', () => {
-                name_tag.setAttribute('readonly', 'readonly');
-                document.getElementById('name').value = null;
-                document.getElementById('name').value = name;
-
-                detail_tag.setAttribute('readonly', 'readonly');
-                document.getElementById('detail').value = null;
-                document.getElementById('detail').value = detail;
-
-                name_tag.style.backgroundColor = 'rgba(232,232,232,0.49)';
-                detail_tag.style.backgroundColor = 'rgba(232,232,232,0.49)';
-
-                let send_btn = document.getElementById('send_btn');
-
-                send_btn.innerText = '수정';
-                send_btn.id = 'update_btn';
-
-                let cancel_btn = document.getElementById('cancel_btn');
-
-                cancel_btn.innerText = '삭제';
-                cancel_btn.id = 'delete_btn';
-            })
-
-            document.getElementById('send_btn').addEventListener('click', () => {
-                let name_tag = document.getElementById('name');
-                let petName = name_tag.value;
-                let detail_tag = document.getElementById('detail');
-                let petDetail = detail_tag.value;
+            // 수정 RESTAPI
+            function handleSaveClick() {
+                const nameTag = document.getElementById('name');
+                const petName = nameTag.value;
+                const detailTag = document.getElementById('detail');
+                const petDetail = detailTag.value;
                 let petNo = document.getElementById('petNo').value;
                 petNo = parseInt(petNo);
 
-                let url = '/pet/update';
-                fetch(url,{
-                    "method": "POST",
-                    "headers": {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({petName, petDetail, petNo})
-                })
-                    .then((response) => response.json()) // 응답 문자열 추출
-                    .then((data) => {
-                        if (parseInt(data.cnt) == 1){
-                            alert('수정 되었습니다.');
-                            location.reload();
-                        }else{
-                            alert('수정에 실패 했습니다.');
-                        }
-                    });
-            })
-        })
-
-        document.getElementById('delete_btn').addEventListener('click', ()=>{
-            if(confirm('반려동물 정보를 삭제하시겠습니까?')) {
-                let petNo = document.getElementById('petNo').value;
-                petNo = parseInt(petNo);
-
-                let url = '/pet/delete';
+                const url = '/pet/update';
                 fetch(url, {
                     "method": "POST",
                     "headers": {
                         "Content-Type": "application/json"
                     },
-                    body: JSON.stringify({petNo})
+                    body: JSON.stringify({ petName, petDetail, petNo })
                 })
-                .then((response) => response.json()) // 응답 문자열 추출
-                .then((data) => {
-                    if (parseInt(data.cnt) == 1) {
-                        alert('삭제 되었습니다.');
-                        location.reload();
-                    } else {
-                        alert('삭제에 실패 했습니다.');
-                    }
-                });
+                    .then((response) => response.json()) // 응답 문자열 추출
+                    .then((data) => {
+                        if (parseInt(data.cnt) == 1) {
+                            alert('수정 되었습니다.');
+                            location.reload();
+                        } else {
+                            alert('수정에 실패 했습니다.');
+                        }
+                    });
             }
-        });
 
-    }
-</script>
+            // 삭제 RESTAPI
+            function handleDeleteClick() {
+                if (confirm('반려동물 정보를 삭제하시겠습니까?')) {
+                    let petNo = document.getElementById('petNo').value;
+                    petNo = parseInt(petNo);
+
+                    const url = '/pet/delete';
+                    fetch(url, {
+                        "method": "POST",
+                        "headers": {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({ petNo })
+                    })
+                        .then((response) => response.json()) // 응답 문자열 추출
+                        .then((data) => {
+                            if (parseInt(data.cnt) == 1) {
+                                alert('삭제 되었습니다.');
+                                location.reload();
+                            } else {
+                                alert('삭제에 실패 했습니다.');
+                            }
+                        });
+                }
+            }
+        }
+    </script>
 </div>
 </body>
 </html>

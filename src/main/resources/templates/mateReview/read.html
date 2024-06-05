@@ -30,7 +30,13 @@
     <div  class="review_comment">
       <div class="row mb-3">
         <div class="col-md-6 themed-grid-col">
-          <span class="content" style="font-weight: bold">작성자 | </span><span class="content" th:text="${mateReviewVO.name}" style="font-size: 14px;"></span>
+          <span class="content" style="font-weight: bold">작성자 | </span>
+<!--          <span class="content" th:text="${mateReviewVO.name}" style="font-size: 14px;"></span>-->
+          <a th:text="${mateReviewVO.name}" style="font-weight: bold; color: black; margin-left: 10px;"
+             class="" type="button" data-bs-toggle="dropdown" aria-expanded="false"></a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item a_button" th:href="@{|/pet/list?memberNo=${mateReviewVO.memberNo}|}">반려동물 정보</a></li>
+          </ul>
         </div>
         <div class="col-md-6 themed-grid-col">
           <span th:if="${mateReviewVO.reviewGrade >= 1}"><img src="/image/mateReview/on.png" style="width: 12%;"></span>

@@ -48,7 +48,13 @@
         <div class="row mb-3 text-center pb-3" style="border-bottom: 3px solid rgba(33, 150, 243, 0.95);">
             <div th:text="${mateCommunityVO.title}" style="font-weight: bolder; text-align: left; font-size: 16px;" class="col-md-4"></div>
             <div class="col-md-4" style="text-align: right;"><span>작성일 | </span><span th:text="${mateCommunityVO.WDate}" style="font-weight: bold;"></span></div>
-            <div class="col-md-2" style="text-align: right;"><span>작성자 | </span><span th:text="${mateCommunityVO.name}" style="font-weight: bold;"></span></div>
+            <div class="col-md-2" style="text-align: right;">
+                <span>작성자 | </span><a th:text="${mateCommunityVO.name}" style="font-weight: bold; color: black;"
+                                      class="" type="button" data-bs-toggle="dropdown" aria-expanded="false"></a>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item a_button" th:href="@{|/pet/list?memberNo=${mateCommunityVO.memberNo}|}">반려동물 정보</a></li>
+                </ul>
+            </div>
             <div class="col-md-2" style="text-align: right;"><span>조회수 | </span><span th:text="${mateCommunityVO.viewCnt}" style="font-weight: bold;"></span></div>
         </div>
 

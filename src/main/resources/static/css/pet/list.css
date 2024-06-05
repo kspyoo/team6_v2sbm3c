@@ -2,6 +2,13 @@
     border-bottom-color: rgba(33, 150, 243, 0.95);
 }
 
+.a-history-back{
+    color: rgba(33, 150, 243, 0.95);
+    font-weight: bold;
+    text-decoration-line: none;
+    cursor: pointer;
+}
+
 .btn-outline-info{
     width: 60%;
     --bs-btn-hover-color: #fff;
@@ -99,6 +106,7 @@ input[type="radio"]{
     border: 1px solid #8FBFFA;
     border-radius: 5px;
     width: 100%;
+    box-shadow: lightgrey 0px 5px 7px 0px;
 }
 
 .pet_detail{
@@ -128,6 +136,10 @@ input[type="radio"]{
     margin: auto;
 }
 
+.detail-font-size{
+    font-size: 6px;
+}
+
 @media screen and (min-width: 650px) {
     .pet_detail{
         height: 56%;
@@ -135,10 +147,14 @@ input[type="radio"]{
     }
 
     .font-size{
-        font-size: 12px;
+        font-size: 10px;
     }
 
     .btn-font-size{
+        font-size: 7px;
+    }
+
+    .detail-font-size{
         font-size: 7px;
     }
 }
@@ -150,11 +166,15 @@ input[type="radio"]{
     }
 
     .font-size{
-        font-size: 14px;
+        font-size: 13px;
     }
 
     .btn-font-size{
         font-size: 11px;
+    }
+
+    .detail-font-size{
+        font-size: 10px;
     }
 }
 
@@ -165,11 +185,15 @@ input[type="radio"]{
     }
 
     .font-size{
-        font-size: 16px;
+        font-size: 15px;
     }
 
     .btn-font-size{
         font-size: 14px;
+    }
+
+    .detail-font-size{
+        font-size: 13px;
     }
 }
 
@@ -180,11 +204,15 @@ input[type="radio"]{
     }
 
     .font-size{
-        font-size: 18px;
+        font-size: 17px;
     }
 
     .btn-font-size{
         font-size: 16px;
+    }
+
+    .detail-font-size{
+        font-size: 15px;
     }
 }
 
@@ -195,10 +223,14 @@ input[type="radio"]{
     }
 
     .font-size{
-        font-size: 20px;
+        font-size: 19px;
     }
 
     .btn-font-size{
         font-size: 18px;
+    }
+
+    .detail-font-size{
+        font-size: 17px;
     }
 }
