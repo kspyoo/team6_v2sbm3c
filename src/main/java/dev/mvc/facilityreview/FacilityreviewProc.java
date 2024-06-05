@@ -1,10 +1,12 @@
 package dev.mvc.facilityreview;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
 
 import dev.mvc.tool.Tool;
 
@@ -19,30 +21,11 @@ public class FacilityreviewProc implements FacilityreviewProcInter {
    int cnt= this.facilityreviewDAO.create(facilityreviewVO);
     return cnt;
   }
-
+  
+  
   @Override
-  public ArrayList<FacilityreviewVO> list() {
-    ArrayList<FacilityreviewVO> list=this.facilityreviewDAO.list();
-    return list;
-  }
-
-  @Override
-  public ArrayList<FacilityreviewVO> list_by_culturefno(int culturefno) {
-    ArrayList<FacilityreviewVO> list = facilityreviewDAO.list_by_culturefno(culturefno);
-    String reviewcomment = "";
-    
-    // 특수 문자 변경
-    for (FacilityreviewVO facilityreviewVO:list) {
-      reviewcomment = facilityreviewVO.getReviewcomment();
-      reviewcomment = Tool.convertChar(reviewcomment);
-      facilityreviewVO.setReviewcomment(reviewcomment);
-    }
-    return list;
-  }
-
-  @Override
-  public ArrayList<FacilityreviewMemberVO> list_by_culturefno_join(int culturefno) {
-    ArrayList<FacilityreviewMemberVO> list = facilityreviewDAO.list_by_culturefno_join(culturefno);
+  public List<FacilityreviewMemberVO> list_by_culturefno_join(int culturefno) {
+    List<FacilityreviewMemberVO> list = facilityreviewDAO.list_by_culturefno_join(culturefno);
     String reviewcomment = "";
     
     // 특수 문자 변경
@@ -54,17 +37,40 @@ public class FacilityreviewProc implements FacilityreviewProcInter {
     return list;
   }
 
+
   @Override
-  public int checkPasswd(Map<String, Object> map) {
-    int cnt = this.facilityreviewDAO.checkPasswd(map);
-    return cnt ;
+  public List<FacilityreviewMemberVO> list_by_culturefno_join_500(int culturefno) {
+    List<FacilityreviewMemberVO> list =this.facilityreviewDAO.list_by_culturefno_join_500(culturefno);
+    return list;
   }
+
+
+  @Override
+  public FacilityreviewVO read(int rno) {
+    FacilityreviewVO facilityreviewVO =this.facilityreviewDAO.read(rno);
+    return facilityreviewVO ;
+  }
+
+
+  @Override
+  public int update(FacilityreviewVO facilityreviewVO) {
+    int cnt =this.facilityreviewDAO.update(facilityreviewVO);
+    return cnt;
+  }
+
 
   @Override
   public int delete(int rno) {
-    int cnt =this.facilityreviewDAO.delete(rno);
+    int cnt= this.facilityreviewDAO.delete(rno);
     return cnt;
   }
+  
+  
+
+
+
+
+
   
 
 }

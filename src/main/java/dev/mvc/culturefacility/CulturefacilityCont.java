@@ -16,8 +16,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import dev.mvc.culturefacility.CulturefacilityVO;
-
+import dev.mvc.culturefile.CulturefileProcInter;
 import dev.mvc.facilityreview.FacilityreviewVO;
+import dev.mvc.member.MemberProcInter;
 import dev.mvc.tool.Tool;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -25,9 +26,20 @@ import jakarta.validation.Valid;
 @RequestMapping("/culturefacility")
 @Controller
 public class CulturefacilityCont {
+  
+  @Autowired
+  @Qualifier("dev.mvc.member.MemberProc") // @Service("dev.mvc.member.MemberProc")
+  private MemberProcInter memberProc;
+  
   @Autowired
   @Qualifier("dev.mvc.culturefacility.CulturefacilityProc")
   private CulturefacilityProcInter CulturefacilityProc;
+  
+  
+  @Autowired
+  @Qualifier("dev.mvc.culturefile.CulturefileProc")
+  private CulturefileProcInter culturefileProc;
+  
   
 
 

@@ -3,7 +3,6 @@ DROP TABLE FACILITYREVIEW
 CREATE TABLE FACILITYREVIEW(
 		RNO                           		NUMBER(10)		 NOT NULL		 PRIMARY KEY,
 		REVIEWCOMMENT                 		VARCHAR2(1000)		 NOT NULL,
-		REVIEWGRADE                   		VARCHAR2(10)		 NOT NULL,
 		RDATE                         		DATE		 NOT NULL,
 		MEMBERNO                      		NUMBER(10)		 NOT NULL,
 		CULTUREFNO                    		NUMBER(10)		NOT NULL ,
@@ -29,24 +28,24 @@ CREATE SEQUENCE facilityreview_seq
 
 
 --등록 --
-INSERT INTO facilityreview(rno, culturefno, memberno, reviewcomment, reviewgrade, rdate)
-VALUES(facilityreview_seq.nextval, 1, 1, '댓글1', '5', sysdate);
+INSERT INTO facilityreview(rno, culturefno, memberno, reviewcomment,  rdate)
+VALUES(facilityreview_seq.nextval, 1, 1, '댓글1', sysdate);
 
 -- 전체 목록--
-SELECT rno, culturefno, memberno, reviewcomment, reviewgrade, rdate
+SELECT rno, culturefno, memberno, reviewcomment, rdate
 FROM facilityreview
 ORDER BY rno DESC;
 
 --facilityreview + member join 목록--
 SELECT m.id,
-          r.rno, r.culturefno, r.memberno, r.reviewcomment, r.reviewgrade, r.rdate
+          r.rno, r.culturefno, r.memberno, r.reviewcomment,r.rdate
 FROM member m,  facilityreview r
 WHERE m.memberno = r.memberno
 ORDER BY r.rno DESC;
 
 -- reply + member join + 특정 contentsno 별 목록
 SELECT m.id,
-           r.rno, r.culturefno, r.memberno, r.reviewcomment, r.reviewgrade, r.rdate
+           r.rno, r.culturefno, r.memberno, r.reviewcomment, r.rdate
 FROM member m,  facilityreview r
 WHERE (m.memberno = r.memberno) AND r.culturefno=1
 ORDER BY r.rno DESC;

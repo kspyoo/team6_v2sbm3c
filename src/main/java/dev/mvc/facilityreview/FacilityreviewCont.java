@@ -1,8 +1,7 @@
 package dev.mvc.facilityreview;
 
 import java.util.ArrayList;
-
-
+import java.util.List;
 
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,172 +41,135 @@ public class FacilityreviewCont {
   
   public FacilityreviewCont(){
     System.out.println("-> FacilityreviewCont .");
-  }
-  
-  
-  // 댓글 작성 페이지 매핑
-  @GetMapping("/facilityreview/create/{culturefno}" )
-  public String create(@PathVariable int culturefno,  
-                       CulturefacilityVO culturefacilityVO,
-                       @RequestParam(name="word", defaultValue="") String word,
-                       @RequestParam(name="now_page", defaultValue="1") int now_page,
-                       Model model) {
-      
-      culturefacilityVO = culturefacilityProc.read(culturefno);
-      model.addAttribute("culturefno",culturefno);
     
-      model.addAttribute("culturefacilityVO",culturefacilityVO);
-      model.addAttribute("word",word);
-      model.addAttribute("now_page",now_page);
-      
-      return "/facilityreview/create"; // templates/create.html
-  }
-  
-  @PostMapping(value = "/facilityreview/create")
-  @ResponseBody
-  public String create(@RequestBody FacilityreviewVO facilityreviewVO,
-                                    HttpSession session,
-                                    Model model
-                                    ) {
-    
-      Integer memberno = (Integer) session.getAttribute("memberno");
-      if (memberno == null) {
-          return "{\"cnt\":0, \"msg\":\"로그인이 필요합니다.\"}";
-      }
-      
- 
-
-
-      // 비밀번호가 일치하면 글 작성
-      facilityreviewVO.setMemberno(memberno);
-      int cnt = facilityreviewProc.create(facilityreviewVO);
-
-      JSONObject obj = new JSONObject();
-      obj.put("cnt", cnt);
-
-      return obj.toString();
-  }
-
-
-
-  
-  @GetMapping(value="/facilityreview/list/{culturefno}")
-  public String list(HttpSession session, Model model,
-                     @PathVariable int culturefno
-                     ) {
-    ArrayList<FacilityreviewVO> list = facilityreviewProc.list_by_culturefno(culturefno);
-    model.addAttribute("list", list);
-  
-    return "facilityreview/list"; // /WEB-INF/views/member/login_ck_form.jsp
-  }
-
-  
-  
-  
- 
-  
-/**
- * 
- * @param culturefno
- * @return
- */
-  @ResponseBody
-  @GetMapping(value = "/facilityreview/list_by_culturefno")
-  public String list_by_culturefno(int culturefno) {
-    ArrayList<FacilityreviewVO> list = facilityreviewProc.list_by_culturefno(culturefno);
-    
-    JSONObject obj = new JSONObject();
-    obj.put("list", list);
- 
-    return obj.toString(); 
-
-  }
-  
-  
-  
-///**
-// * 
-// * @param culturefno
-// * @return
-// */
-//  @ResponseBody
-//  @GetMapping(value = "/facilityreview/list_by_culturefno_join")
-//  public String list_by_culturefno_join(int culturefno) {
-//    // String msg="JSON 출력";
-//    // return msg;
-//    
-//    ArrayList<FacilityreviewMemberVO> list = facilityreviewProc.list_by_culturefno_join(culturefno);
-//    
-//    JSONObject obj = new JSONObject();
-//    obj.put("list", list);
-// 
-//    return obj.toString();     
-//  }
     
  
-//http://localhost:9091/contents/read.do
+  }
+  
+  
   /**
-   * 조회
+   * 댓글 생성
+   * 
+   * @param session
+   * @param facilityreviewVO
    * @return
    */
-  @GetMapping(value="/culturefacility/read")
-  public String read_ajax(HttpServletRequest request,
-                          CulturefacilityVO culturefacilityVO,
-                          Model model, int culturefno) {
-    // public ModelAndView read(int contentsno, int now_page) {
-    // System.out.println("-> now_page: " + now_page);
-    
-    
-    culturefacilityVO  = this.culturefacilityProc.read(culturefno);
-    model.addAttribute("culturefno",culturefno);
-    model.addAttribute("CulturefacilityVO", culturefacilityVO); // request.setAttribute("contentsVO", contentsVO);
-    
-    // 단순 read
-    // mav.setViewName("/contents/read"); // /WEB-INF/views/contents/read.jsp
-    
-    // 쇼핑 기능 추가
-    // mav.setViewName("/contents/read_cookie"); // /WEB-INF/views/contents/read_cookie.jsp
-    
-    // 댓글 기능 추가 
+  @PostMapping(value = "/facilityreview/create")
+  @ResponseBody
+  public String create(HttpSession session, @RequestBody FacilityreviewVO facilityreviewVO) {
+    System.out.println("-> 수신 데이터:" + facilityreviewVO.toString());
 
-    
-    // -------------------------------------------------------------------------------
-    // 쇼핑 카트 장바구니에 상품 등록전 로그인 폼 출력 관련 쿠기  
-    // -------------------------------------------------------------------------------
-    Cookie[] cookies = request.getCookies();
-    Cookie cookie = null;
+    int memberno = (int)session.getAttribute("memberno"); // 보안성 향상
+    facilityreviewVO.setMemberno(memberno);
 
-    String ck_id = ""; // id 저장
-    String ck_id_save = ""; // id 저장 여부를 체크
-    String ck_passwd = ""; // passwd 저장
-    String ck_passwd_save = ""; // passwd 저장 여부를 체크
+    int cnt = this.facilityreviewProc.create(facilityreviewVO);
 
-    if (cookies != null) {  // Cookie 변수가 있다면
-      for (int i=0; i < cookies.length; i++){
-        cookie = cookies[i]; // 쿠키 객체 추출
-        
-        if (cookie.getName().equals("ck_id")){
-          ck_id = cookie.getValue();                                 // Cookie에 저장된 id
-        }else if(cookie.getName().equals("ck_id_save")){
-          ck_id_save = cookie.getValue();                          // Cookie에 id를 저장 할 것인지의 여부, Y, N
-        }else if (cookie.getName().equals("ck_passwd")){
-          ck_passwd = cookie.getValue();                          // Cookie에 저장된 password
-        }else if(cookie.getName().equals("ck_passwd_save")){
-          ck_passwd_save = cookie.getValue();                  // Cookie에 password를 저장 할 것인지의 여부, Y, N
-        }
-      }
-    }
-    
-    System.out.println("-> ck_id: " + ck_id);
-    
-    model.addAttribute("ck_id", ck_id); 
-    model.addAttribute("ck_id_save", ck_id_save);
-    model.addAttribute("ck_passwd", ck_passwd);
-    model.addAttribute("ck_passwd_save", ck_passwd_save);
-    // -------------------------------------------------------------------------------
-    
-    return "/culturefacility/read";
+    JSONObject json = new JSONObject();
+//    json.put("res", "등록 테스트");
+    json.put("res", cnt);
+
+    return json.toString();
   }
+
+  /**
+   * 최신 댓글 500건 출력
+   * 
+   * @param culturefno
+   * @return
+   */
+  @GetMapping(value = "/facilityreview/list_by_culturefno_join")
+  @ResponseBody
+  public String list_by_culturefno_join(int culturefno) {
+    List<FacilityreviewMemberVO> list = facilityreviewProc.list_by_culturefno_join_500(culturefno);
+
+    JSONObject obj = new JSONObject();
+    obj.put("res", list);
+
+    System.out.println("-> obj.toString(): " + obj.toString());
+
+    return obj.toString();
+  }
+
+  /**
+   * 조회
+   * 
+   * @param rno
+   * @return
+   */
+  @GetMapping(value = "/facilityreview/read", produces = "application/json")
+  @ResponseBody
+  public String read(int rno) {
+    FacilityreviewVO facilityreviewVO = this.facilityreviewProc.read(rno);
+
+    JSONObject row = new JSONObject();
+    
+    row.put("id", facilityreviewVO.getId()); 
+    row.put("rno", facilityreviewVO.getRno());
+    row.put("culturefno", facilityreviewVO.getCulturefno());
+    row.put("memberno", facilityreviewVO.getMemberno());
+    row.put("reviewcomment", facilityreviewVO.getReviewcomment());
+    // row.put("reviewgrade", facilityreviewVO .getReviewgrade());
+    row.put("rdate", facilityreviewVO.getRdate());
+
+    JSONObject obj = new JSONObject();
+    obj.put("res", row);
+
+    // System.out.println("-> obj.toString(): " + obj.toString());
+    return obj.toString();
+  }
+
+  /**
+   * 수정처리
+   * 
+   * @param session
+   * @param facilityreviewVO
+   * @return
+   */
+  @PostMapping(value = "/facilityreview/update")
+  @ResponseBody
+  public String update(HttpSession session, @RequestBody FacilityreviewVO facilityreviewVO) {
+    System.out.println("-> 수정할 수신 데이터:" + facilityreviewVO.toString());
+
+    int memberno = (int) session.getAttribute("memberno"); // 보안성 향상
+
+    int cnt = 0;
+    if (memberno == facilityreviewVO.getMemberno()) { // 회원 자신이 쓴글만 수정 가능
+      cnt = this.facilityreviewProc.update(facilityreviewVO);
+    }
+
+    JSONObject json = new JSONObject();
+    json.put("res", cnt); // 1: 성공, 0: 실패
+
+    return json.toString();
+  }
+
+  /**
+   * 삭제처리
+   * 
+   * @param session
+   * @param facilityreviewVO
+   * @return
+   */
+  @PostMapping(value = "/facilityreview/delete")
+  @ResponseBody
+  public String delete(HttpSession session, @RequestBody FacilityreviewVO facilityreviewVO) {
+    System.out.println("-> 삭제할 수신 데이터:" + facilityreviewVO.toString());
+
+    int memberno = (int) session.getAttribute("memberno"); // 보안성 향상
+
+    int cnt = 0;
+    if (memberno == facilityreviewVO.getMemberno()) { // 회원 자신이 쓴글만 수정 가능
+      cnt = this.facilityreviewProc.delete(facilityreviewVO.getRno());
+    }
+
+    JSONObject json = new JSONObject();
+    json.put("res", cnt); // 1: 성공, 0: 실패
+
+    return json.toString();
+  }
+  
+  
+
   
 }
   
