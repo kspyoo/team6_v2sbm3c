@@ -5,7 +5,10 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
 
 @Controller
 @RequestMapping("/pet")
@@ -51,7 +54,7 @@ public class PetCont {
     @GetMapping("/petInfo")
     @ResponseBody
     public PetVO readOne(@RequestParam int petNo){
-        PetVO petVO = this.petProc.myPetInfo(petNo);
+        PetVO petVO = this.petProc.petInfo(petNo);
         return petVO;
     }
 
@@ -104,5 +107,32 @@ public class PetCont {
         json.put("cnt", cnt);
 
         return json.toString();
+    }
+
+    @GetMapping("/list")
+    public String list(@RequestParam(defaultValue = "0") int memberNo, HttpSession session, Model model){
+        ArrayList<PetVO> petVOList = new ArrayList<PetVO>();
+        int cnt = 0;
+        if (String.valueOf(memberNo).equals("0")){ // 보고싶은 회원번호가 없는경우
+            if (session.getAttribute("memberno") != null){ // 본인의 리스트를 볼 경우
+                int myMemberNo = (int) session.getAttribute("memberno");
+                petVOList = this.petProc.petInfoList(myMemberNo);
+
+                cnt = this.petProc.petInfoCnt(myMemberNo);
+
+                model.addAttribute("cnt", cnt);
+                model.addAttribute("petVOList", petVOList);
+                return "pet/list";
+            }else{ // 받아온 회원번호도 없고 로그인도 안된경우
+                return "redirect:/member/login";
+            }
+        }else{
+            petVOList = this.petProc.petInfoList(memberNo);
+            cnt = this.petProc.petInfoCnt(memberNo);
+
+            model.addAttribute("cnt", cnt);
+            model.addAttribute("petVOList", petVOList);
+            return "pet/list";
+        }
     }
 }

@@ -1,0 +1,57 @@
+<html layout:decorate="~{layout}"> <!-- layout.html 상속 -->
+<div layout:fragment="content" style="padding-top: 20px; width: 70%; margin: auto">
+<link href="/css/pet/list.css" rel="Stylesheet" type="text/css">
+<div>
+    <div class='title_line'>반려동물 정보 조회</div>
+
+    <aside class="aside_right">
+        <a href="javascript:location.reload();">새로고침</a>
+        <span class='menu_divide'>│</span>
+        <a href="./create">글 등록</a>
+    </aside>
+
+    <div class='menu_line'></div>
+
+    <div class="" id="pet_info_list">
+        <div class="row info_box" th:if="${cnt > 0}" th:each="petVO:${petVOList}">
+            <div class="col-3 mt-3 mb-3">
+                <div class="img_container ">
+                    <img src="/image/pet/No_Image.png" alt="반려동물 사진" style="width: 100%;">
+                </div>
+            </div>
+            <div class="col-7 mt-4 mb-3 row">
+                <div class="row align-items-center">
+                    <div class="col-4 font-size">이름 : [[${petVO.petName}]]</div>
+                    <div class="col-4 font-size" th:if="${petVO.petTypeNo==1}">종 : 강아지</div>
+                    <div class="col-4 font-size" th:if="${petVO.petTypeNo==2}">종 : 고양이</div>
+                    <div class="col-4 font-size" th:if="${petVO.petTypeNo==3}">종 : 기타</div>
+                    <div class="col-4 font-size">나이 : 00살</div>
+                </div>
+                <div class="pet_detail">
+                    <div class="pet_detail_txt" th:text="${petVO.petDetail}"></div>
+                </div>
+            </div>
+            <div class="col-2 mt-3 mb-3 row" style="text-align: center;">
+                <button class="btn btn-outline-info btn-md btn-font-size info_btn align-item-center">구경하기</button>
+            </div>
+        </div>
+
+        <div th:if="${cnt == 0}" style="width: 100%">
+            <div style="width: 60%; margin: 0px auto; text-align: center;">
+                등록된 반려동물 정보가 없습니다!
+                정보를 등록해 주세요!
+            </div>
+        </div>
+    </div>
+    <script th:inline="javascript">
+        window.onload = () => {
+            if ([[${petVOList.size}]] < 2)
+            document.getElementById('pet_info_list')
+        }
+    </script>
+
+
+</div>
+</div>
+</body>
+</html>

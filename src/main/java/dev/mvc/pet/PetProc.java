@@ -29,8 +29,8 @@ public class PetProc implements PetProcInter{
      * @return
      */
     @Override
-    public PetVO myPetInfo(int petNo) {
-        return this.petDAO.myPetInfo(petNo);
+    public PetVO petInfo(int petNo) {
+        return this.petDAO.petInfo(petNo);
     }
 
     /**
@@ -39,8 +39,8 @@ public class PetProc implements PetProcInter{
      * @return
      */
     @Override
-    public ArrayList<PetVO> myPetInfoList(int memberNo) {
-        return this.petDAO.myPetInfoList(memberNo);
+    public ArrayList<PetVO> petInfoList(int memberNo) {
+        return this.petDAO.petInfoList(memberNo);
     }
 
     /**

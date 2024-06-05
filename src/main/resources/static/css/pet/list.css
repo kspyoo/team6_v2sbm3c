@@ -1,0 +1,204 @@
+.title_line{
+    border-bottom-color: rgba(33, 150, 243, 0.95);
+}
+
+.btn-outline-info{
+    width: 60%;
+    --bs-btn-hover-color: #fff;
+    --bs-btn-active-color: #fff;
+}
+
+.content_body_bottom {
+    clear: both;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    text-align: center;
+    width: 100%;
+    background-color: white;
+}
+
+input[type="radio"]{
+    display: none;
+}
+
+.check_type label{
+    content: url(/image/mateCommunity/uncheck.png);
+    width: 25px;
+}
+
+.check_type input:checked + label{
+    content: url(/image/mateCommunity/check.png);
+    width: 25px;
+}
+
+.addr .btn{
+    --bs-btn-bg: #0dcaf0;;
+    --bs-btn-color: white;
+    --bs-btn-hover-bg: #0dcaf0;
+    --bs-btn-hover-color: white;
+    --bs-btn-active-bg: #0dcaf0;
+    --bs-btn-active-color: white;
+}
+
+.select_type{
+    border: 1px solid #8FBFFA;
+    border-radius: 5px;
+    height: 30px;
+    text-align-last: center;
+}
+
+.time{
+    border: 1px solid #8FBFFA;
+    border-radius: 5px;
+    height: 25px;
+    padding: 0px 7px;
+}
+
+.form-control{
+    border: 1px solid #8FBFFA;
+}
+
+.birth{
+    border: 1px solid #8FBFFA;
+    border-radius: 5px;
+    height: 30px;
+    text-align-last: left;
+    width: 18%;
+}
+
+.gender{
+    border: 1px solid #8FBFFA;
+    border-radius: 5px;
+    height: 30px;
+    text-align-last: left;
+}
+
+.petType{
+    border: 1px solid #8FBFFA;
+    border-radius: 5px;
+    height: 30px;
+    text-align-last: left;
+}
+
+.img_box{
+    text-align: center;
+    margin: 0px auto;
+    width: 55%;
+}
+
+.img_container{
+    margin: 0px auto;
+    width: 70%;
+}
+
+.row {
+    --bs-gutter-x: 0;
+}
+
+.info_box{
+    border: 1px solid #8FBFFA;
+    border-radius: 5px;
+    width: 100%;
+}
+
+.pet_detail{
+    width: 100%;
+    height: 52%;
+    margin-top: 0.8rem;
+}
+
+.pet_detail_txt{
+    border: 1px solid #8FBFFA;
+    border-radius: 5px;
+    width: 100%;
+    height: 100%;
+}
+
+.font-size{
+    font-size: 10px;
+}
+
+.btn-font-size{
+    font-size: 6px;
+}
+
+.info_btn{
+    width: 70%;
+    height: 70%;
+    margin: auto;
+}
+
+@media screen and (min-width: 650px) {
+    .pet_detail{
+        height: 56%;
+        margin-top: 1rem !important;
+    }
+
+    .font-size{
+        font-size: 12px;
+    }
+
+    .btn-font-size{
+        font-size: 7px;
+    }
+}
+
+@media screen and (min-width: 900px) {
+    .pet_detail{
+        margin-top: 1.4rem !important;
+        height: 59%;
+    }
+
+    .font-size{
+        font-size: 14px;
+    }
+
+    .btn-font-size{
+        font-size: 11px;
+    }
+}
+
+@media screen and (min-width: 1240px) {
+    .pet_detail{
+        height: 62%;
+        margin-top: 1.5rem !important;
+    }
+
+    .font-size{
+        font-size: 16px;
+    }
+
+    .btn-font-size{
+        font-size: 14px;
+    }
+}
+
+@media screen and (min-width: 1560px) {
+    .pet_detail{
+        height: 65%;
+        margin-top: 1.5rem !important;
+    }
+
+    .font-size{
+        font-size: 18px;
+    }
+
+    .btn-font-size{
+        font-size: 16px;
+    }
+}
+
+@media screen and (min-width: 1920px) {
+    .pet_detail{
+        height: 70%;
+        margin-top: 1.5rem !important;
+    }
+
+    .font-size{
+        font-size: 20px;
+    }
+
+    .btn-font-size{
+        font-size: 18px;
+    }
+}

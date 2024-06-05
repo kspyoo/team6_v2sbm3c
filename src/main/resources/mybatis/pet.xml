@@ -7,13 +7,13 @@
         values(PETTYPE_SEQ.nextval, #{petName}, #{petBirth}, #{petGender}, #{petDetail}, #{petTypeNo}, #{memberNo})
     </insert>
 
-    <select id="myPetInfo" parameterType="int" resultType="dev.mvc.pet.PetVO">
+    <select id="petInfo" parameterType="int" resultType="dev.mvc.pet.PetVO">
         select petno, petname, petbirth, petgender, petdetail, pettypeno, memberno
         from PET
         where PETNO = #{petNo}
     </select>
 
-    <select id="myPetInfoList" parameterType="int" resultType="dev.mvc.pet.PetVO">
+    <select id="petInfoList" parameterType="int" resultType="dev.mvc.pet.PetVO">
         select petno, petname, petbirth, petgender, petdetail, pettypeno, memberno
         from PET
         where MEMBERNO = #{memberNo}
