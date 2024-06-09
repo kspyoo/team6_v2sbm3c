@@ -21,11 +21,11 @@
 
         <table class="table table-hover" style="margin: 20px auto">
             <colgroup>
-                <col style="width: 10%;"></col>
+                <col style="width: 15%;"></col>
                 <col style="width: 30%;"></col>
                 <col style="width: 25%;"></col>
                 <col style="width: 25%;"></col>
-                <col style="width: 10%;"></col>
+                <col style="width: 5%;"></col>
                 <!--            <col style="width: 15%;"></col>-->
                 <!--            <col style="width: 10%;"></col>-->
             </colgroup>
@@ -43,12 +43,16 @@
             <tbody>
             <tr th:each="mateCommunityVO:${my_list_all}" style="cursor: pointer;">
                 <td class="td_basic" style="text-align: center; vertical-align: middle;">
-                    <span th:if="${mateCommunityVO.status == 1}" style="font-weight: bold;">마감</span>
-                    <span th:if="${mateCommunityVO.status == 0}" style="font-weight: bold;">모집중</span>
+<!--                    <span th:if="${mateCommunityVO.status == 1}" style="font-weight: bold;">마감</span>-->
+<!--                    <span th:if="${mateCommunityVO.status == 0}" style="font-weight: bold;">모집중</span>-->
+                    <span th:id="'status'+${mateCommunityVO.MCommunityNo}" style="font-weight: bold;"></span>
                 </td>
 
                 <td class="td_left align-middle" th:attr="onclick=|location.href='/mateCommunity/read?mCommunityNo=${mateCommunityVO.mCommunityNo}&now_page=${now_page}&searchWord=${searchWord}'|">
-                    <span th:text="${mateCommunityVO.title}" style="font-weight: bold; margin-left: 10px;"></span>
+                    <span th:text="${mateCommunityVO.title}" style="font-weight: bold; margin-left: 10px;" th:value="@{|${mateCommunityVO.title.substring(0,8)}...|}"
+                        th:if="${mateCommunityVO.title.length()>=8}"></span>
+                    <span th:text="${mateCommunityVO.title}" style="font-weight: bold; margin-left: 10px;" th:value="@{|${mateCommunityVO.title.substring(0,8)}...|}"
+                          th:if="${mateCommunityVO.title.length() < 8}"></span>
                 </td>
 
                 <td class="td_left align-middle" style="text-align: center;">
@@ -61,14 +65,15 @@
 
                 <td class="td_left align-middle" style="text-align: center;">
                     <div class="dropdown">
-                        <button class="btn btn-outline-info dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <button class="btn btn-outline-info dropdown-toggle btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                             관리
                         </button>
                         <ul class="dropdown-menu">
                             <li><button th:id="'delete'+${mateCommunityVO.MCommunityNo}" class="dropdown-item a_button">삭제</button></li>
-                            <li><button th:id="'delete'+${mateCommunityVO.MCommunityNo}" class="dropdown-item a_button">수정</button></li>
-                            <li><button th:id="'delete'+${mateCommunityVO.MCommunityNo}" class="dropdown-item a_button">마감</button></li>
-                            <li><button th:id="'delete'+${mateCommunityVO.MCommunityNo}" class="dropdown-item a_button">모집 시작</button></li>
+                            <li><button th:id="'update'+${mateCommunityVO.MCommunityNo}" class="dropdown-item a_button"
+                                        th:onclick="@{|location.href='/mateCommunity/update?mCommunityNo=${mateCommunityVO.MCommunityNo}'|}">수정</button></li>
+                            <li><button th:id="'recruit_finish'+${mateCommunityVO.MCommunityNo}" class="dropdown-item a_button" th:if="${mateCommunityVO.status==0}">마감</button></li>
+                            <li><button th:id="'recruit_start'+${mateCommunityVO.MCommunityNo}" class="dropdown-item a_button" th:if="${mateCommunityVO.status==1}">모집 시작</button></li>
                             <li><button th:id="'review'+${mateCommunityVO.MCommunityNo}" class="dropdown-item a_button" style="display: none;"
                                         th:onclick="@{|location.href='/mateReview/list?mCommunityNo=${mateCommunityVO.MCommunityNo}'|}">후기 조회</button></li>
                         </ul>
@@ -77,9 +82,25 @@
                 </td>
                 <script th:inline="javascript">
                     window.addEventListener('load', function() {
+                        console.log(new Date([[${mateCommunityVO.assembleTime.split(" ")}]][0]));
+                        if (new Date([[${mateCommunityVO.assembleTime.split(" ")}]][0]) < new Date()) {
+                            let status = document.getElementById('status' + [[${mateCommunityVO.MCommunityNo}]]);
+                            status.innerText='모집 종료';
+
+                            if(document.getElementById('recruit_finish'+[[${mateCommunityVO.MCommunityNo}]]) != null) {
+                                let recruit_finish = document.getElementById('recruit_finish' + [[${mateCommunityVO.MCommunityNo}]]);
+                                recruit_finish.remove();
+                            }
+
+                            if(document.getElementById('recruit_start'+[[${mateCommunityVO.MCommunityNo}]]) != null) {
+                                let recruit_start = document.getElementById('recruit_start' + [[${mateCommunityVO.MCommunityNo}]]);
+                                recruit_start.remove();
+                            }
+                        }
+
                         if(document.getElementById('delete'+[[${mateCommunityVO.MCommunityNo}]]) != null) {
                             document.getElementById('delete'+[[${mateCommunityVO.MCommunityNo}]]).addEventListener('click', () => {
-                                if(confirm('신청 취소하시겠습니까?')) {
+                                if(confirm('게시글을 삭제 하시겠습니까?')) {
                                     let url = '/mateCommunity/delete?mCommunityNo=' + [[${mateCommunityVO.mCommunityNo}]];
 
                                     fetch(url, {
@@ -108,6 +129,56 @@
                                 let review = document.getElementById('review' + [[${mateCommunityVO.MCommunityNo}]]);
                                 review.removeAttribute("style");
                             }
+                        }
+
+                        if(document.getElementById('recruit_finish'+[[${mateCommunityVO.MCommunityNo}]]) != null){
+                            document.getElementById('recruit_finish'+[[${mateCommunityVO.MCommunityNo}]]).addEventListener('click', () => {
+                                let url = '/mateCommunity/recruit_finish?mCommunityNo=' + [[${mateCommunityVO.mCommunityNo}]];
+                                if(confirm('모집을 마감하시겠습니까?')) {
+                                    fetch(url, {
+                                        method: 'GET'
+                                    })
+                                        .then(response => response.json())
+                                        .then(rdata => {
+                                            console.log(rdata);
+                                            if (rdata == 0 || rdata == null) { // 패스워드 불일치
+                                                alert("상태변경에 실패 했습니다.");
+                                                return false;
+                                            } else {
+                                                alert("모집상태가 변경 되었습니다.");
+                                                location.reload();
+                                            }
+                                        })
+                                        .catch(error => { // 서버 다운등 통신 에러
+                                            console.error('Error:', error);
+                                        });
+                                }
+                            });
+                        }
+
+                        if(document.getElementById('recruit_start'+[[${mateCommunityVO.MCommunityNo}]]) != null){
+                            document.getElementById('recruit_start'+[[${mateCommunityVO.MCommunityNo}]]).addEventListener('click', () => {
+                                let url = '/mateCommunity/recruit_start?mCommunityNo=' + [[${mateCommunityVO.mCommunityNo}]];
+                                if(confirm('모집 하시겠습니까?')) {
+                                    fetch(url, {
+                                        method: 'GET'
+                                    })
+                                        .then(response => response.json())
+                                        .then(rdata => {
+                                            console.log(rdata);
+                                            if (rdata == 0 || rdata == null) { // 패스워드 불일치
+                                                alert("상태변경에 실패 했습니다.");
+                                                return false;
+                                            } else {
+                                                alert("모집상태가 변경 되었습니다.");
+                                                location.reload();
+                                            }
+                                        })
+                                        .catch(error => { // 서버 다운등 통신 에러
+                                            console.error('Error:', error);
+                                        });
+                                }
+                            });
                         }
                     });
                 </script>
