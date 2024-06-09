@@ -1,0 +1,39 @@
+<html layout:decorate="~{layout}"> <!-- layout.html 상속 -->
+<div layout:fragment="content" style="padding-top: 20px; width: 70%; margin: auto">
+    <link href="/css/petProfile/create.css" rel="Stylesheet" type="text/css">
+    <div>
+        <div class='title_line'>반려동물 사진 등록</div>
+
+        <aside class="aside_right">
+            <a href="javascript:location.reload();">새로고침</a>
+        </aside>
+
+        <div class='menu_line'></div>
+
+        <!-- 사진 업로드 폼 -->
+        <div class="content mt-4">
+            <div class="img-container mt-3">
+                <div class="img-box">
+                    <img id="preview" src="" alt="" class="preview" onerror="this.onerror=null; this.src='/image/Pet/No_Image.png'">
+                </div>
+            </div>
+            <div style="text-align: center;" class="mt-2 mb-2">
+                <span>미리보기</span>
+            </div>
+            <form method="post" action="./create" enctype="multipart/form-data" class="profile-form">
+                <div class="profile-box mb-3">
+                    <input class="profile-name" value="" placeholder="등록 할 이미지를 올려주세요." readonly>
+                    <div class="label-box mt-3">
+                        <label for="file" class="btn btn-outline-info">사진 등록</label>
+                    </div>
+                    <input type="file" name="petProfile" id="file">
+                </div>
+                <div class="btn-box mb-3">
+                    <button class="btn btn-outline-info mb-3">저장</button>
+                    <button class="btn btn-outline-info">취소</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</html>

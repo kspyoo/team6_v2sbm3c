@@ -17,9 +17,10 @@
         <input type="hidden" name="petNo" id="petNo" th:value="${petNo}">
         <div class="mb-3 img_box">
             <div class="img_container mb-3">
-                <img src="/image/pet/No_Image.png" style="width: 100%">
+                <img src="/image/pet/No_Image.png" style="width: 75%">
             </div>
-            <button type="button" id="change_image" class="btn btn-outline-info btn-md" style="width: 45%; margin-right: 1%">사진 추가하기</button>
+            <button type="button" id="change_image" class="btn btn-outline-info btn-md" style="width: 45%; margin-right: 1%"
+                    th:attr="onclick=|location='/petProfile/create?petNo=${petNo}'|">사진 추가하기</button>
             <button type="button" onclick="history.back()" class="btn btn-outline-info btn-md" style="width: 45%; margin-left: 1%">사진 관리</button>
         </div>
 
