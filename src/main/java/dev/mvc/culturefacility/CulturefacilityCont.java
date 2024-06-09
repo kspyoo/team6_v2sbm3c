@@ -161,7 +161,7 @@ public String create(Model model, CulturefacilityVO culturefacilityVO
     int no = search_count - ((now_page - 1) * this.record_per_page);
     model.addAttribute("no", no);
     
-    return "culturefacility/read";  // /templates/cate/read.html
+    return "culturefacility/read";  // /templates/cate/myPetInfo.html
 //    return "culturefacility/read_cookie_reply"
   }
   

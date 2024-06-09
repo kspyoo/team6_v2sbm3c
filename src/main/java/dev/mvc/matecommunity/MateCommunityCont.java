@@ -75,33 +75,37 @@ public class MateCommunityCont {
     public String my_list_all(Model model, HttpSession session,
                            @RequestParam(name = "searchWord", defaultValue = "") String searchWord,
                            @RequestParam(name = "now_page", defaultValue = "1") int now_page){
-        searchWord = Tool.checkNull(searchWord).trim();
+        if(session.getAttribute("memberno")!=null) {
+            searchWord = Tool.checkNull(searchWord).trim();
 
 //        ArrayList<PartCateVOMenu> menu = this.partCateProc.menu();
 //        model.addAttribute("menu", menu);
 
-        System.out.println((int) session.getAttribute("memberno"));
-        ArrayList<MateCommunityJoinVO> my_list_all = this.mateCommunityProc.my_list_all(now_page, MateCommunity.RECORD_PER_PAGE, (int) session.getAttribute("memberno"));
-        model.addAttribute("my_list_all", my_list_all);
+            System.out.println((int) session.getAttribute("memberno"));
+            ArrayList<MateCommunityJoinVO> my_list_all = this.mateCommunityProc.my_list_all(now_page, MateCommunity.RECORD_PER_PAGE, (int) session.getAttribute("memberno"));
+            model.addAttribute("my_list_all", my_list_all);
 
-        // 특정 목록 카테고리 개수
-        int my_list_all_count = this.mateCommunityProc.my_list_all_count((int) session.getAttribute("memberno"));
-        model.addAttribute("my_list_all_count", my_list_all_count);
+            // 특정 목록 카테고리 개수
+            int my_list_all_count = this.mateCommunityProc.my_list_all_count((int) session.getAttribute("memberno"));
+            model.addAttribute("my_list_all_count", my_list_all_count);
 
-        // 리스트 일련변호
-        // 레코드 갯수 - ((현재 페이지 - 1) * 페이지당 레코드 갯수)
-        int myListIndex = (my_list_all_count - ((now_page - 1) * MateCommunity.RECORD_PER_PAGE));
-        model.addAttribute("myListIndex", myListIndex);
+            // 리스트 일련변호
+            // 레코드 갯수 - ((현재 페이지 - 1) * 페이지당 레코드 갯수)
+            int myListIndex = (my_list_all_count - ((now_page - 1) * MateCommunity.RECORD_PER_PAGE));
+            model.addAttribute("myListIndex", myListIndex);
 
-        // 페이징 버튼 목록
-        String paging = this.mateCommunityProc.list_all_pagingBox(
-                now_page, searchWord, "/mateCommunity/my_list_all", my_list_all_count, MateCommunity.RECORD_PER_PAGE, MateCommunity.PAGE_PER_BLOCK);
+            // 페이징 버튼 목록
+            String paging = this.mateCommunityProc.list_all_pagingBox(
+                    now_page, searchWord, "/mateCommunity/my_list_all", my_list_all_count, MateCommunity.RECORD_PER_PAGE, MateCommunity.PAGE_PER_BLOCK);
 
-        model.addAttribute("paging", paging);
-        model.addAttribute("searchWord", searchWord);
-        model.addAttribute("now_page", now_page);
+            model.addAttribute("paging", paging);
+            model.addAttribute("searchWord", searchWord);
+            model.addAttribute("now_page", now_page);
 
-        return "mateCommunity/my_list_all";
+            return "mateCommunity/my_list_all";
+        }else{
+            return "redirect:/member/login";
+        }
     }
 
     // 게시글 카테고리마다 리스트 조회 + 페이징 + 검색
@@ -152,37 +156,45 @@ public class MateCommunityCont {
     // 게시글 작성 폼
     @GetMapping("/create")
     public String createForm(Model model, HttpSession session, int petTypeNo){
-        model.addAttribute("petTypeNo", petTypeNo);
-        model.addAttribute("memberNo", session.getAttribute("memberno"));
+        if (session.getAttribute("memberno")!=null) {
+            model.addAttribute("petTypeNo", petTypeNo);
+            model.addAttribute("memberNo", session.getAttribute("memberno"));
 
-        return "mateCommunity/create";
+            return "mateCommunity/create";
+        }else{
+            return "redirect:/member/login";
+        }
     }
 
     // 게시글 작성
     @PostMapping("/create")
-    public String create(MateCommunityVO mateCommunityVO){
-        StringBuffer tags = new StringBuffer(" ");
+    public String create(MateCommunityVO mateCommunityVO, HttpSession session){
+        if (session.getAttribute("memberno")!=null) {
+            StringBuffer tags = new StringBuffer(" ");
 
-        if (String.valueOf(mateCommunityVO.getSearchTag()).trim() != "" || String.valueOf(mateCommunityVO.getSearchTag()) != "null") {
-            String[] tag_list = mateCommunityVO.getSearchTag().split(" ");
-            for (String tag: tag_list){
-                tags.append("#");
-                tags.append(tag);
-                tags.append(" ");
+            if (String.valueOf(mateCommunityVO.getSearchTag()).trim() != "" || String.valueOf(mateCommunityVO.getSearchTag()) != "null") {
+                String[] tag_list = mateCommunityVO.getSearchTag().split(" ");
+                for (String tag : tag_list) {
+                    tags.append("#");
+                    tags.append(tag);
+                    tags.append(" ");
+                }
             }
-        }
 
-        System.out.println(tags.toString().trim());
-        mateCommunityVO.setSearchTag(tags.toString().trim());
-        int result = this.mateCommunityProc.create(mateCommunityVO);
+            System.out.println(tags.toString().trim());
+            mateCommunityVO.setSearchTag(tags.toString().trim());
+            int result = this.mateCommunityProc.create(mateCommunityVO);
 
-        if (result == 1){
-            System.out.println("글 작성 성공");
+            if (result == 1) {
+                System.out.println("글 작성 성공");
+            } else {
+                System.out.println("글작성 실패");
+            }
+
+            return "redirect:/mateCommunity/list_all";
         }else{
-            System.out.println("글작성 실패");
+            return "redirect:/member/login";
         }
-
-        return "redirect:/mateCommunity/list_all";
     }
 
     // 게시글 조회
@@ -209,59 +221,67 @@ public class MateCommunityCont {
 
     // 게시글 수정 폼
     @GetMapping("/update")
-    public String updateForm(Model model, int mCommunityNo,
+    public String updateForm(Model model, int mCommunityNo, HttpSession session,
                          @RequestParam(name = "petTypeNo", defaultValue = "0") int petTypeNo){
+        if (session.getAttribute("memberno")!=null) {
 
-        MateCommunityJoinVO mateCommunityVO = this.mateCommunityProc.read_content(mCommunityNo);
+            MateCommunityJoinVO mateCommunityVO = this.mateCommunityProc.read_content(mCommunityNo);
 
-        StringBuffer tags = new StringBuffer();
+            StringBuffer tags = new StringBuffer();
 
-        if (mateCommunityVO.getSearchTag().trim() != "") {
-            String[] searchTags = mateCommunityVO.getSearchTag().split("#");
-            for (String tag: searchTags){
-                tags.append(tag);
+            if (mateCommunityVO.getSearchTag().trim() != "") {
+                String[] searchTags = mateCommunityVO.getSearchTag().split("#");
+                for (String tag : searchTags) {
+                    tags.append(tag);
+                }
             }
+
+            System.out.println(tags.toString().trim());
+            mateCommunityVO.setSearchTag(tags.toString().trim());
+
+            model.addAttribute("mateCommunityVO", mateCommunityVO);
+            model.addAttribute("petTypeNo", petTypeNo);
+
+            System.out.println(petTypeNo);
+
+            return "mateCommunity/update";
+        }else{
+            return "redirect:/member/login";
         }
-
-        System.out.println(tags.toString().trim());
-        mateCommunityVO.setSearchTag(tags.toString().trim());
-
-        model.addAttribute("mateCommunityVO", mateCommunityVO);
-        model.addAttribute("petTypeNo", petTypeNo);
-
-        System.out.println(petTypeNo);
-
-        return "mateCommunity/update";
     }
 
     // 게시글 수정
     @PostMapping("/update")
-    public String update(Model model, MateCommunityVO mateCommunityVO,
+    public String update(Model model, MateCommunityVO mateCommunityVO, HttpSession session,
                          @RequestParam(name = "current_petTypeNo", defaultValue = "0") int current_petTypeNo){
-        StringBuffer tags = new StringBuffer(" ");
-        if (String.valueOf(mateCommunityVO.getSearchTag()).trim() != "" || String.valueOf(mateCommunityVO.getSearchTag()) != "null") {
-            String[] tag_list = mateCommunityVO.getSearchTag().split(" ");
-            for (String tag: tag_list){
-                tags.append("#");
-                tags.append(tag);
-                tags.append(" ");
+        if (session.getAttribute("memberno")!=null) {
+            StringBuffer tags = new StringBuffer(" ");
+            if (String.valueOf(mateCommunityVO.getSearchTag()).trim() != "" || String.valueOf(mateCommunityVO.getSearchTag()) != "null") {
+                String[] tag_list = mateCommunityVO.getSearchTag().split(" ");
+                for (String tag : tag_list) {
+                    tags.append("#");
+                    tags.append(tag);
+                    tags.append(" ");
+                }
             }
-        }
 
-        mateCommunityVO.setSearchTag(tags.toString().trim());
+            mateCommunityVO.setSearchTag(tags.toString().trim());
 
-        int result = this.mateCommunityProc.update_content(mateCommunityVO);
+            int result = this.mateCommunityProc.update_content(mateCommunityVO);
 
-        if (result == 1){
-            System.out.println("글 수정 성공");
+            if (result == 1) {
+                System.out.println("글 수정 성공");
+            } else {
+                System.out.println("글 수정 실패");
+            }
+
+            if (current_petTypeNo == 0) {
+                return "redirect:/mateCommunity/read?mCommunityNo=" + mateCommunityVO.getMCommunityNo();
+            } else {
+                return "redirect:/mateCommunity/read?petTypeNo=" + current_petTypeNo + "&mCommunityNo=" + mateCommunityVO.getMCommunityNo();
+            }
         }else{
-            System.out.println("글 수정 실패");
-        }
-
-        if(current_petTypeNo == 0) {
-            return "redirect:/mateCommunity/read?mCommunityNo=" + mateCommunityVO.getMCommunityNo();
-        }else{
-            return "redirect:/mateCommunity/read?petTypeNo=" + current_petTypeNo + "&mCommunityNo=" + mateCommunityVO.getMCommunityNo();
+            return "redirect:/member/login";
         }
     }
 

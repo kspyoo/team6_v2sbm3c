@@ -19,8 +19,12 @@ public class PetCont {
     private PetProcInter petProc;
 
     @GetMapping("/create")
-    public String createForm(){
-        return "pet/create";
+    public String createForm(HttpSession session){
+        if (session.getAttribute("memberno") != null) {
+            return "pet/create";
+        }else{
+            return "redirect:/member/login";
+        }
     }
 
     @PostMapping("/create")
@@ -46,15 +50,30 @@ public class PetCont {
         return json.toString();
     }
 
+    @GetMapping("/myPetInfo")
+    public String myPetInfo(@RequestParam(defaultValue = "0") int petNo, Model model,HttpSession session){
+        if (session.getAttribute("memberno") != null) {
+            model.addAttribute("petNo", petNo);
+
+            return "pet/myPetInfo";
+        }else{
+            return "redirect:/member/login";
+        }
+    }
+
     @GetMapping("/read")
-    public String read(){
-        return "pet/myPetInfo";
+    public String read(@RequestParam(defaultValue = "0") int petNo, Model model){
+        model.addAttribute("petNo", petNo);
+
+        return "pet/read";
     }
 
     @GetMapping("/petInfo")
     @ResponseBody
     public PetVO readOne(@RequestParam int petNo){
+        System.out.println(petNo);
         PetVO petVO = this.petProc.petInfo(petNo);
+        System.out.println(petVO.getPetNo());
         return petVO;
     }
 
@@ -82,7 +101,7 @@ public class PetCont {
         System.out.println(jsonObject.toString());
 
         int petNo = (int) jsonObject.get("petNo");
-        String petName = String.valueOf(jsonObject.get("제petName"));
+        String petName = String.valueOf(jsonObject.get("petName"));
         String petDetail = String.valueOf(jsonObject.get("petDetail"));
 
         int cnt = this.petProc.update(petNo,petName,petDetail);
@@ -120,8 +139,10 @@ public class PetCont {
 
                 cnt = this.petProc.petInfoCnt(myMemberNo);
 
+                model.addAttribute("memberNo", myMemberNo);
                 model.addAttribute("cnt", cnt);
                 model.addAttribute("petVOList", petVOList);
+
                 return "pet/list";
             }else{ // 받아온 회원번호도 없고 로그인도 안된경우
                 return "redirect:/member/login";
@@ -130,6 +151,7 @@ public class PetCont {
             petVOList = this.petProc.petInfoList(memberNo);
             cnt = this.petProc.petInfoCnt(memberNo);
 
+            model.addAttribute("memberNo", memberNo);
             model.addAttribute("cnt", cnt);
             model.addAttribute("petVOList", petVOList);
             return "pet/list";
