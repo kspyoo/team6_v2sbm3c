@@ -42,6 +42,80 @@
 		</ul>
 	</div>
 
+	<!--지도 -->
+	<html>
+
+	<head>
+		<style>
+			#map {
+				width: 500px;
+				height: 400px;
+				margin: 0 auto;
+				/* 가로 가운데 정렬 */
+			}
+
+			.customOverlay {
+				background-color: white;
+				/* 텍스트의 배경색 */
+				color: black;
+				/* 텍스트의 글자색 */
+				padding: 5px;
+				border-radius: 5px;
+				font-family: Arial, sans-serif;
+				/* 텍스트의 글꼴 */
+				font-size: 12px;
+				/* 텍스트의 크기 */
+				box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+				/* 그림자 효과 */
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="map"></div>
+		<script type="text/javascript"
+			src="//dapi.kakao.com/v2/maps/sdk.js?appkey=ca5c332acaf73ff87bd45c5738b5c0f8&libraries=services,clusterer,drawing"></script>
+		<script>
+			// read.html에서 컨트롤러로부터 전달된 위도와 경도 값을 받아옵니다.
+			let latitude = [[${culturefacilityVO.latitude}]];
+			let longitude = [[${culturefacilityVO.longitude}]];
+		
+			
+		
+	
+
+			let container = document.getElementById('map');
+			let options = {
+				center: new kakao.maps.LatLng(latitude,longitude),
+				level: 3
+			};
+
+			let map = new kakao.maps.Map(container, options);
+
+			// 마커의 위치를 설정합니다
+			let markerPosition = new kakao.maps.LatLng(latitude,longitude);
+
+			// 마커를 생성합니다
+			let marker = new kakao.maps.Marker({
+				position: markerPosition
+			});
+
+			// 마커를 지도에 표시합니다
+			marker.setMap(map);
+
+
+
+		</script>
+	</body>
+
+	</html>
+
+
+
+
+
+
+
 	 
 	<!-- ------------------------------ 댓글 영역 시작 ------------------------------ -->
 	<script>
