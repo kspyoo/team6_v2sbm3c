@@ -13,6 +13,8 @@ public class FacilityreviewVO {
   private int culturefno;
   /** 회원 번호 */
   private int memberno;
+  /** 관리자 번호 */
+  private int masterno;
   /** 댓글내용 */
   private String reviewcomment;
   /** 등록일 */

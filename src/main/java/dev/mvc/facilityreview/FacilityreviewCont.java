@@ -18,6 +18,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import dev.mvc.culturefacility.CulturefacilityProc;
 import dev.mvc.culturefacility.CulturefacilityVO;
+import dev.mvc.master.MasterProc;
+import dev.mvc.master.MasterVO;
 import dev.mvc.member.MemberProc;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -38,6 +40,11 @@ public class FacilityreviewCont {
   @Autowired
   @Qualifier("dev.mvc.culturefacility.CulturefacilityProc") // 이름지정
   private CulturefacilityProc culturefacilityProc;
+  
+  @Autowired
+  @Qualifier("dev.mvc.master.MasterProc") // MasterProc 추가
+  private MasterProc masterProc;
+  
   
   public FacilityreviewCont(){
     System.out.println("-> FacilityreviewCont .");
@@ -62,6 +69,8 @@ public class FacilityreviewCont {
     int memberno = (int)session.getAttribute("memberno"); // 보안성 향상
     facilityreviewVO.setMemberno(memberno);
 
+
+ 
     int cnt = this.facilityreviewProc.create(facilityreviewVO);
 
     JSONObject json = new JSONObject();
@@ -129,6 +138,7 @@ public class FacilityreviewCont {
   @ResponseBody
   public String update(HttpSession session, @RequestBody FacilityreviewVO facilityreviewVO) {
     System.out.println("-> 수정할 수신 데이터:" + facilityreviewVO.toString());
+    
 
     int memberno = (int) session.getAttribute("memberno"); // 보안성 향상
 
