@@ -12,16 +12,22 @@
 	</div>
 	<aside class="aside_right">
 		<a th:href="@{|/culturefacility/list_search?word=${word}&now_page=${now_page}|}">목록</a>
-		<span class="menu_devide">│</span>
-		<a th:href="@{|/culturefacility/update/${culturefacilityVO.culturefno}?word=${word}&now_page=${now_page}|}">수정</a>
-		<span class="menu_devide">│</span>
-		<a th:href="@{|/culturefacility/delete/${culturefacilityVO.culturefno}?word=${word}&now_page=${now_page}|}">삭제</a>
-		<span class="menu_devide">│</span>
-		<a href="/culturefacility/create">등록</a>
+
+		<!-- 관리자일 때만 나타날 메뉴 -->
+		<th:block th:if="${session.masterno != null}">
+			<span class="menu_devide">│</span>
+			<a href="/culturefacility/create">등록</a>
+			<span class="menu_devide">│</span>
+			<a th:href="@{|/culturefacility/update/${culturefacilityVO.culturefno}?word=${word}&now_page=${now_page}|}">수정</a>
+			<span class="menu_devide">│</span>
+			<a th:href="@{|/culturefacility/delete/${culturefacilityVO.culturefno}?word=${word}&now_page=${now_page}|}">삭제</a>
+		</th:block>
 		<span class="menu_devide">│</span>
 		<a href="javascript: location.reload();">새로 고침</a>
 
+
 	</aside>
+
 	<div class="menu_line"></div>
 
 	<div class="container mt-3" style="width: 50%; margin: 5px auto;">
@@ -57,19 +63,33 @@
 			let btn_delete_tag = document.getElementById("btn_delete"); // 삭제 처리
 			let btn_cancel_tag = document.getElementById("btn_cancel"); // 수정/삭제 취소
 
+			// 관리자 여부 확인
+			let isAdmin = '[[${session.masterno}]]' !== '';
+
+
 			// 댓글 입력
 			reviewcomment_tag.addEventListener('click', () => {
+
+				if (isAdmin) {
+					alert('관리자는 후기를 등록 할 수 없습니다.');
+					return; // 관리자는 수정할 수 없으므로 함수 종료
+				}
+
+
 				let id = '[[${session.id}]]'; //  javascript -> Thymeleaf -> session
 
 				if (id == '') {
 					alert('로그인해야 댓글을 입력 할 수 있습니다.');
 					location.href = "/member/login?url=/culturefacility/read?culturefno=[[${culturefacilityVO.culturefno}]]%26word=[[${word}]]%26now_page=[[${now_page}]]";
 				} else {
-	
+
 
 
 				}
 			});
+
+
+
 
 			// 취소 버튼 클릭 시
 			btn_cancel_tag.addEventListener('click', () => {
@@ -129,7 +149,9 @@
 							msg += "<span style='font-weight: bold;'>" + row.id + "</span>";
 							msg += "  " + row.rdate;
 
-							if ('[[${session.memberno}]]' == row.memberno) { // 글쓴이 일치여부 확인, 본인의 글만 삭제 가능함 ★
+							//	if ('[[${session.memberno}]]' == row.memberno) { // 글쓴이 일치여부 확인, 본인의 글만 삭제 가능함 ★
+							// 변경된 부분 시작
+							if ('[[${session.memberno}]]' == row.memberno || '[[${session.masterno}]]' != '') {
 								msg += " <a href='javascript:facilityreview_update(" + row.rno + ")'><img src='/facilityreview/images/update.png' style='width: 16px;'></a>";
 								msg += " <a href='javascript:facilityreview_delete(" + row.rno + ")'><img src='/facilityreview/images/delete.png' style='width: 16px;'></a>";
 							}
@@ -210,7 +232,9 @@
 						msg += "<span style='font-weight: bold;'>" + row.id + "</span>";
 						msg += "  " + row.rdate;
 
-						if ('[[${session.memberno}]]' == row.memberno) { // 글쓴이 일치여부 확인, 본인의 글만 삭제 가능함 ★
+						//if ('[[${session.memberno}]]' == row.memberno) { // 글쓴이 일치여부 확인, 본인의 글만 삭제 가능함 ★
+						// 변경된 부분 시작
+						if ('[[${session.memberno}]]' == row.memberno || '[[${session.masterno}]]' != '') {
 							msg += " <a href='javascript:facilityreview_update(" + row.rno + ")'><img src='/facilityreview/images/update.png' style='width: 16px;'></a>";
 							msg += " <a href='javascript:facilityreview_delete(" + row.rno + ")'><img src='/facilityreview/images/delete.png' style='width: 16px;'></a>";
 						}
@@ -230,6 +254,16 @@
 			let rno_tag = document.getElementById('rno')
 			let memberno_tag = document.getElementById('memberno')
 			let reviewcomment_tag = document.getElementById('reviewcomment')
+
+
+			// 관리자 여부 확인
+			let isAdmin = '[[${session.masterno}]]' !== '';
+
+			if (isAdmin) {
+				alert('관리자는 후기를 수정할 수 없습니다.');
+				return; // 관리자는 수정할 수 없으므로 함수 종료
+			}
+
 
 			// fetch로 데이터 읽어 오기
 			fetch("/facilityreview/read?rno=" + rno, {
@@ -266,7 +300,9 @@
 						fetch("/facilityreview/delete", {
 							"method": "post",
 							"headers": {"Content-Type": "application/json"},
-							body: JSON.stringify({"rno": rno, "memberno": data['res']['memberno']})
+							// 변경된 부분 시작
+							body: JSON.stringify({"rno": rno, "memberno": '[[${session.memberno}]]'})
+							//body: JSON.stringify({"rno": rno, "memberno": data['res']['memberno']})
 						})
 							.then((response) => response.json())
 							.then((data) => {

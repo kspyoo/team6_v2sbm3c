@@ -29,20 +29,20 @@ import jakarta.servlet.http.HttpSession;
 public class FacilityreviewCont {
   
   @Autowired
-  @Qualifier("dev.mvc.facilityreview.FacilityreviewProc") // 이름지정
+  @Qualifier("dev.mvc.facilityreview.FacilityreviewProc") // 문화시설 리뷰
   private FacilityreviewProcInter facilityreviewProc;
   
   
   @Autowired
-  @Qualifier("dev.mvc.member.MemberProc") // 이름지정
+  @Qualifier("dev.mvc.member.MemberProc") // 회원
   private MemberProc memberProc;
   
   @Autowired
-  @Qualifier("dev.mvc.culturefacility.CulturefacilityProc") // 이름지정
+  @Qualifier("dev.mvc.culturefacility.CulturefacilityProc") // 문화시설
   private CulturefacilityProc culturefacilityProc;
   
   @Autowired
-  @Qualifier("dev.mvc.master.MasterProc") // MasterProc 추가
+  @Qualifier("dev.mvc.master.MasterProc") // 관리자
   private MasterProc masterProc;
   
   
@@ -163,20 +163,23 @@ public class FacilityreviewCont {
   @PostMapping(value = "/facilityreview/delete")
   @ResponseBody
   public String delete(HttpSession session, @RequestBody FacilityreviewVO facilityreviewVO) {
-    System.out.println("-> 삭제할 수신 데이터:" + facilityreviewVO.toString());
+      System.out.println("-> 삭제할 수신 데이터:" + facilityreviewVO.toString());
 
-    int memberno = (int) session.getAttribute("memberno"); // 보안성 향상
+      int memberno = session.getAttribute("memberno") != null ? (int) session.getAttribute("memberno") : 0;
+      int masterno = session.getAttribute("masterno") != null ? (int) session.getAttribute("masterno") : 0;
 
-    int cnt = 0;
-    if (memberno == facilityreviewVO.getMemberno()) { // 회원 자신이 쓴글만 수정 가능
-      cnt = this.facilityreviewProc.delete(facilityreviewVO.getRno());
-    }
+      int cnt = 0;
+      // 회원 자신이 쓴 글이거나 관리자일 경우 삭제 가능
+      if (memberno == facilityreviewVO.getMemberno() || masterno != 0) {
+          cnt = this.facilityreviewProc.delete(facilityreviewVO.getRno());
+      }
 
-    JSONObject json = new JSONObject();
-    json.put("res", cnt); // 1: 성공, 0: 실패
+      JSONObject json = new JSONObject();
+      json.put("res", cnt); // 1: 성공, 0: 실패
 
-    return json.toString();
+      return json.toString();
   }
+
   
   
 
