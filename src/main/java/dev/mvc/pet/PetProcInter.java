@@ -17,14 +17,14 @@ public interface PetProcInter {
      * @param petNo
      * @return
      */
-    public PetVO petInfo(int petNo);
+    public PetJoinVO petInfo(int petNo);
 
     /**
      * 반려동물 정보 리스트 조회
      * @param memberNo
      * @return
      */
-    public ArrayList<PetVO> petInfoList(int memberNo);
+    public ArrayList<PetJoinVO> petInfoList(int memberNo);
 
     /**
      * 회원의 데이터 개수 조회

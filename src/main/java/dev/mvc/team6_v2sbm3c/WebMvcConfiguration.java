@@ -1,5 +1,6 @@
 package dev.mvc.team6_v2sbm3c;
 
+import dev.mvc.petprofile.PetProfile;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -23,6 +24,9 @@ public class WebMvcConfiguration implements WebMvcConfigurer{
         
         // JSP 인식되는 경로: http://localhost:9091/contents/storage";
         registry.addResourceHandler("/culturefile/storage/**").addResourceLocations("file:///" +  Culturefile.getUploadDir());
+
+        // 반려동물 이미지 경로
+        registry.addResourceHandler("/petprofile/storage/**").addResourceLocations("file:///" +  PetProfile.getUploadDir());
         
         // JSP 인식되는 경로: http://localhost:9091/attachfile/storage";
         // registry.addResourceHandler("/contents/storage/**").addResourceLocations("file:///" +  Tool.getOSPath() + "/attachfile/storage/");

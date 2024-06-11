@@ -109,7 +109,7 @@ public class MasterCont {
       MasterVO masterVO = this.masterProc.read(masterno);
       model.addAttribute("masterVO", masterVO);
       
-      return "master/read";  // templates/member/read.html
+      return "master/read";  // templates/member/myPetInfo.html
             
   }
   

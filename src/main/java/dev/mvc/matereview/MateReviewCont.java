@@ -30,12 +30,16 @@ public class MateReviewCont {
 
     @GetMapping("/create")
     public String createForm(@RequestParam(name = "mCommunityNo") int mCommunityNo, Model model, HttpSession session) {
-        MateCommunityJoinVO mateCommunityVO = this.mateCommunityProc.read_content(mCommunityNo);
-        model.addAttribute("mCommunityNo", mCommunityNo);
-        model.addAttribute("memberNo", session.getAttribute("memberno"));
-        model.addAttribute("mateCommunityVO", mateCommunityVO);
+        if (session.getAttribute("memberno") != null) {
+            MateCommunityJoinVO mateCommunityVO = this.mateCommunityProc.read_content(mCommunityNo);
+            model.addAttribute("mCommunityNo", mCommunityNo);
+            model.addAttribute("memberNo", session.getAttribute("memberno"));
+            model.addAttribute("mateCommunityVO", mateCommunityVO);
 
-        return "mateReview/create";
+            return "mateReview/create";
+        }else{
+            return "redirect:/member/login";
+        }
     }
 
     @PostMapping("/create")
@@ -80,22 +84,26 @@ public class MateReviewCont {
 
     @GetMapping("/myList")
     public String myList_all(Model model, HttpSession session, @RequestParam(name = "now_page", defaultValue = "1") int now_page){
-        int memberNo = (int) session.getAttribute("memberno");
-        ArrayList<MyMateReviewVO> myReviewList = this.mateReviewProc.myReviewList(now_page, MateReview.RECORD_PER_PAGE, memberNo);
+        if (session.getAttribute("memberno") != null) {
+            int memberNo = (int) session.getAttribute("memberno");
+            ArrayList<MyMateReviewVO> myReviewList = this.mateReviewProc.myReviewList(now_page, MateReview.RECORD_PER_PAGE, memberNo);
 
-        model.addAttribute("memberNo", memberNo);
-        model.addAttribute("myReviewList", myReviewList);
+            model.addAttribute("memberNo", memberNo);
+            model.addAttribute("myReviewList", myReviewList);
 
-        int listCount = this.mateReviewProc.myReviewCount(memberNo);
-        model.addAttribute("listCount", listCount);
+            int listCount = this.mateReviewProc.myReviewCount(memberNo);
+            model.addAttribute("listCount", listCount);
 
-        String paging = this.mateReviewProc.reviewList_pagingBox(now_page,"/mateReview/list",listCount
-                ,MateReview.RECORD_PER_PAGE, MateCommunity.PAGE_PER_BLOCK,memberNo);
-        model.addAttribute("paging", paging);
+            String paging = this.mateReviewProc.reviewList_pagingBox(now_page, "/mateReview/list", listCount
+                    , MateReview.RECORD_PER_PAGE, MateCommunity.PAGE_PER_BLOCK, memberNo);
+            model.addAttribute("paging", paging);
 
-        model.addAttribute("now_page", now_page);
+            model.addAttribute("now_page", now_page);
 
-        return "mateReview/my_review_list";
+            return "mateReview/my_review_list";
+        }else{
+            return "redirect:/member/login";
+        }
     }
 
     @GetMapping("/read")
@@ -119,15 +127,20 @@ public class MateReviewCont {
     }
 
     @GetMapping("/update")
-    public String updateForm(int rNo, Model model, @RequestParam(name = "now_page", defaultValue = "1") int now_page){
-        MateReviewViewVO mateReviewVO = this.mateReviewProc.reviewRead(rNo);
-        MateCommunityJoinVO mateCommunityVO = this.mateCommunityProc.read_content(mateReviewVO.getMCommunityNo());
+    public String updateForm(int rNo, Model model, @RequestParam(name = "now_page", defaultValue = "1") int now_page,
+                             HttpSession session){
+        if (session.getAttribute("memberno") != null) {
+            MateReviewViewVO mateReviewVO = this.mateReviewProc.reviewRead(rNo);
+            MateCommunityJoinVO mateCommunityVO = this.mateCommunityProc.read_content(mateReviewVO.getMCommunityNo());
 
-        model.addAttribute("mateReviewVO", mateReviewVO);
-        model.addAttribute("mateCommunityVO", mateCommunityVO);
-        model.addAttribute("now_page", now_page);
+            model.addAttribute("mateReviewVO", mateReviewVO);
+            model.addAttribute("mateCommunityVO", mateCommunityVO);
+            model.addAttribute("now_page", now_page);
 
-        return "mateReview/update";
+            return "mateReview/update";
+        } else{
+            return "redirect:/member/login";
+        }
     }
 
     @PostMapping("/update")

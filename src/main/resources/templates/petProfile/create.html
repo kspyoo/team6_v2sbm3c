@@ -1,0 +1,108 @@
+<html layout:decorate="~{layout}"> <!-- layout.html 상속 -->
+<div layout:fragment="content" style="padding-top: 20px; width: 70%; margin: auto">
+    <link href="/css/petProfile/create.css" rel="Stylesheet" type="text/css">
+    <div>
+        <div class='title_line'>반려동물 사진 등록</div>
+
+        <aside class="aside_right">
+            <a href="javascript:location.reload();">새로고침</a>
+        </aside>
+
+        <div class='menu_line'></div>
+
+        <!-- 사진 업로드 폼 -->
+        <div class="content mt-4">
+            <div class="img-container mt-3">
+                <div class="img-box">
+                    <img id="preview" src="" alt="" class="preview" onerror="this.onerror=null; this.src='/image/Pet/No_Image.png'"
+                            style="object-fit: cover;">
+                </div>
+            </div>
+            <div style="text-align: center;" class="mt-2 mb-2">
+                <span>미리보기</span>
+            </div>
+            <form method="post" action="./create" enctype="multipart/form-data" class="profile-form" id="profile-form">
+                <input type="hidden" name="petNo" th:value="${petNo}" id="petNo">
+                <div class="profile-box mb-3">
+                    <input class="profile-name" value="" placeholder="등록 할 이미지를 올려주세요." readonly id="profile-name">
+                    <div class="label-box mt-3">
+                        <label for="file" class="btn btn-outline-info">사진 등록</label>
+                    </div>
+                    <input type="file" name="petProfile" id="file" onchange="readURL(this)"
+                           accept="image/jpg, image/jpeg, image/png, image/gif" >
+                </div>
+                <div class="btn-box mb-3">
+                    <button type="button" class="btn btn-outline-info mb-3" id="send">저장</button>
+                    <button type="button" class="btn btn-outline-info" id="cancel">취소</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script>
+        window.onload=()=>{
+            document.getElementById('file').addEventListener('change', () => {
+                let file = document.getElementById('file');
+                if(file.value == ''){
+                    document.getElementById('profile-name').value = null;
+                    document.getElementById('preview').src="/image/Pet/No_Image.png";
+                }
+            });
+
+            document.getElementById('send').addEventListener('click',()=>{
+                let fileInput = document.getElementById('file');
+                let file = fileInput.files[0];
+
+                if (!file) {
+                    alert('파일을 선택해주세요.');
+                    return;
+                }
+
+                let formData = new FormData();
+                let petNo = document.getElementById('petNo').value;
+
+                formData.append('petProfile', file);
+                formData.append('petNo', petNo);
+
+                let url = './create'
+                fetch(url,{
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if(data.cnt != -1){
+                        console.log('성공:', data.cnt);
+                        alert('업로드 되었습니다.')
+                        location.href='/pet/myPetInfo?petNo='+petNo;
+                    } else{
+                        console.log('실패:', data.cnt);
+                        alert('업로드 실패했습니다.')
+                        location.reload();
+                    }
+                })
+            })
+
+            document.getElementById('cancel').addEventListener('click',()=>{
+                if(confirm('업로드를 취소하시겠습니까?')){
+                    let petNo = document.getElementById('petNo').value;
+                    location.href='/pet/myPetInfo?petNo='+ petNo;
+                }
+            })
+        }
+
+        function readURL(input) {
+            if (input.files && input.files[0]) {
+                let reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('preview').src = e.target.result;
+                };
+                reader.readAsDataURL(input.files[0]);
+
+                document.getElementById('profile-name').value = document.getElementById('file').value;
+            } else {
+                document.getElementById('preview').src = "";
+            }
+        }
+    </script>
+</div>
+</html>

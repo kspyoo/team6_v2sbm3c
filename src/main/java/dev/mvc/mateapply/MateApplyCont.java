@@ -53,64 +53,74 @@ public class MateApplyCont {
         return cnt;
     }
 
+    // 내가 보낸 신청 리스트
     @GetMapping("/applyList")
     public String applyList(Model model, HttpSession session,
                             @RequestParam(defaultValue = "0", name = "petTypeNo") int petTypeNo,
                             @RequestParam(defaultValue = "", name = "searchWord") String searchWord,
                             @RequestParam(defaultValue = "1", name = "now_page") int now_page){
-        // 특정 목록 카테고리 개수
-        int applyListCnt = this.mateApplyProc.applyListCnt((int)session.getAttribute("memberno"));
-        model.addAttribute("applyListCnt", applyListCnt);
+        if(session.getAttribute("memberno") != null) {
+            // 특정 목록 카테고리 개수
+            int applyListCnt = this.mateApplyProc.applyListCnt((int) session.getAttribute("memberno"));
+            model.addAttribute("applyListCnt", applyListCnt);
 
-        // 리스트 일련변호
-        // 레코드 갯수 - ((현재 페이지 - 1) * 페이지당 레코드 갯수)
-        int applyListIndex = (applyListCnt - ((now_page - 1) * MateApply.RECORD_PER_PAGE));
-        model.addAttribute("applyListIndex", applyListIndex);
+            // 리스트 일련변호
+            // 레코드 갯수 - ((현재 페이지 - 1) * 페이지당 레코드 갯수)
+            int applyListIndex = (applyListCnt - ((now_page - 1) * MateApply.RECORD_PER_PAGE));
+            model.addAttribute("applyListIndex", applyListIndex);
 
-        // 페이징 버튼 목록
-        String paging = this.mateApplyProc.list_pagingBox(
-                now_page, searchWord, "/mateApply/applyList", applyListCnt, MateApply.RECORD_PER_PAGE, MateApply.PAGE_PER_BLOCK);
+            // 페이징 버튼 목록
+            String paging = this.mateApplyProc.list_pagingBox(
+                    now_page, searchWord, "/mateApply/applyList", applyListCnt, MateApply.RECORD_PER_PAGE, MateApply.PAGE_PER_BLOCK);
 
-        ArrayList<MateApplyListVO> applyList = this.mateApplyProc.applyList((int)session.getAttribute("memberno"), now_page, MateApply.RECORD_PER_PAGE);
+            ArrayList<MateApplyListVO> applyList = this.mateApplyProc.applyList((int) session.getAttribute("memberno"), now_page, MateApply.RECORD_PER_PAGE);
 
-        model.addAttribute("paging", paging);
-        model.addAttribute("applyList", applyList);
-        model.addAttribute("searchWord", searchWord);
-        model.addAttribute("petTypeNo", petTypeNo);
-        model.addAttribute("now_page", now_page);
+            model.addAttribute("paging", paging);
+            model.addAttribute("applyList", applyList);
+            model.addAttribute("searchWord", searchWord);
+            model.addAttribute("petTypeNo", petTypeNo);
+            model.addAttribute("now_page", now_page);
 
-        return "mateApply/my_apply_list";
+            return "mateApply/my_apply_list";
+        }else {
+            return "redirect:/member/login";
+        }
     }
 
+    // 내가 받은 신청 리스트
     @GetMapping("/recruitList")
     public String recruitList(Model model, HttpSession session, int mCommunityNo,
                               @RequestParam(defaultValue = "0", name = "petTypeNo") int petTypeNo,
                               @RequestParam(defaultValue = "", name = "searchWord") String searchWord,
                               @RequestParam(defaultValue = "1", name = "now_page") int now_page){
-        // 특정 목록 카테고리 개수
-        int recruitListCnt = this.mateApplyProc.recruitListCnt((int)session.getAttribute("memberno"));
-        model.addAttribute("recruitListCnt", recruitListCnt);
+        if(session.getAttribute("memberno") != null) {
+            // 특정 목록 카테고리 개수
+            int recruitListCnt = this.mateApplyProc.recruitListCnt((int)session.getAttribute("memberno"));
+            model.addAttribute("recruitListCnt", recruitListCnt);
 
-        // 리스트 일련변호
-        // 레코드 갯수 - ((현재 페이지 - 1) * 페이지당 레코드 갯수)
-        int recruitListIndex = (recruitListCnt - ((now_page - 1) * MateApply.RECORD_PER_PAGE));
-        model.addAttribute("applyListIndex", recruitListIndex);
+            // 리스트 일련변호
+            // 레코드 갯수 - ((현재 페이지 - 1) * 페이지당 레코드 갯수)
+            int recruitListIndex = (recruitListCnt - ((now_page - 1) * MateApply.RECORD_PER_PAGE));
+            model.addAttribute("applyListIndex", recruitListIndex);
 
-        // 페이징 버튼 목록
-        String paging = this.mateApplyProc.list_pagingBox(
-                now_page, searchWord, "/mateApply/recruitList", recruitListCnt, MateApply.RECORD_PER_PAGE, MateApply.PAGE_PER_BLOCK);
+            // 페이징 버튼 목록
+            String paging = this.mateApplyProc.list_pagingBox(
+                    now_page, searchWord, "/mateApply/recruitList", recruitListCnt, MateApply.RECORD_PER_PAGE, MateApply.PAGE_PER_BLOCK);
 
-        MateCommunityJoinVO mateCommunityVO = this.mateCommunityProc.read_content(mCommunityNo);
-        ArrayList<MateRecruitListVO> recruitList = this.mateApplyProc.recruitList(mCommunityNo,  now_page, MateApply.RECORD_PER_PAGE);
+            MateCommunityJoinVO mateCommunityVO = this.mateCommunityProc.read_content(mCommunityNo);
+            ArrayList<MateRecruitListVO> recruitList = this.mateApplyProc.recruitList(mCommunityNo,  now_page, MateApply.RECORD_PER_PAGE);
 
-        model.addAttribute("paging", paging);
-        model.addAttribute("recruitList", recruitList);
-        model.addAttribute("mateCommunityVO", mateCommunityVO);
-        model.addAttribute("searchWord", searchWord);
-        model.addAttribute("petTypeNo", petTypeNo);
-        model.addAttribute("now_page", now_page);
+            model.addAttribute("paging", paging);
+            model.addAttribute("recruitList", recruitList);
+            model.addAttribute("mateCommunityVO", mateCommunityVO);
+            model.addAttribute("searchWord", searchWord);
+            model.addAttribute("petTypeNo", petTypeNo);
+            model.addAttribute("now_page", now_page);
 
-        return "mateApply/recruit_list";
+            return "mateApply/recruit_list";
+        }else {
+            return "redirect:/member/login";
+        }
     }
 
     @GetMapping("/accept")

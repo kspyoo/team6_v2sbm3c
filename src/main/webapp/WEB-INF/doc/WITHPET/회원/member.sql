@@ -132,21 +132,38 @@ CREATE SEQUENCE PET_SEQ
 /**********************************/
 /* Table Name: 반려동물 사진 */
 /**********************************/
+DROP TABLE PETPROFILE;
+
 CREATE TABLE PETPROFILE(
     PETPROFILENO                            NUMBER(10)     NOT NULL    PRIMARY KEY,
-    FILENAME                          VARCHAR2(100)    NOT NULL,
-    FILESIZE                          VARCHAR2(100)    NOT NULL,
-    THUMBFILE                         VARCHAR2(100)    NOT NULL,
-    PETNO                             NUMBER(10)     NULL ,
+    OGFILENAME                          VARCHAR2(100)    NOT NULL,
+    SVFILENAME                          VARCHAR2(100)    NOT NULL,
+--     FILESIZE                          VARCHAR2(100)    NOT NULL,
+--     THUMBFILE                         VARCHAR2(100)    NOT NULL,
+    SEQNO                             NUMBER(5)     NOT NULL,
+    UPLOADDATE                        DATE      NOT NULL,
+    PETNO                             NUMBER(10)     NULL,
   FOREIGN KEY (PETNO) REFERENCES Pet (PETNO)
 );
 
 COMMENT ON TABLE PETPROFILE is '반려동물';
 COMMENT ON COLUMN PETPROFILE.PETPROFILENO is '프로필 사진 번호';
-COMMENT ON COLUMN PETPROFILE.FILENAME is '파일이름';
-COMMENT ON COLUMN PETPROFILE.FILESIZE is '파일 크기';
-COMMENT ON COLUMN PETPROFILE.THUMBFILE is '썸네일 파일';
+COMMENT ON COLUMN PETPROFILE.OGFILENAME is '원본파일이름';
+COMMENT ON COLUMN PETPROFILE.SVFILENAME is '저장된파일이름';
+-- COMMENT ON COLUMN PETPROFILE.FILESIZE is '파일 크기';
+-- COMMENT ON COLUMN PETPROFILE.THUMBFILE is '썸네일 파일';
+COMMENT ON COLUMN PETPROFILE.SEQNO is '사진 순서';
+COMMENT ON COLUMN PETPROFILE.UPLOADDATE is '사진 등록 시간';
 COMMENT ON COLUMN PETPROFILE.PETNO is '반려동물번호';
+
+DROP SEQUENCE PETPROFILE_SEQ;
+
+CREATE SEQUENCE PETPROFILE_SEQ
+    START WITH 1              -- 시작 번호
+    INCREMENT BY 1          -- 증가값
+    MAXVALUE 9999999999 -- 최대값: 9999999 --> NUMBER(7) 대응
+    CACHE 2                       -- 2번은 메모리에서만 계산
+    NOCYCLE;                     -- 다시 1부터 생성되는 것을 방지
 
 
 /**********************************/
