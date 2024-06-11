@@ -56,6 +56,7 @@ public class CulturefileCont {
       model.addAttribute("culturefno", culturefno); // 매개변수 전달
 
       return "/culturefile/update_file";
+
   }
 
 
