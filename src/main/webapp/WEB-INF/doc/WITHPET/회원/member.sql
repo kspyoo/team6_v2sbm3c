@@ -211,7 +211,7 @@ ORDER BY l.loginno DESC;
     ORDER BY l.loginno DESC;
 
 INSERT INTO memberprofile(mprofileno, memberno)
-VALUES (memberprofile_seq.nextval,61);
+VALUES (memberprofile_seq.nextval,42);
 
 commit;
 
@@ -251,4 +251,12 @@ FROM login
     WHERE (UPPER(ip) LIKE '%' || UPPER('하정') || '%' 
           OR UPPER(conndate) LIKE '%' || UPPER('하정') || '%' 
           OR UPPER(memberno) LIKE '%' || UPPER('하정') || '%') AND memberno != 0;
+          
+          
+ALTER TABLE MEMBERPROFILE MODIFY (FILE1 VARCHAR2(100));
 
+SELECT mprofileno, file1, file1saved, thumbfile, filesize, memberno
+FROM memberprofile
+WHERE memberno =42;
+
+DELETE FROM member WHERE mermberno = 119;
