@@ -45,9 +45,13 @@ public class CulturefileCont {
                        CulturefileVO culturefileVO) {
     CulturefacilityVO culturefacilityVO = this.culturefacilityProc.read(culturefno);
     model.addAttribute("culturefacilityVO",culturefacilityVO);
+    model.addAttribute("culturefileVO",culturefileVO);
+    
+    System.out.println(culturefileVO);
     
     ArrayList<CulturefileVO> list = this.culturefileProc.read(culturefno);
     model.addAttribute("culturefno", culturefno); // 매개변수 전달
+    model.addAttribute(list);
    
     return  "/culturefile/update_file";
   }
@@ -79,7 +83,7 @@ public class CulturefileCont {
       MultipartFile mf = culturefileVO.getFile1MF();
 
       file1 = mf.getOriginalFilename(); // 원본 파일명
-      System.out.println("-> 원본 파일명 file1: " + file1);
+
 
       long size1 = mf.getSize(); // 파일 크기
       int upload_count = 0; // 업로드 횟수 초기화
@@ -96,6 +100,9 @@ public class CulturefileCont {
               culturefileVO.setThumbfile(thumbfile); // 썸네일 파일명
               culturefileVO.setSize1(size1); // 파일 크기
               upload_count = 1; // 업로드 성공
+              
+              
+              this.culturefileProc.create(culturefileVO);
           } else { // 업로드 불가능한 파일 형식
               ra.addFlashAttribute("code", "check_upload_file_fail"); // 업로드 실패 메시지
               ra.addFlashAttribute("cnt", 0); // 업로드 실패
