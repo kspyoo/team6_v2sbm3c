@@ -29,5 +29,13 @@ public interface CulturefileDAOInter {
    * @return 삭제된 레코드 갯수
    */
   public int delete(int fano);
+  /**
+   * 파일번호
+   * @param fano
+   * @return
+   */
+  public CulturefileVO readByFano(int fano);
+  
+
 
 }

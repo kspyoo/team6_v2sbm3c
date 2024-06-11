@@ -21,6 +21,13 @@
     WHERE culturefno = #{culturefno}
   </select>
 
+	<select id="readByFano" resultType="dev.mvc.culturefile.CulturefileVO" parameterType="int">
+    SELECT fano, size1, file1, file1saved, thumbfile, culturefno
+    FROM culturefile
+    WHERE fano = #{fano}
+  </select>
+
+
 	<delete id="delete" parameterType="int">
     DELETE 
     FROM culturefile 

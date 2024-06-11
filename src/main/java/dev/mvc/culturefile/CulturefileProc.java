@@ -36,6 +36,16 @@ public class CulturefileProc implements CulturefileProcInter {
     return cnt;
   }
 
+  @Override
+  public CulturefileVO readByFano(int fano) {
+    CulturefileVO culturefileVO = this.culturefileDAO.readByFano(fano);
+    return culturefileVO ;
+  }
+
+
+
+  
+
 
   
   

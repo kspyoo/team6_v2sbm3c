@@ -56,7 +56,7 @@ public class CulturefileCont {
 
       model.addAttribute("list", list);
       model.addAttribute("culturefacilityVO", culturefacilityVO);
-      model.addAttribute("culturefileVO",list.get(1));
+      model.addAttribute("culturefileVO",list.get(0));
       model.addAttribute("culturefno", culturefno); // 매개변수 전달
 
       return "/culturefile/update_file";
@@ -145,6 +145,26 @@ public class CulturefileCont {
 
     return "redirect:/culturefile/msg"; // 리다이렉트
   }
+  
+  /**
+   * 파일 삭제 처리
+   * 
+   * @param fano 파일 번호
+   * @param ra 리다이렉트 속성
+   * @return 리다이렉트 URL
+   */
+  @PostMapping(value = "/culturefile/delete_file")
+  public String delete_file(@RequestParam("fano") int fano, RedirectAttributes ra, CulturefileVO culturefileVO) {
+      culturefileVO = this.culturefileProc.readByFano(fano);
+      int culturefno = culturefileVO.getCulturefno(); // 삭제 후 리다이렉트할 때 사용
+
+      this.culturefileProc.delete(fano);
+
+      ra.addAttribute("culturefno", culturefno); // 리다이렉트 매개변수로 culturefno 전달
+      ra.addFlashAttribute("code", "delete_success"); // 삭제 성공 메시지
+      return "redirect:/culturefile/update_file"; // 삭제 후 리다이렉트
+  }
+
   
 
 
