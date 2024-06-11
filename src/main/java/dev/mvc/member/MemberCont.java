@@ -206,12 +206,12 @@ public class MemberCont {
     if (cnt == 1) {
       MemberVO memberVO = this.memberProc.readById(id);
     
-      memberprofileVO =  this.memberprofileProc.read_file(memberVO.getMemberno());
+   //  memberprofileVO =  this.memberprofileProc.read_file(memberVO.getMemberno());
       
       session.setAttribute("memberno", memberVO.getMemberno());
       session.setAttribute("id", memberVO.getId());
       session.setAttribute("name", memberVO.getName());
-      session.setAttribute("mprofileno",memberprofileVO.getMprofileno());
+  //  session.setAttribute("mprofileno",memberprofileVO.getMprofileno());
 //      String ip = this.security.aesEncode(request.getRemoteAddr());
       String ip = request.getRemoteAddr();
       

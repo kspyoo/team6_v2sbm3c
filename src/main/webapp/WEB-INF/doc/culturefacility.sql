@@ -74,7 +74,7 @@ ORDER BY culturefno DESC;
 
 -- 삭제
 DELETE FROM culturefacility
-WHERE culturefno = 1;
+WHERE culturefno = 2;
 
 -- ----------------------------------------------------------------------------------------------------
 -- 검색, cateno별 검색 목록
