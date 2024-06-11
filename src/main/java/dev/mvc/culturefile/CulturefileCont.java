@@ -45,14 +45,18 @@ public class CulturefileCont {
       CulturefacilityVO culturefacilityVO = this.culturefacilityProc.read(culturefno);
       ArrayList<CulturefileVO> list = this.culturefileProc.read(culturefno);
       
+      System.out.println(list);
       
- 
-      System.out.println(culturefileVO);
-      model.addAttribute("culturefacilityVO", culturefacilityVO);
-      model.addAttribute("culturefileVO",culturefileVO);
+      // 리스트가 비어있을 때의 처리
+      if (list.isEmpty()) {
+          this.culturefileProc.create(culturefileVO); // 새로운 CulturefileVO 생성
+          list = this.culturefileProc.read(culturefno); // 리스트 다시 읽어오기
+      }
       
-      System.out.println(list.get(0));
+
       model.addAttribute("list", list);
+      model.addAttribute("culturefacilityVO", culturefacilityVO);
+      model.addAttribute("culturefileVO",list.get(1));
       model.addAttribute("culturefno", culturefno); // 매개변수 전달
 
       return "/culturefile/update_file";
@@ -141,23 +145,9 @@ public class CulturefileCont {
 
     return "redirect:/culturefile/msg"; // 리다이렉트
   }
+  
 
-//파일 삭제 메소드 추가
-  @PostMapping(value = "/culturefile/delete")
-  public String delete(@RequestParam("fileNo") int fileNo, RedirectAttributes ra) {
-    // 파일 삭제 로직 구현
-    int success = culturefileProc.delete(fileNo);
 
-    if (success > 0) { // 성공적으로 삭제된 경우
-      ra.addFlashAttribute("message", "파일이 성공적으로 삭제되었습니다.");
-    } else if (success == 0) { // 삭제된 것이 없는 경우
-      ra.addFlashAttribute("warning", "삭제된 파일이 없습니다.");
-    } else { // 오류 발생
-      ra.addFlashAttribute("error", "파일 삭제 중 오류가 발생했습니다.");
-    }
-
-    return "redirect:/culturefile/update_file"; // 삭제 후 해당 페이지로 리다이렉트
-  }
 
   /**
    * 새로고침 방지를 위한 메시지 출력
