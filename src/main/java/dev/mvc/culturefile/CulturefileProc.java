@@ -1,5 +1,7 @@
 package dev.mvc.culturefile;
 
+import java.util.ArrayList;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -20,19 +22,23 @@ public class CulturefileProc implements CulturefileProcInter {
     int cnt = this.culturefileDAO.update_file(culturefileVO);
     return cnt;
   }
-
+  
   @Override
-  public CulturefileVO read(int culturefno) {
-    CulturefileVO culturefileVO = this.culturefileDAO.read(culturefno);
-    return culturefileVO ;
+  public ArrayList<CulturefileVO> read(int culturefno) {
+    ArrayList<CulturefileVO> list =this.culturefileDAO.read(culturefno);
+    return list;
   }
+  
+
+  
 
   @Override
   public int delete(int fano) {
     int cnt =this.culturefileDAO.delete(fano);
     return cnt;
   }
-  
+
+
   
   
 

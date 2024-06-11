@@ -1,5 +1,7 @@
 package dev.mvc.memberprofile;
 
+import java.util.List;
+
 import org.springframework.web.multipart.MultipartFile;
 
 import lombok.Getter;
@@ -25,4 +27,10 @@ public class MemberprofileVO {
   private long filesize = 0;
   /** FK*/
   private int memberno = 0;
+  /** 원본 파일명 */
+  private String fname;
+  /** 업로드된 파일명 */
+  private String fupname;
+  /**list 저장*/
+  private List<MultipartFile> fnamesMF;
 }
