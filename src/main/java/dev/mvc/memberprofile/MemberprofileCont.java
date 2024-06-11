@@ -84,8 +84,8 @@ public class MemberprofileCont {
         
     MemberprofileVO memberprofileVO = list.get(0);
     model.addAttribute("memberprofileVO", memberprofileVO);
+    model.addAttribute("list",list);
     
-    System.out.println(list);
     
     return "/memberprofile/update_file";
   }
@@ -98,7 +98,9 @@ public class MemberprofileCont {
     System.out.println("upDir : " + upDir);
 
     int origin = this.memberprofileProc.read_file(memberno).get(0).getMprofileno();
-
+    
+    System.out.println(this.memberprofileProc.read_file(memberno).get(0));
+    System.out.println(this.memberprofileProc.read_file(memberno));
     
     if (multiFileList != null && !multiFileList.isEmpty() && !multiFileList.get(0).getOriginalFilename().isEmpty()) {
       this.memberprofileProc.delete_others(memberno, origin);
@@ -146,6 +148,7 @@ public class MemberprofileCont {
       }
     }
     if (multiFileList == null || multiFileList.isEmpty() || multiFileList.get(0).getOriginalFilename().isEmpty()) {
+      this.memberprofileProc.delete_others(memberno, origin);
       memberprofileProc.update_file(memberprofileVO);
     }
 

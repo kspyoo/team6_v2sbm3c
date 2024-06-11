@@ -1,5 +1,7 @@
 package dev.mvc.culturefile;
 
+import java.util.ArrayList;
+
 public interface CulturefileProcInter {
 
   /**
@@ -16,11 +18,11 @@ public interface CulturefileProcInter {
   public int update_file(CulturefileVO culturefileVO);
   
   /**
-   * 문화시설 정보 읽기
+   * 조회
    * @param culturefno
    * @return
    */
-  public CulturefileVO read(int culturefno);
+  public ArrayList<CulturefileVO> read(int culturefno);
   
   /**
    * 삭제

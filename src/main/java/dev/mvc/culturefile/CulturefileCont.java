@@ -1,5 +1,7 @@
 package dev.mvc.culturefile;
 
+import java.util.ArrayList;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
@@ -44,7 +46,7 @@ public class CulturefileCont {
     CulturefacilityVO culturefacilityVO = this.culturefacilityProc.read(culturefno);
     model.addAttribute("culturefacilityVO",culturefacilityVO);
     
-    culturefileVO = this.culturefileProc.read(culturefno);
+    ArrayList<CulturefileVO> list = this.culturefileProc.read(culturefno);
     model.addAttribute("culturefno", culturefno); // 매개변수 전달
    
     return  "/culturefile/update_file";
