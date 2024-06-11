@@ -70,9 +70,9 @@ public class PetCont {
 
     @GetMapping("/petInfo")
     @ResponseBody
-    public PetVO readOne(@RequestParam int petNo){
+    public PetJoinVO readOne(@RequestParam int petNo){
         System.out.println(petNo);
-        PetVO petVO = this.petProc.petInfo(petNo);
+        PetJoinVO petVO = this.petProc.petInfo(petNo);
         System.out.println(petVO.getPetNo());
         return petVO;
     }
@@ -130,7 +130,7 @@ public class PetCont {
 
     @GetMapping("/list")
     public String list(@RequestParam(defaultValue = "0") int memberNo, HttpSession session, Model model){
-        ArrayList<PetVO> petVOList = new ArrayList<PetVO>();
+        ArrayList<PetJoinVO> petVOList = new ArrayList<PetJoinVO>();
         int cnt = 0;
         if (String.valueOf(memberNo).equals("0")){ // 보고싶은 회원번호가 없는경우
             if (session.getAttribute("memberno") != null){ // 본인의 리스트를 볼 경우
@@ -142,6 +142,9 @@ public class PetCont {
                 model.addAttribute("memberNo", myMemberNo);
                 model.addAttribute("cnt", cnt);
                 model.addAttribute("petVOList", petVOList);
+
+                System.out.println("svfilename => " + petVOList.get(0).getSvFileName());
+                System.out.println("PetName => " + petVOList.get(0).getPetName());
 
                 return "pet/list";
             }else{ // 받아온 회원번호도 없고 로그인도 안된경우

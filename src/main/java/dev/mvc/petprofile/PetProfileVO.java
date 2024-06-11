@@ -9,7 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class PetProfileVO {
     // PETPROFILENO, OGFILENAME, SVFILENAME, SEQNO, UPLOADDATE, PETNO
     // 사진 파일 데이터
-    private MultipartFile file1MF;
+    private MultipartFile petProfile;
     // 사진 번호
     private int petProfileNo;
     // 원본 사진 이름

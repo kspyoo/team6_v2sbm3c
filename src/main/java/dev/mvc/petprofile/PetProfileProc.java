@@ -13,4 +13,14 @@ public class PetProfileProc implements PetProfileProcInter{
     public int create(PetProfileVO petProfileVO) {
         return petProfileDAOInter.create(petProfileVO);
     }
+
+    @Override
+    public PetProfileVO read_one() {
+        return petProfileDAOInter.read_one();
+    }
+
+    @Override
+    public PetProfileVO list(int petNo) {
+        return petProfileDAOInter.list(petNo);
+    }
 }
