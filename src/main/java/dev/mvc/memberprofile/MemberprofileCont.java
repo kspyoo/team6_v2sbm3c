@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -86,25 +87,19 @@ public class MemberprofileCont {
     model.addAttribute("memberprofileVO", memberprofileVO);
     model.addAttribute("list",list);
     
-    
+    System.out.println("list  aaaaaaaaaa : " + list);
     return "/memberprofile/update_file";
   }
 
   @PostMapping(value = "/update_file")
   public String update_file(HttpServletRequest request, RedirectAttributes ra, @RequestParam("memberno") int memberno,
-      @RequestParam("multiFile") List<MultipartFile> multiFileList, MemberprofileVO memberprofileVO) {
+      @RequestParam(value="multiFile") List<MultipartFile> multiFileList, MemberprofileVO memberprofileVO) {
     String upDir = Memberprofile.getUploadDir();
-
-    System.out.println("upDir : " + upDir);
 
     int origin = this.memberprofileProc.read_file(memberno).get(0).getMprofileno();
     
-    System.out.println(this.memberprofileProc.read_file(memberno).get(0));
-    System.out.println(this.memberprofileProc.read_file(memberno));
-    
     if (multiFileList != null && !multiFileList.isEmpty() && !multiFileList.get(0).getOriginalFilename().isEmpty()) {
-      this.memberprofileProc.delete_others(memberno, origin);
-
+   
       for (int i = 0; i < multiFileList.size(); i++) {
         try {
           String originalFilename = multiFileList.get(i).getOriginalFilename();
@@ -121,15 +116,15 @@ public class MemberprofileCont {
             thumbnail = Tool.preview(upDir, uniqueFilename, 200, 150);
           }
 
-          System.out.println("File1 : " + originalFilename);
-
           memberprofileVO.setMemberno(memberno);
           memberprofileVO.setFile1(originalFilename);
           memberprofileVO.setFile1saved(uniqueFilename);
           memberprofileVO.setThumbfile(thumbnail);
           memberprofileVO.setFilesize(multiFileList.get(i).getSize());
 
-          
+
+          System.out.println("File1 : " + memberprofileVO);
+
 
           if (i == 0) {
             memberprofileProc.update_file(memberprofileVO); // 데이터베이스에 프로필 정보 저장
@@ -157,5 +152,20 @@ public class MemberprofileCont {
 
     return "redirect:/member/read";
   }
+  
+  @PostMapping(value ="/delete_one")
+  public String delete_one(@RequestParam("mprofileno") int mprofileno,
+                                 int memberno,
+                                 RedirectAttributes ra,
+                                 MemberprofileVO mvo,
+                                 HttpSession session) {
+    this.memberprofileProc.delete_one(memberno, mprofileno);
+    
+    
+    System.out.println(memberno);
+    
+    return "redirect:/memberprofile/update_file?memberno="+memberno;
+  }
+  
 
 }

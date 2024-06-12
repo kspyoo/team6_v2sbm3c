@@ -20,6 +20,7 @@
         SELECT mprofileno, file1, file1saved, thumbfile, filesize, memberno
         FROM memberprofile
         WHERE memberno = #{memberno}
+        ORDER BY memberno ASC
     </select>
 
   <!-- 회원 탈퇴 -->
@@ -32,6 +33,12 @@
   <delete id="delete_others" parameterType="int">
         DELETE FROM memberprofile
         WHERE memberno=#{memberno} AND mprofileno!=#{mprofileno}
+    </delete>
+
+  <!-- 회원 탈퇴 -->
+  <delete id="delete_one" parameterType="int">
+        DELETE FROM memberprofile
+        WHERE memberno=#{memberno} AND mprofileno=#{mprofileno}
     </delete>
 
   <insert id="create_other_file" parameterType="dev.mvc.memberprofile.MemberprofileVO">
