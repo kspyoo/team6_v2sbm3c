@@ -207,8 +207,11 @@ public class MemberCont {
     model.addAttribute("cnt", cnt);
     if (cnt == 1) {
       MemberVO memberVO = this.memberProc.readById(id);
+
+
+
       
-      this.memberprofileProc.create_file(memberVO.getMemberno());
+     this.memberprofileProc.create_file(memberVO.getMemberno());
       
       memberprofileVO =  this.memberprofileProc.read_file(memberVO.getMemberno()).get(0);
       System.out.println("memberprofileVO : "+ memberprofileVO);
@@ -300,6 +303,11 @@ public class MemberCont {
 
   @GetMapping(value = "/read")
   public String read(HttpSession session, Model model, int memberno,MemberprofileVO memberprofileVO,LoginVO loginVO) {
+    
+    if(session.getAttribute("memberno") == null) {
+      return "member/login";
+    }
+    
     System.out.println(loginVO);
     
     MemberVO memberVO = this.memberProc.read(memberno);
@@ -313,9 +321,8 @@ public class MemberCont {
     memberprofileVO = this.memberprofileProc.read_file(memberno).get(0);
     System.out.println("memberprofileVO : " + memberprofileVO);
     model.addAttribute("memberprofileVO", memberprofileVO);
-    
-   
-    
+        
+
     
     return "member/read";
   }
@@ -328,7 +335,11 @@ public class MemberCont {
    * @return 회원 정보
    */
   @GetMapping(value = "/delete")
-  public String delete(Model model, int memberno, MasterVO masterVO) {
+  public String delete(HttpSession session,Model model, int memberno, MasterVO masterVO) {
+    
+    if(session.getAttribute("memberno") == null) {
+      return "member/login";
+    }
     MemberVO memberVO = this.memberProc.read(memberno);
     
 //    MemberprofileVO memberprofileVO = this.memberprofileProc.read_file(memberno);
@@ -469,6 +480,9 @@ public class MemberCont {
    */
   @GetMapping(value="/passwd_update_form")
   public String passwd_update_form(HttpSession session, Model model) { 
+    if(session.getAttribute("memberno") == null) {
+      return "member/login";
+    }
     int memberno = (int)session.getAttribute("memberno"); // session에서 가져오기
     
     MemberVO memberVO = this.memberProc.read(memberno);
@@ -588,6 +602,10 @@ public class MemberCont {
   
   @GetMapping(value="/list")
   public String list(HttpSession session, Model model) {
+    if(session.getAttribute("masterno") == null) {
+      return "master/login";
+    }
+    
       ArrayList<MemberVO> list = this.memberProc.list();
       int masterno = (int) session.getAttribute("masterno"); 
       MasterVO masterVO = this.masterProc.read(masterno);

@@ -13,10 +13,10 @@
 	</aside>
 
 	<div class='menu_line'></div>
-  
+
 
 	<fieldset class="fieldset_basic">
-	
+
 		<ul>
 			<li class="li_none">
 
@@ -29,7 +29,9 @@
 								style='width: 50%; float: left; margin-top: 0.5%; margin-right: 1%;'>
 						</div>
 
+
 						<div th:if="${culturefileVO.size1 == 0}" style="text-align: center; width: 50%; float: left;">
+
 						<label th:text="${list}"></label>
 							<img src="/culturefile/images/none1.png" style="width: 90%;">
 						</div>
@@ -50,7 +52,7 @@
 						<br>
 						<div style='margin-top: 20px; clear: both;'>
 							<button type="submit" class="btn btn-secondary btn-sm">파일 변경 처리</button>
-							<button type="button" onclick="history.back();" class="btn btn-secondary btn-sm">취소</button>
+							<button type="button" onclick="history.back();" class="btn btn-secondary btn-sm">파일 변경 취소</button>
 						</div>
 					</form>
 				</div>

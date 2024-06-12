@@ -71,9 +71,9 @@
             </div>
 
             <div th:if="${memberprofileVO.filesize == 0}"
-              style="text-align: center; width: 50%; border: 2px solid black">
+              style="text-align: center; width: 50%; border: 2px solid black ; margin:0 auto;">
 
-              <img src="/member/images/defaultmember.png" style="width: 100%;">
+              <img src="/member/images/defaultmember.png" style="width: 100%; ">
               <label>기본 이미지</label>
             </div>
           </div>
@@ -142,54 +142,20 @@
               <input type='text' name='addr_detail' id='addr_detail' th:value='${memberVO.addr_detail}'
                 placeholder="상세 주소" class="form-control form-control-sm" style="width: 30%;">
             </div>
+
+
+            <div id="wrap" style="display:none;width:500px;height:10px;margin:5px 0;position:relative">
+              <img src="//t1.daumcdn.net/postcode/resource/images/close.png" id="btnFoldWrap"
+                style="cursor:pointer;position:absolute;right:0px;top:-1px;z-index:1" onclick="foldDaumPostcode()"
+                alt="접기 버튼">
+            </div>
           </form>
         </div>
-
-
-
-        <!-- <div class="form-group">
-              성명*
-              <input type='text' name='name' id='name' th:value='${memberVO.name}' required="required" placeholder="성명"
-                class="form-control form-control-sm" style="width: 30%;">
-              <span id='mname_msg'></span>
-            </div>
-
-            <div class="form-group">
-              <label for="phone">전화 번호</label>
-              <input type='text' name='phone' id='phone' th:value='${memberVO.phone}' required="required"
-                placeholder="전화번호" class="form-control form-control-sm" style="width: 30%;">
-              예) 010-0000-0000
-            </div>
-
-            <div class="form-group">
-              <label for="addr_code">우편 번호</label>
-              <input type='text' name='addr_code' id='addr_code' th:value='${memberVO.addr_code}' placeholder="우편번호"
-                class="form-control form-control-sm" style="width: 30%;">
-              <button type="button" id="btn_DaumPostcode" onclick="DaumPostcode()" class="btn btn-primary btn-sm"
-                style="margin-top: 4px;">우편번호 찾기</button>
-            </div>
-
-            <div class="form-group">
-              <label for="addr_main" style="width: 100%;">주소</label>
-              <input type='text' name='addr_main' id='addr_main' th:value='${memberVO.addr_main}' placeholder="주소"
-                class="form-control form-control-sm">
-            </div>
-
-            <div class="form-group">
-              <label for="addr_detail" style="width: 100%;">상세 주소</label>
-              <input type='text' name='addr_detail' id='addr_detail' th:value='${memberVO.addr_detail}'
-                placeholder="상세 주소" class="form-control form-control-sm">
-            </div> -->
-
         <!-- ------------------------------ DAUM 우편번호 API 시작 ------------------------------ -->
         <div>
-          <div id="wrap" style="display:none;border:1px solid;width:500px;height:300px;margin:5px 0;position:relative">
-            <img src="//t1.daumcdn.net/postcode/resource/images/close.png" id="btnFoldWrap"
-              style="cursor:pointer;position:absolute;right:0px;top:-1px;z-index:1" onclick="foldDaumPostcode()"
-              alt="접기 버튼">
-          </div>
 
-          <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+
+          <script  src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
           <script>
             // 우편번호 찾기 찾기 화면을 넣을 element
             var element_wrap = document.getElementById('wrap');
@@ -278,8 +244,6 @@
           <button type="button" onclick="history.back();" class="btn btn-secondary btn-sm">취소</button>
           <button type="button" th:attr="onclick=|location.href='./delete?memberno=${memberVO.memberno}'|"
             class="btn btn-secondary btn-sm">삭제</button>
-
-
         </div>
 
 

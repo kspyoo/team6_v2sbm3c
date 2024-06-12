@@ -86,13 +86,13 @@ public class MemberprofileCont {
     model.addAttribute("memberprofileVO", memberprofileVO);
     model.addAttribute("list",list);
     
-    
+    System.out.println("list  aaaaaaaaaa : " + list);
     return "/memberprofile/update_file";
   }
 
   @PostMapping(value = "/update_file")
   public String update_file(HttpServletRequest request, RedirectAttributes ra, @RequestParam("memberno") int memberno,
-      @RequestParam("multiFile") List<MultipartFile> multiFileList, MemberprofileVO memberprofileVO) {
+      @RequestParam(value="multiFile") List<MultipartFile> multiFileList, MemberprofileVO memberprofileVO) {
     String upDir = Memberprofile.getUploadDir();
 
     System.out.println("upDir : " + upDir);
@@ -121,15 +121,15 @@ public class MemberprofileCont {
             thumbnail = Tool.preview(upDir, uniqueFilename, 200, 150);
           }
 
-          System.out.println("File1 : " + originalFilename);
-
           memberprofileVO.setMemberno(memberno);
           memberprofileVO.setFile1(originalFilename);
           memberprofileVO.setFile1saved(uniqueFilename);
           memberprofileVO.setThumbfile(thumbnail);
           memberprofileVO.setFilesize(multiFileList.get(i).getSize());
 
-          
+
+          System.out.println("File1 : " + memberprofileVO);
+
 
           if (i == 0) {
             memberprofileProc.update_file(memberprofileVO); // 데이터베이스에 프로필 정보 저장

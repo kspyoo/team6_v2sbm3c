@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="dev.mvc.culturefile.CulturefileDAOInter">
-
+  
 	<insert id="create" parameterType="dev.mvc.culturefile.CulturefileVO">
     INSERT INTO culturefile(fano,culturefno, size1 ,file1,file1saved, thumbfile)
     VALUES (culturefile_seq.nextval,#{culturefno}, #{size1}, #{file1}, #{file1saved}, #{thumbfile})
