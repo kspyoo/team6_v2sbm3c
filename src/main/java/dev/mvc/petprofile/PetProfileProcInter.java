@@ -1,5 +1,7 @@
 package dev.mvc.petprofile;
 
+import java.util.ArrayList;
+
 public interface PetProfileProcInter {
     /**
      * 사진 업로드
@@ -20,5 +22,11 @@ public interface PetProfileProcInter {
      * @param petNo 반려동물 번호
      * @return
      */
-    public PetProfileVO list(int petNo);
+    public ArrayList<PetProfileVO> list(int petNo);
+
+    /**
+     * 파일 이름을 난수로 바꿈 (형식 : yyyymmddhhmmss_randomNum)
+     * @return
+     */
+    public String randomFileName();
 }
