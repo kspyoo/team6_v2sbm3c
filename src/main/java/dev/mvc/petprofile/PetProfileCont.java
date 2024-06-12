@@ -14,6 +14,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Random;
+
 @Controller
 @RequestMapping("/petProfile")
 public class PetProfileCont {
@@ -42,6 +46,7 @@ public class PetProfileCont {
             // ------------------------------------------------------------------------------
             // 파일 전송 코드 시작
             // ------------------------------------------------------------------------------
+
             String file1 = "";          // 원본 파일명 image
             String file1saved = "";   // 저장된 파일명, image
 
@@ -78,5 +83,15 @@ public class PetProfileCont {
 
         json.put("cnt", cnt);
         return json.toString();
+    }
+
+    @GetMapping("/list")
+    public String profileList(Model model, int petNo){
+        ArrayList<PetProfileVO> list = this.petProfileProc.list(petNo);
+        System.out.println(list.get(0).getSvFileName());
+        model.addAttribute("list", list);
+        model.addAttribute("petNo", petNo);
+
+        return "petProfile/list";
     }
 }

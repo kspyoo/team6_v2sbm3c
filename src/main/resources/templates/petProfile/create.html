@@ -91,16 +91,29 @@
         }
 
         function readURL(input) {
+            const check = /[\u1100-\u11FF\uAC00-\uD7AF]/;
+
             if (input.files && input.files[0]) {
+                // 파일명이 올바르게 가져와지는지 콘솔에 출력해보기
+                let name = input.value.split('\\').pop();
+                console.log("파일명: ", name);
+
+                if (check.test(name)) {
+                    alert('파일명을 변경해주세요.');
+                    input.value = '';
+                    return false;
+                }
+                console.log("한글이 포함되지 않은 파일명: ", name);
+
                 let reader = new FileReader();
                 reader.onload = function(e) {
                     document.getElementById('preview').src = e.target.result;
                 };
                 reader.readAsDataURL(input.files[0]);
 
-                document.getElementById('profile-name').value = document.getElementById('file').value;
+                document.getElementById('profile-name').value = name; // 파일명을 저장하는 부분 수정
             } else {
-                document.getElementById('preview').src = "";
+                document.getElementById('preview').src = "/image/Pet/No_Image.png";
             }
         }
     </script>

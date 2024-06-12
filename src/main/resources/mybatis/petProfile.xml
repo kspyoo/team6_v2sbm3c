@@ -33,7 +33,7 @@
                           select PETPROFILENO, OGFILENAME, SVFILENAME, SEQNO, UPLOADDATE, PETNO
                           from PETPROFILE
                           where PETNO = #{petNo}
-                          order by SEQNO desc
+                          order by SEQNO desc, PETPROFILENO desc
                       )
              )
     </select>
