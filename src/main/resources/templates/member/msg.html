@@ -45,12 +45,14 @@
 
           <div th:case="passwd_change_success">
             <span class="span_success">패스워드 변경을 실행했습니다.</span><br>
-            <button type="button" th:attr="onclick=|location.href='./read?memberno=${memberVO.memberno}'|" class="btn btn-secondary btn-sm" style="margin-top:10px ;">돌아가기</button>
+            <button type="button" th:attr="onclick=|location.href='./read?memberno=${memberVO.memberno}'|"
+              class="btn btn-secondary btn-sm" style="margin-top:10px ;">돌아가기</button>
           </div>
 
           <div th:case="passwd_change_fail">
             <span class="span_fail">패스워드 변경을 실패했습니다.</span><br>
-            <button type="button" th:attr="onclick=|location.href='./passwd_update_form?memberno=${memberVO.memberno}'|">
+            <button type="button"
+              th:attr="onclick=|location.href='./passwd_update_form?memberno=${memberVO.memberno}'|">
           </div>
 
           <div th:case="find_fail">
@@ -72,6 +74,7 @@
             <span class="span_fail">이미지 등록에 성공했습니다.</span><br>
             <span th:text="${name}"></span>
           </div>
+
         </li>
 
         <li class="li_none">

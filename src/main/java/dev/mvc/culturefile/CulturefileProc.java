@@ -25,9 +25,9 @@ public class CulturefileProc implements CulturefileProcInter {
   
   @Override
   public ArrayList<CulturefileVO> read(int culturefno) {
-
     ArrayList<CulturefileVO> list =this.culturefileDAO.read(culturefno);
     return list;
+
   }
   
   @Override

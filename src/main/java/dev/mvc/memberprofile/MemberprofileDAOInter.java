@@ -36,6 +36,14 @@ public interface MemberprofileDAOInter {
    * @return
    */
   public int delete_others(@Param("memberno") int memberno, @Param("mprofileno") int mprofileno);
+  
+  /**
+   * 
+   * @param memberno
+   * @return
+   */
+  public int delete_one(@Param("memberno") int memberno, @Param("mprofileno") int mprofileno);
+  
   /**
    * 
    * @param file1

@@ -34,12 +34,7 @@ public class CulturefileCont {
     System.out.println("--> CulturefileCont created.");
   }
 
-  /**
-   * 등록 폼
-   * 
-   * @param culturefno 문화 파일 번호
-   * @return 뷰 이름과 모델을 담은 ModelAndView 객체
-   */
+
   @GetMapping(value = "/culturefile/update_file")
   public String create(@RequestParam("culturefno") int culturefno, Model model,CulturefileVO culturefileVO) {
       CulturefacilityVO culturefacilityVO = this.culturefacilityProc.read(culturefno);
@@ -47,6 +42,7 @@ public class CulturefileCont {
       
       System.out.println(list);
       
+
       // 리스트가 비어있을 때의 처리
       if (list.isEmpty()) {
           this.culturefileProc.create(culturefileVO); // 새로운 CulturefileVO 생성
@@ -60,7 +56,6 @@ public class CulturefileCont {
       model.addAttribute("culturefno", culturefno); // 매개변수 전달
 
       return "/culturefile/update_file";
-
   }
 
 
@@ -96,44 +91,46 @@ public class CulturefileCont {
 //   
 
     // 파일 전송 코드 시작
-    String file1 = ""; // 원본 파일명
-    String file1saved = ""; // 저장된 파일명
-    String thumbfile = ""; // 미리보기 이미지
+      String file1 = ""; // 원본 파일명
+      String file1saved = ""; // 저장된 파일명
+      String thumbfile = ""; // 미리보기 이미지
 
-    String upDir = Culturefile.getUploadDir(); // 파일 업로드 폴더
-    System.out.println("-> upDir: " + upDir);
+      String upDir = Culturefile.getUploadDir(); // 파일 업로드 폴더
+      System.out.println("-> upDir: " + upDir);
 
-    MultipartFile mf = culturefileVO.getFile1MF();
+      MultipartFile mf = culturefileVO.getFile1MF();
 
-    file1 = mf.getOriginalFilename(); // 원본 파일명
-    System.out.println("-> 원본 파일명 file1: " + file1);
+      file1 = mf.getOriginalFilename(); // 원본 파일명
 
-    long size1 = mf.getSize(); // 파일 크기
-    int upload_count = 0; // 업로드 횟수 초기화
-    if (size1 > 0) { // 파일 크기 체크
-      if (Tool.checkUploadFile(file1)) { // 업로드 가능한 파일인지 검사
-        file1saved = Upload.saveFileSpring(mf, upDir);
 
-        if (Tool.isImage(file1saved)) { // 이미지인지 검사
-          thumbfile = Tool.preview(upDir, file1saved, 200, 150); // 썸네일 생성
-        }
+      long size1 = mf.getSize(); // 파일 크기
+      int upload_count = 0; // 업로드 횟수 초기화
+      if (size1 > 0) { // 파일 크기 체크
+          if (Tool.checkUploadFile(file1)) { // 업로드 가능한 파일인지 검사
+              file1saved = Upload.saveFileSpring(mf, upDir);
 
-        culturefileVO.setFile1(file1); // 원본 파일명
-        culturefileVO.setFile1saved(file1saved); // 저장된 파일명
-        culturefileVO.setThumbfile(thumbfile); // 썸네일 파일명
-        culturefileVO.setSize1(size1); // 파일 크기
-        upload_count = 1; // 업로드 성공
+              if (Tool.isImage(file1saved)) { // 이미지인지 검사
+                  thumbfile = Tool.preview(upDir, file1saved, 200, 150); // 썸네일 생성
+              }
 
-        this.culturefileProc.create(culturefileVO);
-      } else { // 업로드 불가능한 파일 형식
-        ra.addFlashAttribute("code", "check_upload_file_fail"); // 업로드 실패 메시지
-        ra.addFlashAttribute("cnt", 0); // 업로드 실패
-        ra.addFlashAttribute("url", "/culture/msg"); // 메시지 URL
-        return "redirect:/culturefile/msg"; // 리다이렉트
+              culturefileVO.setFile1(file1); // 원본 파일명
+              culturefileVO.setFile1saved(file1saved); // 저장된 파일명
+              culturefileVO.setThumbfile(thumbfile); // 썸네일 파일명
+              culturefileVO.setSize1(size1); // 파일 크기
+              upload_count = 1; // 업로드 성공
+              
+              
+              this.culturefileProc.create(culturefileVO);
+          } else { // 업로드 불가능한 파일 형식
+              ra.addFlashAttribute("code", "check_upload_file_fail"); // 업로드 실패 메시지
+              ra.addFlashAttribute("cnt", 0); // 업로드 실패
+              ra.addFlashAttribute("url", "/culture/msg"); // 메시지 URL
+              return "redirect:/culturefile/msg"; // 리다이렉트
+          }
+      } else { // 글만 등록하는 경우
+          System.out.println("-> 글만 등록");
+
       }
-    } else { // 글만 등록하는 경우
-      System.out.println("-> 글만 등록");
-    }
 
     // 파일 전송 코드 종료
 
