@@ -1,0 +1,57 @@
+<html layout:decorate="~{layout}"> <!-- layout.html 상속 -->
+<div layout:fragment="content" style="padding-top: 20px; width: 70%; margin: auto">
+    <link href="/css/petProfile/list.css" rel="Stylesheet" type="text/css">
+    <script type="text/JavaScript" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link href="/fotorama/fotorama.css" rel="stylesheet">
+    <script src="/fotorama/fotorama.js"></script>
+    <div>
+        <div class='title_line'>반려동물 사진 구경하기</div>
+
+        <aside class="aside_right">
+            <a href="javascript:location.reload();">새로고침</a>
+        </aside>
+
+        <div class='menu_line'></div>
+
+        <!-- 사진 자동 슬라이드 -->
+        <div class="carousel-container">
+            <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-indicators">
+                    <th:block th:each="petProfileVO, petProfileVOStat : ${list}">
+                        <button type="button"
+                                data-bs-target="#carouselExampleIndicators"
+                                th:data-bs-slide-to="${petProfileVOStat.index}"
+                                th:classappend="${petProfileVOStat.index == 0 ? 'active' : ''}"
+                                th:aria-current="${petProfileVOStat.index == 0 ? 'true' : 'false'}"
+                                th:aria-label="'Slide ' + ${petProfileVOStat.index + 1}"></button>
+                    </th:block>
+                </div>
+                <div class="carousel-inner">
+                    <th:block th:each="petProfileVO, petProfileVOStat : ${list}">
+                        <div class="carousel-item" th:classappend="${petProfileVOStat.index == 0 ? 'active' : ''}">
+                            <img th:src="@{|/petprofile/storage/${petProfileVO.svFileName}|}" class="d-block w-100" alt="...">
+                        </div>
+                    </th:block>
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="btn-box mb-3">
+            <button type="button" class="btn btn-outline-info" id="cancel" th:attr="onclick=|location.href='/pet/read?petNo=${petNo}'|">돌아가기</button>
+        </div>
+
+    </div>
+    <script th:inline="javascript">
+        window.onload=()=>{
+        }
+    </script>
+</div>
+</html>
