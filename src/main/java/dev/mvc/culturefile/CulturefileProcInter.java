@@ -22,10 +22,8 @@ public interface CulturefileProcInter {
 
   /**
    * 조회
-<<<<<<< HEAD
-   * 
-=======
->>>>>>> 192858b06898921b3df4ebb5f693b65986afd04a
+ 
+
    * @param culturefno
    * @return
    */
@@ -38,5 +36,17 @@ public interface CulturefileProcInter {
    * @return 삭제된 레코드 갯수
    */
   public int delete(int fano);
+  
+  /**
+   * 파일번호
+   * @param fano
+   * @return
+   */
+  public CulturefileVO readByFano(int fano);
+  
+
+  
+  
+
 
 }

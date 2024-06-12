@@ -30,14 +30,21 @@ public class CulturefileProc implements CulturefileProcInter {
 
   }
   
-
-  
-
   @Override
   public int delete(int fano) {
     int cnt =this.culturefileDAO.delete(fano);
     return cnt;
   }
+
+  @Override
+  public CulturefileVO readByFano(int fano) {
+    CulturefileVO culturefileVO = this.culturefileDAO.readByFano(fano);
+    return culturefileVO ;
+  }
+
+
+
+  
 
 
   

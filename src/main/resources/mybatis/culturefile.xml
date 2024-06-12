@@ -1,25 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="dev.mvc.culturefile.CulturefileDAOInter">
-  
+
 	<insert id="create" parameterType="dev.mvc.culturefile.CulturefileVO">
     INSERT INTO culturefile(fano,culturefno, size1 ,file1,file1saved, thumbfile)
     VALUES (culturefile_seq.nextval,#{culturefno}, #{size1}, #{file1}, #{file1saved}, #{thumbfile})
   </insert>
-	
-	  <!-- 파일 수정 -->
-  <update id="update_file" parameterType="dev.mvc.culturefile.CulturefileVO">
+
+	<!-- 파일 수정 -->
+	<update id="update_file" parameterType="dev.mvc.culturefile.CulturefileVO">
     UPDATE culturefile
     SET size1=#{size1},file1=#{file1}, file1saved=#{file1saved}, thumbfile=#{thumbfile}
     WHERE culturefno = #{culturefno}
-  </update>  
-  
-    <!-- 일반적인 조회 -->
-  <select id="read" resultType="dev.mvc.culturefile.CulturefileVO" parameterType="int">
+  </update>
+
+	<!-- 일반적인 조회 -->
+	<select id="read" resultType="dev.mvc.culturefile.CulturefileVO" parameterType="int">
     SELECT fano, size1 ,file1,file1saved, thumbfile,culturefno
     FROM culturefile
     WHERE culturefno = #{culturefno}
   </select>
-  
+
+	<select id="readByFano" resultType="dev.mvc.culturefile.CulturefileVO" parameterType="int">
+    SELECT fano, size1, file1, file1saved, thumbfile, culturefno
+    FROM culturefile
+    WHERE fano = #{fano}
+  </select>
+
+
+	<delete id="delete" parameterType="int">
+    DELETE 
+    FROM culturefile 
+    WHERE fano = #{fano}
+  </delete>
+
 
 </mapper>

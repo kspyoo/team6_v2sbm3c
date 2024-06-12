@@ -40,14 +40,19 @@ public class CulturefileCont {
       CulturefacilityVO culturefacilityVO = this.culturefacilityProc.read(culturefno);
       ArrayList<CulturefileVO> list = this.culturefileProc.read(culturefno);
       
+      System.out.println(list);
       
- 
-      System.out.println(culturefileVO);
-      System.out.println(list.get(0));
+
+      // 리스트가 비어있을 때의 처리
+      if (list.isEmpty()) {
+          this.culturefileProc.create(culturefileVO); // 새로운 CulturefileVO 생성
+          list = this.culturefileProc.read(culturefno); // 리스트 다시 읽어오기
+      }
       
+
+      model.addAttribute("list", list);
       model.addAttribute("culturefacilityVO", culturefacilityVO);
       model.addAttribute("culturefileVO",list.get(0));
-      model.addAttribute("list", list);
       model.addAttribute("culturefno", culturefno); // 매개변수 전달
 
       return "/culturefile/update_file";
@@ -137,23 +142,29 @@ public class CulturefileCont {
 
     return "redirect:/culturefile/msg"; // 리다이렉트
   }
+  
+  /**
+   * 파일 삭제 처리
+   * 
+   * @param fano 파일 번호
+   * @param ra 리다이렉트 속성
+   * @return 리다이렉트 URL
+   */
+  @PostMapping(value = "/culturefile/delete_file")
+  public String delete_file(@RequestParam("fano") int fano, RedirectAttributes ra, CulturefileVO culturefileVO) {
+      culturefileVO = this.culturefileProc.readByFano(fano);
+      int culturefno = culturefileVO.getCulturefno(); // 삭제 후 리다이렉트할 때 사용
 
-//파일 삭제 메소드 추가
-  @PostMapping(value = "/culturefile/delete")
-  public String delete(@RequestParam("fileNo") int fileNo, RedirectAttributes ra) {
-    // 파일 삭제 로직 구현
-    int success = culturefileProc.delete(fileNo);
+      this.culturefileProc.delete(fano);
 
-    if (success > 0) { // 성공적으로 삭제된 경우
-      ra.addFlashAttribute("message", "파일이 성공적으로 삭제되었습니다.");
-    } else if (success == 0) { // 삭제된 것이 없는 경우
-      ra.addFlashAttribute("warning", "삭제된 파일이 없습니다.");
-    } else { // 오류 발생
-      ra.addFlashAttribute("error", "파일 삭제 중 오류가 발생했습니다.");
-    }
-
-    return "redirect:/culturefile/update_file"; // 삭제 후 해당 페이지로 리다이렉트
+      ra.addAttribute("culturefno", culturefno); // 리다이렉트 매개변수로 culturefno 전달
+      ra.addFlashAttribute("code", "delete_success"); // 삭제 성공 메시지
+      return "redirect:/culturefile/update_file"; // 삭제 후 리다이렉트
   }
+
+  
+
+
 
   /**
    * 새로고침 방지를 위한 메시지 출력
