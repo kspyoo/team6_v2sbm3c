@@ -20,7 +20,7 @@
         SELECT mprofileno, file1, file1saved, thumbfile, filesize, memberno
         FROM memberprofile
         WHERE memberno = #{memberno}
-        ORDER BY memberno ASC
+        ORDER BY mprofileno ASC
     </select>
 
   <!-- 회원 탈퇴 -->
