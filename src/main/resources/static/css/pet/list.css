@@ -93,6 +93,37 @@ input[type="radio"]{
     width: 55%;
 }
 
+/*.img_box{*/
+/*    position: absolute;*/
+/*    width: 100%;*/
+/*    height: 100%;*/
+/*    border: 1px solid #8FBFFA;*/
+/*    border-radius: 5px;*/
+/*}*/
+
+.preview{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border: 1.5px solid #8FBFFA;
+    border-radius: 5px;
+}
+
+.img-container{
+    width: 65%;
+    margin: auto;
+}
+
+.img-box{
+    position: relative;
+}
+
+.img-box:after {
+    content: "";
+    display: block;
+    padding-bottom: 100%;
+}
+
 .img_container{
     margin: 0px auto;
     width: 70%;

@@ -81,12 +81,35 @@ input[type="radio"]{
 }
 
 .img_box{
-    text-align: center;
+    /*text-align: center;*/
     margin: 0px auto;
     width: 55%;
 }
 
-.img_container{
-    width: 60%;
-    margin: 0px auto;
+/*.img_container{*/
+/*    width: 60%;*/
+/*    margin: 0px auto;*/
+/*}*/
+
+.preview{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border: 1.5px solid #8FBFFA;
+    border-radius: 5px;
+}
+
+.img-container{
+    width: 45%;
+    margin: auto;
+}
+
+.img-box{
+    position: relative;
+}
+
+.img-box:after {
+    content: "";
+    display: block;
+    padding-bottom: 100%;
 }
