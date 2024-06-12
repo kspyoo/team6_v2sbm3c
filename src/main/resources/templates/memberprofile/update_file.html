@@ -1,6 +1,6 @@
 <!DOCTYPE html>
-
-<html layout:decorate="~{layout}"> <!-- layout.html 상속-->
+<html layout:decorate="~{layout}">
+<!-- layout.html 상속-->
 
 <div layout:fragment="content">
 
@@ -15,49 +15,57 @@
 
   <div class='menu_line'></div>
 
-  <fieldset class="fieldset_basic">
-    <ul>
-      <li class="li_none">
-        <div style="width:60%;margin:auto;">
-          <div th:if="${memberprofileVO != null}">
-            <div
-              th:if="${memberprofileVO.file1.endsWith('jpg') or memberprofileVO.file1.endsWith('png')  or memberprofileVO.file1.endsWith('gif')}">
-              <label>이미지</label>
-              <img th:src="@{|/member/storage/${memberprofileVO.file1saved}|}"
-                style='width: 50%; float: left; margin-top: 0.5%; margin-right: 1%;'>
-            </div>
+  <!-- Flexbox Container to divide the layout into two parts -->
+  <div class="flex-container" style="display: flex; width: 100%; gap: 10px; margin: 10px 0;">
 
-            <div th:if="${memberprofileVO.filesize == 0}" style="text-align: center; width: 50%; float: left;">
-              <img src="/member/images/defaultmember.png" style="width: 90%;">
-            </div>
+    <!-- Left Side: Photo List -->
+    <div class="flex-item" style="flex: 1; padding: 10px;">
+      <fieldset class="fieldset_basic" style="height: 100%;">
+        <div th:if="${memberprofileVO != null}">
+          <div th:if="${memberprofileVO.file1 != null && (memberprofileVO.file1.endsWith('jpg') or memberprofileVO.file1.endsWith('png') or memberprofileVO.file1.endsWith('gif'))}">
+         
+            <table class="table table-striped" style="width: 100%;">
+
+              <colgroup>
+                <col style="width: 100%;" />
+              </colgroup>
+
+              <tr th:each="memberprofileVO, status:${list}">
+                <td class='td_basic'>
+                  <img th:src="@{|/member/storage/${memberprofileVO.file1saved}|}" style="width: 30%;" th:text="${memberprofileVO.file1}">
+                </td>
+              </tr>
+            </table>
+          </div>
+          <div th:if="${memberprofileVO.filesize == 0}" style="text-align: center;">
+            <label>기본 이미지</label>
+            <img src="/member/images/defaultmember.png" style="width: 90%;">
           </div>
         </div>
+      </fieldset>
+    </div>
 
+    <!-- Right Side: File Selection -->
+    <div class="flex-item" style="flex: 1; padding: 10px;">
+      <fieldset class="fieldset_basic">
+        <form name='frm' method='POST' action='./update_file' enctype="multipart/form-data">
+          <input type="hidden" name="memberno" th:value="${memberVO.memberno }">
+          <input type="hidden" name="mprofileno" th:value="${memberprofileVO.mprofileno}">
+          변경 이미지 선택<br>
+          <!-- 다중 파일 선택을 지원하기 위해 multiple 속성을 추가 -->
+          <input type='file' name='multiFile' id='multiFile' placeholder="파일 선택" multiple="multiple"><br>
 
+          <br>
+          <div style='margin-top: 20px;'>
+            <button type="submit" class="btn btn-secondary btn-sm">파일 변경 처리</button>
+            <button type="submit" class="btn btn-secondary btn-sm">파일 삭제</button>
+            <button type="button" onclick="history.back();" class="btn btn-secondary btn-sm">파일 변경 취소</button>
+          </div>
+        </form>
+      </fieldset>
+    </div>
 
-        <div style='text-align:left; width:47%; float: left;'>
-          <form name='frm' method='POST' action='./update_file' enctype="multipart/form-data">
-            <input type="hidden" name="memberno" th:value="${memberVO.memberno }">
-            <input type="hidden" name="mprofileno" th:value="${memberprofileVO.mprofileno}">
-            변경 이미지 선택<br>
-            <input type='file' name='file1MF' id='file1MF' value='' placeholder="파일 선택"><br>
-            <br>
-            <div style='margin-top: 20px; clear: both;'>
-              <button type="submit" class="btn btn-secondary btn-sm">파일 변경 처리</button>
-              <button type="submit" class="btn btn-secondary btn-sm">파일 삭제</button>
-              <button type="button" onclick="history.back();" class="btn btn-secondary btn-sm">파일 변경 취소</button>
-            </div>
-        </div>
-
-        
-
-      </li>
-    </ul>
-
-
-
-
-  </fieldset>
+  </div>
 </div>
 
 </html>

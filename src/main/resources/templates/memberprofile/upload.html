@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+
+<html layout:decorate="~{layout}">
+<!-- layout.html 상속-->
+
+<div layout:fragment="content">
+
+  <div class="title_line">파일 수정 > <span th:text="@{|${memberVO.name} (${memberVO.id})|}"></span></div>
+  <aside class="aside_right" style="display: flex; gap: 10px; margin-right: 10%; margin-top: 5px;">
+    <a href="javascript:location.reload();">새로고침</a>
+    <span class='menu_divide'>│</span>
+    <a href='./create'>회원 가입</a>
+    <span class='menu_divide'>│</span>
+    <a href='./list'>목록</a>
+  </aside>
+
+  <div class='menu_line'></div>
+
+  <body>
+    <h1>File Upload success</h1>
+    <p>
+      <a th:href="@{/upload}" th:text="업로드페이지로" href="url">link text</a>
+    </p>
+  </body>
+
+</div>
+
+</html>

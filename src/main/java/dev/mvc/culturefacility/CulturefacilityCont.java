@@ -103,6 +103,7 @@ public String create(Model model, CulturefacilityVO culturefacilityVO
     }
     
     int cnt = this.CulturefacilityProc.create(culturefacilityVO);
+ 
     System.out.println("-> cnt: " + cnt);
 
     model.addAttribute("cnt", cnt);
