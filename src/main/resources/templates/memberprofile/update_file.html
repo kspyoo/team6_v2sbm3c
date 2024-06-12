@@ -189,13 +189,28 @@
       flex-direction: column;
       height: 200px;
       text-align: center;
-      
+
     }
 
     .default-image-container img {
       width: 100px;
       height: auto;
-      margin : auto;
+      margin: auto;
+    }
+
+    .delete-btn {
+      position: absolute;
+      top: 5px;
+      /* 버튼 위치를 조금 위로 이동 */
+      right: 5px;
+      /* 버튼 위치를 조금 오른쪽으로 이동 */
+      background-color: rgba(255, 0, 0, 0.7);
+      color: white;
+      border: none;
+      padding: 3px;
+      /* 버튼의 padding을 줄임 */
+      cursor: pointer;
+      border-radius: 4px;
     }
   </style>
 </head>
@@ -223,6 +238,11 @@
                 <div class="image-grid-item" th:each="memberprofileVO, status:${list}">
                   <div th:if="${memberprofileVO.filesize} > 0">
                     <img th:src="@{|/member/storage/${memberprofileVO.file1saved}|}" th:alt="${memberprofileVO.file1}">
+                    <form method="POST" action="./delete_one" style="display:inline;">
+                      <input type="hidden" name="memberno" th:value="${memberVO.memberno}">
+                      <input type="hidden" name="mprofileno" th:value="${memberprofileVO.mprofileno}">
+                      <button type="submit" class="delete-btn">삭제</button>
+                    </form>
                   </div>
                 </div>
               </div>
@@ -249,14 +269,16 @@
 
             <div class="file_area" style="width: 50%;">
               <div class="form-inline">
-                <input type="file" name="multiFile" id="multiFile" class="form-control" required>
+                <input type="file" name="multiFile" id="multiFile" class="form-control">
               </div>
             </div>
 
             <div style='margin-top: 20px;'>
               <button type="submit" class="btn" style="border: 2px solid black;">파일 변경 처리</button>
+              <form method="POST" action="./delete_others" style="display:inline;">
               <button type="submit" class="btn" onclick="clearMultiFile();" style="border: 2px solid black;">파일
                 삭제</button>
+              </form>
               <button type="button" class="btn" onclick="history.back();" style="border: 2px solid black;">파일 변경
                 취소</button>
             </div>

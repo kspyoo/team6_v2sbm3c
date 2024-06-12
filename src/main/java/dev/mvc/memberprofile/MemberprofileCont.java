@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -95,16 +96,10 @@ public class MemberprofileCont {
       @RequestParam(value="multiFile") List<MultipartFile> multiFileList, MemberprofileVO memberprofileVO) {
     String upDir = Memberprofile.getUploadDir();
 
-    System.out.println("upDir : " + upDir);
-
     int origin = this.memberprofileProc.read_file(memberno).get(0).getMprofileno();
     
-    System.out.println(this.memberprofileProc.read_file(memberno).get(0));
-    System.out.println(this.memberprofileProc.read_file(memberno));
-    
     if (multiFileList != null && !multiFileList.isEmpty() && !multiFileList.get(0).getOriginalFilename().isEmpty()) {
-      this.memberprofileProc.delete_others(memberno, origin);
-
+   
       for (int i = 0; i < multiFileList.size(); i++) {
         try {
           String originalFilename = multiFileList.get(i).getOriginalFilename();
@@ -157,5 +152,20 @@ public class MemberprofileCont {
 
     return "redirect:/member/read";
   }
+  
+  @PostMapping(value ="/delete_one")
+  public String delete_one(@RequestParam("mprofileno") int mprofileno,
+                                 int memberno,
+                                 RedirectAttributes ra,
+                                 MemberprofileVO mvo,
+                                 HttpSession session) {
+    this.memberprofileProc.delete_one(memberno, mprofileno);
+    
+    
+    System.out.println(memberno);
+    
+    return "redirect:/memberprofile/update_file?memberno="+memberno;
+  }
+  
 
 }

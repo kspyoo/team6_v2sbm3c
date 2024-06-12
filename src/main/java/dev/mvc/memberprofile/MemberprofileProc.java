@@ -36,7 +36,13 @@ public class MemberprofileProc implements MemberprofileProcInter{
   
   @Override
   public int delete_others(@Param("memberno") int memberno, @Param("mprofileno") int mprofileno) {
-    int cnt=this.memberprofileDAO.delete_others(memberno, mprofileno);
+    int cnt = this.memberprofileDAO.delete_others(memberno, mprofileno);
+    return cnt;
+  }
+  
+  @Override
+  public int delete_one(@Param("memberno") int memberno, @Param("mprofileno") int mprofileno) {
+    int cnt = this.memberprofileDAO.delete_one(memberno, mprofileno);
     return cnt;
   }
 
