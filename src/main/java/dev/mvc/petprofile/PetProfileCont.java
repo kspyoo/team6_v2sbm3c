@@ -8,10 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
@@ -88,10 +85,61 @@ public class PetProfileCont {
     @GetMapping("/list")
     public String profileList(Model model, int petNo){
         ArrayList<PetProfileVO> list = this.petProfileProc.list(petNo);
-        System.out.println(list.get(0).getSvFileName());
+
         model.addAttribute("list", list);
         model.addAttribute("petNo", petNo);
 
         return "petProfile/list";
+    }
+
+    @GetMapping("/update")
+    public String profileUpdateList(Model model, int petNo){
+        ArrayList<PetProfileVO> list = this.petProfileProc.list(petNo);
+
+        model.addAttribute("list", list);
+        model.addAttribute("petNo", petNo);
+
+        return "petProfile/updateList";
+    }
+
+    @PostMapping("/delete_one")
+    @ResponseBody
+    public String delete_one(@RequestBody String json_src){
+        JSONObject jsonObject = new JSONObject(json_src);
+
+        int petNo = (int) jsonObject.get("petProfileNo");
+
+        int cnt = this.petProfileProc.delete_all(petNo);
+
+        JSONObject json = new JSONObject();
+        json.put("cnt", cnt);
+
+        return json.toString();
+    }
+
+    @PostMapping("/delete_all")
+    @ResponseBody
+    public String delete_all(@RequestBody String json_src){
+        JSONObject jsonObject = new JSONObject(json_src);
+
+        int petNo = (int) jsonObject.get("petNo");
+
+        int cnt = this.petProfileProc.delete_all(petNo);
+
+        JSONObject json = new JSONObject();
+        json.put("cnt", cnt);
+
+        return json.toString();
+    }
+
+    @GetMapping("/profile_cnt")
+    @ResponseBody
+    public String profile_cnt(int petNo){
+        int cnt = this.petProfileProc.profile_cnt(petNo);
+
+        JSONObject json = new JSONObject();
+        json.put("cnt", cnt);
+
+        return json.toString();
     }
 }

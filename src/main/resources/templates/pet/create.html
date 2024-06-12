@@ -143,11 +143,7 @@
                 console.log(data);
                 if (data.cnt == 1){
                     alert('반려동물 정보가 등록되었습니다.');
-                    if (confirm('반려동물 사진을 등록 하시겠습니까?')){
-                        location.href='/petProfile/create';
-                    }else{
-                        location.href='/pet/list';
-                    }
+                    location.href='/pet/list';
                 }else{
                     alert('등록 실패 했습니다.')
                 }
