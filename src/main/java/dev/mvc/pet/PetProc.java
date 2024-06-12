@@ -29,7 +29,7 @@ public class PetProc implements PetProcInter{
      * @return
      */
     @Override
-    public PetVO petInfo(int petNo) {
+    public PetJoinVO petInfo(int petNo) {
         return this.petDAO.petInfo(petNo);
     }
 
@@ -39,7 +39,7 @@ public class PetProc implements PetProcInter{
      * @return
      */
     @Override
-    public ArrayList<PetVO> petInfoList(int memberNo) {
+    public ArrayList<PetJoinVO> petInfoList(int memberNo) {
         return this.petDAO.petInfoList(memberNo);
     }
 

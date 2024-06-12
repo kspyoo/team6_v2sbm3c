@@ -1,5 +1,7 @@
 package dev.mvc.culturefile;
 
+import java.util.ArrayList;
+
 public interface CulturefileDAOInter { 
   /**
    * 파일 등록
@@ -19,7 +21,7 @@ public interface CulturefileDAOInter {
    * @param culturefno
    * @return
    */
-  public CulturefileVO read(int culturefno);
+  public ArrayList<CulturefileVO> read(int culturefno);
   
   /**
    * 삭제
@@ -27,5 +29,13 @@ public interface CulturefileDAOInter {
    * @return 삭제된 레코드 갯수
    */
   public int delete(int fano);
+  /**
+   * 파일번호
+   * @param fano
+   * @return
+   */
+  public CulturefileVO readByFano(int fano);
+  
+
 
 }

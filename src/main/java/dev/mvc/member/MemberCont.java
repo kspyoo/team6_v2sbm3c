@@ -77,7 +77,7 @@ public class MemberCont {
 
       JSONObject obj = new JSONObject();
       obj.put("cnt", cnt);
-      System.out.println("error");
+      System.out.println("obj Phone : "+ obj);
       return obj.toString();
   }
 
@@ -96,14 +96,17 @@ public class MemberCont {
   @PostMapping(value = "/create")
   public String create_proc(Model model, MemberVO memberVO, MemberprofileVO memberprofileVO) {
     int checkID_cnt = this.memberProc.checkID(memberVO.getId());
-    
-    if (checkID_cnt == 0) {
+    int checkPhone_cnt = this.memberProc.checkPhone(memberVO.getPhone());
+    System.out.println(checkPhone_cnt);
+    if (checkID_cnt == 0 && checkPhone_cnt == 0) {
       memberVO.setStatus("1");
       int cnt = this.memberProc.create(memberVO);
       if (cnt == 1) {
+        
         model.addAttribute("code", "create_success");
         model.addAttribute("name", memberVO.getName());
         model.addAttribute("id", memberVO.getId());
+        model.addAttribute("phone", memberVO.getPhone());
         memberVO = this.memberProc.readById(memberVO.getId());
         memberprofileProc.create_file(memberVO.getMemberno());
         
@@ -112,7 +115,6 @@ public class MemberCont {
       }
       model.addAttribute("cnt", cnt);
     } else { // id 중복
-      System.out.println("checkID in create_proc");
       model.addAttribute("code", "create_fail");
       model.addAttribute("cnt", 0);
     }
@@ -205,9 +207,14 @@ public class MemberCont {
     model.addAttribute("cnt", cnt);
     if (cnt == 1) {
       MemberVO memberVO = this.memberProc.readById(id);
-    
-      memberprofileVO =  this.memberprofileProc.read_file(memberVO.getMemberno());
+
+
+
       
+     this.memberprofileProc.create_file(memberVO.getMemberno());
+      
+      memberprofileVO =  this.memberprofileProc.read_file(memberVO.getMemberno()).get(0);
+      System.out.println("memberprofileVO : "+ memberprofileVO);
       session.setAttribute("memberno", memberVO.getMemberno());
       session.setAttribute("id", memberVO.getId());
       session.setAttribute("name", memberVO.getName());
@@ -296,17 +303,26 @@ public class MemberCont {
 
   @GetMapping(value = "/read")
   public String read(HttpSession session, Model model, int memberno,MemberprofileVO memberprofileVO,LoginVO loginVO) {
+    
+    if(session.getAttribute("memberno") == null) {
+      return "member/login";
+    }
+    
     System.out.println(loginVO);
     
     MemberVO memberVO = this.memberProc.read(memberno);
     model.addAttribute("memberVO", memberVO);
     
+    System.out.println("확인용 : " + this.memberprofileProc.read_file(memberno));
+    
     System.out.println("this.memberProc.read(memberno) : " + this.memberProc.read(memberno));
     
     // MemberProfileVO를 조회하여 모델에 추가
-    memberprofileVO = this.memberprofileProc.read_file(memberno);
+    memberprofileVO = this.memberprofileProc.read_file(memberno).get(0);
+    System.out.println("memberprofileVO : " + memberprofileVO);
     model.addAttribute("memberprofileVO", memberprofileVO);
-    
+        
+
     
     return "member/read";
   }
@@ -319,7 +335,11 @@ public class MemberCont {
    * @return 회원 정보
    */
   @GetMapping(value = "/delete")
-  public String delete(Model model, int memberno, MasterVO masterVO) {
+  public String delete(HttpSession session,Model model, int memberno, MasterVO masterVO) {
+    
+    if(session.getAttribute("memberno") == null) {
+      return "member/login";
+    }
     MemberVO memberVO = this.memberProc.read(memberno);
     
 //    MemberprofileVO memberprofileVO = this.memberprofileProc.read_file(memberno);
@@ -384,7 +404,8 @@ public class MemberCont {
       MemberVO memberVO = this.memberProc.findId(name, phone);
 
       model.addAttribute("memberVO", memberVO);
-      
+
+
       return "/member/findId";
     } else {
       model.addAttribute("code", "find_fail");
@@ -459,6 +480,9 @@ public class MemberCont {
    */
   @GetMapping(value="/passwd_update_form")
   public String passwd_update_form(HttpSession session, Model model) { 
+    if(session.getAttribute("memberno") == null) {
+      return "member/login";
+    }
     int memberno = (int)session.getAttribute("memberno"); // session에서 가져오기
     
     MemberVO memberVO = this.memberProc.read(memberno);
@@ -578,13 +602,17 @@ public class MemberCont {
   
   @GetMapping(value="/list")
   public String list(HttpSession session, Model model) {
+    if(session.getAttribute("masterno") == null) {
+      return "master/login";
+    }
+    
       ArrayList<MemberVO> list = this.memberProc.list();
       int masterno = (int) session.getAttribute("masterno"); 
       MasterVO masterVO = this.masterProc.read(masterno);
       
       for (MemberVO memberVO : list) {
         int memberno = memberVO.getMemberno();
-        MemberprofileVO memberprofileVO = this.memberprofileProc.read_file(memberno);
+        MemberprofileVO memberprofileVO = this.memberprofileProc.read_file(memberno).get(0);
         memberVO.setMprofileno(memberprofileVO.getMprofileno());
         int index = list.indexOf(memberVO);
         list.set(index, memberVO);

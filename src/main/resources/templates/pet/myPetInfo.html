@@ -16,12 +16,34 @@
         class="row">
         <input type="hidden" name="petNo" id="petNo" th:value="${petNo}">
         <div class="mb-3 img_box">
-            <div class="img_container mb-3">
-                <img src="/image/pet/No_Image.png" style="width: 75%">
+<!--            <div class="img_container mb-3">-->
+<!--                <img style="width: 75%" id="pet_image">-->
+<!--            </div>-->
+            <div class="img-container">
+                <div class="img-box">
+                    <img src="/image/pet/No_Image.png" alt="반려동물 사진" style="width: 100%; object-fit: cover; cursor: pointer;"
+                         class="preview" id="preview" onclick="window.open(this.src)">
+                </div>
             </div>
-            <button type="button" id="change_image" class="btn btn-outline-info btn-md" style="width: 45%; margin-right: 1%"
-                    th:attr="onclick=|location='/petProfile/create?petNo=${petNo}'|">사진 추가하기</button>
-            <button type="button" onclick="history.back()" class="btn btn-outline-info btn-md" style="width: 45%; margin-left: 1%">사진 관리</button>
+            <div class="mt-4">
+                <button type="button" id="change_image" class="btn btn-outline-info btn-md" style="width: 45%; margin-right: 1%"
+                        th:attr="onclick=|location='/petProfile/create?petNo=${petNo}'|">사진 추가하기</button>
+                <button type="button" class="btn btn-outline-info btn-md" style="width: 45%; margin-left: 1%"
+                        th:attr="onclick=|location='/petProfile/update?petNo=${petNo}'|">사진 관리</button>
+            </div>
+<!--            <div class="img-container">-->
+<!--                <div class="img-box" th:if="${petVO.svFileName!=null and-->
+<!--                                                        (petVO.svFileName.endsWith('.jpg') or petVO.svFileName.endsWith('.png') or-->
+<!--                                                        petVO.svFileName.endsWith('.jpeg') or petVO.svFileName.endsWith('.gif'))}">-->
+<!--                    <img th:src="@{|/petprofile/storage/${petVO.svFileName}|}" alt="반려동물 사진" style="width: 100%; object-fit: cover; cursor: pointer;"-->
+<!--                         class="preview" onclick="window.open(this.src)">-->
+<!--                </div>-->
+<!--                <div class="img-box" th:unless="${petVO.svFileName!=null and-->
+<!--                                                        (petVO.svFileName.endsWith('.jpg') or petVO.svFileName.endsWith('.png') or-->
+<!--                                                        petVO.svFileName.endsWith('.jpeg') or petVO.svFileName.endsWith('.gif'))}">-->
+<!--                    <img src="/image/pet/No_Image.png" alt="반려동물 사진" style="width: 100%;" class="preview">-->
+<!--                </div>-->
+<!--            </div>-->
         </div>
 
         <div class="mb-3 row">
@@ -111,6 +133,10 @@
             })
                 .then((response) => response.json()) // 응답 문자열 추출
                 .then((data) => {
+                    if (data.svFileName != null){
+                        document.getElementById('preview').src='/petprofile/storage/'+data.svFileName;
+                    }
+
                     document.getElementById('name').value = data.petName;
 
                     if (data.petTypeNo == 1) {

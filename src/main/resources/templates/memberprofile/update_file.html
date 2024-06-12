@@ -1,63 +1,313 @@
 <!DOCTYPE html>
+<html layout:decorate="~{layout}">
+<!-- layout.html 상속 -->
 
-<html layout:decorate="~{layout}"> <!-- layout.html 상속-->
+<head>
+  <style>
+    /* 기본 스타일 설정 */
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f9;
+      color: #333;
+      margin: 0;
+      padding: 0;
+    }
 
-<div layout:fragment="content">
+    .flex-container {
+      display: flex;
+      gap: 20px;
+      margin: 20px;
+    }
 
-  <div class="title_line">파일 수정 > <span th:text="@{|${memberVO.name} (${memberVO.id})|}"></span></div>
-  <aside class="aside_right" style="display: flex; gap: 10px; margin-right: 10%; margin-top: 5px;">
-    <a href="javascript:location.reload();">새로고침</a>
-    <span class='menu_divide'>│</span>
-    <a href='./create'>회원 가입</a>
-    <span class='menu_divide'>│</span>
-    <a href='./list'>목록</a>
-  </aside>
+    .flex-item {
+      flex: 1;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+    }
 
-  <div class='menu_line'></div>
+    fieldset {
+      border: none;
+    }
 
-  <fieldset class="fieldset_basic">
-    <ul>
-      <li class="li_none">
-        <div style="width:60%;margin:auto;">
+    .fieldset_basic {
+      margin-bottom: 20px;
+    }
+
+    .table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .table-striped tr:nth-child(even) {
+      background-color: #f2f2f2;
+    }
+
+    .table-striped td {
+      padding: 10px;
+      text-align: center;
+    }
+
+    .td_basic img {
+      border-radius: 10px;
+      margin: 10px 0;
+    }
+
+    form input[type='file'] {
+      padding: 10px;
+      border: 2px dashed #007bff;
+      border-radius: 10px;
+      width: 100%;
+      margin-top: 10px;
+    }
+
+    form button {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      margin: 5px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    form button:hover {
+      background-color: #0056b3;
+    }
+
+    form button[type='button'] {
+      background-color: white;
+    }
+
+    form button[type='button']:hover {
+      background-color: rgb(215, 215, 215);
+    }
+
+    .btn:hover {
+      background-color: rgb(215, 215, 215);
+    }
+
+    /* 이미지 그리드 스타일 */
+    .image-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+    }
+
+    .image-grid-item {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .image-grid img {
+      width: 150px;
+      height: 150px;
+      object-fit: cover;
+      border-radius: 10px;
+      border: 2px solid #ddd;
+    }
+
+    .image-grid img:hover {
+      width: 250px;
+      height: 250px;
+      border-color: #007bff;
+    }
+
+    .btn_delete_image {
+      background-color: #dc3545;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      font-size: 0.8em;
+    }
+
+    .btn_delete_image:hover {
+      background-color: #c82333;
+    }
+
+    label {
+      font-weight: bold;
+      margin-bottom: 10px;
+      display: block;
+    }
+
+    /* 새로운 파일 추가 영역 스타일 */
+    .file_area .form-inline {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .file_area .form-inline input[type='file'] {
+      flex: 1;
+    }
+
+    .file_area .form-inline .btn_delete {
+      background-color: #dc3545;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .file_area .form-inline .btn_delete:hover {
+      background-color: #c82333;
+    }
+
+    /* 추가 버튼 스타일 */
+    #id_btn_new_file {
+      background-color: #28a745;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    #id_btn_new_file:hover {
+      background-color: #218838;
+    }
+
+    /* 기본 이미지를 가운데로 정렬하는 스타일 */
+    .default-image-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      height: 200px;
+      text-align: center;
+
+    }
+
+    .default-image-container img {
+      width: 100px;
+      height: auto;
+      margin: auto;
+    }
+
+    .delete-btn {
+      position: absolute;
+      top: 5px;
+      /* 버튼 위치를 조금 위로 이동 */
+      right: 5px;
+      /* 버튼 위치를 조금 오른쪽으로 이동 */
+      background-color: rgba(255, 0, 0, 0.7);
+      color: white;
+      border: none;
+      padding: 3px;
+      /* 버튼의 padding을 줄임 */
+      cursor: pointer;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div layout:fragment="content" style="width: 80%; margin: auto">
+
+    <div class="title_line">파일 수정 > <span th:text="@{|${memberVO.name} (${memberVO.id})|}"></span></div>
+    <aside class="aside_right" style="display: flex; gap: 10px; margin-right: 10%; margin-top: 5px;">
+      <a href="javascript:location.reload();">새로고침</a>
+    </aside>
+
+    <div class='menu_line'></div>
+
+    <div class="flex-container">
+
+      <div class="flex-item">
+        <fieldset class="fieldset_basic">
           <div th:if="${memberprofileVO != null}">
             <div
-              th:if="${memberprofileVO.file1.endsWith('jpg') or memberprofileVO.file1.endsWith('png')  or memberprofileVO.file1.endsWith('gif')}">
-              <label>이미지</label>
-              <img th:src="@{|/member/storage/${memberprofileVO.file1saved}|}"
-                style='width: 50%; float: left; margin-top: 0.5%; margin-right: 1%;'>
+              th:if="${memberprofileVO.file1 != null && (memberprofileVO.file1.endsWith('jpg') or memberprofileVO.file1.endsWith('png') or memberprofileVO.file1.endsWith('gif'))}">
+              <label>이미지 목록</label>
+              <div class="image-grid">
+                <div class="image-grid-item" th:each="memberprofileVO, status:${list}">
+                  <div th:if="${memberprofileVO.filesize} > 0">
+                    <img th:src="@{|/member/storage/${memberprofileVO.file1saved}|}" th:alt="${memberprofileVO.file1}">
+                    <form method="POST" action="./delete_one" style="display:inline;">
+                      <input type="hidden" name="memberno" th:value="${memberVO.memberno}">
+                      <input type="hidden" name="mprofileno" th:value="${memberprofileVO.mprofileno}">
+                      <button type="submit" class="delete-btn">삭제</button>
+                    </form>
+                  </div>
+                </div>
+              </div>
             </div>
-
-            <div th:if="${memberprofileVO.filesize == 0}" style="text-align: center; width: 50%; float: left;">
-              <img src="/member/images/defaultmember.png" style="width: 90%;">
+            <div th:if="${memberprofileVO.filesize == 0}" class="default-image-container">
+              <label>기본 이미지</label>
+              <div class="image-grid-item">
+                <img src="/member/images/defaultmember.png">
+              </div>
             </div>
           </div>
-        </div>
+        </fieldset>
+      </div>
 
-
-
-        <div style='text-align:left; width:47%; float: left;'>
+      <div class="flex-item">
+        <fieldset class="fieldset_basic">
           <form name='frm' method='POST' action='./update_file' enctype="multipart/form-data">
-            <input type="hidden" name="memberno" th:value="${memberVO.memberno }">
+            <input type="hidden" name="memberno" th:value="${memberVO.memberno}">
             <input type="hidden" name="mprofileno" th:value="${memberprofileVO.mprofileno}">
-            변경 이미지 선택<br>
-            <input type='file' name='file1MF' id='file1MF' value='' placeholder="파일 선택"><br>
-            <br>
-            <div style='margin-top: 20px; clear: both;'>
-              <button type="submit" class="btn btn-secondary btn-sm">파일 변경 처리</button>
-              <button type="submit" class="btn btn-secondary btn-sm">파일 삭제</button>
-              <button type="button" onclick="history.back();" class="btn btn-secondary btn-sm">파일 변경 취소</button>
+            <label>변경 이미지 선택</label>
+
+            <button type="button" id="id_btn_new_file" onclick="id_btn_new_file()"
+              class="btn btn-primary btn-sm">추가</button>
+
+            <div class="file_area" style="width: 50%;">
+              <div class="form-inline">
+                <input type="file" name="multiFile" id="multiFile" class="form-control">
+              </div>
             </div>
-        </div>
 
-        
-
-      </li>
-    </ul>
-
-
-
-
-  </fieldset>
-</div>
+            <div style='margin-top: 20px;'>
+              <button type="submit" class="btn" style="border: 2px solid black;">파일 변경 처리</button>
+              <form method="POST" action="./delete_others" style="display:inline;">
+              <button type="submit" class="btn" onclick="clearMultiFile();" style="border: 2px solid black;">파일
+                삭제</button>
+              </form>
+              <button type="button" class="btn" onclick="history.back();" style="border: 2px solid black;">파일 변경
+                취소</button>
+            </div>
+          </form>
+        </fieldset>
+      </div>
+    </div>
+  </div>
+</body>
 
 </html>
+
+<script>
+  function id_btn_new_file() {
+    $('.file_area').append('<div class="form-inline">' +
+      '<input type="file" name="multiFile" id="multiFile" class="form-control">' +
+      ' <button type="button" class="btn_delete btn btn-sm">삭제</button>' + '</div>');
+  }
+
+  $(document).ready(function () {
+    $('#id_btn_new_file').click(id_btn_new_file);
+
+    $('.file_area').on('click', '.btn_delete', function () {
+      $(this).closest('div').remove();
+    });
+  });
+
+  function clearMultiFile() {
+    document.getElementById('multiFile').value = '';
+    document.getElementById('multiFile').removeAttribute('required');
+  }
+</script>

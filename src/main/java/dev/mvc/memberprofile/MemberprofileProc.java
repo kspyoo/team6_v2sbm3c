@@ -1,5 +1,8 @@
 package dev.mvc.memberprofile;
 
+import java.util.ArrayList;
+
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -20,14 +23,32 @@ public class MemberprofileProc implements MemberprofileProcInter{
     return cnt;
   }
   @Override
-  public MemberprofileVO read_file(int memberno) {
-    MemberprofileVO memberprofileVO = this.memberprofileDAO.read_file(memberno);
-    return memberprofileVO;
+  public ArrayList<MemberprofileVO> read_file(int memberno) {
+    ArrayList<MemberprofileVO> list = this.memberprofileDAO.read_file(memberno);
+    return list;
   }
   
   @Override
   public int delete_FK(int memberno) {
     int cnt = this.memberprofileDAO.delete_FK(memberno);
+    return cnt;
+  }
+  
+  @Override
+  public int delete_others(@Param("memberno") int memberno, @Param("mprofileno") int mprofileno) {
+    int cnt = this.memberprofileDAO.delete_others(memberno, mprofileno);
+    return cnt;
+  }
+  
+  @Override
+  public int delete_one(@Param("memberno") int memberno, @Param("mprofileno") int mprofileno) {
+    int cnt = this.memberprofileDAO.delete_one(memberno, mprofileno);
+    return cnt;
+  }
+
+  @Override
+  public int create_other_file(MemberprofileVO memberprofileVO) {
+    int cnt = this.memberprofileDAO.create_other_file(memberprofileVO);
     return cnt;
   }
 

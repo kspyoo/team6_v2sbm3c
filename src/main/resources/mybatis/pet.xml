@@ -7,16 +7,40 @@
         values(PETTYPE_SEQ.nextval, #{petName}, #{petBirth}, #{petGender}, #{petDetail}, #{petTypeNo}, #{memberNo})
     </insert>
 
-    <select id="petInfo" parameterType="int" resultType="dev.mvc.pet.PetVO">
-        select petno, petname, petbirth, petgender, petdetail, pettypeno, memberno
-        from PET
-        where PETNO = #{petNo}
+    <select id="petInfo" parameterType="int" resultType="dev.mvc.pet.PetJoinVO">
+        select p.petno, p.petname, p.petbirth, p.petgender, p.petdetail, p.pettypeno, p.memberno, pp.svFileName
+        from PET p left outer join
+             (select petno, SVFILENAME
+              from (
+                       -- rownum 생성
+                       select petno, SVFILENAME, ROWNUM as SEQNO
+                       from (
+                                -- SEQNO 내림차순 정렬 -> PETPROFILENO 내림차순 정렬
+                                select petno, SVFILENAME, SEQNO
+                                from PETPROFILE
+                                order by SEQNO desc, PETPROFILENO desc
+                            )
+                   )
+              where SEQNO = 1) pp on p.PETNO = pp.PETNO
+        where p.PETNO = #{petNo}
     </select>
 
-    <select id="petInfoList" parameterType="int" resultType="dev.mvc.pet.PetVO">
-        select petno, petname, petbirth, petgender, petdetail, pettypeno, memberno
-        from PET
-        where MEMBERNO = #{memberNo}
+    <select id="petInfoList" parameterType="int" resultType="dev.mvc.pet.PetJoinVO">
+        select p.petno, p.petname, p.petbirth, p.petgender, p.petdetail, p.pettypeno, p.memberno, pp.svFileName
+        from PET p left outer join
+             (select petno, SVFILENAME
+              from (
+                       -- rownum 생성
+                       select petno, SVFILENAME, ROWNUM as SEQNO
+                       from (
+                                -- SEQNO 내림차순 정렬 -> PETPROFILENO 내림차순 정렬
+                                select petno, SVFILENAME, SEQNO
+                                from PETPROFILE
+                                order by SEQNO desc, PETPROFILENO desc
+                            )
+                   )
+              where SEQNO = 1) pp on p.PETNO = pp.PETNO
+        where p.MEMBERNO = #{memberNo}
     </select>
 
     <select id="petInfoCnt" parameterType="int">

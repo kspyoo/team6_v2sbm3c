@@ -1,5 +1,9 @@
 package dev.mvc.memberprofile;
 
+import java.util.ArrayList;
+
+import org.apache.ibatis.annotations.Param;
+
 public interface MemberprofileDAOInter {
   /**
    * 사진 등록
@@ -17,7 +21,7 @@ public interface MemberprofileDAOInter {
    * 파일 조회
    * @return
    */
-  public MemberprofileVO read_file(int memberno);
+  public ArrayList<MemberprofileVO> read_file(int memberno);
   
   /**
    * 자식테이블 삭제
@@ -25,4 +29,29 @@ public interface MemberprofileDAOInter {
    * @return
    */
   public int delete_FK(int memberno);
+  
+  /**
+   * 
+   * @param memberno
+   * @return
+   */
+  public int delete_others(@Param("memberno") int memberno, @Param("mprofileno") int mprofileno);
+  
+  /**
+   * 
+   * @param memberno
+   * @return
+   */
+  public int delete_one(@Param("memberno") int memberno, @Param("mprofileno") int mprofileno);
+  
+  /**
+   * 
+   * @param file1
+   * @param file1saved
+   * @param thumbfile
+   * @param filesize
+   * @param memberno
+   * @return
+   */
+  public int create_other_file(MemberprofileVO memberprofileVO);
 }

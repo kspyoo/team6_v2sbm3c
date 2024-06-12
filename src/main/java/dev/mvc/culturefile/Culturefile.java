@@ -22,7 +22,7 @@ public class Culturefile {
           
       } else { // Linux, AWS, 서비스용 배치 폴더 
           // System.out.println("Linux");
-          path = "/home/ubuntu/deploy/resort_v4sbm3c/contents/storage/";
+          path = "/home/ubuntu/deploy/team6_v2sbm3c/culturefile/storage/";
       }
       
       return path;

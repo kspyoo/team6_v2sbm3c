@@ -21,8 +21,18 @@
     <div class="" id="pet_info_list">
         <div class="row info_box mt-4 mb-4" th:if="${cnt > 0}" th:each="petVO:${petVOList}">
             <div class="col-3 mt-3 mb-3">
-                <div class="img_container ">
-                    <img src="/image/pet/No_Image.png" alt="반려동물 사진" style="width: 100%;">
+                <div class="img-container">
+                    <div class="img-box" th:if="${petVO.svFileName!=null and
+                                                        (petVO.svFileName.endsWith('.jpg') or petVO.svFileName.endsWith('.png') or
+                                                        petVO.svFileName.endsWith('.jpeg') or petVO.svFileName.endsWith('.gif'))}">
+                        <img th:src="@{|/petprofile/storage/${petVO.svFileName}|}" alt="반려동물 사진" style="width: 100%; object-fit: cover; cursor: pointer;"
+                            class="preview" onclick="window.open(this.src)">
+                    </div>
+                    <div class="img-box" th:unless="${petVO.svFileName!=null and
+                                                        (petVO.svFileName.endsWith('.jpg') or petVO.svFileName.endsWith('.png') or
+                                                        petVO.svFileName.endsWith('.jpeg') or petVO.svFileName.endsWith('.gif'))}">
+                        <img src="/image/pet/No_Image.png" alt="반려동물 사진" style="width: 100%;" class="preview">
+                    </div>
                 </div>
             </div>
             <div class="col-7 mt-4 mb-3 row">

@@ -23,14 +23,13 @@
       document.querySelector('#passwd2').addEventListener('keypress', (event) => {
         // document.getElementById('passwd').addEventListener('keypress', (event) => {
         if (event.key === 'Enter') {
-          document.getElementById('mname').focus();
+          document.getElementById('name').focus();
         }
       });
 
       document.querySelector('#name').addEventListener('keypress', (event) => {
         // document.getElementById('passwd').addEventListener('keypress', (event) => {
         if (event.key === 'Enter') {
-          alert("dfdfdf");
           document.getElementById('tel').focus();
         }
       });
@@ -58,7 +57,7 @@
       let id_msg = document.getElementById('id_msg');
 
       if (id.value.trim().length == 0) {
-        id_msg.innerHTML = 'ID 입력은 필수 입니다. ID(이메일)는 3자이상 권장합니다.';
+        id_msg.innerHTML = 'ID 입력은 필수 입니다.<br>ID(이메일)는 3자이상 권장합니다.';
         id_msg.classList.add('span_warning');    // class 적용
         id.focus();
 
@@ -83,10 +82,9 @@
           .then(response => response.json())
           .then(rdata => {
             if (rdata.cnt > 0) { // 아이디 중복
-              id_msg.innerHTML = '이미 사용중인 ID(이메일) 입니다. 다른 ID(이메일)을 지정해주세요.';
+              id_msg.innerHTML = '이미 사용중인 ID(이메일) 입니다.<br>다른 ID(이메일)을 지정해주세요.';
               id_msg.classList.add('span_warning');
               id.focus();
-              System.out.println("d");
             } else { // 아이디 중복 안됨.
               id_msg.innerHTML = '사용 가능한 ID(이메일) 입니다.';
               id_msg.classList.add('span_info');
@@ -108,6 +106,7 @@
     }
 
     function checkPhone() {
+      //location.href = "/member/findIdView";
 
       let phone = document.getElementById('phone');
       let phone_msg = document.getElementById('phone_msg');
@@ -119,13 +118,14 @@
 
         return false;  // 회원 가입 진행 중지
 
-      } else {  // when Phone is entered
+      } else {
+        phone_msg.classList.remove('span_warning'); // class 삭제
 
         // ---------------------------------------------------------------------------------------
         // fetch 관련 시작
         // ---------------------------------------------------------------------------------------
-        let phone = document.getElementById('phone');
         let url = './checkPhone?phone=' + phone.value;
+
         fetch(url, {
           method: 'GET',
           // headers: {
@@ -136,17 +136,23 @@
           .then(response => response.json())
           .then(rdata => {
             if (rdata.cnt > 0) { // 아이디 중복
-              if (confirm('이미 가입되어있는 전화번호 입니다.\n아이디 찾기 페이지로 넘어가시겠습니까?')) {
-                location.href = '/member/findIdView';
-              }
-            } else {
-              return true;
+              phone_msg.innerHTML = '이미 사용중인 전화번호 입니다.';
+              phone_msg.classList.add('span_warning');
+              phone.focus();
+
+
+            } else { // 아이디 중복 안됨.
+              phone_msg.innerHTML = '사용 가능한 전화번호 입니다.';
+              phone_msg.classList.add('span_info');
+              document.getElementById('addr_code').focus();
             }
           })
           .catch(error => { // 서버 다운등 통신 에러
             console.error('Error:', error);
-            return false;
           });
+
+        // 처리중 출력
+        phone_msg.innerHTML = "<img src='/image/progress.gif' style='width: 5%;'>"; // static 기준
 
         // ---------------------------------------------------------------------------------------
         // fetch 관련 종료
@@ -160,7 +166,7 @@
       let id_msg = document.getElementById('id_msg');
 
       if (id.value.trim().length == 0) {
-        id_msg.innerHTML = 'ID 입력은 필수 입니다. ID(이메일)는 3자이상 권장합니다.';
+        id_msg.innerHTML = 'ID 입력은 필수 입니다.<br>ID(이메일)는 3자이상 권장합니다.';
         id_msg.classList.add('span_warning');    // class 적용
         id.focus();
 
@@ -173,6 +179,8 @@
       let passwd2 = document.getElementById('passwd2');
       let passwd2_msg = document.getElementById('passwd2_msg');
 
+      passwd2_msg.innerHTML = '';
+
       if (passwd.value != passwd2.value) {
         passwd2_msg.innerHTML = '입력된 패스워드가 일치하지 않습니다.';
         passwd2_msg.classList.add('span_warning');    // class 적용
@@ -184,6 +192,8 @@
       let name = document.getElementById('name');
       let name_msg = document.getElementById('name_msg');
 
+      name_msg.innerHTML = '';
+
       if (name.value.length == 0) {
         name_msg.innerHTML = '이름 입력은 필수입니다.';
         name_msg.classList.add('span_warning');    // class 적용
@@ -191,12 +201,31 @@
 
         return false;  // 회원 가입 진행 중지
       }
-      checkPhone();
+
+      let phone = document.getElementById('phone');
+      let phone_msg = document.getElementById('phone_msg');
+
+      if (phone.value.trim().length == 0) {
+        phone_msg.innerHTML = '전화번호 입력은 필수입니다..';
+        phone_msg.classList.add('span_warning');    // class 적용
+        phone.focus();
+
+        return false;  // 회원 가입 진행 중지
+
+      }
+
       document.getElementById('frm').submit(); // required="required" 작동 안됨.
     }    
   </script>
 
   <div class="title_line">회원 가입(*: 필수)</div>
+  <aside class="aside_right">
+    <a href="/member/findIdView">아이디 찾기</a>
+    <span class='menu_divide'>│</span>
+    <a href="/member/findPasswdView">비밀번호 찾기</a>
+  </aside>
+
+  <div class='menu_line'></div>
 
   <div style="width: 70%; margin: 0px auto; ">
 
@@ -209,6 +238,7 @@
           style="margin-right: 10px;">중복확인</button>
         <span id='id_msg'></span>
       </div>
+
 
       <div style="display: flex; align-items: center; margin-bottom: 10px; width: 100%;">
         <label for="passwd" style="width: 150px; margin-right: 10px;">패스워드*</label>
@@ -232,8 +262,8 @@
 
       <div style="display: flex; align-items: center; margin-bottom: 10px; width: 100%;">
         <label for="gender" style="width: 150px; margin-right: 10px;">성별</label>
-        <input type='radio' name='gender' value='male' checked style="margin-right: 10px;" /> 남
-        <input type='radio' name='gender' value='female' style="margin-right: 10px;" /> 녀
+        <input type='radio' name='gender' value='male' checked style="margin-right: 5px;" /> 남
+        <input type='radio' name='gender' value='female' style="margin-right: 5px;margin-left: 15px;" /> 여
         <span id='gender_msg'></span>
       </div>
 
@@ -246,9 +276,12 @@
 
       <div style="display: flex; align-items: center; margin-bottom: 10px; width: 100%;">
         <label for="phone" style="width: 150px; margin-right: 10px;">전화 번호*</label>
-        <input type='tel' name='phone' id='phone' value='010-1234-5678' required="required" placeholder="전화번호"
+        <input type='text' name='phone' id='phone' value='010-1234-5678' required="required" placeholder="전화번호"
           class="form-control form-control-sm" style="width: 30%; margin-right: 10px;">
         예) 010-0000-0000
+        <button type='button' id="btn_checkPhone" onclick="checkPhone()" class="btn btn-primary btn-sm"
+          style="margin-right: 10px;margin-left: 10px;">중복확인</button>
+        <span id='phone_msg'></span>
       </div>
 
       <div style="display: flex; align-items: center; margin-bottom: 10px; width: 100%;">

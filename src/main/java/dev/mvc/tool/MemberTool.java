@@ -1,7 +1,9 @@
 package dev.mvc.tool;
 
 import javax.imageio.ImageIO;
-import javax.servlet.http.HttpServletRequest;
+
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.http.HttpServletRequest;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.PixelGrabber;
@@ -12,7 +14,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Random;
 
-public class Tool {
+public class MemberTool {
     /**
      * FileUpload 1.2, 1.3 한글 변환
      * @param str
@@ -280,10 +282,11 @@ public class Tool {
 
         try{
             // System.out.println("--> User dir: " + System.getProperty("user.dir"));
-            path = request.getRealPath(dir) + "/";
+          ServletContext servletContext = request.getServletContext();
+          path = servletContext.getRealPath("/") + dir + "/";
             // System.out.println("--> Upload path: " + path);
         }catch(Exception e){
-            System.out.println(e.toString()+"ddddddd");
+            System.out.println(e.toString());
         }
 
         return path;
