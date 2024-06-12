@@ -161,7 +161,6 @@ public class CulturefileCont {
       this.culturefileProc.delete(fano);
 
       ra.addAttribute("culturefno", culturefno); // 리다이렉트 매개변수로 culturefno 전달
-      ra.addFlashAttribute("code", "delete_success"); // 삭제 성공 메시지
       return "redirect:/culturefile/update_file"; // 삭제 후 리다이렉트
   }
 
