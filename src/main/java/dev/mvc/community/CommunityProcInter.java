@@ -9,9 +9,11 @@ public interface CommunityProcInter {
 
   public int create(CommunityVO communityVO);
   
-  public ArrayList<CommunityVO>list_all();
+  public ArrayList<attachmentVO>list();
   
-  public CommunityVO read(int communityno);
+  public ArrayList<attachmentVO>list_all();
+  
+  public attachmentVO read(int communityno);
   
   public int update(CommunityVO communityVO);
   

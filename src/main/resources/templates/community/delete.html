@@ -10,7 +10,7 @@
   <aside class="aside_right">
     <a href="/community/list_all">목록</a>
     <span class="menu_devide">│</span>
-    <a th:href="@{|/community/update/${communityVO.communityno}|}">수정</a>
+    <a th:href="@{|/community/update/${attachmentVO.communityno}|}">수정</a>
     <span class="menu_devide">│</span>
     <a href="/community/delete">삭제</a>
     <span class="menu_devide">│</span>
@@ -20,9 +20,9 @@
   </aside>
 
   <div class='menu_line'></div>
-  <form name='frm' method='POST' th:object="${communityVO}" th:action="@{|/community/delete/${communityVO.communityno}|}">
-    <div class="msg_warning">게시글을 삭제하면 복구 할 수 없습니다.</div>
-    <label>제목</label>: <span th:text="${communityVO.title}"></span>
+  <form name='frm' method='POST' th:object="${attachmentVO}" th:action="@{|/community/delete/${attachmentVO.communityno}|}">
+    <div class="msg_warning">게시글 이미지를 삭제하면 복구 할 수 없습니다.</div>
+    <label>제목</label>: <span th:text="${attachmentVO.title}"></span>
 
 
     <div class="content_body_bottom">

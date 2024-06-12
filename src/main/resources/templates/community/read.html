@@ -9,29 +9,63 @@
   <aside class="aside_right">
     <a href="/community/list_all">목록</a>
     <span class="menu_devide">│</span>
-    <a th:href="@{|/community/update/${communityVO.communityno}|}">수정</a>
+    <a th:href="@{|/community/update/${attachmentVO.communityno}|}">수정</a>
     <span class="menu_devide">│</span>
-    <a th:href="@{|/community/delete/${communityVO.communityno}|}">삭제</a> 
-    <span class="menu_devide">│</span>
+    <a th:href="@{|/community/delete/${attachmentVO.communityno}|}">삭제</a> 
+    <span class="menu_devide">│</span> 
     <a href="/community/create">등록</a>
     <span class="menu_devide">│</span>
     <a href="javascript: location.reload();">새로 고침</a>
   </aside>
-  <div class="menu_line"></div>
-  
-  <div class="container mt-3" style="width: 50%; margin: 5px auto;">
-    <ul class="list-group list-group-flush">
-      <li class="list-group-item">글번호: <span th:text="${communityVO.communityno}"></span></li>
-      <li class="list-group-item">제목: <span th:text="${communityVO.title}"></span></li>
-      <li class="list-group-item">내용: <span th:text="${communityVO.content}"></span></li>
-      <li class="list-group-item">조회수: <span th:text="${communityVO.vcnt}"></span></li>
-      <li class="list-group-item">좋아요수: <span th:text="${communityVO.rcnt}"></span></li>
-      <li class="list-group-item">작성일자: <span th:text="${communityVO.writedate}"></span></li>
-      <li class="list-group-item">검색태그: <span th:text="${communityVO.tag}"></span></li>
-    </ul>  
-  </div>
+<div class='menu_line'></div>
 
-  
+  <fieldset class="fieldset_basic">
+    <ul>
+      <li class="li_none">
+        <div style="width: 100%; word-break: break-all;">
+          <div
+            th:if="${(attachmentVO.filename != null) and (attachmentVO.filename.endsWith('jpg') or attachmentVO.filename.endsWith('png')  or attachmentVO.filename.endsWith('gif'))}">
+            <img th:src="@{|/communityattachment/storage/${attachmentVO.filename}|}"
+              style="width:50%; float:left; margin-top:0.5%; margin-right:1%;">
+          </div>
+
+          <span style="font-size: 1.5em; font-weight: bold;"
+            th:utext="${#strings.replace(attachmentVO.title, '\n', '<br/>')}"></span>
+          <span style="font-size: 1em;" th:text="${attachmentVO.writedate }"></span><br>
+
+          <!-- <span th:utext="${#strings.replace(yourTextVariable, '\n', '<br/>')}"></span> -->
+          <!-- th:utext: html 그대로 출력, string:thymeleaf 제공 객체 -->
+          <div th:utext="${#strings.replace(attachmentVO.content, '\n', '<br/>')}"></div> -->
+          <!-- <div style="white-space: pre-warp;">
+          <span th:text="${contentsVO.content}"></span>
+         </div>-->
+
+      </li>
+
+      <li class="li_none" th:if="${attachmentVO.filesize > 0}">
+        <div>
+          <!-- ServletRegister.java: registrationBean.addUrlMappings("/download"); -->
+          첨부 파일: <a
+            th:href="@{|/download?dir=/communityattachmentVO/storage&filename=${attachmentVO.filename}&downname=${attachmentVO.filename}|}"
+            th:text="|${attachmentVO.filename}|"> </a>
+          <span th:text="|(${attachmentVO.filesize})|"></span>
+
+        </div>
+      </li>
+            </li>
+    </ul>
+  </fieldset>
+</div>
+
+</li>
+</ul>
+</fieldset>
+
+</div>
+
+</body>
+
+</html>
  
 </div>
 </html>
