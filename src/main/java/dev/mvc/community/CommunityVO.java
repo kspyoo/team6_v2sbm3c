@@ -18,7 +18,7 @@ import lombok.Setter;
 //);
 @Setter @Getter
 public class CommunityVO {
-  private int communityno =0 ;
+  private int communityno;
   private String title ="";
   private String content= "";
   private int vcnt = 1;

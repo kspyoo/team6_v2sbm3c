@@ -46,4 +46,11 @@ public interface PetDAOInter {
      * @return
      */
     public int delete(int petNo);
+
+    /**
+     * 특정 유저의 반려동물 정보 전체 삭제
+     * @param memberNo
+     * @return
+     */
+    public int delete_all(int memberNo);
 }

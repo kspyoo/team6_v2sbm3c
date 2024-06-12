@@ -37,4 +37,32 @@
                       )
              )
     </select>
+
+    <!--  해당 이미지가 존재 하는지 확인해보고 있으면 삭제  -->
+    <delete id="delete" parameterType="int">
+        delete
+        from PETPROFILE
+        where exists(
+            select 1
+            from PETPROFILE
+            where PETPROFILENO = ${petProfileNo}
+        ) and PETPROFILENO = #{petProfileNo}
+    </delete>
+
+    <!--  특정 반려동물번호로 저장된 이미지가 있는경우 이미지 전체 삭제 진행  -->
+    <delete id="delete_all" parameterType="int">
+        delete
+        from PETPROFILE
+        where exists(
+                select 1
+                from PETPROFILE
+                where petNo = ${petNo}
+            ) and petNo = #{petNo}
+    </delete>
+
+    <select id="profile_cnt" parameterType="int">
+        select count(*)
+        from PETPROFILE
+        where petno = ${petNo}
+    </select>
 </mapper>

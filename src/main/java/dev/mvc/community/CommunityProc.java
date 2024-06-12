@@ -26,15 +26,22 @@ public class CommunityProc implements CommunityProcInter {
   }
 
   @Override
-  public ArrayList<CommunityVO> list_all() {
-    ArrayList<CommunityVO>list = this.communityDAO.list();
+  public ArrayList<attachmentVO> list() {
+    ArrayList<attachmentVO>list = this.communityDAO.list();
+    return list;
+  }
+  
+  
+  @Override
+  public ArrayList<attachmentVO> list_all() {
+    ArrayList<attachmentVO>list = this.communityDAO.list_all();
     return list;
   }
 
   @Override
-  public CommunityVO read(int communityno) {
-    CommunityVO communityVO = this.communityDAO.read(communityno);
-    return communityVO;
+  public attachmentVO read(int communityno) {
+    attachmentVO attachmentVO = this.communityDAO.read(communityno);
+    return attachmentVO;
   }
 
   @Override

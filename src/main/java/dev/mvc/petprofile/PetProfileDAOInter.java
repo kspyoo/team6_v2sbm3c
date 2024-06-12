@@ -23,4 +23,25 @@ public interface PetProfileDAOInter {
      * @return
      */
     public ArrayList<PetProfileVO> list(int petNo);
+
+    /**
+     * 이미지 삭제(단건)
+     * @param petProfileNo
+     * @return
+     */
+    public int delete(int petProfileNo);
+
+    /**
+     * 이미지 삭제(전체)
+     * @param petNo
+     * @return
+     */
+    public int delete_all(int petNo);
+
+    /**
+     * 이미지가 몇장 있는지 확인 조회
+     * @param petNo
+     * @return
+     */
+    public int profile_cnt(int petNo);
 }

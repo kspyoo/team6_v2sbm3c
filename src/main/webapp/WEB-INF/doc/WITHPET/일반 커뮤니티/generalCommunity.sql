@@ -140,6 +140,41 @@ FROM(
         FROM community
           WHERE UPPER(title) LIKE '%' || UPPER('word') || '%' OR UPPER(tag) LIKE '%' || UPPER('word') || '%'  
         ORDER BY communityno ASC;
+        
+SELECT c.communityno,c.title,c.content,c.vcnt,c.rcnt,c.writedate,c.tag,c.memberno,c.ctypeno,ca.cano, ca.filename, ca.filesize, ca.thumbfile,ca.communityno 
+FROM community c
+LEFT OUTER JOIN communityattachment ca
+ON c.communityno = ca.communityno;
+
+SELECT c.communityno,c.title,c.content,c.vcnt,c.rcnt,c.writedate,c.tag,c.memberno,c.ctypeno,ca.cano, ca.filename, ca.filesize, ca.thumbfile,ca.communityno 
+FROM community c
+RIGHT OUTER JOIN communityattachment ca
+ON c.communityno = ca.communityno;
+
+
+
+SELECT c.communityno,c.title,c.content,c.vcnt,c.rcnt,c.writedate,c.tag,c.memberno,c.ctypeno,ca.cano, ca.filename, ca.filesize, ca.thumbfile,ca.communityno 
+FROM community c
+INNER JOIN communityattachment ca
+ON c.communityno = ca.communityno;
+
+
+SELECT c.communityno,c.title,c.content,c.vcnt,c.rcnt,c.writedate,c.tag,c.memberno,c.ctypeno,ca.cano, ca.filename, ca.filesize, ca.thumbfile,ca.communityno 
+FROM community c 
+LEFT OUTER JOIN communityattachment ca
+ON c.communityno = ca.communityno
+WHERE c.communityno =32;
+
+
+
+SELECT communityno,title,content,vcnt,rcnt,writedate,tag,memberno,ctypeno
+FROM community
+WHERE communityno=32;
+
+SELECT cano, filename, filesize, thumbfile,communityno 
+FROM communityattachment
+WHERE communityno=32;
+commit;
 /**********************************/
 /* Table Name: 댓글 */
 /**********************************/
@@ -171,7 +206,7 @@ DROP TABLE COMMUNITYATTACHMENT;
 CREATE TABLE COMMUNITYATTACHMENT(
     CANO                              NUMBER(10)     NOT NULL    PRIMARY KEY,
     FILENAME                          VARCHAR2(100)    NOT NULL,
-    FILESIZE                          number(10)    NOT NULL,
+    FILESIZE                          number(13)    NOT NULL,
     THUMBFILE                         VARCHAR2(100)    NOT NULL,
     COMMUNITYNO                       NUMBER(10)     NULL ,
   FOREIGN KEY (COMMUNITYNO) REFERENCES COMMUNITY (COMMUNITYNO)
@@ -193,7 +228,7 @@ CREATE SEQUENCE COMMUNITYATTACHMENT_SEQ
   NOCYCLE;            
 
 INSERT INTO communityattachment(cano, filename, filesize, thumbfile,communityno)
-VALUES(COMMUNITYATTACHMENT_SEQ.nextval,'puppy.png',1000,'puppy.png',14);
+VALUES(COMMUNITYATTACHMENT_SEQ.nextval,'puppy.png',1000,'puppy.png',27);
 
 SELECT * FROM communityattachment;
 
@@ -213,5 +248,5 @@ WHERE communityno = 14;
 SELECT * FROM communityattachment;
 
 --delete
-DELETE FROM communityattachment WHERE communityno=14;
+DELETE FROM communityattachment WHERE communityno=0;
 
