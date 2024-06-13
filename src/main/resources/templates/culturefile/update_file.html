@@ -2,95 +2,118 @@
 <html layout:decorate="~{layout}">
 
 <head>
-	<style>
-		.image-grid {
-			display: flex;
-			flex-wrap: wrap;
-			justify-content: center;
-			gap: 20px;
-		}
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+   <style>
+      .left-box,
+      .right-box {
+         border: 1px solid #ddd;
+         border-radius: 8px;
+         padding: 20px;
+         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+         width: 45%;
+         box-sizing: border-box;
+      }
 
-		.image-container {
-			position: relative;
-			width: 100px;
-			/* 이미지 크기를 절반으로 줄임 */
-			height: 100px;
-			/* 이미지 크기를 절반으로 줄임 */
-			overflow: hidden;
-			border: 1px solid #ddd;
-			border-radius: 8px;
-			box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-		}
+      .image-grid {
+         display: flex;
+         flex-wrap: wrap;
+         justify-content: center;
+         gap: 20px;
+      }
 
-		.image-container img {
-			width: 100%;
-			height: 100%;
-			object-fit: cover;
-		}
+      .image-container {
+         position: relative;
+         width: 100px;
+         height: 100px;
+         overflow: hidden;
+         border: 1px solid #ddd;
+         border-radius: 8px;
+         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
 
-		.delete-btn {
-			position: absolute;
-			top: 5px;
-			/* 버튼 위치를 조금 위로 이동 */
-			right: 5px;
-			/* 버튼 위치를 조금 오른쪽으로 이동 */
-			background-color: rgba(255, 0, 0, 0.7);
-			color: white;
-			border: none;
-			padding: 3px;
-			/* 버튼의 padding을 줄임 */
-			cursor: pointer;
-			border-radius: 4px;
-		}
+      .image-container img {
+         width: 100%;
+         height: 100%;
+         object-fit: cover;
+      }
 
+      .delete-btn {
+         position: absolute;
+         top: 5px;
+         right: 5px;
+         background-color: rgba(255, 0, 0, 0.7);
+         color: white;
+         border: none;
+         padding: 3px;
+         cursor: pointer;
+         border-radius: 4px;
+      }
 
-		.file-upload-form {
-			text-align: left;
-			width: 47%;
-			margin: auto;
-			margin-top: 20px;
-		}
-	</style>
+      .file-upload-form {
+         text-align: left;
+      }
+
+      .aside_right {
+         text-align: right;
+         margin: 10px 0;
+      }
+   </style>
 </head>
->>>>>>> 1054cf9f77d0173b2d9f2154367e87e81a170e76
 
 <body>
-	<div layout:fragment="content">
-		<div class='title_line'>
-			> 파일 수정
-		</div>
-		<aside class="aside_right">
-			<a href="/culturefacility/create">등록</a>
-			<span class='menu_divide'>│</span>
-			<a href="javascript:location.reload();">새로고침</a>
-			<span class='menu_divide'>│</span>
-		</aside>
-		<div class='menu_line'></div>
+   <div layout:fragment="content">
+      <div class='title_line'> > 파일 수정 </div>
+      <aside class="aside_right">
+         <a href="/culturefacility/create">등록</a>
+         <span class='menu_divide'>│</span>
+         <a href="javascript:location.reload();">새로고침</a>
+         <span class='menu_divide'>│</span>
+      </aside>
+      <div class='menu_line'></div>
 
+      <div class="left-box">
+         <div class="image-grid">
+            <div th:each="file, iterStat : ${list}" class="image-container" th:if="${!iterStat.first}">
+               <img th:src="@{|/culturefile/storage/${file.file1saved}|}" th:alt="${file.file1}">
+               <form method="POST" th:action="@{/culturefile/delete_file}" style="display:inline;">
+                  <input type="hidden" name="fano" th:value="${file.fano}">
+                  <button type="submit" class="delete-btn">삭제</button>
+               </form>
+            </div>
+         </div>
+      </div>
 
-		<fieldset class="fieldset_basic">
-			<div class="image-grid">
-				<div th:each="file, iterStat : ${list}" class="image-container" th:if="${!iterStat.first}">
-					<img th:src="@{|/culturefile/storage/${file.file1saved}|}" th:alt="${file.file1}">
-					<form method="POST" th:action="@{/culturefile/delete_file}" style="display:inline;">
-						<input type="hidden" name="fano" th:value="${file.fano}">
-						<button type="submit" class="delete-btn">삭제</button>
-					</form>
-				</div>
-
-			</div>
-			<div class="file-upload-form">
-				<form name='frm' method='POST' action='./update_file' enctype="multipart/form-data">
-					<input type="hidden" name="culturefno" th:if="${culturefacilityVO != null}"
-						th:value="${culturefacilityVO.culturefno}">
-					<label for="file1MF">변경 이미지 선택</label><br>
-					<input type='file' name='file1MF' id='file1MF'><br><br>
-					<button type="submit" class="btn btn-secondary btn-sm">파일 변경 처리</button>
-					<button type="button" onclick="history.back();" class="btn btn-secondary btn-sm">파일 변경 취소</button>
-				</form>
-			</div>
-		</fieldset>
-	</div>
+      <div class="right-box">
+         <div class="file-upload-form">
+            <form name='frm' method='POST' action='./update_file' enctype="multipart/form-data">
+               <input type="hidden" name="culturefno" th:if="${culturefacilityVO != null}"
+                  th:value="${culturefacilityVO.culturefno}">
+               <input type='file' name='files' id='file1MF' multiple class='file-input'><br><br>
+               <button type="submit" class="btn btn-secondary btn-sm">파일 변경 처리</button>
+               <button type="button" onclick="history.back();" class="btn btn-secondary btn-sm">파일 변경 취소</button>
+            </form>
+         </div>
+      </div>
+   </div>
 </body>
 
 </html>
+
+<script>
+   function id_btn_new_file() {
+      $('.right-box .file-upload-form').append(
+         '<div class="form-inline file_area">' +
+         '<input type="file" name="files" class="form-control" multiple>' +
+         ' <button type="button" class="btn_delete btn btn-sm">삭제</button>' +
+         '</div>'
+      );
+   }
+
+   $(document).ready(function () {
+      $('#id_btn_new_file').click(id_btn_new_file);
+
+      $('.right-box .file-upload-form').on('click', '.btn_delete', function () {
+         $(this).closest('.file_area').remove();
+      });
+   });
+</script>
