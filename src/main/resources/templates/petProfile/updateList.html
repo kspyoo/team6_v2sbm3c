@@ -1,0 +1,105 @@
+<html layout:decorate="~{layout}"> <!-- layout.html 상속 -->
+<div layout:fragment="content" style="padding-top: 20px; width: 70%; margin: auto">
+    <link href="/css/petProfile/updateList.css" rel="Stylesheet" type="text/css">
+    <script type="text/JavaScript" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <div id="list_all" style="height: 641.898px;">
+        <div class='title_line'>반려동물 사진 구경하기</div>
+
+        <aside class="aside_right">
+            <a href="javascript:location.reload();">새로고침</a>
+        </aside>
+
+        <div class='menu_line'></div>
+
+        <div>
+            <span>총 모집글 수 [[${mateCommunity_cnt}]]</span>
+        </div>
+
+        <table class="table table-hover" style="margin: 20px auto">
+            <colgroup>
+                <col style="width: 15%;"></col>
+                <col style="width: 50%;"></col>
+                <col style="width: 10%;"></col>
+                <col style="width: 25%;"></col>
+                <!--            <col style="width: 15%;"></col>-->
+                <!--            <col style="width: 10%;"></col>-->
+            </colgroup>
+            <thead>
+            <tr>
+                <th class="th_bs" style='text-align: center; border-right: 1px solid;'>번호</th>
+                <th class="th_bs" style='text-align: center; border-right: 1px solid;'>이미지 이름</th>
+                <th class="th_bs" style='text-align: center; border-right: 1px solid;'>순서</th>
+                <th class="th_bs" style='text-align: center;'>관리</th>
+                <!--            <th class="th_bs" style='text-align: center;'>관리</th>-->
+                <!--            <th class="th_bs" style='text-align: center;'>기타</th>-->
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="petProfileVO, stat:${list}" style="cursor: pointer;">
+                <td class="td_basic" style="text-align: center;">
+                    <span th:text="${stat.index + 1}"></span>
+                </td>
+
+                <td class="td_left align-middle">
+                    <span th:text="${petProfileVO.ogFileName}" style="font-weight: bold; margin-left: 10px; cursor: pointer;"
+                          th:onclick="@{|window.open('/petprofile/storage/${petProfileVO.svFileName}')|}" ></span>
+                </td>
+
+                <td class="td_left align-middle" style="text-align: center;">
+                    <span th:text="${petProfileVO.seqNo}" ></span>
+                </td>
+
+                <td class="td_left align-middle" style="text-align: center;">
+                    <a th:href="@{|/petProfile/seqno_up/${petProfileVO.petProfileNo}|}"><img src="/image/petProfile/up.png" class="icon"></a>
+                    <a th:href="@{|/petProfile/seqno_down/${petProfileVO.petProfileNo}|}"><img src="/image/petProfile/down.png" class="icon"></a>
+                    <a type="button" th:id="@{|'delete'+${petProfileVO.petProfileNo}|}"><img src="/image/petProfile/delete.png" class="icon"></a>
+                </td>
+
+                <script th:inline="javascript">
+                    window.addEventListener('load', function() {
+                        let delete_button = document.getElementById('delete' + [[${petProfileVO.petProfileNo}]])
+                        let petNo = [[${petProfileVO.petProfileNo}]];
+
+                        delete_button.addEventListener('click', ()=>{
+                            if (confirm('이미지를 삭제 하시겠습니까?')){
+                                let url = '/petProfile/delete_one'
+                                fetch(url,{
+                                    "method": "POST",
+                                    "headers": {"Content-Type": "application/json"},
+                                    body: JSON.stringify({ petNo })
+                                })
+                                .then((response) => response.json()) // 응답 문자열 추출
+                                .then((data) => {
+                                    if (parseInt(data.cnt) == 1) {
+                                        alert('이미지가 삭제 되었습니다.');
+                                        location.reload();
+                                    } else {
+                                        alert('이미지 삭제에 실패 했습니다.');
+                                        location.reload();
+                                    }
+                                });
+                            }
+                        })
+                    });
+                </script>
+            </tr>
+            </tbody>
+        </table>
+        <div th:if="${list.size()==0}" style="text-align: center; padding: 160px;">
+            <span>작성된 게시글이 없습니다.</span><br>
+            <span>첫 게시글을 작성해주세요!</span>
+        </div>
+        <script th:inline="javascript">
+            window.onload = () =>{
+                if([[${list.size()}]] > 10){
+                    document.getElementById('list_all').style.height = "auto";
+                }
+            }
+        </script>
+
+    </div>
+    <div class="btn-box mb-3">
+        <button type="button" class="btn btn-outline-info" id="cancel" th:attr="onclick=|location.href='/pet/myPetInfo?petNo=${petNo}'|">돌아가기</button>
+    </div>
+</div>
+</html>
