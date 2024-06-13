@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+
+<html layout:decorate="~{layout}">
+<!-- layout.html 상속-->
+<div layout:fragment="content" style="width: 80%; margin: auto">
+  <div class='title_line'>
+    > 글 조회
+  </div>
+
+  <aside class="aside_right">
+    <span th:if="${session.masterno != null}">
+      <a th:href="@{|/notice/update?noticeno=${noticeVO.noticeno}|}">수정</a>
+      <span class='menu_divide'>│</span>
+      <a th:href="@{|/notice/delete?noticeno=${noticeVO.noticeno}|}">삭제</a>
+      <span class='menu_divide'>│</span>
+    </span>
+    <a href="javascript:location.reload();">새로고침</a>
+  </aside>
+
+  <div class='menu_line'></div>
+
+  <fieldset class="fieldset_basic">
+    <ul>
+      <li class="li_none">
+        <div style="width: 100%; word-break: break-all;">
+
+          <div
+            th:if="${noticeVO.nfile.endsWith('jpg') or noticeVO.nfile.endsWith('png')  or noticeVO.nfile.endsWith('gif')}">
+            <img th:src="@{|/notice/storage/${noticeVO.nfile}|}"
+              style='width: 50%; float: left; margin-top: 0.5%; margin-right: 1%;'>
+          </div>
+
+          <span style="font-size: 1.5em; font-weight: bold;" th:text="${noticeVO.title}"></span>
+          <span style="font-size: 1em;" th:text="${noticeVO.noticedate }"></span><br><br>
+          <div style="white-space: pre-wrap;"><span th:text="${noticeVO.notice}"></span></div>
+        </div>
+      </li>
+
+    </ul>
+  </fieldset>
+
+</div>
+
+</html>

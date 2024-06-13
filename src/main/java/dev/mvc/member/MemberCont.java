@@ -317,8 +317,12 @@ public class MemberCont {
     
     System.out.println("this.memberProc.read(memberno) : " + this.memberProc.read(memberno));
     
+    
+    
     // MemberProfileVO를 조회하여 모델에 추가
     ArrayList<MemberprofileVO> list = this.memberprofileProc.read_file(memberno);
+    
+    System.out.println("list : " + list);
     if(list.size() < 2) {
       memberprofileVO = this.memberprofileProc.read_file(memberno).get(0);
       model.addAttribute("memberprofileVO", memberprofileVO);
