@@ -51,7 +51,7 @@
                 <td class="td_left align-middle" th:attr="onclick=|location.href='/mateCommunity/read?mCommunityNo=${mateCommunityVO.mCommunityNo}&now_page=${now_page}&searchWord=${searchWord}'|">
                     <span th:text="${mateCommunityVO.title}" style="font-weight: bold; margin-left: 10px;" th:value="@{|${mateCommunityVO.title.substring(0,8)}...|}"
                         th:if="${mateCommunityVO.title.length()>=8}"></span>
-                    <span th:text="${mateCommunityVO.title}" style="font-weight: bold; margin-left: 10px;" th:value="@{|${mateCommunityVO.title.substring(0,8)}...|}"
+                    <span th:text="${mateCommunityVO.title}" style="font-weight: bold; margin-left: 10px;" th:value="${mateCommunityVO.title}"
                           th:if="${mateCommunityVO.title.length() < 8}"></span>
                 </td>
 
