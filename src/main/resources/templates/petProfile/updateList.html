@@ -12,32 +12,39 @@
         <div class='menu_line'></div>
 
         <div>
-            <span>총 모집글 수 [[${mateCommunity_cnt}]]</span>
+            <span>총 이미지 수 [[${list.size}]]</span>
         </div>
 
         <table class="table table-hover" style="margin: 20px auto">
             <colgroup>
-                <col style="width: 15%;"></col>
-                <col style="width: 50%;"></col>
                 <col style="width: 10%;"></col>
-                <col style="width: 25%;"></col>
+                <col style="width: 20%;"></col>
+                <col style="width: 45%;"></col>
+                <col style="width: 10%;"></col>
+                <col style="width: 15%;"></col>
                 <!--            <col style="width: 15%;"></col>-->
                 <!--            <col style="width: 10%;"></col>-->
             </colgroup>
             <thead>
             <tr>
-                <th class="th_bs" style='text-align: center; border-right: 1px solid;'>번호</th>
-                <th class="th_bs" style='text-align: center; border-right: 1px solid;'>이미지 이름</th>
                 <th class="th_bs" style='text-align: center; border-right: 1px solid;'>순서</th>
+                <th class="th_bs" style='text-align: center; border-right: 1px solid;'>대표이미지</th>
+                <th class="th_bs" style='text-align: center; border-right: 1px solid;'>이미지 이름</th>
+                <th class="th_bs" style='text-align: center; border-right: 1px solid;'>출력번호</th>
                 <th class="th_bs" style='text-align: center;'>관리</th>
                 <!--            <th class="th_bs" style='text-align: center;'>관리</th>-->
                 <!--            <th class="th_bs" style='text-align: center;'>기타</th>-->
             </tr>
             </thead>
             <tbody>
-            <tr th:each="petProfileVO, stat:${list}" style="cursor: pointer;">
+            <tr th:each="petProfileVO, stat:${list}" style="">
+                <td class="td_left align-middle" style="text-align: center;">
+                    <span th:text="${stat.index + 1}" ></span>
+                </td>
+
                 <td class="td_basic" style="text-align: center;">
-                    <span th:text="${stat.index + 1}"></span>
+                    <span th:if="${stat.index == 0}">대표</span>
+                    <span th:if="${stat.index != 0}">일반</span>
                 </td>
 
                 <td class="td_left align-middle">
@@ -50,9 +57,9 @@
                 </td>
 
                 <td class="td_left align-middle" style="text-align: center;">
-                    <a th:href="@{|/petProfile/seqno_up/${petProfileVO.petProfileNo}|}"><img src="/image/petProfile/up.png" class="icon"></a>
-                    <a th:href="@{|/petProfile/seqno_down/${petProfileVO.petProfileNo}|}"><img src="/image/petProfile/down.png" class="icon"></a>
-                    <a type="button" th:id="@{|'delete'+${petProfileVO.petProfileNo}|}"><img src="/image/petProfile/delete.png" class="icon"></a>
+                    <a th:href="@{|/petProfile/seq_forward/${petProfileVO.petProfileNo}/${petNo}|}"><img src="/image/petProfile/down.png" class="icon"></a>
+                    <a th:href="@{|/petProfile/seq_backward/${petProfileVO.petProfileNo}/${petNo}|}"><img src="/image/petProfile/up.png" class="icon"></a>
+                    <a type="button" th:id="@{|delete${petProfileVO.petProfileNo}|}"><img src="/image/petProfile/delete.png" class="icon"></a>
                 </td>
 
                 <script th:inline="javascript">
@@ -86,8 +93,7 @@
             </tbody>
         </table>
         <div th:if="${list.size()==0}" style="text-align: center; padding: 160px;">
-            <span>작성된 게시글이 없습니다.</span><br>
-            <span>첫 게시글을 작성해주세요!</span>
+            <span>등록된 이미지가 없습니다.</span>
         </div>
         <script th:inline="javascript">
             window.onload = () =>{
@@ -97,6 +103,9 @@
             }
         </script>
 
+    </div>
+    <div style="text-align: center" class="mb-4">
+        <span>출력순서가 같을시 나중에 등록된 이미지가 메인 이미지로 설정 됩니다.</span>
     </div>
     <div class="btn-box mb-3">
         <button type="button" class="btn btn-outline-info" id="cancel" th:attr="onclick=|location.href='/pet/myPetInfo?petNo=${petNo}'|">돌아가기</button>

@@ -50,4 +50,18 @@ public interface PetProfileProcInter {
      * @return
      */
     public int profile_cnt(int petNo);
+
+    /**
+     * 출력 순서 변경 (앞으로)
+     * @param petProfileNo
+     * @return
+     */
+    public int seq_forward(int petProfileNo);
+
+    /**
+     * 출력 순서 변경 (뒤로)
+     * @param petProfileNo
+     * @return
+     */
+    public int seq_backward(int petProfileNo);
 }

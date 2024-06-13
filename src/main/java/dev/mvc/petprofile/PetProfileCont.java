@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -141,5 +142,21 @@ public class PetProfileCont {
         json.put("cnt", cnt);
 
         return json.toString();
+    }
+
+    @GetMapping("/seq_forward/{petProfileNo}/{petNo}")
+    public String seq_forward(@PathVariable(name = "petProfileNo") int petProfileNo,
+                              @PathVariable(name = "petNo") int petNo){
+        this.petProfileProc.seq_forward(petProfileNo);
+
+        return "redirect:/petProfile/update?petNo="+petNo;
+    }
+
+    @GetMapping("/seq_backward/{petProfileNo}/{petNo}")
+    public String seq_backward(@PathVariable(name = "petProfileNo") int petProfileNo,
+                               @PathVariable(name = "petNo") int petNo){
+        this.petProfileProc.seq_backward(petProfileNo);
+
+        return "redirect:/petProfile/update?petNo="+petNo;
     }
 }
