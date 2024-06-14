@@ -77,12 +77,9 @@
       background-color: #0056b3;
     }
 
-    form button[type='button'] {
-      background-color: white;
-    }
 
     form button[type='button']:hover {
-      background-color: rgb(215, 215, 215);
+      background-color: #c82333;
     }
 
     .btn:hover {
@@ -114,8 +111,6 @@
     }
 
     .image-grid img:hover {
-      width: 250px;
-      height: 250px;
       border-color: #007bff;
     }
 
@@ -199,18 +194,16 @@
     }
 
     .delete-btn {
-      position: absolute;
-      top: 5px;
-      /* 버튼 위치를 조금 위로 이동 */
-      right: 5px;
-      /* 버튼 위치를 조금 오른쪽으로 이동 */
-      background-color: rgba(255, 0, 0, 0.7);
-      color: white;
-      border: none;
-      padding: 3px;
-      /* 버튼의 padding을 줄임 */
-      cursor: pointer;
-      border-radius: 4px;
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background-color: rgba(255, 0, 0, 0.7);
+  color: white;
+  border: none;
+  padding: 3px;
+  cursor: pointer;
+  border-radius: 4px;
+  z-index: 1; /* 다른 요소 위에 표시되도록 설정 */
     }
   </style>
 </head>
@@ -232,16 +225,16 @@
         <fieldset class="fieldset_basic">
           <div th:if="${memberprofileVO != null}">
             <div
-              th:if="${memberprofileVO.file1 != null && (memberprofileVO.file1.endsWith('jpg') or memberprofileVO.file1.endsWith('png') or memberprofileVO.file1.endsWith('gif'))}">
+              th:if="${memberprofileVO.file1 != null and (memberprofileVO.file1.endsWith('jpg') or memberprofileVO.file1.endsWith('png') or memberprofileVO.file1.endsWith('gif'))}">
               <label>이미지 목록</label>
               <div class="image-grid">
                 <div class="image-grid-item" th:each="memberprofileVO, status:${list}">
-                  <div th:if="${memberprofileVO.filesize} > 0">
+                  <div th:if="${memberprofileVO.filesize} > 0 and ${status.index} > 0">
                     <img th:src="@{|/member/storage/${memberprofileVO.file1saved}|}" th:alt="${memberprofileVO.file1}">
-                    <form method="POST" action="./delete_one" style="display:inline;">
+                    <form method="POST" action="./delete_one" th:id="'deleteForm_' + ${memberprofileVO.mprofileno}">
                       <input type="hidden" name="memberno" th:value="${memberVO.memberno}">
                       <input type="hidden" name="mprofileno" th:value="${memberprofileVO.mprofileno}">
-                      <button type="submit" class="delete-btn">삭제</button>
+                      <button type="button" class="delete-btn" th:onclick="'confirmDelete(' + ${memberprofileVO.mprofileno} + ')'">삭제</button>
                     </form>
                   </div>
                 </div>
@@ -273,14 +266,9 @@
               </div>
             </div>
 
+
             <div style='margin-top: 20px;'>
               <button type="submit" class="btn" style="border: 2px solid black;">파일 변경 처리</button>
-              <form method="POST" action="./delete_others" style="display:inline;">
-              <button type="submit" class="btn" onclick="clearMultiFile();" style="border: 2px solid black;">파일
-                삭제</button>
-              </form>
-              <button type="button" class="btn" onclick="history.back();" style="border: 2px solid black;">파일 변경
-                취소</button>
             </div>
           </form>
         </fieldset>
@@ -309,5 +297,37 @@
   function clearMultiFile() {
     document.getElementById('multiFile').value = '';
     document.getElementById('multiFile').removeAttribute('required');
+  }
+
+  function confirmDelete(mprofileno) {
+    if (confirm("정말 삭제하시겠습니까?\n삭제한 이미지는 복구할 수 없습니다.")) {
+      var formId = "deleteForm_" + mprofileno;
+      var form = document.getElementById(formId);
+      if (form) {
+        form.submit();
+      } else {
+        console.error("폼이 존재하지 않습니다:", formId);
+      }
+    } else {
+      return false;
+    }
+  }
+
+  function deleteData() {
+    $.ajax({
+      url: "./delete_one", // 삭제 요청을 보낼 URL
+      method: "POST",
+      data: $("#deleteForm").serialize(), // 폼 데이터 직렬화하여 전송
+      success: function (response) {
+        // 성공적으로 삭제되었을 때 실행할 코드
+        alert("삭제되었습니다.");
+        // 필요하다면 페이지 새로고침 등 추가 작업 수행
+      },
+      error: function (xhr, status, error) {
+        // 삭제 요청이 실패했을 때 실행할 코드
+
+        alert(error);
+      }
+    });
   }
 </script>

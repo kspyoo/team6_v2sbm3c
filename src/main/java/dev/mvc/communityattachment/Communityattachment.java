@@ -16,7 +16,7 @@ public class Communityattachment {
           
           
       } else { 
-          path = "/home/ubuntu/deploy/team6_v2sbm3c/community/storage/";
+        path = "/users/kimchangin/desktop/communityattachment/storage/";
       }
       
       return path;

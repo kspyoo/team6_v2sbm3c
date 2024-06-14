@@ -30,6 +30,30 @@ public class PetProfileProc implements PetProfileProcInter{
     }
 
     @Override
+    public int delete(int petProfileNo) {
+        return this.petProfileDAOInter.delete(petProfileNo);
+    }
+
+    @Override
+    public int delete_all(int petNo) {
+        return this.petProfileDAOInter.delete_all(petNo);
+    }
+
+    public int profile_cnt(int petNo){
+        return this.petProfileDAOInter.profile_cnt(petNo);
+    }
+
+    @Override
+    public int seq_forward(int petProfileNo) {
+        return this.petProfileDAOInter.seq_forward(petProfileNo);
+    }
+
+    @Override
+    public int seq_backward(int petProfileNo) {
+        return this.petProfileDAOInter.seq_backward(petProfileNo);
+    }
+
+    @Override
     public String randomFileName() {
         String randowNum = "0123456789";
         LocalDate now_date = LocalDate.now();

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+
+<html layout:decorate="~{layout}"> <!-- layout.html 상속-->
+<div layout:fragment="content" style="width: 80%; margin: auto">
+
+  <div class='title_line'>
+    <span th:if="${word != ''}" th:text="|> ${word} (${search_count} 건)|" class="title_line_text"></span>
+  </div>
+
+  <aside class="aside_right">
+    <span th:if="${session.masterno != null}">
+      <a th:href="@{|/notice/create?masterno=${session.masterno}|}">공지사항 등록</a>
+      <span class="menu_devide">│</span>
+    </span>
+    <a th:href="@{|/notice/list_all?word=${word}&now_page=${now_page}|}">목록형</a>
+    <span class="menu_devide">│</span>
+    <a th:href="@{|/notice/list_search_paging_grid?word=${word}&now_page=${now_page}|}">갤러리형</a>
+    <span class="menu_devide">│</span>
+    <a href="javascript:location.reload();">새로고침</a>
+  </aside>
+
+  <!-- /contents/list_search_component.html 파일의 list_search_fragment import -->
+  <div th:replace="~{notice/list_search_component::list_search_fragment}"></div>
+     
+  <div class='menu_line'></div>
+       
+  <div style='width: 100%;'> <!-- 갤러리 Layout  시작 -->
+    <div th:if="${list_all.size() > 0}"  th:each="noticeVO, status:${list_all}" 
+         th:attr="onclick=|location.href='/notice/read?noticeno=${noticeVO.noticeno}&word=${word}&now_page=${now_page}'|"
+         style='width: 24%; height: 190px; float: left; margin: 0.5%; padding: 0.5%; background-color: rgb(232, 255, 255); text-align: left; cursor: pointer;'>
+
+      <div th:if="${noticeVO.nfile.endsWith('jpg') or noticeVO.nfile.endsWith('png')  or noticeVO.nfile.endsWith('gif')}"
+             style="width: 100%; height: 100px;">
+        <img th:src="@{|/notice/storage/${noticeVO.nfile}|}" style="width: 100%; height: 100%;">
+      </div>
+
+      <div th:if="${((noticeVO.nfile.endsWith('jpg') or noticeVO.nfile.endsWith('png')  or noticeVO.nfile.endsWith('gif')) == false)}"
+             style="width: 100%; height: 100px;">
+        <span th:text="${noticeVO.nfile}"></span>
+      </div>
+
+      <div th:if="${noticeVO == null}" style="width: 100%; height: 100px;">
+        <img src="/contents/images/none1.png" style="width: 100%; height: 100%;">
+      </div>
+      <div>
+        <span th:text="${noticeVO.title}" style="font-weight: bold;"></span><br>
+        <span th:if="${noticeVO.notice.length() > 80 }" 
+                  th:text="|${noticeVO.notice.substring(0, 80) }...|"></span>
+        <span th:if="${noticeVO.notice.length() <= 80 }" 
+                  th:text="|${noticeVO.notice}|"></span>
+      </div>
+      
+      <div style="width: 100%; text-align: right;"></div>
+      
+    </div>
+    
+    <div th:if="${list_all.size() == 0}" style="text-align: center; padding: 50px 0px;">
+      <span>관련 글이 등록되지 않았습니다.</span>
+    </div> 
+  </div>  <!-- 갤러리 Layout  종료 -->
+   
+  <!-- 페이지 버튼 목록 출력 시작 -->
+  <div class="bottom_menu" th:utext="${paging}"></div>
+  <!-- 페이지 버튼 목록 출력 종료 --> 
+
+</div>
+</html>
+
+
+
+
+

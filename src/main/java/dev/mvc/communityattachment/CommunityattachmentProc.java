@@ -17,5 +17,17 @@ public class CommunityattachmentProc implements CommunityattachmentProcInter {
     int cnt = this.communityattachmentDAO.create(communityattachmentVO);
     return cnt;
   }
+  @Override
+  public int delete(int cano) {
+    int cnt = this.communityattachmentDAO.delete(cano);
+    return cnt;
+  }
+  @Override
+  public int create_image(CommunityattachmentVO communityattachmentVO) {
+    int cnt = this.communityattachmentDAO.create_image(communityattachmentVO);
+    return cnt;
+  }
+  
+  
 
 }

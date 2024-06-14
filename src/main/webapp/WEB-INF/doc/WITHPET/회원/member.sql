@@ -201,6 +201,41 @@ CREATE SEQUENCE memberprofile_seq
   CACHE 2                       -- 2번은 메모리에서만 계산
   NOCYCLE;                     -- 다시 1부터 생성되는 것을 방지
   
+  
+/**********************************/
+/* Table Name: 공지게시판 */
+/**********************************/
+DROP TABLE notice;
+
+CREATE TABLE notice(
+		noticeno                      		NUMBER(10)		 NULL 		 PRIMARY KEY,
+		title                    		VARCHAR2(30)		 NOT NULL ,
+    notice                       		VARCHAR2(100)		 NOT NULL ,
+		file                      		VARCHAR2(100)		 NULL ,
+		noticedate                    		DATE		 NULL ,
+    PASSWD                            VARCHAR2(50)     NOT NULL,
+		MASTERNO                      		NUMBER(10)		 NULL ,
+  FOREIGN KEY (MASTERNO) REFERENCES MASTER (MASTERNO)
+);
+
+COMMENT ON TABLE notice is '공지게시판';
+COMMENT ON COLUMN notice.noticeno is '공지글 번호';
+COMMENT ON COLUMN notice.title is '공지글 이름';
+COMMENT ON COLUMN notice.notice is '공지글 내용';
+COMMENT ON COLUMN notice.file is '첨부파일';
+COMMENT ON COLUMN notice.noticedate is '등록일';
+COMMENT ON COLUMN notice.passwd is '비밀번호';
+COMMENT ON COLUMN notice.MASTERNO is '관리자번호';
+
+DROP SEQUENCE NOTICE_SEQ;
+
+CREATE SEQUENCE NOTICE_SEQ
+    START WITH 1              -- 시작 번호
+    INCREMENT BY 1          -- 증가값
+    MAXVALUE 9999999999 -- 최대값: 9999999 --> NUMBER(7) 대응
+    CACHE 2                       -- 2번은 메모리에서만 계산
+    NOCYCLE;     
+  
 INSERT INTO Memberprofile (MPROFILENO,memberno)
 VALUES (memberprofile_seq.nextval,1);
   
@@ -277,3 +312,5 @@ FROM memberprofile
 WHERE memberno =42;
 
 DELETE FROM member WHERE mermberno = 119;
+
+SELECT * FROM MEMBER ORDER BY MEMBERNO DESC;

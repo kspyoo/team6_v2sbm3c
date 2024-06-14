@@ -4,6 +4,17 @@
 <mapper namespace="dev.mvc.communityattachment.CommunityattachmentDAOInter">
   <insert id="create" parameterType="dev.mvc.communityattachment.CommunityattachmentVO">
   INSERT INTO communityattachment(cano, filename, filesize, thumbfile,communityno)
-  VALUES(COMMUNITYATTACHMENT_SEQ.nextval,#{filename},#{filesize},#{thumbfile},#{communityno})
+  VALUES(COMMUNITYATTACHMENT_SEQ.nextval,#{filename, jdbcType=VARCHAR},#{filesize},#{thumbfile, jdbcType=VARCHAR},community_seq.currval)
   </insert>
+  
+  <delete id="delete" parameterType="int">
+  DELETE FROM communityattachment WHERE EXISTS( SELECT 1 FROM communityattachment WHERE cano = #{cano})and cano = #{cano}
+  </delete>
+  <insert id="create_image" parameterType="dev.mvc.communityattachment.CommunityattachmentVO">
+  INSERT INTO communityattachment(cano, filename, filesize, thumbfile,communityno)
+  VALUES(COMMUNITYATTACHMENT_SEQ.nextval,#{filename, jdbcType=VARCHAR},#{filesize},#{thumbfile, jdbcType=VARCHAR},#{communityno})
+  </insert>
+  
+  
+  
 </mapper>

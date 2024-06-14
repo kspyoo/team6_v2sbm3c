@@ -13,12 +13,14 @@ public interface CommunityDAOInter {
   /*
    * 목록
    */
-  public ArrayList<CommunityVO>list();
+  public ArrayList<attachmentVO>list();
+  
+  public ArrayList<attachmentVO>list_all();
   
   /*
    * 조회
    */
-  public CommunityVO read(int communityno);
+  public attachmentVO read(int communityno);
     
   /*
    * 수정

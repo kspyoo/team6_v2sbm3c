@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+
+<html layout:decorate="~{layout}">
+<div layout:fragment="content" style="width: 80%; margin: auto">
+
+  <div class='title_line'>
+    <span th:if="${word != ''}" th:text="|> ${word} (${search_count} 건)|" class="title_line_text"></span>
+  </div>
+
+  <aside class="aside_right">
+    <span th:if="${session.masterno != null}">
+      <a th:href="@{|/notice/create?masterno=${session.masterno}|}">공지사항 등록</a>
+      <span class="menu_devide">│</span>
+    </span>
+    <a th:href="@{|/notice/list_search_paging_grid|}">갤러리형</a>
+    <span class='menu_divide'>│</span>
+    <a href="javascript:location.reload();">새로고침</a>
+    
+  </aside>
+
+  <div th:replace="~{notice/list_search_component::list_search_fragment}"></div>
+
+  <div class='menu_line'></div>
+
+  <table class="table table-striped" style='width: 100%;'>
+    <colgroup>
+      <col style='width: 10%;' />
+      <col style='width: 30%;' />
+      <col style='width: 30%;' />
+      <col style='width: 30%;' />
+    </colgroup>
+    <tr>
+      <th class='th_bs'>번호</th>
+      <th class='th_bs'>제목</th>
+      <th class='th_bs'>내용</th>
+      <th class='th_bs'>등록일</th>
+    </tr>
+
+    <tr th:each="noticeVO, status:${list_all}"
+      th:attr="onclick=|location.href='/notice/read?noticeno=${noticeVO.noticeno}&word=${word}&now_page=${now_page}'|"
+      style="cursor: pointer; height: 90px;">
+      <td class='td_left'><a th:href="@{|./read?noticeno=${noticeVO.noticeno}|}" th:text="${status.count}"></a></td>
+      <td class='td_left'><a th:href="@{|./read?noticeno=${noticeVO.noticeno}|}" th:text="${noticeVO.title}"></a></td>
+      <td class='td_left'><a th:href="@{|./read?noticeno=${noticeVO.noticeno}|}" th:text="${noticeVO.notice}"></a></td>
+      <td class='td_left'><a th:href="@{|./read?noticeno=${noticeVO.noticeno}|}" th:text="${noticeVO.noticedate}"></a>
+      </td>
+    </tr>
+    
+    
+
+  <!-- 페이지 버튼 목록 출력 시작 -->
+  <div class="bottom_menu" th:utext="${paging}"></div>
+  <!-- 페이지 버튼 목록 출력 종료 -->
+
+</div>
+
+</html>

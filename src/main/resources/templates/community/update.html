@@ -2,16 +2,49 @@
 
 <html layout:decorate="~{layout}">
 <!-- layout.html 상속-->
+
 <div layout:fragment="content">
   <div class='title_line'>
     <span class="title_line_text"></span>
   </div>
+
+  <script>
+    function attachment() {
+      window.open(
+        "/communityattachment/create",
+        "",
+        "height=250,width=400,top=200,left=100"
+      );
+    }
+
+  </script>
+   <style>
+    .upload-name {
+      display: inline-block;
+      height: 40px;
+      padding: 0 10px;
+      vertical-align: middle;
+      border: 1px solid #dddddd;
+      width: 78%;
+      color: #999999;
+    }
+
+    input[type="file"] {
+      position: absolute;
+      width: 0;
+      height: 0;
+      padding: 0;
+      overflow: hidden;
+      border: 0;
+    }
+  </style>
+
   <aside class="aside_right">
     <a href="/community/list_all">목록</a>
     <span class="menu_devide">│</span>
     <a href="/community/update">수정</a>
     <span class="menu_devide">│</span>
-    <a th:href="@{|/community/delete/${communityVO.communityno}|}">삭제</a>
+    <a th:href="@{|/community/delete/${attachmentVO.communityno}|}">삭제</a>
     <span class="menu_devide">│</span>
     <a href="/community/create">등록</a>
     <span class="menu_devide">│</span>
@@ -19,24 +52,50 @@
   </aside>
 
   <div class='menu_line'></div>
-  <form name='frm' method='POST' th:object="${communityVO}" th:action="@{|/community/update/${communityVO.communityno}|}">
+  <form name='frm' method='POST' th:object="${attachmentVO}"
+    th:action="@{|/community/update/${attachmentVO.communityno}|}" enctype="multipart/form-data">
 
     <div>
       <label>제목</label>
-      <input type='text' name='title' th:value='${communityVO.title}' required="required" autofocus="autofocus"
+      <input type='text' name='title' th:value='${attachmentVO.title}' required="required" autofocus="autofocus"
         class="form-control" style='width: 100%;'>
     </div>
     <div>
       <label>내용</label>
       <textarea name='content' required="required" class="form-control" rows="12" style='width: 100%;'
-        th:text='${communityVO.content}'></textarea>
+        th:text='${attachmentVO.content}'></textarea>
     </div>
     <div>
       <label>태그</label>
-      <input type='text' name='tag' th:value='${communityVO.tag}' required="required" class="form-control"
+      <input type='text' name='tag' th:value='${attachmentVO.tag}' required="required" class="form-control"
         style='width: 100%;'>
     </div>
+
+
     <div>
+      <li class="li_none" th:if="${attachmentVO.filesize > 0}">
+        <div>
+          <!-- ServletRegister.java: registrationBean.addUrlMappings("/download"); -->
+          첨부 파일: <a
+            th:href="@{|/download?dir=/communityattachmentVO/storage&filename=${attachmentVO.filename}&downname=${attachmentVO.filename}|}"
+            th:text="|${attachmentVO.filename}|"> </a>
+          <span th:text="|(${attachmentVO.filesize})|"></span>
+          <button type="button"
+            th:attr="onclick=|location.href='/communityattachment/delete?cano=${attachmentVO.cano}&communityno=${attachmentVO.communityno}'|"
+            class="btn btn-secondary btn-sm">삭제</button>
+        </div>
+      </li>
+      <li class="li_none" th:unless="${attachmentVO.filesize > 0}">
+        <div>
+        <input class="upload-name" value="첨부파일" placeholder="첨부파일" id="upload-name" th:href="@{|/download?dir=/communityattachmentVO/storage&filename=${attachmentVO.filename}&downname=${attachmentVO.filename}|}"
+            th:text="|${attachmentVO.filename}|">
+        <input type="file" id="result" style="width: 100%;" name="file" readonly>
+
+          <button type="button" class="form-control" value="attachment" onclick="attachment();">등록</button>
+        </div>
+      </li>
+
+
       <label>패스워드</label>
       <input type='password' name='passwd' th:value='1234' required="required" class="form-control" style='width: 50%;'>
     </div>

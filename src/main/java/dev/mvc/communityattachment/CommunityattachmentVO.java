@@ -4,6 +4,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 //CANO                              NUMBER(10)     NOT NULL    PRIMARY KEY,
 //FILENAME                          VARCHAR2(100)    NOT NULL,
@@ -11,13 +12,14 @@ import lombok.Setter;
 //THUMBFILE                         VARCHAR2(100)    NOT NULL,
 //COMMUNITYNO                       NUMBER(10)     NULL ,
 
-
-@Getter @Setter
+@ToString
+@Getter 
+@Setter
 public class CommunityattachmentVO {
   private MultipartFile filenameMF;
   private int cano;
   private String filename;
-  private int filesize;
+  private long filesize;
   private String thumbfile;
   private int communityno;
 

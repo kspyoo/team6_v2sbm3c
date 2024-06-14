@@ -208,10 +208,10 @@ public class MemberCont {
     if (cnt == 1) {
       MemberVO memberVO = this.memberProc.readById(id);
 
-
+      
 
       
-     this.memberprofileProc.create_file(memberVO.getMemberno());
+    // this.memberprofileProc.create_file(memberVO.getMemberno());
       
       memberprofileVO =  this.memberprofileProc.read_file(memberVO.getMemberno()).get(0);
       System.out.println("memberprofileVO : "+ memberprofileVO);
@@ -317,10 +317,21 @@ public class MemberCont {
     
     System.out.println("this.memberProc.read(memberno) : " + this.memberProc.read(memberno));
     
+    
+    
     // MemberProfileVO를 조회하여 모델에 추가
-    memberprofileVO = this.memberprofileProc.read_file(memberno).get(0);
-    System.out.println("memberprofileVO : " + memberprofileVO);
-    model.addAttribute("memberprofileVO", memberprofileVO);
+    ArrayList<MemberprofileVO> list = this.memberprofileProc.read_file(memberno);
+    
+    System.out.println("list : " + list);
+    if(list.size() < 2) {
+      memberprofileVO = this.memberprofileProc.read_file(memberno).get(0);
+      model.addAttribute("memberprofileVO", memberprofileVO);
+      System.out.println("memberprofileVO : "+memberprofileVO);
+    } else {
+      memberprofileVO = this.memberprofileProc.read_file(memberno).get(1);
+      model.addAttribute("memberprofileVO", memberprofileVO);
+    }
+
         
 
     

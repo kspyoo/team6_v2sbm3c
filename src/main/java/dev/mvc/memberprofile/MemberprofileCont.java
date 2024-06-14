@@ -77,39 +77,45 @@ public class MemberprofileCont {
   }
 
   @GetMapping(value = "/update_file")
-  public String update_file(Model model, int memberno) {
+  public String update_file(Model model, int memberno, MemberprofileVO memberprofileVO, HttpSession session) {
     MemberVO memberVO = this.memberProc.read(memberno);
     model.addAttribute("memberVO", memberVO);
+
+    if (session.getAttribute("memberno") == null) {
+      return "/member/login";
+    }
     
     ArrayList<MemberprofileVO> list = this.memberprofileProc.read_file(memberno);
-        
-    MemberprofileVO memberprofileVO = list.get(0);
+    if (list.size() < 2) {
+      memberprofileVO = list.get(0);
+    } else {
+      memberprofileVO = list.get(1);
+    }
+
     model.addAttribute("memberprofileVO", memberprofileVO);
-    model.addAttribute("list",list);
+    model.addAttribute("list", list);
     
+   
+
     System.out.println("list  aaaaaaaaaa : " + list);
     return "/memberprofile/update_file";
   }
 
   @PostMapping(value = "/update_file")
   public String update_file(HttpServletRequest request, RedirectAttributes ra, @RequestParam("memberno") int memberno,
-      @RequestParam(value="multiFile") List<MultipartFile> multiFileList, MemberprofileVO memberprofileVO) {
+      @RequestParam(value = "multiFile") List<MultipartFile> multiFileList, MemberprofileVO memberprofileVO) {
     String upDir = Memberprofile.getUploadDir();
 
-    int origin = this.memberprofileProc.read_file(memberno).get(0).getMprofileno();
+    System.out.println("aaaaaaaaaaaaaaaaaaaaaaaa : "+multiFileList);
     
     if (multiFileList != null && !multiFileList.isEmpty() && !multiFileList.get(0).getOriginalFilename().isEmpty()) {
-   
+
       for (int i = 0; i < multiFileList.size(); i++) {
         try {
           String originalFilename = multiFileList.get(i).getOriginalFilename();
           String uniqueFilename = Upload.saveFileSpring(multiFileList.get(i), upDir);
 
-          if (i < this.memberprofileProc.read_file(memberno).size()) {
-            memberprofileVO = this.memberprofileProc.read_file(memberno).get(i);
-          } else {
-            memberprofileVO = new MemberprofileVO();
-          }
+          memberprofileVO = new MemberprofileVO();
 
           String thumbnail = null;
           if (Tool.isImage(originalFilename)) {
@@ -122,50 +128,31 @@ public class MemberprofileCont {
           memberprofileVO.setThumbfile(thumbnail);
           memberprofileVO.setFilesize(multiFileList.get(i).getSize());
 
-
           System.out.println("File1 : " + memberprofileVO);
 
-
-          if (i == 0) {
-            memberprofileProc.update_file(memberprofileVO); // 데이터베이스에 프로필 정보 저장
-            System.out.println("memberprofileVO : " + memberprofileVO);
-          } else {
-            System.out.println("memberprofileVO : " + memberprofileVO);
-            memberprofileProc.create_other_file(memberprofileVO);
-          }
+          memberprofileProc.create_other_file(memberprofileVO);
 
         } catch (Exception e) { // IOException으로 처리
           e.printStackTrace();
-          // 에러 발생 시 파일 삭제
           new File(upDir + File.separator + multiFileList.get(i).getOriginalFilename()).delete();
         }
 
       }
     }
-    if (multiFileList == null || multiFileList.isEmpty() || multiFileList.get(0).getOriginalFilename().isEmpty()) {
-      this.memberprofileProc.delete_others(memberno, origin);
-      memberprofileProc.update_file(memberprofileVO);
-    }
 
     ra.addAttribute("memberno", memberno);
-    
 
     return "redirect:/member/read";
   }
-  
-  @PostMapping(value ="/delete_one")
-  public String delete_one(@RequestParam("mprofileno") int mprofileno,
-                                 int memberno,
-                                 RedirectAttributes ra,
-                                 MemberprofileVO mvo,
-                                 HttpSession session) {
+
+  @PostMapping(value = "/delete_one")
+  public String delete_one(@RequestParam("mprofileno") int mprofileno, int memberno, RedirectAttributes ra,
+      MemberprofileVO mvo, HttpSession session) {
     this.memberprofileProc.delete_one(memberno, mprofileno);
-    
-    
+
     System.out.println(memberno);
-    
-    return "redirect:/memberprofile/update_file?memberno="+memberno;
+
+    return "redirect:/memberprofile/update_file?memberno=" + memberno;
   }
-  
 
 }

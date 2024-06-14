@@ -4,7 +4,11 @@
 <mapper namespace="dev.mvc.petprofile.PetProfileDAOInter">
     <insert id="create" parameterType="dev.mvc.petprofile.PetProfileVO">
         INSERT INTO PETPROFILE(PETPROFILENO, OGFILENAME, SVFILENAME, SEQNO, UPLOADDATE, PETNO)
-        VALUES (PETPROFILE_SEQ.nextval, #{ogFileName}, #{svFileName}, 0, sysdate, #{petNo})
+        VALUES (PETPROFILE_SEQ.nextval, #{ogFileName}, #{svFileName},
+                   (select nvl(max(seqno)+1, 1) as seqno
+                    from petprofile
+                    where petNo = #{petNo})
+                , sysdate, #{petNo})
     </insert>
 
     <!--  메인 이미지 조회(seqno로 먼저 정렬후 제일 처음에 있는 이미지를 메인이미지로 사용함. seqno를 지정 하지 않았거나 같은 순서로 되어있을 경우)  -->
@@ -13,28 +17,81 @@
         select PETPROFILENO, OGFILENAME, SVFILENAME, SEQNO, UPLOADDATE, PETNO
         from (
                  -- rownum 생성
-                 select PETPROFILENO, OGFILENAME, SVFILENAME, ROWNUM as SEQNO, UPLOADDATE, PETNO
+                 select PETPROFILENO, OGFILENAME, SVFILENAME, SEQNO, ROWNUM as r, UPLOADDATE, PETNO
                  from (
                           -- SEQNO 내림차순 정렬 -> PETPROFILENO 내림차순 정렬
                           select PETPROFILENO, OGFILENAME, SVFILENAME, SEQNO, UPLOADDATE, PETNO
                           from PETPROFILE
                           where PETNO = #{petNo}
-                          order by SEQNO desc, PETPROFILENO desc
+                          order by SEQNO asc, PETPROFILENO desc
                       )
              )
-        where SEQNO = 1
+        where r = 1
     </select>
 
     <select id="list" parameterType="int" resultType="dev.mvc.petprofile.PetProfileVO">
         select PETPROFILENO, OGFILENAME, SVFILENAME, SEQNO, UPLOADDATE, PETNO
         from (
-                 select PETPROFILENO, OGFILENAME, SVFILENAME, ROWNUM as SEQNO, UPLOADDATE, PETNO
+                 select PETPROFILENO, OGFILENAME, SVFILENAME, SEQNO, UPLOADDATE, PETNO
                  from (
                           select PETPROFILENO, OGFILENAME, SVFILENAME, SEQNO, UPLOADDATE, PETNO
                           from PETPROFILE
                           where PETNO = #{petNo}
-                          order by SEQNO desc, PETPROFILENO desc
+                          order by SEQNO asc, PETPROFILENO desc
                       )
              )
     </select>
+
+    <!--  해당 이미지가 존재 하는지 확인해보고 있으면 삭제  -->
+    <delete id="delete" parameterType="int">
+        delete
+        from PETPROFILE
+        where exists(
+            select 1
+            from PETPROFILE
+            where PETPROFILENO = ${petProfileNo}
+        ) and PETPROFILENO = #{petProfileNo}
+    </delete>
+
+    <!--  특정 반려동물번호로 저장된 이미지가 있는경우 이미지 전체 삭제 진행  -->
+    <delete id="delete_all" parameterType="int">
+        delete
+        from PETPROFILE
+        where exists(
+                select 1
+                from PETPROFILE
+                where petNo = ${petNo}
+            ) and petNo = #{petNo}
+    </delete>
+
+    <select id="profile_cnt" parameterType="int">
+        select count(*)
+        from PETPROFILE
+        where petno = ${petNo}
+    </select>
+
+    <update id="seq_forward" parameterType="int">
+        update PETPROFILE
+        <!--
+        set seqno = (
+            select seqno2 from (
+                    select lag(seqno) over ( order by seqno , petprofileno desc) as seqno2, petprofileno
+                    from petprofile
+                )where petprofileno = #{petProfileNo}
+            ) - 1
+            -->
+        set seqno = seqno - 1
+        where not exists(
+                select 1
+                from petprofile
+                where seqNo = 1 and petprofileno = #{petProfileNo}
+            )
+          and petprofileno = #{petProfileNo}
+    </update>
+
+    <update id="seq_backward" parameterType="int">
+        update PETPROFILE
+        set seqno = seqno + 1
+        where petprofileno = #{petProfileNo}
+    </update>
 </mapper>

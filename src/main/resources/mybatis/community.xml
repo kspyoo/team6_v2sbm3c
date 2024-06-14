@@ -6,16 +6,16 @@
   INSERT INTO COMMUNITY(communityno,title,content,vcnt,rcnt,writedate,tag,memberno,ctypeno)
   VALUES(COMMUNITY_SEQ.nextval,#{title},#{content},#{vcnt},#{rcnt},sysdate,#{tag},#{memberno},#{ctypeno})
   </insert>
-  <select id="list" resultType="dev.mvc.community.CommunityVO">
+<!--   <select id="list" resultType="dev.mvc.community.CommunityVO">
     SELECT communityno,title,content,vcnt,rcnt,writedate,tag,memberno,ctypeno
     FROM community
     ORDER BY communityno ASC
-  </select>
-  <select id="read" resultType="dev.mvc.community.CommunityVO" parameterType="int">
+</select>-->  
+ <!--  <select id="read" resultType="dev.mvc.community.CommunityVO" parameterType="int">
     SELECT communityno,title,content,vcnt,rcnt,writedate,tag,memberno,ctypeno
     FROM community
     WHERE communityno=#{communityno}
-  </select>
+  </select>-->
  <update id="update" parameterType="dev.mvc.community.CommunityVO">
   UPDATE community
   SET  title =#{title},content=#{content},writedate=sysdate,tag=#{tag}
@@ -23,7 +23,8 @@
  </update>
  
  <delete id="delete" parameterType="int">
- DELETE FROM community WHERE communityno=#{communityno}
+ 
+ DELETE FROM community WHERE EXISTS( SELECT 1 FROM community WHERE communityno=#{communityno})and communityno=#{communityno}
  </delete>
  
 <select id="list_search_paging" resultType="dev.mvc.community.CommunityVO" parameterType="HashMap">
@@ -52,4 +53,30 @@ SELECT COUNT(*) as cnt
         FROM community
           WHERE UPPER(title) LIKE '%'||UPPER(#{word})||'%'OR UPPER(tag)LIKE '%' ||UPPER(#{word}) 
 </select>
+
+<select id="list_all" resultType="dev.mvc.community.attachmentVO" >
+  SELECT c.communityno,c.title,c.content,c.vcnt,c.rcnt,c.writedate,c.tag,c.memberno,c.ctypeno,ca.cano, ca.filename, ca.filesize, ca.thumbfile,ca.communityno 
+  FROM community c
+  INNER JOIN communityattachment ca
+  ON c.communityno = ca.communityno
+</select>
+
+<select id="list" resultType="dev.mvc.community.attachmentVO">
+SELECT c.communityno,c.title,c.content,c.vcnt,c.rcnt,c.writedate,c.tag,c.memberno,c.ctypeno,ca.cano, ca.filename, ca.filesize, ca.thumbfile,ca.communityno 
+FROM community c
+LEFT OUTER JOIN communityattachment ca
+ON c.communityno = ca.communityno
+</select>
+
+<select id="read" resultType="dev.mvc.community.attachmentVO" parameterType="int">
+SELECT c.communityno,c.title,c.content,c.vcnt,c.rcnt,c.writedate,c.tag,c.memberno,c.ctypeno,ca.cano, ca.filename, ca.filesize, ca.thumbfile,ca.communityno 
+FROM community c 
+LEFT OUTER JOIN communityattachment ca
+ON c.communityno = ca.communityno
+WHERE c.communityno = #{communityno}
+</select>
+
+
 </mapper>
+
+

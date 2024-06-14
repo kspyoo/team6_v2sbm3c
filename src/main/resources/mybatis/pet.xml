@@ -18,7 +18,7 @@
                                 -- SEQNO 내림차순 정렬 -> PETPROFILENO 내림차순 정렬
                                 select petno, SVFILENAME, SEQNO
                                 from PETPROFILE
-                                order by SEQNO desc, PETPROFILENO desc
+                                order by SEQNO asc, PETPROFILENO desc
                             )
                    )
               where SEQNO = 1) pp on p.PETNO = pp.PETNO
@@ -36,7 +36,7 @@
                                 -- SEQNO 내림차순 정렬 -> PETPROFILENO 내림차순 정렬
                                 select petno, SVFILENAME, SEQNO
                                 from PETPROFILE
-                                order by SEQNO desc, PETPROFILENO desc
+                                order by SEQNO asc, PETPROFILENO desc
                             )
                    )
               where SEQNO = 1) pp on p.PETNO = pp.PETNO
@@ -58,6 +58,20 @@
     <delete id="delete" parameterType="int">
         delete
         from PET
-        where PETNO=#{petNo}
+        where exists(
+            select 1
+            from PET
+            where PETNO = ${petNo}
+        ) and PETNO = #{petNo}
+    </delete>
+
+    <delete id="delete_all" parameterType="int">
+        delete
+        from PET
+        where exists(
+            select 1
+            from PET
+            where MEMBERNO = ${memberNo}
+        ) and MEMBERNO = #{memberNo}
     </delete>
 </mapper>
