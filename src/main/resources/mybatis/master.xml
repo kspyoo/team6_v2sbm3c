@@ -11,27 +11,27 @@
   </select>
 
 	<insert id="create" parameterType="dev.mvc.master.MasterVO">
-    INSERT INTO master(masterno, masterid, masterpasswd)
-    VALUES (master_seq.nextval, #{masterid}, #{masterpasswd})
+    INSERT INTO master(masterno, masterid, masterpasswd,mastername)
+    VALUES (master_seq.nextval, #{masterid}, #{masterpasswd},#{mastername})
   </insert>
 
 
 	<select id="list" resultType="dev.mvc.master.MasterVO">
-    SELECT masterno, masterid, masterpasswd
+    SELECT masterno, masterid, masterpasswd,mastername
     FROM master
     ORDER BY  masterno ASC, masterid ASC
   </select>
 
 	<!-- masterno로 관리자 정보 조회 -->
 	<select id="read" resultType="dev.mvc.master.MasterVO" parameterType="int">
-    SELECT masterno, masterid, masterpasswd
+    SELECT masterno, masterid, masterpasswd,mastername
     FROM master
     WHERE masterno = #{masterno}
   </select>
 
 	<!-- id(이메일)로 회원 정보 조회 -->
 	<select id="readById" resultType="dev.mvc.master.MasterVO" parameterType="String">
-    SELECT masterno, masterid, masterpasswd
+    SELECT masterno, masterid, masterpasswd,mastername
     FROM master
     WHERE masterid = #{masterid}
   </select>

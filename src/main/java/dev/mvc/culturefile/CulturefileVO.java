@@ -29,7 +29,7 @@ public class CulturefileVO {
   <input type='file' class="form-control" name='file1MF' id='file1MF' 
              value='' placeholder="파일 선택">
   */
-  private MultipartFile file1MF = null;
+  private MultipartFile file1MF ;
   /** 메인 이미지 크기 단위, 파일 크기 */
   private String size1_label = "";
   /** 메인 이미지 크기 */

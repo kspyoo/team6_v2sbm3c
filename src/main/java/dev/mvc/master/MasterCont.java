@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import dev.mvc.master.MasterVO;
+import dev.mvc.member.MemberVO;
 import dev.mvc.tool.Security;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -308,8 +309,112 @@ public class MasterCont {
 //Cookie 사용 로그인 관련 코드 종료
 //-------------------------------------------
   
- 
+  /**
+   * 패스워드 수정 폼
+   * @param model
+   * @param memberno
+   * @return
+   */
+  @GetMapping(value="/passwd_update_form")
+  public String passwd_update_form(HttpSession session, Model model) {
+    int masterno = (int)session.getAttribute("masterno"); // session에서 가져오기
+    
+    MasterVO masterVO = this.masterProc.read(masterno);
+    
+    model.addAttribute("masterVO", masterVO);
+    
+    return "master/passwd_update_form"; // /member/passwd_update_form.html   
+  }
+  
+  /**
+   * 현재 패스워드 확인
+   * @param session
+   * @param current_passwd
+   * @return 1: 일치, 0: 불일치
+   */
+  @PostMapping(value="/passwd_check")
+  @ResponseBody
+  public String passwd_check(HttpSession session, @RequestBody String json_src) {
+    System.out.println("-> json_src: " + json_src); // json_src: {"current_passwd":"1234"}
+    JSONObject src = new JSONObject(json_src); // String -> JSON
+    String current_passwd =  (String)src.get("current_passwd"); // 값 가져오기
+    // System.out.println("-> current_passwd: " + current_passwd);
+    
+    try {
+      Thread.sleep(3000);
+    } catch(Exception e) {
+      
+    }
+    
+    int masterno = (int)session.getAttribute("masterno"); // session에서 가져오기
+    HashMap<String, Object> map = new HashMap<String, Object>();
+    map.put("masterno", masterno);
+    // map.put("passwd", new Security().aesEncode(current_passwd));
+    map.put("masterpasswd", current_passwd);
+    
+    int cnt = this.masterProc.passwd_check(map);
+    
+    JSONObject json = new JSONObject();
+    json.put("cnt", cnt);
+    System.out.println(json.toString());
+    
+    return json.toString();   
+  }
+  
+  /**
+   * 패스워드 변경
+   * http://localhost:9091/member/passwd_update_proc?current_passwd=00000000000&passwd=7777
+   * @param session
+   * @param model
+   * @param current_passwd 현재 패스워드
+   * @param passwd 새로운 패스워드
+   * @return
+   */
+  @PostMapping(value="/passwd_update_proc")
+  public String passwd_update_proc(HttpSession session, 
+                                                    Model model, 
+                                                    String current_passwd, 
+                                                    String masterpasswd) {
+    
+
+      int masterno = (int)session.getAttribute("masterno"); // session에서 가져오기
+      HashMap<String, Object> map = new HashMap<String, Object>();
+      map.put("masterno", masterno);
+
+      map.put("masterpasswd",current_passwd); // 현재 패스워드 이름 주의
+      
+
+      int cnt = this.masterProc.passwd_check(map); 
+      
+      if (cnt == 0) { // 현재 패스워드 불일치
+        model.addAttribute("code", "passwd_not_equal");
+        model.addAttribute("cnt", 0);
+        
+      } else { // 현재 패스워드 일치
+        HashMap<String, Object> map_new_passwd = new HashMap<String, Object>();
+        map_new_passwd.put("masterno", masterno);
+
+        map_new_passwd.put("masterpasswd",masterpasswd); // 새로운 패스워드
+
+        
+        int passwd_change_cnt = this.masterProc.passwd_update(map_new_passwd);
+        
+        if (passwd_change_cnt == 1) {
+          model.addAttribute("code", "passwd_change_success");
+          model.addAttribute("cnt", 1);
+        } else {
+          model.addAttribute("code", "passwd_change_fail");
+          model.addAttribute("cnt", 0);
+        }
+      }
+
+      return "master/msg";   // /templates/member/msg.html
+    }
 
   }
+  
+ 
+
+  
 
 

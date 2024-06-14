@@ -44,6 +44,16 @@ public class PetProfileProc implements PetProfileProcInter{
     }
 
     @Override
+    public int seq_forward(int petProfileNo) {
+        return this.petProfileDAOInter.seq_forward(petProfileNo);
+    }
+
+    @Override
+    public int seq_backward(int petProfileNo) {
+        return this.petProfileDAOInter.seq_backward(petProfileNo);
+    }
+
+    @Override
     public String randomFileName() {
         String randowNum = "0123456789";
         LocalDate now_date = LocalDate.now();

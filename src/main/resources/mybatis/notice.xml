@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dev.mvc.notice.NoticeDAOInter">
+  <!-- 공지글 등록-->
+  <insert id="create" parameterType="dev.mvc.notice.NoticeVO">
+    INSERT INTO notice(noticeno, title, notice, nfile, noticedate, passwd ,masterno)
+    VALUES(notice_seq.nextval, #{title},#{notice},#{nfile},sysdate,#{passwd},#{masterno})
+  </insert>
+
+  <!-- 글 목록-->
+  <select id="list_all" resultType="dev.mvc.notice.NoticeVO">
+    SELECT noticeno, title, notice, nfile, noticedate, passwd ,masterno
+    FROM notice
+    ORDER BY noticeno DESC
+  </select>
+
+  <update id="update" parameterType="dev.mvc.notice.NoticeVO">
+    UPDATE notice
+    SET title=#{title}, notice=#{notice}, nfile=#{nfile}
+    WHERE noticeno = #{noticeno}
+  </update>
+
+  <delete id="delete" parameterType="int">
+    DELETE FROM notice
+    WHERE noticeno = #{noticeno}
+  </delete>
+
+  <!-- 글 목록-->
+  <select id="read" resultType="dev.mvc.notice.NoticeVO" parameterType="int">
+    SELECT noticeno, title, notice, nfile, noticedate, passwd ,masterno
+    FROM notice
+    WHERE noticeno =#{noticeno}
+  </select>
+
+  <!-- 패스워드 검사 -->
+  <select id="password_check" resultType="int" parameterType="HashMap">
+    SELECT COUNT(*) as cnt 
+    FROM notice
+    WHERE noticeno = #{noticeno} AND passwd=#{passwd}
+  </select>
+
+  <select id="list_search" resultType="dev.mvc.notice.NoticeVO" parameterType="HashMap">
+    SELECT noticeno, title, notice, nfile, noticedate, passwd ,masterno
+    FROM notice
+    <choose>
+      <when test="word != null or word != ''">
+      WHERE (UPPER(title) Like '%' || UPPER(#{word}) || '%'
+            OR UPPER(notice) Like '%' || UPPER(#{word}) || '%')
+    </when>
+    </choose>
+    ORDER BY noticeno DESC
+  </select>
+
+  <select id="list_search_count" resultType="int" parameterType="HashMap">
+    SELECT COUNT(*) as cnt
+    FROM notice
+    <choose>
+      <when test="word != null or word != ''">
+      WHERE (UPPER(title) Like '%' || UPPER(#{word}) || '%'
+            OR UPPER(notice) Like '%' || UPPER(#{word}) || '%')
+    </when>
+    </choose>
+  </select>
+
+  <select id="paging" resultType="dev.mvc.notice.NoticeVO" parameterType="HashMap">
+     SELECT noticeno, title, notice, nfile, noticedate, passwd ,masterno, r
+     FROM (
+        SELECT noticeno, title, notice, nfile, noticedate, passwd ,masterno, rownum as r
+        FROM (
+            SELECT noticeno, title, notice, nfile, noticedate, passwd ,masterno
+            FROM notice
+            <choose>
+              <when test="word != null or word != ''">
+                      WHERE (UPPER(title) Like '%' || UPPER(#{word}) || '%'
+                      OR UPPER(notice) Like '%' || UPPER(#{word}) || '%')
+              </when>
+            </choose>
+            ORDER BY noticeno DESC
+        )
+     )
+     WHERE <![CDATA[ r >= #{start_num} AND r <= #{end_num} ]]>
+  </select>
+
+</mapper>

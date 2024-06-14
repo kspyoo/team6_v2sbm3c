@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="dev.mvc.masterlogin.MasterloginDAOInter">
+  
+  <insert id="create_masterlogin_record" parameterType="map">
+    INSERT INTO masterlogin(masterloginno,ip,masterno,conndate)
+    VALUES (masterlogin_seq.nextval,#{ip},#{masterno},sysdate)
+  </insert>
+  
+  <!-- 로그인 내역 조회 -->
+  <select id="masterlogin_list" resultType="dev.mvc.masterlogin.LoginMasterVO" parameterType="String">
+    SELECT lg.masterloginno, lg.ip, 
+    lg.conndate, lg.masterno, mb.mastername, mb.masterid
+    FROM masterlogin lg
+    LEFT JOIN master mb ON lg.masterno = mb.masterno OR lg
+    <if test="word != null and word != ''">
+                            WHERE (UPPER(lg.ip) LIKE '%' || UPPER(#{word}) || '%' 
+                                  OR UPPER(lg.conndate) LIKE '%' || UPPER(#{word}) || '%' 
+                                  OR UPPER(mb.mastername) LIKE '%' || UPPER(#{word}) || '%' 
+                                  OR UPPER(mb.masterid) LIKE '%' || UPPER(#{word}) || '%') AND lg.masterno != 0   </if>
+    ORDER BY lg.masterloginno DESC
+  </select>
+  
+    <!-- 카테고리별 검색 + 페이징 목록 -->
+  <select id="list_by_search_paging" resultType="dev.mvc.masterlogin.LoginMasterVO" parameterType="Map">
+   SELECT masterloginno, ip, conndate, masterno, mastername, masterid, r
+   FROM (
+              SELECT masterloginno, ip, conndate, masterno, mastername, masterid, rownum AS r
+              FROM (
+                        SELECT lg.masterloginno, lg.ip, lg.conndate, lg.masterno, mb.mastername, mb.masterid
+                        FROM masterlogin lg
+                        JOIN master mb ON lg.masterno = mb.masterno OR lg.masterno IS NULL
+                        <choose>
+                          <when test="word == null or word == ''"> <!-- 검색하지 않는 경우 -->
+                          </when>
+                          <otherwise>
+                            WHERE (UPPER(lg.ip) LIKE '%' || UPPER(#{word}) || '%' 
+                                  OR UPPER(lg.conndate) LIKE '%' || UPPER(#{word}) || '%' 
+                                  OR UPPER(mb.mastername) LIKE '%' || UPPER(#{word}) || '%' 
+                                  OR UPPER(mb.masterid) LIKE '%' || UPPER(#{word}) || '%') AND lg.masterno != 0
+                          </otherwise>
+                        </choose>
+                        ORDER BY lg.masterloginno DESC
+               )
+    )
+    WHERE r &gt; = #{start_num} AND r &lt; = #{end_num}
+  </select>
+  
+  <!-- 검색 레코드 갯수 -->
+  <select id="list_by_search_count" resultType="int" parameterType="String">
+      SELECT COUNT(*) as cnt
+      FROM (
+          SELECT lg.masterloginno, lg.ip, lg.conndate, lg.masterno, mb.mastername, mb.masterid
+          FROM masterlogin lg
+          LEFT JOIN master mb ON lg.masterno = mb.masterno 
+          <if test="word != null and word != ''">
+              WHERE (UPPER(lg.ip) LIKE '%' || UPPER(#{word}) || '%' 
+                  OR UPPER(lg.conndate) LIKE '%' || UPPER(#{word}) || '%' 
+                  OR UPPER(mb.mastername) LIKE '%' || UPPER(#{word}) || '%' 
+                  OR UPPER(mb.masterid) LIKE '%' || UPPER(#{word}) || '%') 
+                  AND lg.masterno != 0   
+          </if>
+          ORDER BY lg.masterloginno DESC
+      )
+  </select>
+  
+  <select id="findnull" resultType="dev.mvc.login.LoginVO">
+    SELECT masterloginno,ip,conndate,masterno
+    FROM masterlogin
+    WHERE masterno IS NULL
+  </select>
+  
+
+  
+  
+</mapper>
