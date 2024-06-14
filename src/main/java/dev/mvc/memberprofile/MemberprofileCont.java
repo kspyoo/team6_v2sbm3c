@@ -86,6 +86,17 @@ public class MemberprofileCont {
     }
     
     ArrayList<MemberprofileVO> list = this.memberprofileProc.read_file(memberno);
+    
+    for (int i=1;i < list.size() ; i ++) {
+      MemberprofileVO mvo = list.get(i);
+      if (mvo.getFile1() == null || mvo.getFile1() == "") {
+        if (list.size() > 1) {
+          this.memberprofileProc.delete_one(memberno, mvo.getMprofileno()); 
+        }
+      }
+      System.out.println("mvo!!!!!! : " + mvo);
+    }
+    
     if (list.size() < 2) {
       memberprofileVO = list.get(0);
     } else {
@@ -150,7 +161,8 @@ public class MemberprofileCont {
       MemberprofileVO mvo, HttpSession session) {
     this.memberprofileProc.delete_one(memberno, mprofileno);
 
-    System.out.println(memberno);
+    ArrayList<MemberprofileVO> remainingFiles = memberprofileProc.read_file(memberno);
+    System.out.println("남아 있는 파일 목록: " + remainingFiles);
 
     return "redirect:/memberprofile/update_file?memberno=" + memberno;
   }

@@ -32,19 +32,14 @@
     </tr>
      
     <tr th:each="memberVO, status:${list}" style="width: 100%;">
-      <td class='td_left'><a th:href="@{|./read?memberno=${memberVO.memberno}&mprofileno=${memberVO.mprofileno}|}" th:text="${memberVO.id}"></a></td>
-      <td class='td_left'><a th:href="@{|./read?memberno=${memberVO.memberno}&mprofileno=${memberVO.mprofileno}|}" th:text="${memberVO.name}"></a></td>
-      <td class='td_basic' th:text="${memberVO.phone}"></td>
+      <td class='td_left'><a th:href="@{|./read_data?memberno=${memberVO.memberno}&mprofileno=${memberVO.mprofileno}|}" th:text="${memberVO.id}"></a></td>
+      <td class='td_left'><a th:href="@{|./read_data?memberno=${memberVO.memberno}&mprofileno=${memberVO.mprofileno}|}" th:text="${memberVO.name}"></a></td>
+      <td class='td_basic' th:text="${memberVO.phone.substring(0, 8)}"></td>
       <td class='td_left'>
         <span th:if="${memberVO.addr_main.length() > 15 }" th:text="|${memberVO.addr_main.substring(0, 15) }...|"></span>
         <span th:unless="${memberVO.addr_main.length() > 15 }" th:text="${memberVO.addr_main}"></span>
       </td>
       <td class='td_basic' th:text="${memberVO.joindate.substring(0, 10)}"></td>
-      <td class='td_basic'>
-        <a th:href="@{|./read?memberno=${memberVO.memberno}|}"><img src='/member/images/update.png' title='수정' class="icon"></a>
-        <a th:href="@{|./delete?memberno=${memberVO.memberno}&masterno=${masterVO.masterno}|}"><img src='/member/images/delete.png' title='삭제' class="icon"></a>
-      </td>
-      
     </tr>
   </table>
    

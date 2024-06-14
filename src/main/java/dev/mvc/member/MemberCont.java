@@ -633,7 +633,35 @@ public class MemberCont {
       model.addAttribute("masterVO", masterVO);
       
       return "member/list"; 
-
+  }
+  
+  @GetMapping(value="/read_data")
+  public String read_data(HttpSession session, Model model, int memberno,MemberprofileVO memberprofileVO,LoginVO loginVO) {
+    
+    System.out.println(loginVO);
+    
+    MemberVO memberVO = this.memberProc.read(memberno);
+    model.addAttribute("memberVO", memberVO);
+    
+    System.out.println("확인용 : " + this.memberprofileProc.read_file(memberno));
+    
+    System.out.println("this.memberProc.read(memberno) : " + this.memberProc.read(memberno));
+    
+    
+    
+    // MemberProfileVO를 조회하여 모델에 추가
+    ArrayList<MemberprofileVO> list = this.memberprofileProc.read_file(memberno);
+    
+    System.out.println("list : " + list);
+    if(list.size() < 2) {
+      memberprofileVO = this.memberprofileProc.read_file(memberno).get(0);
+      model.addAttribute("memberprofileVO", memberprofileVO);
+      System.out.println("memberprofileVO : "+memberprofileVO);
+    } else {
+      memberprofileVO = this.memberprofileProc.read_file(memberno).get(1);
+      model.addAttribute("memberprofileVO", memberprofileVO);
+    }
+    return "member/read_data";
   }
   
 }
