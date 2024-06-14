@@ -1,0 +1,40 @@
+<div th:fragment="list_all_fragment">
+  <div style="width: 80%; margin: 0 auto">
+    <table class="table table-hover">
+      <colgroup>
+        <col style='width: 30%;' />
+        <col style='width: 15%;' />
+        <col style='width: 15%;' />
+        <col style='width: 40%;' />
+      </colgroup>
+      <thead>
+        <tr>
+          <th class='th_bs'>접속일</TH>
+          <th class='th_bs'>관리자ID</th>
+          <th class='th_bs'>성명</th>
+          <th class='th_bs'>IP</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr th:each="masterloginVO, status:${list}">
+          <td class='td_left' th:text="${masterloginVO.conndate}">
+          <td class='td_left'><a th:if="${masterloginVO.masterno != 0}"
+              th:href="@{|../master/read?masterno=${masterloginVO.masterno}&mprofileno=${masterloginVO.mprofileno}|}"
+              th:text="${masterloginVO.id}"></a>
+            <span th:if="${masterloginVO.masterno == 0}">삭제된 관리자아이디</span>
+          </td>
+          <td class='td_left'><a th:if="${masterloginVO.masterno != 0}"
+              th:href="@{|../master/read?masterno=${masterloginVO.masterno}&mprofileno=${masterloginVO.mprofileno}|}"
+              th:text="${masterloginVO.mastername}"></a>
+            <span th:if="${masterloginVO.masterno == 0}">삭제된 관리자</span>
+          </td>
+          <td class='td_left' th:text="${masterloginVO.ip}">
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- 페이지 버튼 목록 출력 시작 -->
+    <div class="bottom_menu" th:utext="${paging}"></div>
+    <!-- 페이지 버튼 목록 출력 종료 -->
+  </div>
+</div>

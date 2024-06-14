@@ -29,6 +29,7 @@
       <input type="hidden" name="masterno" th:value="${masterVO.masterno}">
       
       <div class="msg_warning">관리자 정보는 삭제하면 복구 할 수 없습니다.<br>그래도 삭제하시겠습니까?</div>
+      <div style='text-align: center;'>관리자 이름: <span th:text="${masterVO.mastername}"></span></div>
       
       <div class="content_body_bottom">
         <button type="button" onclick="send();" class="btn btn-secondary btn-sm">삭제</button>

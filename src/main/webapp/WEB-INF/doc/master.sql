@@ -4,12 +4,14 @@ DROP TABLE master CASCADE CONSTRAINTS;
 CREATE TABLE MASTER(
 		MASTERNO                      		NUMBER(10)		 NOT NULL		 PRIMARY KEY,
 		MASTERID                      		VARCHAR2(30)		 NOT NULL,
-		MASTERPASSWD                  		VARCHAR2(50)		 NOT NULL
+		MASTERPASSWD                  		VARCHAR2(50)		 NOT NULL,
+        MASTERNAME                          VARCHAR2(30)         NOT NULL
 );
 
 COMMENT ON TABLE MASTER is '관리자';
 COMMENT ON COLUMN MASTER.MASTERNO is '관리자번호';
 COMMENT ON COLUMN MASTER.MASTERID is '관리자 아이디';
+COMMENT ON COLUMN MASTER.MASTERNAME is '관리자 이름';
 COMMENT ON COLUMN MASTER.MASTERPASSWD is '관리자 비밀번호';
 
 DROP SEQUENCE master_seq;
@@ -23,18 +25,16 @@ CREATE SEQUENCE master_seq
   NOCYCLE;                     -- 다시 1부터 생성되는 것을 방지
 
 --등록--
-INSERT INTO master(masterno, masterid, masterpasswd)                            
-VALUES (master_seq.nextval, 'admin', '1234')
+INSERT INTO master(masterno, masterid, masterpasswd,mastername)                            
+VALUES (master_seq.nextval, 'admin', '1234','홍길동')
 
-INSERT INTO master(masterno, masterid, masterpasswd)                            
-VALUES (master_seq.nextval, 'master', '1234')
 --목록--
-SELECT masterno, masterid, masterpasswd
+SELECT masterno, masterid, masterpasswd,mastername
 FROM master
 ORDER BY masterid ASC;
 
 --삭제--
 DELETE FROM master
-WHERE masterno=10;
+WHERE masterno=3;
      
              
