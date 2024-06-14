@@ -26,7 +26,10 @@ import dev.mvc.master.MasterVO;
 import dev.mvc.memberprofile.Memberprofile;
 import dev.mvc.memberprofile.MemberprofileProcInter;
 import dev.mvc.memberprofile.MemberprofileVO;
+import dev.mvc.openapi.OpenAPIController;
+import dev.mvc.openapi.OpenAPIDTO;
 import dev.mvc.team6_v2sbm3c.MsgCont;
+import dev.mvc.tool.OpenAPI;
 import dev.mvc.tool.Security;
 import dev.mvc.tool.Tool;
 import dev.mvc.tool.Upload;
@@ -643,7 +646,6 @@ public class MemberCont {
     System.out.println("확인용 : " + this.memberprofileProc.read_file(memberno));
     
     System.out.println("this.memberProc.read(memberno) : " + this.memberProc.read(memberno));
-    
     
     
     // MemberProfileVO를 조회하여 모델에 추가

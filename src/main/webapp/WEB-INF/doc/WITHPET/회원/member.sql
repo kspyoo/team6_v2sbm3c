@@ -311,6 +311,6 @@ SELECT mprofileno, file1, file1saved, thumbfile, filesize, memberno
 FROM memberprofile
 WHERE memberno =42;
 
-DELETE FROM memberprofile WHERE mprofileno = 229;
+DELETE FROM memberprofile WHERE mprofileno != 162 and memberno = 42;
 
 SELECT * FROM memberprofile ORDER BY MEMBERNO DESC;
