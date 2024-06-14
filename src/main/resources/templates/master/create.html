@@ -23,9 +23,17 @@
 			document.querySelector('#masterpasswd2').addEventListener('keypress', (event) => {
 				// document.getElementById('passwd').addEventListener('keypress', (event) => {
 				if (event.key === 'Enter') {
+					document.getElementById('mastername').focus();
+				}
+			});
+
+			document.querySelector('#mastername').addEventListener('keypress', (event) => {
+				// document.getElementById('passwd').addEventListener('keypress', (event) => {
+				if (event.key === 'Enter') {
 					document.getElementById('btn_send').focus();
 				}
 			});
+
 
 		}
 
@@ -108,6 +116,18 @@
 				return false;  // 회원 가입 진행 중지
 			}
 
+			let mastername = document.getElementById('mastername');
+			let mastername_msg = document.getElementById('mastername_msg');
+
+			if (mastername.value.length == 0) {
+				mastername_msg.innerHTML = '이름 입력은 필수입니다.';
+				mastername_msg.classList.add('span_warning');    // class 적용
+				mastername.focus();
+
+				return false;  // 회원 가입 진행 중지
+			}
+
+
 			document.getElementById('frm').submit(); // required="required" 작동 안됨.
 		}
 	</script>
@@ -125,8 +145,8 @@
 		<form name="frm" id="frm" th:object="${masterVO}" method="post" action="/master/create">
 			<div>
 				<label for="masterid">관리자 아이디(이메일)*</label>
-				<input type="text" name="masterid" id="masterid" value="" autofocus="autofocus" class="form-control fom-control-sm"
-					style="width: 50%;" th:field="*{masterid}">
+				<input type="text" name="masterid" id="masterid" value="" autofocus="autofocus"
+					class="form-control fom-control-sm" style="width: 50%;" th:field="*{masterid}">
 				<button type='button' id="btn_checkID" onclick="checkID()" class="btn btn-primary btn-sm"
 					style="margin-top: 4px;">중복확인</button>
 				<span id='masterid_msg'></span>
@@ -134,18 +154,26 @@
 
 			<div class="form-group">
 				<label for="masterpasswd">관리자 패스워드*</label>
-				<input type='password' name='masterpasswd' id='masterpasswd' value='1234' required="required" placeholder="관리자 패스워드"
-					class="form-control form-control-sm" style="width:30%;">
+				<input type='password' name='masterpasswd' id='masterpasswd' value='1234' required="required"
+					placeholder="관리자 패스워드" class="form-control form-control-sm" style="width:30%;">
 			</div>
 
 			<div class="form-group">
 				<label for="masterpasswd2">관리자 패스워드 확인*</label>
-				<input type='password' name='masterpasswd2' id='masterpasswd2' value='1234' required="required" placeholder="관리자패스워드 확인"
-					class="form-control form-control-sm" style="width:30%;">
+				<input type='password' name='masterpasswd2' id='masterpasswd2' value='1234' required="required"
+					placeholder="관리자패스워드 확인" class="form-control form-control-sm" style="width:30%;">
 				<span id='masterpasswd2_msg'></span>
 			</div>
 
-	
+			<div class="form-group">
+				<label for="mastername">성명*</label>
+				<input type='text' name='mastername' id='mastername' value='하정우' required="required" placeholder="성명"
+					class="form-control form-control-sm" style="width: 30%;">
+				<span id='mastername_msg'></span>
+			</div>
+
+
+
 			<div class="content_body_bottom">
 				<button type="button" onclick="send();" class="btn btn-secondary btn-sm">가입</button>
 				<button type="button" onclick="history.back();" class="btn btn-secondary btn-sm">취소</button>
