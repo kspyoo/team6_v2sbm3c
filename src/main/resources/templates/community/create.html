@@ -42,6 +42,7 @@
 
   <!-- <div th:replace="~{errors::errorsFragment}"></div> -->
   <form name='frm' method='post' th:object="${communityVO}" action='./create' enctype="multipart/form-data">
+  
     <div>
       <label>제목</label>
       <input type='text' name='title' th:value='${communityVO.title}' required="required" autofocus="autofocus"

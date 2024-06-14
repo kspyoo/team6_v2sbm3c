@@ -36,7 +36,7 @@ FROM(
             FROM community   
         <choose>     
             <otherwise> 
-                WHERE UPPER(title)LIKE '%'||UPPER(#{word})||'%'OR UPPER(tag)LIKE '%' || UPPER(#{word})
+                WHERE UPPER(title)LIKE '%'||UPPER(#{word})||'%'OR UPPER(tag)LIKE '%' || UPPER(#{word})  
           </otherwise>
         </choose>
         ORDER BY communityno ASC  
@@ -48,7 +48,7 @@ WHERE <![CDATA[ r >= #{start_num} AND r <= #{end_num} ]]>
           2 page: WHERE r >= 11 AND r <= 20;
           3 page: WHERE r >= 21 AND r <= 30; -->
 </select>
-<select id="list_search_count" resultType="int" parameterType="HashMap">
+<select id="list_search_count" resultType="int" parameterType="String">
 SELECT COUNT(*) as cnt
         FROM community
           WHERE UPPER(title) LIKE '%'||UPPER(#{word})||'%'OR UPPER(tag)LIKE '%' ||UPPER(#{word}) 

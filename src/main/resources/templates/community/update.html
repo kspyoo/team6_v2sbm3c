@@ -40,9 +40,8 @@
   </style>
 
   <aside class="aside_right">
+  <span th:if="${session.memberno==attachmentVO.memberno}">
     <a href="/community/list_all">목록</a>
-    <span class="menu_devide">│</span>
-    <a href="/community/update">수정</a>
     <span class="menu_devide">│</span>
     <a th:href="@{|/community/delete/${attachmentVO.communityno}|}">삭제</a>
     <span class="menu_devide">│</span>
@@ -94,7 +93,6 @@
           <button type="button" class="form-control" value="attachment" onclick="attachment();">등록</button>
         </div>
       </li>
-
 
       <label>패스워드</label>
       <input type='password' name='passwd' th:value='1234' required="required" class="form-control" style='width: 50%;'>
