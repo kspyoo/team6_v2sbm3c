@@ -12,7 +12,7 @@ public class Communityattachment {
   public static synchronized String getUploadDir() {
       String path = "";
       if (File.separator.equals("\\")) { 
-          path="C:\\kd\\deploy\\team6_v2sbm3c\\community\\storage\\";
+          path="C:\\kd\\deploy\\team6_v2sbm3c\\communityattachment\\storage\\";
           
           
       } else { 
