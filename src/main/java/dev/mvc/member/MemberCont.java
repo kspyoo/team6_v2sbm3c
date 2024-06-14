@@ -208,9 +208,6 @@ public class MemberCont {
     if (cnt == 1) {
       MemberVO memberVO = this.memberProc.readById(id);
 
-      
-
-      
     // this.memberprofileProc.create_file(memberVO.getMemberno());
       
       memberprofileVO =  this.memberprofileProc.read_file(memberVO.getMemberno()).get(0);
