@@ -31,5 +31,5 @@ public interface CommunityDAOInter {
   
   public ArrayList<CommunityVO>list_search_paging(Map<String,Object>map);
   
-  public int list_search_count(HashMap<String, Object> hashMap);
+  public int list_search_count(String word);
 }

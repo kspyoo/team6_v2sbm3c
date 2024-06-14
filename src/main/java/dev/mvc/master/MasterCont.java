@@ -1,6 +1,7 @@
 package dev.mvc.master;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 
 import org.json.JSONObject;
@@ -15,7 +16,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+
 import dev.mvc.master.MasterVO;
+import dev.mvc.masterlogin.MasterloginProcInter;
 import dev.mvc.member.MemberVO;
 import dev.mvc.tool.Security;
 import jakarta.servlet.http.Cookie;
@@ -29,6 +32,10 @@ public class MasterCont {
   @Autowired
   @Qualifier("dev.mvc.master.MasterProc")
   private MasterProcInter masterProc;
+  
+  @Autowired
+  @Qualifier("dev.mvc.masterlogin.MasterloginProc")
+  private MasterloginProcInter masterloginProc;
   
   @Autowired
   Security security;
@@ -217,7 +224,7 @@ public class MasterCont {
     model.addAttribute("ck_masterid_save", "Y");
     model.addAttribute("ck_masterpasswd_save", "Y");
 
-    return "master/login_cookie"; // templates/member/login_cookie.html
+    return "master/login_cookie"; // templates/master/login_cookie.html
   }
 
   /**
@@ -234,14 +241,20 @@ public class MasterCont {
    * @return
    */
   @PostMapping(value = "/login")
-  public String login_proc(HttpSession session, HttpServletRequest request, HttpServletResponse response, Model model,
-      String masterid, String masterpasswd, @RequestParam(value = "masterid_save", defaultValue = "") String masterid_save,
+  public String login_proc(HttpSession session, 
+      HttpServletRequest request, 
+      HttpServletResponse response, 
+      Model model,
+      String masterid, 
+      String masterpasswd, 
+      @RequestParam(value = "masterid_save", defaultValue = "") String masterid_save,
       @RequestParam(value = "masterpasswd_save", defaultValue = "") String masterpasswd_save) {
     HashMap<String, Object> map = new HashMap<String, Object>();
     map.put("masterid", masterid);
     map.put("masterpasswd", masterpasswd);
 
     int cnt = this.masterProc.login(map);
+
     System.out.println("->login_proc cnt:" + cnt);
 
     model.addAttribute("cnt", cnt);
@@ -253,6 +266,24 @@ public class MasterCont {
 
 //    int memberno=(int)session.getAttribute("memberno"); // 세션(session)에서 가져오기
       session.setAttribute("masterid", masterVO.getMasterid());
+      
+      
+ // 관리자 로그인 기록 //     
+     String ip = request.getRemoteAddr();
+     Date rdate =new Date();
+     HashMap<String, Object> masterlogin_map = new HashMap<String, Object>();
+     masterlogin_map.put("masterid",masterid);
+     masterlogin_map.put("ip",ip);
+     masterlogin_map.put("conndate", rdate);
+     masterlogin_map.put("masterno",masterVO.getMasterno());
+     
+     
+     this.masterloginProc.create_masterlogin_record(masterlogin_map);
+     
+     
+     System.out.println(ip);
+      
+ // 관리자 로그인 기록 종료 //     
 
 //cookie 관련코드-------------------------------------------------
 

@@ -195,8 +195,8 @@ public class CommunityProc implements CommunityProcInter {
 
 
   @Override
-  public int list_search_count(HashMap<String, Object> hashMap) {
-    int  cnt = this.communityDAO.list_search_count(hashMap);
+  public int list_search_count(String word) {
+    int  cnt = this.communityDAO.list_search_count(word);
     return cnt;
   }
   

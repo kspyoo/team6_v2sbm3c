@@ -174,7 +174,23 @@ WHERE communityno=32;
 SELECT cano, filename, filesize, thumbfile,communityno 
 FROM communityattachment
 WHERE communityno=32;
-commit;
+    commit;
+
+SELECT * FROM community;
+DELETE FROM community WHERE EXISTS( SELECT 1 FROM community WHERE communityno = 14)and communityno = 14;
+
+
+-- search 첨부파일 join 
+SELECT communityno,title,content,vcnt,rcnt,writedate,tag,memberno,ctypeno, r
+FROM(   
+        SELECT communityno,title,content,vcnt,rcnt,writedate,tag,memberno,ctypeno, rownum as r
+        FROM (
+            SELECT communityno,title,content,vcnt,rcnt,writedate,tag,memberno,ctypeno
+            FROM community             
+            WHERE UPPER(title)LIKE '%'||UPPER('test')||'%'OR UPPER(tag)LIKE '%' ||UPPER('test')
+            ORDER BY communityno ASC
+            )
+        );
 /**********************************/
 /* Table Name: 댓글 */
 /**********************************/
@@ -195,9 +211,78 @@ COMMENT ON COLUMN REPLY.RDATE is '등록일';
 COMMENT ON COLUMN REPLY.COMMUNITYNO is '글 번호';
 COMMENT ON COLUMN REPLY.MEMBERNO is '회원번호';
 
+DROP SEQUENCE reply_seq;
+CREATE SEQUENCE reply_seq
+  START WITH 1              -- 시작 번호
+  INCREMENT BY 1          -- 증가값
+  MAXVALUE 9999999999 -- 최대값: 9999999999
+  CACHE 2                     -- 2번은 메모리에서만 계산
+  NOCYCLE;                   -- 다시 1부터 생성되는 것을 방지
 
 
+-- 등록
+INSERT INTO reply(replyno,content,rdate,communityno,memberno)
+VALUES(reply_seq.nextval,'댓글1',sysdate,27,1);
 
+INSERT INTO reply(replyno,content,rdate,communityno,memberno)
+VALUES(reply_seq.nextval,'댓글2',sysdate,27,1);
+
+INSERT INTO reply(replyno,content,rdate,communityno,memberno)
+VALUES(reply_seq.nextval,'댓글3',sysdate,27,1);
+
+-- 전체 목록
+SELECT replyno,content,rdate,communityno,memberno
+FROM reply
+ORDER BY replyno DESC;
+
+--삭제
+DELETE FROM reply
+WHERE replyno=1;
+
+--communityno에 해당하 댓글수 확인 및 삭제
+SELECT COUNT(*) as cnt
+FROM reply
+WHERE communityno=1;
+
+DELETE FROM reply
+WHERE communityno=1;
+
+--memberno에 해당하 댓글수 확인 및 삭제
+SELECT COUNT(*) as cnt
+FROM reply
+WHERE memberno=1;
+
+DELETE FROM reply
+WHERE memberno=1;
+
+--삭제용 패스워드 검사
+SELECT COUNT(*) as cnt
+FROM reply
+WHERE replyno=1 AND passwd='1234';
+
+
+DELETE FROM reply
+WHERE replyno=1;
+
+SELECT m.id,
+            r.replyno,r.content,r.rdate,r.communityno,r.memberno
+FROM member m, reply r
+WHERE (m.memberno = r.memberno) AND r.communityno= 43
+ORDER BY r.replyno DESC;
+
+SELECT replyno,content,rdate,communityno,memberno,r
+FROM (
+        SELECT replyno,content,rdate,communityno,memberno,rownum as r
+        FROM (
+                SELECT m.id,
+            r.replyno,r.content,r.rdate,r.communityno,r.memberno
+            FROM member m, reply r
+            WHERE (m.memberno = r.memberno) AND r.communityno= 43
+            ORDER BY r.replyno DESC
+        )
+    );
+    
+commit;
 /**********************************/
 /* Table Name: 일반 커뮤니티 첨부파일 */
 /**********************************/
@@ -248,5 +333,17 @@ WHERE communityno = 14;
 SELECT * FROM communityattachment;
 
 --delete
-DELETE FROM communityattachment WHERE communityno=0;
+DELETE FROM communityattachment WHERE EXISTS( SELECT 1 FROM communityattachment WHERE cano = 14)and cano = 14;
+
+commit;
+
+--좋아요 테이블 생성
+CREATE TABLE LIKE(
+    RCNT            NUMBER(10)  NOT NULL    PRIMARY KEY,
+    RCNTDATE        DATE   NOT NULL,
+    COMMUNITYNO                       NUMBER(10)     NOT NULL,
+    MEMBERNO                          NUMBER(10)     NOT NULL,
+  FOREIGN KEY (COMMUNITYNO) REFERENCES COMMUNITY (COMMUNITYNO),
+  FOREIGN KEY (MEMBERNO) REFERENCES member (MEMBERNO)
+);
 

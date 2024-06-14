@@ -19,12 +19,12 @@
         <tr th:each="masterloginVO, status:${list}">
           <td class='td_left' th:text="${masterloginVO.conndate}">
           <td class='td_left'><a th:if="${masterloginVO.masterno != 0}"
-              th:href="@{|../master/read?masterno=${masterloginVO.masterno}&mprofileno=${masterloginVO.mprofileno}|}"
-              th:text="${masterloginVO.id}"></a>
+              th:href="@{|../master/read?masterno=${masterloginVO.masterno}|}"
+              th:text="${masterloginVO.masterid}"></a>
             <span th:if="${masterloginVO.masterno == 0}">삭제된 관리자아이디</span>
           </td>
           <td class='td_left'><a th:if="${masterloginVO.masterno != 0}"
-              th:href="@{|../master/read?masterno=${masterloginVO.masterno}&mprofileno=${masterloginVO.mprofileno}|}"
+              th:href="@{|../master/read?masterno=${masterloginVO.masterno}|}"
               th:text="${masterloginVO.mastername}"></a>
             <span th:if="${masterloginVO.masterno == 0}">삭제된 관리자</span>
           </td>

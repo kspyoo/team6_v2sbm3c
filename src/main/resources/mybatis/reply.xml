@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="dev.mvc.reply.ReplyDAOInter">
+  <insert id="create" parameterType="dev.mvc.reply.ReplyVO">
+INSERT INTO reply(replyno,content,rdate,communityno,memberno)
+VALUES(reply_seq.nextval,#{content},sysdate,#{communityno},#{memberno})
+</insert>
+
+  <select id="list" resultType="dev.mvc.reply.ReplyVO">
+SELECT replyno,content,rdate,communityno,memberno
+FROM reply
+ORDER BY replyno DESC
+</select>
+
+  <select id="list_by_communityno" resultType="dev.mvc.reply.ReplyVO" parameterType="int">
+SELECT replyno,content,rdate,communityno,memberno
+FROM reply
+WHERE communityno=#{communityno}
+ORDER BY replyno DESC
+</select>
+
+  <select id="read" resultType="dev.mvc.reply.ReplyVO" parameterType="int">
+SELECT replyno,content,rdate,communityno,memberno
+FROM reply
+WHERE replyno=#{replyno}
+</select>
+
+  <update id="update" parameterType="dev.mvc.reply.ReplyVO">
+    UPDATE reply
+    SET content=#{content}
+    WHERE replyno=#{replyno}
+  </update>
+
+  <delete id="delete" parameterType="int">
+    DELETE FROM reply
+    WHERE replyno=#{replyno}
+  </delete>
+
+
+  <select id="list_by_communityno_join" resultType="dev.mvc.reply.ReplyVO" parameterType="int">
+SELECT m.id,
+            r.replyno,r.content,r.rdate,r.communityno,r.memberno
+FROM member m, reply r
+WHERE (m.memberno = r.memberno) AND r.communityno= #{communityno}
+ORDER BY r.replyno DESC
+</select>
+
+  <select id="list_by_communityno_join_500" resultType="dev.mvc.reply.ReplyVO" parameterType="int">
+SELECT replyno,content,rdate,communityno,memberno,r
+FROM (
+        SELECT replyno,content,rdate,communityno,memberno,rownum as r
+        FROM (
+                SELECT m.id,
+                p.replyno,p.content,p.rdate,p.communityno,p.memberno
+                FROM member m, reply p
+                WHERE (m.memberno = p.memberno) AND p.communityno=#{communityno}
+                ORDER BY p.replyno DESC
+        )
+    )
+    WHERE r &lt;= 500
+</select>
+
+</mapper>

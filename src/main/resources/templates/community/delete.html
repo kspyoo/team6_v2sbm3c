@@ -21,7 +21,7 @@
 
   <div class='menu_line'></div>
   <form name='frm' method='POST' th:object="${attachmentVO}" th:action="@{|/community/delete/${attachmentVO.communityno}|}">
-    <div class="msg_warning">게시글 이미지를 삭제하면 복구 할 수 없습니다.</div>
+    <div class="msg_warning">게시글 삭제하면 복구 할 수 없습니다.</div>
     <label>제목</label>: <span th:text="${attachmentVO.title}"></span>
 
 
