@@ -13,7 +13,7 @@
     SELECT lg.masterloginno, lg.ip, 
     lg.conndate, lg.masterno, mb.mastername, mb.masterid
     FROM masterlogin lg
-    LEFT JOIN master mb ON lg.masterno = mb.masterno OR lg
+    LEFT JOIN master mb ON lg.masterno = mb.masterno 
     <if test="word != null and word != ''">
                             WHERE (UPPER(lg.ip) LIKE '%' || UPPER(#{word}) || '%' 
                                   OR UPPER(lg.conndate) LIKE '%' || UPPER(#{word}) || '%' 

@@ -58,7 +58,7 @@ public class LoginCont {
     
     int no = search_count - ((now_page - 1) * this.record_per_page);
     model.addAttribute("no",search_count);
-    model.addAttribute("all_no",no);
+    model.addAttribute("all_no",search_count);
     return "login/login_list";
   }
   

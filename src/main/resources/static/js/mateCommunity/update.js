@@ -59,14 +59,14 @@ function send(){
     let minute = document.querySelector('#minute');
     let minute_result = minute.options[minute.selectedIndex].value;
 
-    document.getElementById('assembleTime').value = String(date) + " " + String(amOrPm) + String(hour_result) + ":" + String(minute_result);
+    document.getElementById('assembleTime').value = String(date) + " " + String(amOrPm) + " " + String(hour_result) + ":" + String(minute_result);
 
     document.getElementById('frm').submit();
 }
 
 window.onload = () => {
     let assembleDate = document.getElementById('assembleDate');
-    assembleDate.value = new Date().toISOString().substring(0, 10);
+    // assembleDate.value = [[${mateCommunityVO.assembleTime.split(' ')[0]}]];
 
     let offset = 1000 * 60 * 60 * 9 // 9시간 밀리세컨트 값
     let today = new Date(Date.now() + offset)
@@ -81,8 +81,15 @@ window.onload = () => {
     for (let i = 1; i < 13; i++){
         if(i < 10) {
             time.options[i] = new Option('0' + i, String(i));
+            console.log(hour_data)
+            if( parseInt('0'+i) == hour_data ){
+                time.options[i].selected=true;
+            }
         }else{
             time.options[i] = new Option(i+'', String(i));
+            if( i == hour_data ){
+                time.options[i].selected=true;
+            }
         }
     }
 }

@@ -96,6 +96,14 @@
                                 let recruit_start = document.getElementById('recruit_start' + [[${mateCommunityVO.MCommunityNo}]]);
                                 recruit_start.remove();
                             }
+                        }else{
+                            let status = document.getElementById('status' + [[${mateCommunityVO.MCommunityNo}]]);
+
+                            if([[${mateCommunityVO.status}]] == 1) {
+                                status.innerText = '모집 마감';
+                            }else{
+                                status.innerText='모집 중';
+                            }
                         }
 
                         if(document.getElementById('delete'+[[${mateCommunityVO.MCommunityNo}]]) != null) {

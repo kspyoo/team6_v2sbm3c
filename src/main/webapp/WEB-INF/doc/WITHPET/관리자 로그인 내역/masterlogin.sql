@@ -27,7 +27,23 @@ CREATE SEQUENCE masterlogin_seq
   NOCYCLE;       
 
 INSERT INTO masterlogin(masterloginno,ip,conndate,masterno)
-VALUES (masterlogin_seq.nextval,'1',sysdate,  6);
+VALUES (masterlogin_seq.nextval,'1',sysdate,  7);
+
+  <!-- 로그인 내역 조회 -->
+SELECT lg.masterloginno, lg.ip, 
+    lg.conndate, lg.masterno, mb.mastername, mb.masterid
+FROM masterlogin lg
+LEFT JOIN master mb ON lg.masterno = mb.masterno
+WHERE lg.masterno != 0
+  AND (
+        UPPER(lg.ip) LIKE '%' || UPPER() || '%' 
+        OR UPPER(lg.conndate) LIKE '%' || UPPER() || '%' 
+        OR UPPER(mb.mastername) LIKE '%' || UPPER() || '%' 
+        OR UPPER(mb.masterid) LIKE '%' || UPPER() || '%'
+    )
+ORDER BY lg.masterloginno DESC;
+
+
 
 
 
@@ -36,4 +52,4 @@ VALUES (masterlogin_seq.nextval,'1',sysdate,  6);
 
 SELECT masterloginno,ip,conndate,masterno
 FROM masterlogin
-WHERE masterno 
+WHERE masterloginno
