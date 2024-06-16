@@ -2,7 +2,6 @@ package dev.mvc.team6_v2sbm3c;
 
 import javax.sql.DataSource;
 
-
 import org.mybatis.spring.annotation.MapperScan;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
@@ -18,45 +17,47 @@ import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
 @Configuration
-@PropertySource("classpath:/application.properties")  // 설정 파일 위치
-@MapperScan(basePackages= {"dev.mvc.member","dev.mvc.matecommunity", 
-                           "dev.mvc.culturefacility","dev.mvc.master", 
-                           "dev.mvc.community","dev.mvc.catecommunity",
-                           "dev.mvc.memberprofile","dev.mvc.communityattachment",
-                           "dev.mvc.memberprofile","dev.mvc.culturefile", "dev.mvc.pet", "dev.mvc.petprofile",
-                           "dev.mvc.facilityreview","dev.mvc.login","dev.mvc.mateapply","dev.mvc.matereview","dev.mvc.reply",// DAO interface를 찾는 위치
-                           "dev.mvc.facilityreview","dev.mvc.login","dev.mvc.mateapply","dev.mvc.matereview",
-                           "dev.mvc.masterlogin","dev.mvc.notice,\"dev.mvc.pettype\""}) // DAO interface를 찾는 위치
+@PropertySource("classpath:/application.properties") // 설정 파일 위치
+@MapperScan(basePackages = { "dev.mvc.member", "dev.mvc.matecommunity",
+        "dev.mvc.culturefacility", "dev.mvc.master",
+        "dev.mvc.community", "dev.mvc.catecommunity",
+        "dev.mvc.memberprofile", "dev.mvc.communityattachment",
+        "dev.mvc.memberprofile", "dev.mvc.culturefile", "dev.mvc.pet", "dev.mvc.petprofile",
+        "dev.mvc.facilityreview", "dev.mvc.login", "dev.mvc.mateapply", "dev.mvc.matereview", "dev.mvc.reply", // DAO
+                                                                                                               // interface를
+                                                                                                               // 찾는 위치
+        "dev.mvc.facilityreview", "dev.mvc.login", "dev.mvc.mateapply", "dev.mvc.matereview",
+        "dev.mvc.masterlogin", "dev.mvc.notice", "dev.mvc.pettype" }) // DAO interface를 찾는 위치
 public class DatabaseConfiguration {
-    
+
     @Autowired
     private ApplicationContext applicationContext;
-    
+
     @Bean
-    @ConfigurationProperties(prefix="spring.datasource.hikari")  // 설정 파일의 접두사 선언 spring.datasource.hikari....
+    @ConfigurationProperties(prefix = "spring.datasource.hikari") // 설정 파일의 접두사 선언 spring.datasource.hikari....
     public HikariConfig hikariConfig() {
         return new HikariConfig();
     }
-    
+
     @Bean
-    public DataSource dataSource() throws Exception{
+    public DataSource dataSource() throws Exception {
         DataSource dataSource = new HikariDataSource(hikariConfig());
-        System.out.println(dataSource.toString());  // 정상적으로 연결 되었는지 해시코드로 확인
+        System.out.println(dataSource.toString()); // 정상적으로 연결 되었는지 해시코드로 확인
         return dataSource;
     }
-    
+
     @Bean
-    public SqlSessionFactory sqlSessionFactory(DataSource dataSource) throws Exception{
+    public SqlSessionFactory sqlSessionFactory(DataSource dataSource) throws Exception {
         SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
         sqlSessionFactoryBean.setDataSource(dataSource);
         // "/src/main/resources/mybatis" 폴더의 파일명이 "xml"로 끝나는 파일 매핑
         sqlSessionFactoryBean.setMapperLocations(applicationContext.getResources("classpath:/mybatis/**/*.xml"));
-        
+
         return sqlSessionFactoryBean.getObject();
     }
-    
+
     @Bean
-    public SqlSessionTemplate sqlSessionTemplate(SqlSessionFactory sqlSessionFactory){
+    public SqlSessionTemplate sqlSessionTemplate(SqlSessionFactory sqlSessionFactory) {
         return new SqlSessionTemplate(sqlSessionFactory);
     }
 }
