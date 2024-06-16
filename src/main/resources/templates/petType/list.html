@@ -1,0 +1,235 @@
+<html layout:decorate="~{layout}"> <!-- layout.html 상속 -->
+<div layout:fragment="content" style="padding-top: 20px; width: 70%; margin: auto">
+<link href="/css/mateCommunity/create.css" rel="Stylesheet" type="text/css">
+  <div id="list_all" style=" height:auto;">
+    <div class='title_line'>반려동물 분류 관리</div>
+
+    <aside class="aside_right">
+      <a href="javascript:location.reload();">새로고침</a>
+    </aside>
+
+    <div class='menu_line'></div>
+
+    <div style="height: 80%">
+      <table class="table table-hover" style="margin: 20px auto;">
+        <colgroup>
+          <col style="width: 20%;"></col>
+          <col style="width: 60%;"></col>
+          <col style="width: 20%;"></col>
+          <!--            <col style="width: 15%;"></col>-->
+          <!--            <col style="width: 10%;"></col>-->
+        </colgroup>
+        <thead>
+        <tr>
+          <th class="th_bs" style='text-align: center; border-right: 1px solid;'>분류 번호</th>
+          <th class="th_bs" style='text-align: center; border-right: 1px solid;'>이름</th>
+          <th class="th_bs" style='text-align: center;'>관리</th>
+          <!--            <th class="th_bs" style='text-align: center;'>관리</th>-->
+          <!--            <th class="th_bs" style='text-align: center;'>기타</th>-->
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="petTypeVO:${list}" style="cursor: pointer;">
+          <td class="td_basic" style="text-align: center; vertical-align: middle;">
+            <!--                    <span th:if="${mateCommunityVO.status == 1}" style="font-weight: bold;">마감</span>-->
+            <!--                    <span th:if="${mateCommunityVO.status == 0}" style="font-weight: bold;">모집중</span>-->
+            <span th:text="${petTypeVO.petTypeNo}" style="font-weight: bold;"></span>
+          </td>
+
+          <td class="td_left align-middle">
+            <span th:text="${petTypeVO.petType}" style="font-weight: bold; margin-left: 10px;"></span>
+          </td>
+
+          <td class="td_left align-middle" style="text-align: center;">
+            <div class="dropdown">
+              <button class="btn btn-outline-info dropdown-toggle btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                관리
+              </button>
+              <ul class="dropdown-menu">
+                <li><button th:id="'invisible'+${petTypeVO.petTypeNo}" class="dropdown-item a_button">숨김</button></li>
+                <li><button th:id="'update'+${petTypeVO.petTypeNo}" class="dropdown-item a_button"
+                            data-bs-toggle="modal" data-bs-target="#exampleModal">수정</button></li>
+                <li><button th:id="'delete'+${petTypeVO.petTypeNo}" class="dropdown-item a_button">삭제</button></li>
+              </ul>
+            </div>
+          </td>
+          <script th:inline="javascript">
+            window.addEventListener('load', function() {
+              document.getElementById('update'+[[${petTypeVO.petTypeNo}]]).addEventListener('click', () => {
+                document.getElementById('exampleModalLabel').innerText = '반려동물 분류 이름 수정';
+                document.getElementById('typeName').placeholder = '';
+                document.getElementById('typeName').placeholder = [[${petTypeVO.petType}]];
+
+                document.getElementById('petTypeNo').value = '';
+                document.getElementById('petTypeNo').value = [[${petTypeVO.petTypeNo}]];
+
+                let sendBtn = document.getElementById('send_btn');
+                sendBtn.innerText = '수정';
+                sendBtn.setAttribute('data-action', 'update');
+              });
+
+              document.getElementById('delete'+[[${petTypeVO.petTypeNo}]]).addEventListener('click', () => {
+                if (confirm('삭제하시겠습니까?')) {
+                  let petTypeNo = [[${petTypeVO.petTypeNo}]]
+                  let url = "./delete"
+                  fetch(url, {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({petTypeNo})
+                  })
+                          .then(response => response.json())
+                          .then(rdata => {
+                            console.log(rdata);
+                            if (parseInt(rdata.cnt) == 0 || rdata == null) {
+                              alert("삭제할 수 없습니다.");
+                              return false;
+                            } else {
+                              alert("삭제 되었습니다.");
+                              location.reload();
+                            }
+                          })
+                          .catch(error => {
+                            console.error('Error:', error);
+                          });
+                }
+              })
+            });
+          </script>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+    <div style="text-align: center;">
+      <button class="btn btn-outline-info" style="width: 20%" id="add_btn"
+              data-bs-toggle="modal" data-bs-target="#exampleModal">추가</button>
+    </div>
+
+    <!-- 등록 Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="exampleModalLabel">분류 등록</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body ms-3" style="width: 70%;">
+            <label class="mb-3">이름</label>
+            <input type="text" id="typeName" class="form-control" placeholder="분류 이름을 입력해주세요." style="width: 100%">
+            <input type="hidden" id="masterNo" value="6">
+            <input type="hidden" id="petTypeNo" value="">
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-outline-info" style="width: 25%" id="send_btn">등록</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script th:inline="javascript">
+      window.onload = () => {
+        if([[${list.size()}]] < 10){
+          document.getElementById('list_all').style.height = "600px";
+        }
+
+        document.getElementById('add_btn').addEventListener('click', () => {
+          document.getElementById('exampleModalLabel').innerText = '반려동물 분류 등록';
+          document.getElementById('typeName').value = '';
+          document.getElementById('typeName').placeholder = '분류 이름을 입력해주세요.';
+          document.getElementById('petTypeNo').value = '';
+
+          let updateBtn = document.getElementById('update_btn');
+          if(updateBtn != null) {
+            updateBtn.id = 'send_btn';
+            document.getElementById('send_btn').innerText = '등록';
+          }
+        });
+
+        document.getElementById('send_btn').addEventListener('click', () => {
+          if(document.getElementById('send_btn').innerText === '등록') {
+            handleCreate();
+          } else {
+            handleUpdate();
+          }
+        });
+      };
+
+      const handleCreate = () => {
+        alert('등록');
+        let typeName_tag = document.getElementById('typeName');
+        let typeName = typeName_tag.value;
+        if(typeName == ''){
+          alert('이름을 입력해주세요');
+          return false;
+        }
+
+        let masterNo_tag = document.getElementById('masterNo');
+        let masterNo = parseInt(masterNo_tag.value);
+
+        if (confirm('등록하시겠습니까?')) {
+          let url = "./create"
+          fetch(url, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({typeName, masterNo})
+          })
+          .then(response => response.json())
+          .then(rdata => {
+            console.log(rdata);
+            if (parseInt(rdata.cnt) == 0 || rdata == null) {
+              alert("등록에 실패 했습니다.");
+              return false;
+            } else {
+              alert("등록 되었습니다.");
+              location.reload();
+            }
+          })
+          .catch(error => {
+            console.error('Error:', error);
+          });
+        }
+      };
+
+      const handleUpdate = () => {
+        alert('수정');
+        let typeName_tag = document.getElementById('typeName');
+        let typeName = typeName_tag.value;
+        if(typeName == ''){
+          alert('이름을 입력해주세요');
+          return false;
+        }
+
+        let petTypeNo_tag = document.getElementById('petTypeNo');
+        let petTypeNo = parseInt(petTypeNo_tag.value);
+
+        if (confirm('수정하시겠습니까?')) {
+          let url = "./update"
+          fetch(url, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({typeName, petTypeNo})
+          })
+          .then(response => response.json())
+          .then(rdata => {
+            console.log(rdata);
+            if (rdata == 0 || rdata == null) {
+              alert("수정에 실패 했습니다.");
+              return false;
+            } else {
+              alert("수정 되었습니다.");
+              location.reload();
+            }
+          })
+          .catch(error => {
+            console.error('Error:', error);
+          });
+        }
+      };
+    </script>
+  </div>
+</div>

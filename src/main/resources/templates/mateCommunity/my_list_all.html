@@ -109,10 +109,15 @@
                         if(document.getElementById('delete'+[[${mateCommunityVO.MCommunityNo}]]) != null) {
                             document.getElementById('delete'+[[${mateCommunityVO.MCommunityNo}]]).addEventListener('click', () => {
                                 if(confirm('게시글을 삭제 하시겠습니까?')) {
-                                    let url = '/mateCommunity/delete?mCommunityNo=' + [[${mateCommunityVO.mCommunityNo}]];
+                                    let url = '/mateCommunity/delete';
+                                    let mCommunityNo = [[${mateCommunityVO.mCommunityNo}]];
 
                                     fetch(url, {
-                                        method: 'GET'
+                                        method: 'POST',
+                                        headers: {
+                                            'Content-Type': 'application/json'
+                                        },
+                                        body: JSON.stringify({mCommunityNo})
                                     })
                                         .then(response => response.json())
                                         .then(rdata => {
