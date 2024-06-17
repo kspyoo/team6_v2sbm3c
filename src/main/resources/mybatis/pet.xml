@@ -49,6 +49,12 @@
         where MEMBERNO = #{memberNo}
     </select>
 
+    <select id="petInfoCnt_by_petTypeNo" parameterType="int">
+        select count(*)
+        from PET
+        where PETTYPENO = #{petTypeNo}
+    </select>
+
     <update id="update" parameterType="Map">
         UPDATE PET
         SET PETNAME = #{petName}, PETDETAIL = #{petDetail}
@@ -73,5 +79,15 @@
             from PET
             where MEMBERNO = ${memberNo}
         ) and MEMBERNO = #{memberNo}
+    </delete>
+
+    <delete id="delete_all_by_petTypeNo" parameterType="int">
+        delete
+        from PET
+        where exists(
+                select 1
+                from PET
+                where petTypeNo = ${petTypeNo}
+            ) and petTypeNo = #{petTypeNo}
     </delete>
 </mapper>
