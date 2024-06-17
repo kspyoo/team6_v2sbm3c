@@ -1,6 +1,7 @@
 package dev.mvc.culturefacility;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,8 +18,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import dev.mvc.culturefacility.CulturefacilityVO;
 import dev.mvc.culturefile.CulturefileProcInter;
+import dev.mvc.culturefile.CulturefileVO;
 import dev.mvc.facilityreview.FacilityreviewVO;
 import dev.mvc.member.MemberProcInter;
+import dev.mvc.openapi.OpenAPIDTO;
+import dev.mvc.tool.OpenAPI;
 import dev.mvc.tool.Tool;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -132,8 +136,16 @@ public class CulturefacilityCont {
       @RequestParam(name = "now_page", defaultValue = "1") int now_page) {
 
     // word = Tool.checkNull(word);
-
+    
     CulturefacilityVO culturefacilityVO = this.CulturefacilityProc.read(culturefno);
+    // 이미지
+    ArrayList<CulturefileVO> list_images = this.culturefileProc.read(culturefno);
+    model.addAttribute("list_images", list_images);
+    // 이미지 종료
+    
+    
+    
+    
     model.addAttribute("culturefacilityVO", culturefacilityVO);
 
     // 페이징 목록

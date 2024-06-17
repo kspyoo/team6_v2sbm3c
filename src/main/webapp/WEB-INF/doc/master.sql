@@ -35,6 +35,6 @@ ORDER BY masterid ASC;
 
 --삭제--
 DELETE FROM master
-WHERE masterno=3;
+WHERE masterno=1;
      
              

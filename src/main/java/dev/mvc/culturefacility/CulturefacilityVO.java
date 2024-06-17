@@ -39,6 +39,8 @@ public class CulturefacilityVO {
   private String operatingtime = "";
   /** 주차가능여부 */
   private String pa = "";
+  /** 실제 저장된 메인 이미지 */
+  private String file1saved = "";
   /** 관리자 번호 */
   private int masterno;
 

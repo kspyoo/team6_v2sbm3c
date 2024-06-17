@@ -3,13 +3,13 @@ DROP TABLE CULTUREFACILITY CASCADE CONSTRAINTS;
 CREATE TABLE CULTUREFACILITY(
 		CULTUREFNO                    		NUMBER(10)		 NOT NULL		 PRIMARY KEY,
 		CNAME                         		VARCHAR2(200)		 NOT NULL,
-        RADDRESS                            VARCHAR2(100)		 NOT NULL,
+        RADDRESS                            VARCHAR2(200)		 NOT NULL,
 		LATITUDE                      		VARCHAR2(30)		 NOT NULL,
 		LONGITUDE                     		VARCHAR2(30)		 NOT NULL,
 		ADDR_CODE                     		VARCHAR2(30)		 NOT NULL,
 		PHONE                         		VARCHAR2(30)		 NOT NULL,
-		CLOSEDDAYS                    		VARCHAR2(30)		 NOT NULL,
-		OPERATINGTIME                 		VARCHAR2(100)		 NOT NULL,
+		CLOSEDDAYS                    		VARCHAR2(200)		 NOT NULL,
+		OPERATINGTIME                 		VARCHAR2(200)		 NOT NULL,
 		PA                            		VARCHAR2(30)		 NOT NULL,
 		MASTERNO                      		NUMBER(10)		 NULL ,
   FOREIGN KEY (MASTERNO) REFERENCES MASTER (MASTERNO)

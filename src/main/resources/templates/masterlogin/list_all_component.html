@@ -9,6 +9,7 @@
       </colgroup>
       <thead>
         <tr>
+        
           <th class='th_bs'>접속일</TH>
           <th class='th_bs'>관리자ID</th>
           <th class='th_bs'>성명</th>
@@ -17,18 +18,18 @@
       </thead>
       <tbody>
         <tr th:each="masterloginVO, status:${list}">
-          <td class='td_left' th:text="${masterloginVO.conndate}">
-          <td class='td_left'><a th:if="${masterloginVO.masterno != 0}"
-              th:href="@{|../master/read?masterno=${masterloginVO.masterno}|}"
+          <td class='td_bs' th:text="${masterloginVO.conndate}">
+          <td class='td_bs'><a th:if="${masterloginVO.masterno != 0}"
+              
               th:text="${masterloginVO.masterid}"></a>
             <span th:if="${masterloginVO.masterno == 0}">삭제된 관리자아이디</span>
           </td>
-          <td class='td_left'><a th:if="${masterloginVO.masterno != 0}"
-              th:href="@{|../master/read?masterno=${masterloginVO.masterno}|}"
+          <td class='td_bs'><a th:if="${masterloginVO.masterno != 0}"
+           
               th:text="${masterloginVO.mastername}"></a>
             <span th:if="${masterloginVO.masterno == 0}">삭제된 관리자</span>
           </td>
-          <td class='td_left' th:text="${masterloginVO.ip}">
+          <td class='td_bs' th:text="${masterloginVO.ip}">
         </tr>
       </tbody>
     </table>

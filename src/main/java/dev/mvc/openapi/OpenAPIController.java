@@ -40,12 +40,13 @@ public class OpenAPIController {
         List<OpenAPIDTO> list = new ArrayList<OpenAPIDTO>();
         List<OpenAPIDTO> list_all = new ArrayList<OpenAPIDTO>();
 
-        for (int i = 1; i < 8; i++) { //23929
-            list = OpenAPI.getData(i, 3000); // 3000개까지는 서버 에러 없이 출력 가능
+        for (int i = 1; i < 2; i++) { //23929
+            list = OpenAPI.getData(i, 2); // 3000개까지는 서버 에러 없이 출력 가능
             list_all.addAll(list);
         }
 
         return list_all.size() + "개" + list_all.toString();
     }
+
 
 }

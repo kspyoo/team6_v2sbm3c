@@ -3,11 +3,13 @@
 <html layout:decorate="~{layout}">
 <!-- layout.html 상속-->
 <div layout:fragment="content">
+<link href="/css/culturefacility/read.css" rel="Stylesheet" type="text/css">
+<script type="text/JavaScript" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 
 
 	<div class='title_line'>
-		문화시설 >
+		&nbsp;&nbsp;문화시설 >
 		<span th:text="${culturefacilityVO.cname}" class="title_line_text"></span>
 	</div>
 	<aside class="aside_right">
@@ -26,22 +28,65 @@
 		<a href="javascript: location.reload();">새로 고침</a>
 
 
+
 	</aside>
 
 	<div class="menu_line"></div>
-	
 
-	
+
+
+	<!-- 사진 자동 슬라이드 -->
+	<div class="carousel-container" th:if="${list_images.size() > 0}">
+		<div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+			<div class="carousel-indicators">
+				<th:block th:each="culturefileVO, culturefileVOStat : ${list_images}">
+					<button type="button" data-bs-target="#carouselExampleIndicators"
+						th:data-bs-slide-to="${culturefileVOStat.index}"
+						th:classappend="${culturefileVOStat.index == 0 ? 'active' : ''}"
+						th:aria-current="${culturefileVOStat.index == 0 ? 'true' : 'false'}"
+						th:aria-label="'Slide ' + ${culturefileVOStat.index + 1}"></button>
+				</th:block>
+			</div>
+			<div class="carousel-inner">
+				<th:block th:each="culturefileVO, culturefileVOStat : ${list_images}">
+					<div class="carousel-item" th:classappend="${culturefileVOStat.index == 0 ? 'active' : ''}">
+						<img th:src="@{|/culturefile/storage/${culturefileVO.file1saved}|}" class="d-block w-100"
+							style="width: 100%; height:auto ;" alt="...">
+					</div>
+				</th:block>
+			</div>
+			<button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators"
+				data-bs-slide="prev">
+				<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+				<span class="visually-hidden">Previous</span>
+			</button>
+			<button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators"
+				data-bs-slide="next">
+				<span class="carousel-control-next-icon" aria-hidden="true"></span>
+				<span class="visually-hidden">Next</span>
+			</button>
+		</div>
+	</div>
+
+
+
+
+	<!-- 사진 자동 슬라이드 종료 -->
+
+
+
+
+
 
 	<div class="container mt-3" style="width: 50%; margin: 5px auto;">
 		<ul class="list-group list-group-flush">
-			<li class="list-group-item">문화시설 이름: <span th:text="${culturefacilityVO.cname}"></span></li>
-			<li class="list-group-item">도로명 주소: <span th:text="${culturefacilityVO.raddress}"></span></li>
-			<li class="list-group-item">우편번호: <span th:text="${culturefacilityVO.addr_code}"></span></li>
-			<li class="list-group-item">전화번호: <span th:text="${culturefacilityVO.phone}"></span></li>
-			<li class="list-group-item">휴무일: <span th:text="${culturefacilityVO.closeddays}"></span></li>
-			<li class="list-group-item">운영시간: <span th:text="${culturefacilityVO.operatingtime}"></span></li>
-			<li class="list-group-item">주차가능여부: <span th:text="${culturefacilityVO.pa}"></span></li>
+			<li class="list-group-item">＃문화시설 이름: <span th:text="${culturefacilityVO.cname}"></span></li>
+			<li class="list-group-item">＃도로명 주소: <span th:text="${culturefacilityVO.raddress}"></span></li>
+			<li class="list-group-item">＃우편번호: <span th:text="${culturefacilityVO.addr_code}"></span></li>
+			<li class="list-group-item">＃전화번호: <span th:text="${culturefacilityVO.phone}"></span></li>
+			<li class="list-group-item">＃휴무일: <span th:text="${culturefacilityVO.closeddays}"></span></li>
+			<li class="list-group-item">＃운영시간: <span th:text="${culturefacilityVO.operatingtime}"></span></li>
+			<li class="list-group-item">＃주차가능여부: <span th:text="${culturefacilityVO.pa}"></span></li>
 		</ul>
 	</div>
 
@@ -51,25 +96,26 @@
 	<head>
 		<style>
 			#map {
-				width: 500px;
+				width: 50%;
 				height: 400px;
 				margin: 0 auto;
-				/* 가로 가운데 정렬 */
+				border-radius: 10px;
+				/* 모서리를 둥글게 설정 */
+				overflow: hidden;
+				/* 내용이 모서리를 넘어갈 경우를 대비하여 오버플로우 숨김 */
+				box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+				/* 그림자 효과 추가 */
 			}
 
+			/* 기타 스타일링 */
 			.customOverlay {
 				background-color: white;
-				/* 텍스트의 배경색 */
 				color: black;
-				/* 텍스트의 글자색 */
 				padding: 5px;
 				border-radius: 5px;
 				font-family: Arial, sans-serif;
-				/* 텍스트의 글꼴 */
 				font-size: 12px;
-				/* 텍스트의 크기 */
 				box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
-				/* 그림자 효과 */
 			}
 		</style>
 	</head>
@@ -82,21 +128,21 @@
 			// read.html에서 컨트롤러로부터 전달된 위도와 경도 값을 받아옵니다.
 			let latitude = [[${culturefacilityVO.latitude}]];
 			let longitude = [[${culturefacilityVO.longitude}]];
-		
-			
-		
-	
+
+
+
+
 
 			let container = document.getElementById('map');
 			let options = {
-				center: new kakao.maps.LatLng(latitude,longitude),
+				center: new kakao.maps.LatLng(latitude, longitude),
 				level: 3
 			};
 
 			let map = new kakao.maps.Map(container, options);
 
 			// 마커의 위치를 설정합니다
-			let markerPosition = new kakao.maps.LatLng(latitude,longitude);
+			let markerPosition = new kakao.maps.LatLng(latitude, longitude);
 
 			// 마커를 생성합니다
 			let marker = new kakao.maps.Marker({
@@ -120,10 +166,10 @@
 
 
 	 
-	<!-- ------------------------------ 댓글 영역 시작 ------------------------------ -->
+	<!-- ------------------------------ 후기 영역 시작 ------------------------------ -->
 	<script>
-		let facilityreview_data; // 댓글 500건 저장
-		let facilityreview_now_page = 1; // 댓글 현재 페이지
+		let facilityreview_data; // 후기 500건 저장
+		let facilityreview_now_page = 1; // 후기 현재 페이지
 	</script>
 
 	<script>
@@ -135,7 +181,7 @@
 
 			let btn_save_tag = document.getElementById("btn_save");      // 수정 저장
 			let rno_tag = document.getElementById("rno");         // 수정할 레코드 번호
-			let memberno_tag = document.getElementById("memberno");  // 댓글 작성 회원 번호
+			let memberno_tag = document.getElementById("memberno");  // 후기 작성 회원 번호
 
 			let btn_delete_tag = document.getElementById("btn_delete"); // 삭제 처리
 			let btn_cancel_tag = document.getElementById("btn_cancel"); // 수정/삭제 취소
@@ -144,7 +190,7 @@
 			let isAdmin = '[[${session.masterno}]]' !== '';
 
 
-			// 댓글 입력
+			// 후기 입력
 			reviewcomment_tag.addEventListener('click', () => {
 
 				if (isAdmin) {
@@ -263,7 +309,7 @@
 						.then((response) => response.json())
 						.then((data) => {
 							if (data['res'] == 0) {
-								alert('댓글 수정에 실패 했습니다.\n 잠시후 다시 시도해 주세요(관리자: 02-123-1234)');
+								alert('후기 수정에 실패 했습니다.\n 잠시후 다시 시도해 주세요(관리자: 02-123-1234)');
 							} else {
 								list_by_culturefno_join(); // 목록 출력
 								reivewcommnet_tag.value = '';
@@ -387,9 +433,9 @@
 									list_by_culturefno_join(); // 목록 출력
 									reviewcomment_tag.value = '';
 									reviewcomment_tag.focus();
-									alert('댓글을 삭제했습니다.');
+									alert('후기를 삭제했습니다.');
 								} else {
-									alert('댓글 삭제에 실패했습니다. 잠시후 다시 시도해주세요.');
+									alert('후기 삭제에 실패했습니다. 잠시후 다시 시도해주세요.');
 								}
 							});
 					} else {
@@ -417,13 +463,13 @@
 		}
 	</script>
 
-	  <div style='width: 100%; margin: 0px auto; clear: both;'>
+	  <div style='width: 50%; margin: 0px auto; clear: both;'>
 		      <form name='frm_facilityreview' id='frm_facilityreview'>
 			          <input type='hidden' name='memberno' id='memberno' value=''>
 			          <input type='hidden' name='rno' id='rno' value=''>
 
 			          <textarea name='reviewcomment' id='reviewcomment' class="form-control"
-				style='width: 100%; height: 60px;' placeholder="댓글 작성, 로그인해야 등록 할 수 있습니다." autofocus='autofocus'></textarea>
+				style='width: 100%; height: 60px;' placeholder="후기 작성, 로그인해야 등록 할 수 있습니다." autofocus='autofocus'></textarea>
 			         <div style='text-align: center;'>
 				<button type='button' id='btn_create'>&nbsp;&nbsp;등&nbsp;&nbsp;록&nbsp;&nbsp;</button>
 				<button type='button' id='btn_save' style='display: none;'>&nbsp;&nbsp;저&nbsp;&nbsp;장&nbsp;&nbsp;</button>
@@ -443,7 +489,7 @@
 		  </div>
 	  
 	 
-	<!-- ------------------------------ 댓글 영역 종료 ------------------------------  -->
+	<!-- ------------------------------ 후기 영역 종료 ------------------------------  -->
 
 
 

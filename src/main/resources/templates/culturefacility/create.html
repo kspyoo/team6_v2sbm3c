@@ -1,71 +1,73 @@
 <!DOCTYPE html>
 
+
+
 <html layout:decorate="~{layout}">
 <!--layout.html 상속-->
 <div layout:fragment="content">
-	<div class="title_line" style=margin-bottom:20px ;>문화시설</div>
-	<form name="frm" th:object="${culturefacilityVO}" method="post" action="/culturefacility/create">
+	<div class="title_line" style=margin-bottom:20px;> &nbsp;&nbsp;문화시설 등록</div>
+	<form name="frm" th:object="${culturefacilityVO}" method="post" action="/culturefacility/create" 	style="width: 50%; margin: 5px auto;">
 
 		<div th:if="${bindingResult != null}" th:errors="*{cname}" class="alert alert-danger"></div>
 		<div>
 			<label>문화시설 이름</label>
-			<input type="text" name="cname" required class="form-control form-control-sm" style="width: 50%;"
+			<input type="text" name="cname" required class="form-control form-control-sm" style="width: 100%;"
 				th:field="*{cname}">
 		</div>
 
 		<div th:if="${bindingResult != null}" th:errors="*{raddress}" class="alert alert-danger"></div>
 		<div>
 			<label>도로명 주소</label>
-			<input type="text" name="raddress" required class="form-control form-control-sm" style="width: 50%;"
+			<input type="text" name="raddress" required class="form-control form-control-sm" style="width: 100%;"
 				th:field="*{raddress}">
 		</div>
 
 		<div th:if="${bindingResult != null}" th:errors="*{latitude}" class="alert alert-danger"></div>
 		<div>
 			<label>위도</label>
-			<input type="text" name="latitude" required class="form-control form-control-sm" style="width: 50%;"
+			<input type="text" name="latitude" required class="form-control form-control-sm" style="width: 100%;"
 				th:field="*{latitude}">
 		</div>
 
 		<div th:if="${bindingResult != null}" th:errors="*{longitude}" class="alert alert-danger"></div>
 		<div>
 			<label>경도</label>
-			<input type="text" name="longitude" required class="form-control form-control-sm" style="width: 50%;"
+			<input type="text" name="longitude" required class="form-control form-control-sm" style="width:100%;"
 				th:field="*{longitude}">
 		</div>
 
 		<div th:if="${bindingResult != null}" th:errors="*{addr_code}" class="alert alert-danger"></div>
 		<div>
 			<label>우편번호</label>
-			<input type="text" name="addr_code" required class="form-control form-control-sm" style="width: 50%;"
+			<input type="text" name="addr_code" required class="form-control form-control-sm" style="width: 100%;"
 				th:field="*{addr_code}">
 		</div>
 
 		<div th:if="${bindingResult != null}" th:errors="*{phone}" class="alert alert-danger"></div>
 		<div>
 			<label>전화번호</label>
-			<input type="text" name="phone" required class="form-control form-control-sm" style="width: 50%;"
+			<input type="text" name="phone" required class="form-control form-control-sm" style="width: 100%;"
 				th:field="*{phone}">
 		</div>
 
 		<div th:if="${bindingResult != null}" th:errors="*{closeddays}" class="alert alert-danger"></div>
 		<div>
 			<label>휴무일</label>
-			<input type="text" name="closeddays" required class="form-control form-control-sm" style="width: 50%;"
+			<input type="text" name="closeddays" required class="form-control form-control-sm" style="width: 100%;"
 				th:field="*{closeddays}">
 		</div>
 
 		<div th:if="${bindingResult != null}" th:errors="*{operatingtime}" class="alert alert-danger"></div>
 		<div>
 			<label>운영시간</label>
-			<input type="text" name="operatingtime" required class="form-control form-control-sm" style="width: 50%;"
+			<input type="text" name="operatingtime" required class="form-control form-control-sm" style="width: 100%;"
 				th:field="*{operatingtime}">
 		</div>
 
 		<div th:if="${bindingResult != null}" th:errors="*{pa}" class="alert alert-danger"></div>
 		<div>
 			<label>주차가능여부</label>
-			<input type="text" name="pa" required class="form-control form-control-sm" style="width: 50%;" th:field="*{pa}">
+			<input type="text" name="pa" required class="form-control form-control-sm" style="width: 100%;" th:field="*{pa}">
 		</div>
 
 		<div class="content_body_bottom">
