@@ -32,12 +32,12 @@ public class PetTypeCont {
 
     @GetMapping("/list")
     public String list(Model model, HttpSession session){
-//        if(session.getAttribute("masterid") == null) {
+        if(session.getAttribute("masterid") != null) {
             ArrayList<PetTypeVO> list = this.petTypeProc.list();
             model.addAttribute("list", list);
-//        }else{
-//            return "redirect:/master/login";
-//        }
+        }else{
+            return "redirect:/master/login";
+        }
         return "petType/list";
     }
 
