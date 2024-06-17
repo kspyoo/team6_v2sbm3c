@@ -1,5 +1,6 @@
 package dev.mvc.pet;
 
+import dev.mvc.petprofile.PetProfileProcInter;
 import jakarta.servlet.http.HttpSession;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,10 @@ public class PetCont {
     @Autowired
     @Qualifier("dev.mvc.pet.PetProc")
     private PetProcInter petProc;
+
+    @Autowired
+    @Qualifier("dev.mvc.petprofile.PetProfileProc")
+    private PetProfileProcInter petProfileProc;
 
     @GetMapping("/create")
     public String createForm(HttpSession session){

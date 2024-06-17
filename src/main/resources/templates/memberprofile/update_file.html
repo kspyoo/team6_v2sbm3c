@@ -224,8 +224,7 @@
       <div class="flex-item">
         <fieldset class="fieldset_basic">
           <div th:if="${memberprofileVO != null}">
-            <div
-              th:if="${memberprofileVO.file1 != null and (memberprofileVO.file1.endsWith('jpg') or memberprofileVO.file1.endsWith('png') or memberprofileVO.file1.endsWith('gif'))}">
+            <div th:if="${memberprofileVO.file1 != null and (memberprofileVO.file1.endsWith('jpg') or memberprofileVO.file1.endsWith('png') or memberprofileVO.file1.endsWith('gif'))}">
               <label>이미지 목록</label>
               <div class="image-grid">
                 <div class="image-grid-item" th:each="memberprofileVO, status:${list}">

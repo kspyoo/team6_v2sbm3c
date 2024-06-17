@@ -3,6 +3,8 @@ package dev.mvc.matecommunity;
 import dev.mvc.mateapply.MateApplyProcInter;
 import dev.mvc.mateapply.MateApplyVO;
 import dev.mvc.member.MemberProcInter;
+import dev.mvc.pettype.PetTypeProcInter;
+import dev.mvc.pettype.PetTypeVO;
 import dev.mvc.tool.Tool;
 import jakarta.servlet.http.HttpSession;
 import org.json.JSONObject;
@@ -25,12 +27,13 @@ public class MateCommunityCont {
     private MateCommunityProcInter mateCommunityProc;
 
     @Autowired
-    @Qualifier("dev.mvc.member.MemberProc")
-    private MemberProcInter memberProcInter;
-
-    @Autowired
     @Qualifier("dev.mvc.mateapply.MateApplyProc")
     private MateApplyProcInter mateApplyProc;
+
+    @Autowired
+    @Qualifier("dev.mvc.pettype.PetTypeProc")
+    private PetTypeProcInter PetTypeProc;
+
 
     @GetMapping("/")
     public String main(){
@@ -43,6 +46,9 @@ public class MateCommunityCont {
                            @RequestParam(name = "searchWord", defaultValue = "") String searchWord,
                            @RequestParam(name = "now_page", defaultValue = "1") int now_page){
         searchWord = Tool.checkNull(searchWord).trim();
+
+        ArrayList<PetTypeVO> petTypeList = this.PetTypeProc.list();
+        model.addAttribute("petTypeList", petTypeList);
 
 //        ArrayList<PartCateVOMenu> menu = this.partCateProc.menu();
 //        model.addAttribute("menu", menu);
@@ -115,8 +121,8 @@ public class MateCommunityCont {
                            @RequestParam(name = "now_page", defaultValue = "1") int now_page){
         searchWord = Tool.checkNull(searchWord).trim();
 
-//        ArrayList<PartCateVOMenu> menu = this.partCateProc.menu();
-//        model.addAttribute("menu", menu);
+        ArrayList<PetTypeVO> petTypeList = this.PetTypeProc.list();
+        model.addAttribute("petTypeList", petTypeList);
 
         ArrayList<MateCommunityVO> list_all_byPetTypeNo = this.mateCommunityProc.list_all_byPetTypeNo(
                 now_page, MateCommunity.RECORD_PER_PAGE, searchWord, petTypeNo);

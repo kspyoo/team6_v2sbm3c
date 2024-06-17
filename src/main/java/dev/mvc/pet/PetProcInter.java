@@ -55,4 +55,18 @@ public interface PetProcInter {
      * @return
      */
     public int delete_all(int memberNo);
+
+    /**
+     * 카테고리안의 정보 개수
+     * @param petTypeNo
+     * @return
+     */
+    public int petInfoCnt_by_petTypeNo(int petTypeNo);
+
+    /**
+     * 특정 카테고리의 반려동물 정보 전체 삭제
+     * @param petTypeNo
+     * @return
+     */
+    public int delete_all_by_petTypeNo(int petTypeNo);
 }

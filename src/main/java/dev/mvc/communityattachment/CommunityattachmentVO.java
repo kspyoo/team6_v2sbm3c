@@ -12,9 +12,12 @@ import lombok.ToString;
 //THUMBFILE                         VARCHAR2(100)    NOT NULL,
 //COMMUNITYNO                       NUMBER(10)     NULL ,
 
-@ToString
+
+
 @Getter 
 @Setter
+@ToString
+
 public class CommunityattachmentVO {
   private MultipartFile filenameMF;
   private int cano;

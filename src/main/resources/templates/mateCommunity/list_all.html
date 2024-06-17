@@ -7,17 +7,11 @@
         </div>
 
         <div class="row mb-3 text-center">
-            <a href="/mateCommunity/list_all" class="col-3 pt-3 themed-grid-col cate-on">
+            <a href="/mateCommunity/list_all" class="col pt-3 themed-grid-col cate-on">
                 전체
             </a>
-            <a th:href="@{|/mateCommunity/list_all_byPetTypeNo?petTypeNo=1|}" class="col-3 pt-3 themed-grid-col cate-off">
-                강아지
-            </a>
-            <a th:href="@{|/mateCommunity/list_all_byPetTypeNo?petTypeNo=2|}" class="col-3 pt-3 themed-grid-col cate-off">
-                고양이
-            </a>
-            <a th:href="@{|/mateCommunity/list_all_byPetTypeNo?petTypeNo=3|}" class="col-3 pt-3 themed-grid-col cate-off">
-                기타
+            <a th:href="@{|/mateCommunity/list_all_byPetTypeNo?petTypeNo=${petTypeVO.petTypeNo}|}" class="col pt-3 themed-grid-col cate-off" th:each="petTypeVO:${petTypeList}">
+                [[${petTypeVO.petType}]]
             </a>
         </div>
 

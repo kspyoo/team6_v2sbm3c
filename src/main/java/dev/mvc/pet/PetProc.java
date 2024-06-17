@@ -82,5 +82,15 @@ public class PetProc implements PetProcInter{
 
     public int delete_all(int memberNo){
         return this.petDAO.delete_all(memberNo);
-    };
+    }
+
+    @Override
+    public int petInfoCnt_by_petTypeNo(int petTypeNo) {
+        return this.petDAO.petInfoCnt_by_petTypeNo(petTypeNo);
+    }
+
+    @Override
+    public int delete_all_by_petTypeNo(int petTypeNo){
+        return this.petDAO.delete_all_by_petTypeNo(petTypeNo);
+    }
 }

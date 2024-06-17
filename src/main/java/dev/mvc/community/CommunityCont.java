@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import dev.mvc.catecommunity.CateCommunityProcInter;
+import dev.mvc.catecommunity.CateCommunityVO;
 import dev.mvc.communityattachment.Communityattachment;
 import dev.mvc.communityattachment.CommunityattachmentProcInter;
 import dev.mvc.communityattachment.CommunityattachmentVO;
@@ -40,6 +42,10 @@ public class CommunityCont {
   @Qualifier("dev.mvc.member.MemberProc")
   private MemberProcInter memberProcInter;
 
+  @Autowired
+  @Qualifier("dev.mvc.catecommunity.CateCommunityProc")
+  private CateCommunityProcInter catecomunityProc;
+
   /** 페이지당 출력할 레코드 갯수, nowPage는 1부터 시작 */
   public int record_per_page = 10;
 
@@ -50,11 +56,16 @@ public class CommunityCont {
     System.out.println("-> communitycont created");
   }
 
-  @GetMapping(value = "/create") // http://localhost:1521/culturefacility/create
+  @GetMapping(value = "/create") // http://localhost:1521/community/create
   public String create(CommunityVO communityVO, Model model, HttpSession session) {
+    
+    
     if (session.getAttribute("memberno") != null) {
       model.addAttribute("memberno", session.getAttribute("memberno"));
+
+      
       model.addAttribute("communityVO", communityVO);
+      
       return "/community/create";
     } else {
       return "redirect:/member/login";
@@ -69,8 +80,12 @@ public class CommunityCont {
 
       return "/community/create";
     }
+
+    int memberno = (int) session.getAttribute("memberno");
+    communityVO.setMemberno(memberno);
+    int cnt = this.comunityProc.create(communityVO);
     if (session.getAttribute("memberno") != null) {
-      int cnt = this.comunityProc.create(communityVO);
+      
       if (cnt == 1) {
         model.addAttribute("code", "create_success");
         model.addAttribute("title", communityVO.getTitle());
@@ -90,9 +105,10 @@ public class CommunityCont {
         communityattachmentVO.setFilesize(filesize);
         cnt = this.communityattachmentProc.create(communityattachmentVO);
         model.addAttribute("communityattachmentVO", communityattachmentVO);
-
+        
       }
 
+      
       model.addAttribute("cnt", cnt);
 
       return "/community/msg"; // /templates/cate/msg.html
@@ -140,13 +156,11 @@ public class CommunityCont {
   }
 
   @GetMapping("/read")
-  public String read(Model model,int communityno, HttpSession session
-      ) {
+  public String read(Model model, int communityno, HttpSession session) {
     if (session.getAttribute("memberno") != null) {
       model.addAttribute("memberno", session.getAttribute("memberno"));
       attachmentVO attachmentVO = this.comunityProc.read(communityno);
       model.addAttribute("attachmentVO", attachmentVO);
-      
 
       return "community/read";
     } else {
@@ -173,7 +187,7 @@ public class CommunityCont {
   public String update_process(Model model, @Valid CommunityVO communityVO,
       @PathVariable("communityno") int communityno, @RequestParam(name = "file") MultipartFile file,
       HttpSession session) {
-    if (session.getAttribute("memberno") != null) {
+    
       model.addAttribute("memberno", session.getAttribute("memberno"));
       if (file.getSize() > 0) {
         CommunityattachmentVO communityattachmentVO = new CommunityattachmentVO();
@@ -187,7 +201,7 @@ public class CommunityCont {
         communityattachmentVO.setCommunityno(communityno);
         this.communityattachmentProc.create_image(communityattachmentVO);
         model.addAttribute("communityattachmentVO", communityattachmentVO);
-      }
+      }if (session.getAttribute("memberno") != null) {
       int cnt = this.comunityProc.update(communityVO);
 
       if (cnt == 1) {
