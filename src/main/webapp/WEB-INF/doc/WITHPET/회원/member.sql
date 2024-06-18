@@ -79,9 +79,6 @@ CREATE TABLE PETTYPE(
     FOREIGN KEY (MASTERNO) REFERENCES MASTER (MASTERNO) ON DELETE SET NULL
 );
 
-select * from PETTYPE;
-ALTER TABLE PETTYPE ADD CONSTRAINT MASTERNO NUMBER(10) NOT NULL ;
-alter table PETTYPE add foreign key (MASTERNO) references MASTER (MASTERNO) on delete SET NULL;
 
 ALTER TABLE PETTYPE ADD regdate DATE DEFAULT sysdate NOT NULL ;
 update PETTYPE set MASTERNO=6;
@@ -243,6 +240,27 @@ COMMENT ON COLUMN notice.MASTERNO is '관리자번호';
 DROP SEQUENCE NOTICE_SEQ;
 
 CREATE SEQUENCE NOTICE_SEQ
+    START WITH 1              -- 시작 번호
+    INCREMENT BY 1          -- 증가값
+    MAXVALUE 9999999999 -- 최대값: 9999999 --> NUMBER(7) 대응
+    CACHE 2                       -- 2번은 메모리에서만 계산
+    NOCYCLE;     
+    
+DROP TABLE noticeimg;
+
+CREATE TABLE noticeimg(
+		imgno                      		NUMBER(10)		NOT NULL 		 PRIMARY KEY,
+		nfile                    		VARCHAR2(100)		 NULL ,
+    filesaved                       		VARCHAR2(100)		 NULL ,
+		thumbfile                      		VARCHAR2(100)		 NULL ,
+		filesize                    		LONG		 NULL ,
+    noticeno                          NUMBER(10)		NOT NULL ,
+  FOREIGN KEY (noticeno) REFERENCES notice (noticeno)ON DELETE CASCADE
+);
+
+DROP SEQUENCE NOTICE_SEQ;
+
+CREATE SEQUENCE NOTICEIMG_SEQ
     START WITH 1              -- 시작 번호
     INCREMENT BY 1          -- 증가값
     MAXVALUE 9999999999 -- 최대값: 9999999 --> NUMBER(7) 대응
