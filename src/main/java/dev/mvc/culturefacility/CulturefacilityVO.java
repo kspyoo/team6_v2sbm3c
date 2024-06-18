@@ -3,9 +3,11 @@ package dev.mvc.culturefacility;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Setter
 @Getter
+@ToString
 public class CulturefacilityVO {
 //  CULTUREFNO                        NUMBER(10)     NOT NULL    PRIMARY KEY, --문화시설 번호
 //  CNAME                             VARCHAR2(200)    NOT NULL, -- 문화시설이름

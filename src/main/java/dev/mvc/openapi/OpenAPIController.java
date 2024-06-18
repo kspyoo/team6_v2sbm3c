@@ -1,6 +1,10 @@
 package dev.mvc.openapi;
 
+import dev.mvc.culturefacility.CulturefacilityProcInter;
+import dev.mvc.culturefacility.CulturefacilityVO;
 import dev.mvc.tool.OpenAPI;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,6 +16,10 @@ import java.util.List;
 @Controller
 @RequestMapping("/openapi")
 public class OpenAPIController {
+
+    @Autowired
+    @Qualifier("dev.mvc.culturefacility.CulturefacilityProc")
+    private CulturefacilityProcInter culturefacilityProc;
 
 //    @GetMapping("/getdata")
 //    @ResponseBody
@@ -36,16 +44,44 @@ public class OpenAPIController {
      */
     @GetMapping("/getdata")
     @ResponseBody
-    public String getdata() {
+    public String getdata() throws InterruptedException {
         List<OpenAPIDTO> list = new ArrayList<OpenAPIDTO>();
         List<OpenAPIDTO> list_all = new ArrayList<OpenAPIDTO>();
 
-        for (int i = 1; i < 2; i++) { //23929
-            list = OpenAPI.getData(i, 2); // 3000개까지는 서버 에러 없이 출력 가능
-            list_all.addAll(list);
-        }
+        list = OpenAPI.getData(1, 500);
+        CulturefacilityVO culturefacilityVO = new CulturefacilityVO();
 
-        return list_all.size() + "개" + list_all.toString();
+        int result = 0;
+        for (OpenAPIDTO openAPIDTO: list){
+            culturefacilityVO.setCname(openAPIDTO.getFacilityName());
+            if(openAPIDTO.getRoadAddr() == null){
+                culturefacilityVO.setRaddress("주소 없음");
+            }else {
+                culturefacilityVO.setRaddress(openAPIDTO.getRoadAddr());
+            }
+            culturefacilityVO.setLatitude(openAPIDTO.getLatitude());
+            culturefacilityVO.setLongitude(openAPIDTO.getLongitude());
+            culturefacilityVO.setAddr_code(openAPIDTO.getAddrCode());
+            culturefacilityVO.setPhone(openAPIDTO.getNumber());
+            culturefacilityVO.setCloseddays(openAPIDTO.getCloseDay());
+            culturefacilityVO.setOperatingtime(openAPIDTO.getOperatingTime());
+            culturefacilityVO.setPa(openAPIDTO.getPa());
+            culturefacilityVO.setChomepage(openAPIDTO.getHomepage());
+            culturefacilityVO.setCulturecate(openAPIDTO.getCate2() + ", " + openAPIDTO.getCate3());
+//            Thread.sleep(100);
+            try{
+                culturefacilityProc.create(culturefacilityVO);
+            }catch(Exception e){
+                System.out.println(culturefacilityVO);
+            }
+        }
+//        for (int i = 1; i < 2; i++) { //23929
+//            list = OpenAPI.getData(i, 2); // 3000개까지는 서버 에러 없이 출력 가능
+//            list_all.addAll(list);
+//        }
+
+//        return list.size() + "개" + list_all.toString();
+        return "저장된 데이터 개수 -> " + result;
     }
 
 
