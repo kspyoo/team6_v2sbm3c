@@ -117,8 +117,6 @@ public class MemberprofileCont {
       @RequestParam(value = "multiFile") List<MultipartFile> multiFileList, MemberprofileVO memberprofileVO) {
     String upDir = Memberprofile.getUploadDir();
 
-    System.out.println("aaaaaaaaaaaaaaaaaaaaaaaa : "+multiFileList);
-    
     if (multiFileList != null && !multiFileList.isEmpty() && !multiFileList.get(0).getOriginalFilename().isEmpty()) {
 
       for (int i = 0; i < multiFileList.size(); i++) {

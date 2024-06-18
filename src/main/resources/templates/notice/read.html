@@ -24,10 +24,24 @@
       <li class="li_none">
         <div style="width: 100%; word-break: break-all;">
 
-          <div
-            th:if="${noticeVO.nfile.endsWith('jpg') or noticeVO.nfile.endsWith('png')  or noticeVO.nfile.endsWith('gif')}">
-            <img th:src="@{|/notice/storage/${noticeVO.nfile}|}"
-              style='width: 50%; float: left; margin-top: 0.5%; margin-right: 1%;'>
+          <div class="flex-item">
+            <fieldset class="fieldset_basic">
+              <div class="image-grid">
+                <div class="image-grid-item" th:each="noticeimgVO, status:${list}">
+                  <div
+                    th:if="${noticeimgVO.filesaved != null and (noticeimgVO.filesaved.endsWith('jpg') or noticeimgVO.filesaved.endsWith('png') or noticeimgVO.filesaved.endsWith('gif'))}">
+                    <span style="font-size: 1.5em; font-weight: bold;" th:text="${noticeimgVO}"></span>
+                    <div class="image-grid">
+
+                      <div th:if="${noticeimgVO.filesize} > 0">
+                        <img th:src="@{|/notice/storage/${noticeimgVO.filesaved}|}" th:alt="${noticeimgVO.filesaved}">
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </fieldset>
           </div>
 
           <span style="font-size: 1.5em; font-weight: bold;" th:text="${noticeVO.title}"></span>
