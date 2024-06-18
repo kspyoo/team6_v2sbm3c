@@ -3,8 +3,8 @@
 <html layout:decorate="~{layout}">
 <!-- layout.html 상속-->
 <div layout:fragment="content">
-<link href="/css/culturefacility/read.css" rel="Stylesheet" type="text/css">
-<script type="text/JavaScript" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<link href="/css/culturefacility/read.css" rel="Stylesheet" type="text/css">
+	<script type="text/JavaScript" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 
 
@@ -36,40 +36,40 @@
 
 
 	<!-- 사진 자동 슬라이드 -->
-<!-- 사진 자동 슬라이드 -->
-<div class="carousel-container" th:if="${list_images.size() > 1}">
-    <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
-        <div class="carousel-indicators">
-            <th:block th:each="culturefileVO, culturefileVOStat : ${list_images}">
-                <button type="button" data-bs-target="#carouselExampleIndicators"
-                        th:data-bs-slide-to="${culturefileVOStat.index}"
-                        th:classappend="${culturefileVOStat.index == 0 ? 'active' : ''}"
-                        th:aria-current="${culturefileVOStat.index == 0 ? 'true' : 'false'}"
-                        th:aria-label="'Slide ' + ${culturefileVOStat.index + 1}"></button>
-            </th:block>
-        </div>
-        <div class="carousel-inner">
-            <th:block th:each="culturefileVO, culturefileVOStat : ${list_images}">
-                <div th:if="${culturefileVOStat.index > 0}" class="carousel-item"
-                     th:classappend="${culturefileVOStat.index == 1 ? 'active' : ''}">
-                    <img th:src="@{|/culturefile/storage/${culturefileVO.file1saved}|}" class="d-block w-100"
-                         style="width: 100%; height:auto;" alt="...">
-                </div>
-            </th:block>
-        </div>
-        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators"
-                data-bs-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Previous</span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators"
-                data-bs-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Next</span>
-        </button>
-    </div>
-</div>
-<!-- 사진 자동 슬라이드 종료 -->
+	<!-- 사진 자동 슬라이드 -->
+	<div class="carousel-container" th:if="${list_images.size() > 1}">
+		<div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+			<div class="carousel-indicators">
+				<th:block th:each="culturefileVO, culturefileVOStat : ${list_images}">
+					<button type="button" data-bs-target="#carouselExampleIndicators"
+						th:data-bs-slide-to="${culturefileVOStat.index}"
+						th:classappend="${culturefileVOStat.index == 0 ? 'active' : ''}"
+						th:aria-current="${culturefileVOStat.index == 0 ? 'true' : 'false'}"
+						th:aria-label="'Slide ' + ${culturefileVOStat.index + 1}"></button>
+				</th:block>
+			</div>
+			<div class="carousel-inner">
+				<th:block th:each="culturefileVO, culturefileVOStat : ${list_images}">
+					<div th:if="${culturefileVOStat.index > 0}" class="carousel-item"
+						th:classappend="${culturefileVOStat.index == 1 ? 'active' : ''}">
+						<img th:src="@{|/culturefile/storage/${culturefileVO.file1saved}|}" class="d-block w-100"
+							style="width: 100%; height:auto;" alt="...">
+					</div>
+				</th:block>
+			</div>
+			<button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators"
+				data-bs-slide="prev">
+				<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+				<span class="visually-hidden">Previous</span>
+			</button>
+			<button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators"
+				data-bs-slide="next">
+				<span class="carousel-control-next-icon" aria-hidden="true"></span>
+				<span class="visually-hidden">Next</span>
+			</button>
+		</div>
+	</div>
+	<!-- 사진 자동 슬라이드 종료 -->
 
 
 
@@ -88,6 +88,17 @@
 			<li class="list-group-item">＃휴무일: <span th:text="${culturefacilityVO.closeddays}"></span></li>
 			<li class="list-group-item">＃운영시간: <span th:text="${culturefacilityVO.operatingtime}"></span></li>
 			<li class="list-group-item">＃주차가능여부: <span th:text="${culturefacilityVO.pa}"></span></li>
+			<li class="list-group-item">＃문화시설 카테고리: <span th:text="${culturefacilityVO.culturecate}"></span></li>
+			<li class="list-group-item">＃홈페이지:
+				<!-- 페이지 링크가 '정보없음'이 아닌 경우 -->
+				<a th:if="${culturefacilityVO.chomepage != '정보없음'}" th:href="${culturefacilityVO.chomepage}" target="_blank"
+					th:text="${culturefacilityVO.chomepage}"></a>
+				<!-- 페이지 링크가 '정보없음'인 경우 -->
+				<span th:if="${culturefacilityVO.chomepage == '정보없음'}" th:text="'정보없음'"></span>
+			</li>
+
+
+
 		</ul>
 	</div>
 
@@ -124,7 +135,7 @@
 	<body>
 		<div id="map"></div>
 		<script type="text/javascript"
-      src="//dapi.kakao.com/v2/maps/sdk.js?appkey=ca5c332acaf73ff87bd45c5738b5c0f8&libraries=services,clusterer,drawing"></script>
+			src="//dapi.kakao.com/v2/maps/sdk.js?appkey=ca5c332acaf73ff87bd45c5738b5c0f8&libraries=services,clusterer,drawing"></script>
 		<script>
 			// read.html에서 컨트롤러로부터 전달된 위도와 경도 값을 받아옵니다.
 			let latitude = [[${culturefacilityVO.latitude}]];
@@ -349,8 +360,8 @@
 
 						let row = facilityreview_data[i];
 						msg += "<div id='" + row.rno + "' style='border-bottom: solid 1px #EEEEEE; margin-bottom: 10px;'>";
-						msg += "<span style='font-weight: bold;'>" + row.name +"("+ row.id +")"+"</span>";
-						
+						msg += "<span style='font-weight: bold;'>" + row.name + "(" + row.id + ")" + "</span>";
+
 						msg += "  " + row.rdate;
 
 						//if ('[[${session.memberno}]]' == row.memberno) { // 글쓴이 일치여부 확인, 본인의 글만 삭제 가능함 ★
