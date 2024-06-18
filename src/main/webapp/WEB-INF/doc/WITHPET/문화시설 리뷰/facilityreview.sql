@@ -61,7 +61,7 @@ FROM (
             SELECT  m.id, m.name,
                      p.rno, p.culturefno, p.memberno, p.reviewcomment, p.rdate
             FROM member m, facilityreview p       
-            WHERE (m.memberno = p.memberno) AND p.culturefno=101
+            WHERE (m.memberno = p.memberno) AND p.culturefno=1
             ORDER BY p.rno DESC
       )
 )

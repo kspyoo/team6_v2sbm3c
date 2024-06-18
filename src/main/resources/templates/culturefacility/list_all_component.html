@@ -1,13 +1,15 @@
 <div th:fragment="list_all_fragment"> <!-- <div th:replace=... -->
   <table class="table table-hover">
     <colgroup>
-      <col style='width: 18%;'/>
-      <col style='width: 11%;'/>
-      <col style='width: 11%;'/>
-      <col style='width: 11%;'/>
-      <col style='width: 11%;'/>
-      <col style='width: 11%;'/>
-      <col style='width: 11%;'/>
+      <col style='width: 10%;'/>
+      <col style='width: 10%;'/>
+      <col style='width: 10%;'/>
+      <col style='width: 10%;'/>
+      <col style='width: 10%;'/>
+      <col style='width: 10%;'/>
+      <col style='width: 10%;'/>
+      <col style='width: 10%;'/>
+      <col style='width: 10%;'/>
     </colgroup>
     <thead>
       <tr>
@@ -19,6 +21,8 @@
         <th class="th_bs">휴무일</th>
         <th class="th_bs">운영시간</th>
         <th class="th_bs">주차가능여부</th>
+        <th class="th_bs">문화시설 카테고리</th>
+        <th class="th_bs">홈페이지</th>
       </tr>
     </thead>
     <tbody>
@@ -31,6 +35,8 @@
         <td class="td_bs" th:text="${culturefacilityVO.closeddays}"></td>
         <td class="td_bs" th:text="${culturefacilityVO.operatingtime}"></td>
         <td class="td_bs" th:text="${culturefacilityVO.pa}"></td>
+        <td class="td_bs" th:text="${culturefacilityVO.culturecate}"></td>
+        <td class="td_bs" th:text="${culturefacilityVO.chomepage}"></td>
         
 
       </tr>

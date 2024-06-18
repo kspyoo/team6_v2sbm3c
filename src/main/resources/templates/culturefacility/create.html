@@ -6,7 +6,8 @@
 <!--layout.html 상속-->
 <div layout:fragment="content">
 	<div class="title_line" style=margin-bottom:20px;> &nbsp;&nbsp;문화시설 등록</div>
-	<form name="frm" th:object="${culturefacilityVO}" method="post" action="/culturefacility/create" 	style="width: 50%; margin: 5px auto;">
+	<form name="frm" th:object="${culturefacilityVO}" method="post" action="/culturefacility/create"
+		style="width: 50%; margin: 5px auto;">
 
 		<div th:if="${bindingResult != null}" th:errors="*{cname}" class="alert alert-danger"></div>
 		<div>
@@ -70,8 +71,20 @@
 			<input type="text" name="pa" required class="form-control form-control-sm" style="width: 100%;" th:field="*{pa}">
 		</div>
 
+		<div th:if="${bindingResult != null}" th:errors="*{culturecate}" class="alert alert-danger"></div>
+		<div>
+			<label>문화시설 카테고리</label>
+			<input type="text" name="culturecate" required class="form-control form-control-sm" style="width: 100%;" th:field="*{culturecate}">
+		</div>
+		
+		<div th:if="${bindingResult != null}" th:errors="*{chomepage}" class="alert alert-danger"></div>
+		<div>
+			<label>홈페이지</label>
+			<input type="text" name="chomepage" required class="form-control form-control-sm" style="width: 100%;" th:field="*{chomepage}">
+		</div>
+
 		<div class="content_body_bottom">
-	<button type="button" class="btn btn-secondary btn-sm"
+			<button type="button" class="btn btn-secondary btn-sm"
 				th:onclick="@{|window.location='/culturefile/update_file?culturefno=${culturefacilityVO.culturefno}'|}">파일추가</button>
 			<button type="submit" class="btn btn-secondary btn-sm">문화시설 추가</button>
 			<button type="button" onclick="location.href='./list_search'" class="btn btn-secondary btn-sm">문화시설 목록</button>

@@ -39,6 +39,11 @@ public class CulturefacilityVO {
   private String operatingtime = "";
   /** 주차가능여부 */
   private String pa = "";
+  /** 문화시설 카테고리 */
+  private String culturecate = "";
+  /** 문화시설 홈페이지 */
+  private String chomepage = "";
+  
   /** 실제 저장된 메인 이미지 */
   private String file1saved = "";
   /** 관리자 번호 */
