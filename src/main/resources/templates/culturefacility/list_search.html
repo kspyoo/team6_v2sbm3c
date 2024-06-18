@@ -9,9 +9,10 @@
 	</div>
 
 	<aside class="aside_right">
-
+    <th:block th:if="${session.masterno != null}">
 		<a href="/culturefacility/create">등록</a>
 		<span class="menu_devide">│</span>
+    </th:block>
 		<a href="javascript: location.reload();">새로 고침</a>
 	</aside>
 

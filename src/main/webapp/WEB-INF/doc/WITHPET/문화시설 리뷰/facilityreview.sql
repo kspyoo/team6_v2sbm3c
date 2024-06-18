@@ -47,21 +47,21 @@ WHERE m.memberno = r.memberno
 ORDER BY r.rno DESC;
 
 -- reply + member join + 특정 contentsno 별 목록
-SELECT m.id,
+SELECT m.id
            r.rno, r.culturefno, r.memberno, r.reviewcomment, r.rdate
 FROM member m,  facilityreview r
 WHERE (m.memberno = r.memberno) AND r.culturefno=1
 ORDER BY r.rno DESC;
 
 4-1) 최신글 500건
-SELECT id, rno, culturefno, memberno, reviewcomment, rdate, r
+SELECT id,name, rno, culturefno, memberno, reviewcomment, rdate, r
 FROM (
-      SELECT id, rno, culturefno,memberno, reviewcomment, rdate,rownum as r
+      SELECT id,name, rno, culturefno,memberno, reviewcomment, rdate,rownum as r
       FROM (
-            SELECT  m.id, 
+            SELECT  m.id, m.name,
                      p.rno, p.culturefno, p.memberno, p.reviewcomment, p.rdate
             FROM member m, facilityreview p       
-            WHERE (m.memberno = p.memberno) AND p.culturefno=2
+            WHERE (m.memberno = p.memberno) AND p.culturefno=101
             ORDER BY p.rno DESC
       )
 )

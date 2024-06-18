@@ -36,11 +36,11 @@
 
 
 .carousel-control-next-icon {
-    background-image: url(/image/petProfile/right-arrow.png);
+    background-image: url(/image/facilityreview/right-arrow.png);
 }
 
 .carousel-control-prev-icon {
-    background-image: url(/image/petProfile/left-arrow.png);
+    background-image: url(/image/facilityreview/left-arrow.png);
 }
 
 @media (min-width: 700px) {

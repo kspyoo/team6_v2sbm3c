@@ -36,42 +36,43 @@
 
 
 	<!-- 사진 자동 슬라이드 -->
-	<div class="carousel-container" th:if="${list_images.size() > 0}">
-		<div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
-			<div class="carousel-indicators">
-				<th:block th:each="culturefileVO, culturefileVOStat : ${list_images}">
-					<button type="button" data-bs-target="#carouselExampleIndicators"
-						th:data-bs-slide-to="${culturefileVOStat.index}"
-						th:classappend="${culturefileVOStat.index == 0 ? 'active' : ''}"
-						th:aria-current="${culturefileVOStat.index == 0 ? 'true' : 'false'}"
-						th:aria-label="'Slide ' + ${culturefileVOStat.index + 1}"></button>
-				</th:block>
-			</div>
-			<div class="carousel-inner">
-				<th:block th:each="culturefileVO, culturefileVOStat : ${list_images}">
-					<div class="carousel-item" th:classappend="${culturefileVOStat.index == 0 ? 'active' : ''}">
-						<img th:src="@{|/culturefile/storage/${culturefileVO.file1saved}|}" class="d-block w-100"
-							style="width: 100%; height:auto ;" alt="...">
-					</div>
-				</th:block>
-			</div>
-			<button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators"
-				data-bs-slide="prev">
-				<span class="carousel-control-prev-icon" aria-hidden="true"></span>
-				<span class="visually-hidden">Previous</span>
-			</button>
-			<button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators"
-				data-bs-slide="next">
-				<span class="carousel-control-next-icon" aria-hidden="true"></span>
-				<span class="visually-hidden">Next</span>
-			</button>
-		</div>
-	</div>
+<!-- 사진 자동 슬라이드 -->
+<div class="carousel-container" th:if="${list_images.size() > 1}">
+    <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-indicators">
+            <th:block th:each="culturefileVO, culturefileVOStat : ${list_images}">
+                <button type="button" data-bs-target="#carouselExampleIndicators"
+                        th:data-bs-slide-to="${culturefileVOStat.index}"
+                        th:classappend="${culturefileVOStat.index == 0 ? 'active' : ''}"
+                        th:aria-current="${culturefileVOStat.index == 0 ? 'true' : 'false'}"
+                        th:aria-label="'Slide ' + ${culturefileVOStat.index + 1}"></button>
+            </th:block>
+        </div>
+        <div class="carousel-inner">
+            <th:block th:each="culturefileVO, culturefileVOStat : ${list_images}">
+                <div th:if="${culturefileVOStat.index > 0}" class="carousel-item"
+                     th:classappend="${culturefileVOStat.index == 1 ? 'active' : ''}">
+                    <img th:src="@{|/culturefile/storage/${culturefileVO.file1saved}|}" class="d-block w-100"
+                         style="width: 100%; height:auto;" alt="...">
+                </div>
+            </th:block>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators"
+                data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators"
+                data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+    </div>
+</div>
+<!-- 사진 자동 슬라이드 종료 -->
 
 
 
-
-	<!-- 사진 자동 슬라이드 종료 -->
 
 
 
@@ -348,7 +349,8 @@
 
 						let row = facilityreview_data[i];
 						msg += "<div id='" + row.rno + "' style='border-bottom: solid 1px #EEEEEE; margin-bottom: 10px;'>";
-						msg += "<span style='font-weight: bold;'>" + row.id + "</span>";
+						msg += "<span style='font-weight: bold;'>" + row.name +"("+ row.id +")"+"</span>";
+						
 						msg += "  " + row.rdate;
 
 						//if ('[[${session.memberno}]]' == row.memberno) { // 글쓴이 일치여부 확인, 본인의 글만 삭제 가능함 ★

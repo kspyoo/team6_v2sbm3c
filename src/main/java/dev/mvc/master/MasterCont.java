@@ -25,6 +25,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import jakarta.websocket.Session;
 
 @RequestMapping("/master")
 @Controller
@@ -94,13 +95,16 @@ public class MasterCont {
    * @return
    */
   @GetMapping(value = "/list")
-  public String list(Model model) {
+  public String list(HttpSession session,Model model) {
     ArrayList<MasterVO> list = this.masterProc.list();
 
-    model.addAttribute("list", list);
-
-    return "master/list";
+    if (session.getAttribute("masterno") != null){
+      model.addAttribute("list", list);
+      return "master/list";
+  }else{
+      return "redirect:/master/login";
   }
+}
   
   
   /**
@@ -132,15 +136,17 @@ public class MasterCont {
    * @return
    */
   @GetMapping(value = "/delete")
-  public String delete(Model model, int masterno) {
+  public String delete(HttpSession session,Model model, int masterno) {
     System.out.println("->delete masterno:" + masterno);
 
     MasterVO masterVO = this.masterProc.read(masterno);
-    model.addAttribute("masterVO", masterVO);
-
-    return "master/delete"; // templates/member/delete.html
+    if (session.getAttribute("masterno") != null){
+      model.addAttribute("masterVO", masterVO);
+      return "master/delete";
+  }else{
+      return "redirect:/master/login";
   }
-
+}
  /**
   * Delete process
   * @param model
