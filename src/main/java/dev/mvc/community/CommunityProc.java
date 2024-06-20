@@ -57,7 +57,7 @@ public class CommunityProc implements CommunityProcInter {
   }
 
   @Override
-  public ArrayList<CommunityVO> list_search_paging(String word,int now_page, int record_per_page) {
+  public ArrayList<attachmentVO> list_search_paging(String word,int now_page, int record_per_page) {
     
     /*
     예) 페이지당 10개의 레코드 출력
@@ -97,12 +97,12 @@ public class CommunityProc implements CommunityProcInter {
     // System.out.println("begin_of_page: " + begin_of_page);
     // System.out.println("WHERE r >= "+start_num+" AND r <= " + end_num);
 
-    Map<String, Object> map = new HashMap<String, Object>();
+    HashMap<String, Object> map = new HashMap<String, Object>();
     map.put("word", word);
     map.put("start_num", start_num);
     map.put("end_num", end_num);
      
-    ArrayList<CommunityVO> list=this.communityDAO.list_search_paging(map);
+    ArrayList<attachmentVO> list=this.communityDAO.list_search_paging(map);
     return list;
   
   }

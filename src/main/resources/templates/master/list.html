@@ -2,9 +2,14 @@
 
 <html layout:decorate="~{layout}">
 <!-- layout.html 상속-->
-<div layout:fragment="content">
+<div layout:fragment="content" style="width: 80%; margin: auto">
 
-	<div class='title_line'>관리자 전용</div>
+	<div class='title_line'>관리자 전용
+		<!-- 검색어가 있을 때만 이 부분이 출력되도록 수정 -->
+		<span th:if="${word != null and word != ''}" th:text="|[${word}] ${no}건|"></span>
+		<span th:if="${word == null or word == '' and all_no != null}" th:text="|${all_no}건|"></span>
+	</div>
+
 
 	<aside class="aside_right">
 		<a href="javascript:location.reload();">새로고침</a>
@@ -30,6 +35,7 @@
 			<th class='th_bs'>기타</th>
 
 		</tr>
+		<div th:replace="~{master/list_search_component::list_search_fragment}"></div>
 
 
 		<tr th:each="masterVO, status:${list}">
@@ -41,8 +47,8 @@
 			</td>
 
 			<td class='td_basic'>
-				<a th:href="@{|./passwd_update_form?masterno=${masterVO.masterno}|}"><img src='/master/images/update.png' title='패스워드 변경'
-						class="icon"></a>
+				<a th:href="@{|./passwd_update_form?masterno=${masterVO.masterno}|}"><img src='/master/images/update.png'
+						title='패스워드 변경' class="icon"></a>
 
 				<a th:href="@{|./delete?masterno=${masterVO.masterno}|}" }><img src='/master/images/delete.png' title='삭제'
 						class="icon"></a>
@@ -52,6 +58,7 @@
 
 
 	</table>
+
 
 	<div class='bottom_menu'>
 		<button type='button' onclick="location.reload();" class="btn btn-primary btn-sm">새로 고침</button>

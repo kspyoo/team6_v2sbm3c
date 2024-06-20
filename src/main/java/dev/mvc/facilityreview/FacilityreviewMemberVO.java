@@ -8,6 +8,8 @@ import lombok.ToString;
 public class FacilityreviewMemberVO {
   /**아이디(이메일)*/
   private String id = "";
+  /**회원 이름*/
+  private String name = "";
   /** 댓글번호*/
   private int rno;
   /** 관련 글 번호*/

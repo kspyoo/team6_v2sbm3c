@@ -1,9 +1,7 @@
 <!DOCTYPE html>
+<html layout:decorate="~{layout}"> <!-- layout.html 상속-->
+<div layout:fragment="content"  style="width: 80%; margin: auto">
 
-<html layout:decorate="~{layout}">
-<!-- layout.html 상속-->
-
-<div layout:fragment="content" style="width: 80%; margin: auto">
 
   <div class='title_line'>회원 정보(관리자 전용)
     <span th:if="${word!=null and word!=''}" th:text="|[${word}] ${no}건|"></span>

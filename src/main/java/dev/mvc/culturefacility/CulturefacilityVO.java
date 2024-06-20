@@ -3,9 +3,11 @@ package dev.mvc.culturefacility;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Setter
 @Getter
+@ToString
 public class CulturefacilityVO {
 //  CULTUREFNO                        NUMBER(10)     NOT NULL    PRIMARY KEY, --문화시설 번호
 //  CNAME                             VARCHAR2(200)    NOT NULL, -- 문화시설이름
@@ -39,6 +41,11 @@ public class CulturefacilityVO {
   private String operatingtime = "";
   /** 주차가능여부 */
   private String pa = "";
+  /** 문화시설 카테고리 */
+  private String culturecate = "";
+  /** 문화시설 홈페이지 */
+  private String chomepage = "";
+  
   /** 실제 저장된 메인 이미지 */
   private String file1saved = "";
   /** 관리자 번호 */

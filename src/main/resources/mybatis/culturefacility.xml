@@ -3,14 +3,14 @@
 <mapper namespace="dev.mvc.culturefacility.CulturefacilityDAOInter">
 
 	<insert id="create" parameterType="dev.mvc.culturefacility.CulturefacilityVO">
-    INSERT INTO culturefacility(culturefno, cname ,raddress,latitude, longitude, addr_code, phone, closeddays, operatingtime, pa)
+    INSERT INTO culturefacility(culturefno, cname ,raddress,latitude, longitude, addr_code, phone, closeddays, operatingtime, pa,culturecate, chomepage)
     VALUES (culturefacility_seq.nextval,#{cname}, #{raddress}, #{latitude}, #{longitude}, #{addr_code}, 
-                 #{phone}, #{closeddays}, #{operatingtime}, #{pa})
+                 #{phone}, #{closeddays}, #{operatingtime}, #{pa},#{culturecate}, #{chomepage})
   </insert>
 
 	<!-- 모든 문화시설의 등록된 글목록 -->
 	<select id="list_all" resultType="dev.mvc.culturefacility.CulturefacilityVO">
-		SELECT culturefno, cname, raddress,latitude,longitude,addr_code,phone,closeddays,operatingtime,pa
+		SELECT culturefno, cname, raddress,latitude,longitude,addr_code,phone,closeddays,operatingtime,pa,culturecate, chomepage
 		FROM culturefacility
 		ORDER BY culturefno ASC
   </select>
@@ -18,7 +18,7 @@
 
 	<!-- 일반적인 조회 -->
 	<select id="read" resultType="dev.mvc.culturefacility.CulturefacilityVO" parameterType="int">
-  	SELECT culturefno, cname, raddress, latitude, longitude, addr_code,phone,closeddays, operatingtime,pa
+  	SELECT culturefno, cname, raddress, latitude, longitude, addr_code,phone,closeddays, operatingtime,pa,culturecate, chomepage
   	FROM culturefacility
   	WHERE culturefno = #{culturefno}
   </select>
@@ -27,7 +27,7 @@
 	<update id="update" parameterType="dev.mvc.culturefacility.CulturefacilityVO">
   UPDATE culturefacility
   SET cname = #{cname}, raddress = #{raddress}, latitude = #{latitude}, longitude = #{longitude}, addr_code = #{addr_code},
-      phone = #{phone},closeddays= #{closeddays}, operatingtime = #{operatingtime}, pa = #{pa}
+      phone = #{phone},closeddays= #{closeddays}, operatingtime = #{operatingtime}, pa = #{pa},culturecate = #{culturecate},chomepage=#{chomepage}
   WHERE culturefno = #{culturefno}
 </update>
 
@@ -39,24 +39,40 @@
 	<!-- 관리자용 검색 목록, Map은 VO class보다 적은 변수의 전달시 사용 -->
 	<!-- SQL -> CateVO -> ArrayList<CateVO> return -->
 	<select id="list_search" resultType="dev.mvc.culturefacility.CulturefacilityVO" parameterType="String">
-		SELECT culturefno, cname, raddress, latitude, longitude, addr_code,phone,closeddays, operatingtime,pa
+		SELECT culturefno, cname, raddress, latitude, longitude, addr_code,phone,closeddays, operatingtime,pa,culturecate, chomepage
     FROM culturefacility
 		<if test="word != null and word != ''">
       WHERE UPPER(cname) LIKE '%' || UPPER(#{word}) || '%'  
+      	OR UPPER(raddress) LIKE '%' || UPPER(#{word}) || '%' 
+      	OR UPPER(addr_code) LIKE '%' || UPPER(#{word}) || '%' 
+      	OR UPPER(phone) LIKE '%' || UPPER(#{word}) || '%' 
+      	OR UPPER(closeddays) LIKE '%' || UPPER(#{word}) || '%' 
+      	OR UPPER(operatingtime) LIKE '%' || UPPER(#{word}) || '%' 
+      	OR UPPER(pa) LIKE '%' || UPPER(#{word}) || '%' 
+      	OR UPPER(culturecate) LIKE '%' || UPPER(#{word}) || '%' 
+      	OR UPPER(chomepage) LIKE '%' || UPPER(#{word}) || '%' 
     </if>
 		ORDER BY culturefno ASC
 	</select>
 
 	<!--페이징-->
 	<select id="list_search_paging" resultType="dev.mvc.culturefacility.CulturefacilityVO" parameterType="Map">
-		SELECT culturefno, cname, raddress, latitude, longitude, addr_code,phone,closeddays, operatingtime,pa,r
+		SELECT culturefno, cname, raddress, latitude, longitude, addr_code,phone,closeddays, operatingtime,pa,culturecate, chomepage,r
     FROM (
-        SELECT culturefno, cname, raddress, latitude, longitude, addr_code,phone,closeddays, operatingtime,pa, rownum as r
+        SELECT culturefno, cname, raddress, latitude, longitude, addr_code,phone,closeddays, operatingtime,pa,culturecate, chomepage, rownum as r
         FROM (
-            SELECT culturefno, cname, raddress, latitude, longitude, addr_code,phone,closeddays, operatingtime,pa
+            SELECT culturefno, cname, raddress, latitude, longitude, addr_code,phone,closeddays, operatingtime,pa,culturecate, chomepage
             FROM culturefacility
 		<if test="word != null and word != ''">
               WHERE UPPER(cname) LIKE '%' || UPPER(#{word}) || '%' 
+                OR UPPER(raddress) LIKE '%' || UPPER(#{word}) || '%' 
+      					OR UPPER(addr_code) LIKE '%' || UPPER(#{word}) || '%' 
+      					OR UPPER(phone) LIKE '%' || UPPER(#{word}) || '%' 
+      					OR UPPER(closeddays) LIKE '%' || UPPER(#{word}) || '%' 
+      					OR UPPER(operatingtime) LIKE '%' || UPPER(#{word}) || '%' 
+      					OR UPPER(pa) LIKE '%' || UPPER(#{word}) || '%' 
+      					OR UPPER(culturecate) LIKE '%' || UPPER(#{word}) || '%' 
+      					OR UPPER(chomepage) LIKE '%' || UPPER(#{word}) || '%' 
             </if>
 		ORDER BY culturefno ASC
         )
@@ -71,6 +87,14 @@
     FROM culturefacility
 		<if test="word != null and word != ''">
       WHERE UPPER(cname) LIKE '%' || UPPER(#{word}) || '%'
+      	OR UPPER(raddress) LIKE '%' || UPPER(#{word}) || '%' 
+      	OR UPPER(addr_code) LIKE '%' || UPPER(#{word}) || '%' 
+      	OR UPPER(phone) LIKE '%' || UPPER(#{word}) || '%' 
+      	OR UPPER(closeddays) LIKE '%' || UPPER(#{word}) || '%' 
+      	OR UPPER(operatingtime) LIKE '%' || UPPER(#{word}) || '%' 
+      	OR UPPER(pa) LIKE '%' || UPPER(#{word}) || '%' 
+      	OR UPPER(culturecate) LIKE '%' || UPPER(#{word}) || '%' 
+      	OR UPPER(chomepage) LIKE '%' || UPPER(#{word}) || '%' 
     </if>
 		ORDER BY culturefno ASC
 	</select>

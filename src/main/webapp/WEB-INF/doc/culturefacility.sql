@@ -11,6 +11,9 @@ CREATE TABLE CULTUREFACILITY(
 		CLOSEDDAYS                    		VARCHAR2(200)		 NOT NULL,
 		OPERATINGTIME                 		VARCHAR2(200)		 NOT NULL,
 		PA                            		VARCHAR2(30)		 NOT NULL,
+        CULTURECATE                         VARCHAR2(200)		 NOT NULL,
+        CHOMEPAGE                           VARCHAR2(200)		 NULL,
+       // rcnt                                NUMBER(10)        NOT NULL,
 		MASTERNO                      		NUMBER(10)		 NULL ,
   FOREIGN KEY (MASTERNO) REFERENCES MASTER (MASTERNO)
 );
@@ -26,6 +29,9 @@ COMMENT ON COLUMN CULTUREFACILITY.PHONE is '전화번호';
 COMMENT ON COLUMN CULTUREFACILITY.CLOSEDDAYS is '휴무일';
 COMMENT ON COLUMN CULTUREFACILITY.OPERATINGTIME is '운영시간';
 COMMENT ON COLUMN CULTUREFACILITY.PA is '주차가능여부';
+COMMENT ON COLUMN CULTUREFACILITY.CULTURECATE is '문화시설 카테고리';
+COMMENT ON COLUMN CULTUREFACILITY.CHOMEPAGE is '문화시설 홈페이지 정보';
+//COMMENT ON COLUMN CULTUREFACILITY.rcnt is '후기수';
 COMMENT ON COLUMN CULTUREFACILITY.MASTERNO is '관리자번호';
 
 DROP SEQUENCE culturefacility_seq;
@@ -40,33 +46,22 @@ CREATE SEQUENCE culturefacility_seq
 
 
  -- 등록 --
-INSERT INTO culturefacility(culturefno, cname, raddress, latitude, longitude, addr_code, phone, closeddays, operatingtime, pa)
-VALUES (culturefacility_seq.nextval, '테스트', '도로명 주소',33.450701, 126.570667, '우편번호', '전화번호', '휴무일', '운영시간', '주차가능여부');
+INSERT INTO culturefacility(culturefno, cname, raddress, latitude, longitude, addr_code, phone, closeddays, operatingtime, pa,culturecate,chomepage)
+VALUES (culturefacility_seq.nextval, '테스트', '도로명 주소',33.450701, 126.570667, '우편번호', '전화번호', '휴무일', '운영시간', '주차가능여부','약국','www.naver.com');
 
-INSERT INTO culturefacility(culturefno, cname, raddress, latitude, longitude, addr_code, phone, closeddays, operatingtime, pa)
-VALUES (culturefacility_seq.nextval, '문화시설이름2', '도로명 주소','위도', '경도', '우편번호', '전화번호', '휴무일', '운영시간', '주차가능여부');
-
-INSERT INTO culturefacility(culturefno, cname, raddress, latitude, longitude, addr_code, phone, closeddays, operatingtime, pa)
-VALUES (culturefacility_seq.nextval, '문화시설이름3', '도로명 주소','위도', '경도', '우편번호', '전화번호', '휴무일', '운영시간', '주차가능여부');
-
-INSERT INTO culturefacility(culturefno, cname, raddress, latitude, longitude, addr_code, phone, closeddays, operatingtime, pa)
-VALUES (culturefacility_seq.nextval, '문화시설이름3', '주소','위도', '경도', '우편번호', '전화번호', '휴무일', '운영시간', '주차가능여부');
-
-INSERT INTO culturefacility(culturefno, cname, raddress, latitude, longitude, addr_code, phone, closeddays, operatingtime, pa)
-VALUES (culturefacility_seq.nextval, '문화시설이름3', '부산','위도', '경도', '우편번호', '전화번호', '휴무일', '운영시간', '주차가능여부');
 
 -- 전체 목록 --
-SELECT culturefno, cname,raddress, latitude, longitude, addr_code, phone, closeddays, operatingtime, pa
+SELECT culturefno, cname,raddress, latitude, longitude, addr_code, phone, closeddays, operatingtime, pa ,culturecate, chomepage
 FROM culturefacility
 ORDER BY culturefno DESC;
 
 -- 모든글
-SELECT culturefno, cname,raddress, latitude, longitude, addr_code, phone, closeddays, operatingtime, pa
+SELECT culturefno, cname,raddress, latitude, longitude, addr_code, phone, closeddays, operatingtime, pa,culturecate, chomepage
 FROM culturefacility
 ORDER BY culturefno ASC;
 
 -- 도로명주소별로 출력
-SELECT culturefno, cname, raddress, latitude, longitude, addr_code, phone, closeddays, operatingtime, pa
+SELECT culturefno, cname, raddress, latitude, longitude, addr_code, phone, closeddays, operatingtime, pa,culturecate, chomepage
 FROM culturefacility
 WHERE raddress LIKE '%도로%'
 ORDER BY culturefno DESC;
@@ -89,6 +84,16 @@ SELECT culturefno, cname, raddress, latitude, longitude, addr_code, phone, close
 FROM culturefacility
 WHERE raddress LIKE '%도로%'
 ORDER BY culturefno ASC;
+
+1) 댓글수 증가
+UPDATE culturefacility
+SET rcnt = rcnt + 1
+WHERE culturefno = 1;
+
+2) 댓글수 감소
+UPDATE culturefacility
+SET rcnt = rcnt - 1
+WHERE culturefno = 1;   
 
 
 commit;

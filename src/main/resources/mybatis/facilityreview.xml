@@ -49,11 +49,11 @@
   
     <!-- 최신글 500건 -->
   <select id="list_by_culturefno_join_500" resultType="dev.mvc.facilityreview.FacilityreviewVO" parameterType="int">
-    SELECT id, rno, culturefno, memberno, reviewcomment, rdate, r
+    SELECT id,name, rno, culturefno, memberno, reviewcomment, rdate, r
     FROM (
-          SELECT id, rno, culturefno,memberno, reviewcomment,rdate,rownum as r
+          SELECT id, name,rno, culturefno,memberno, reviewcomment,rdate,rownum as r
           FROM (
-                SELECT  m.id, 
+                SELECT  m.id,m.name,
                          p.rno, p.culturefno, p.memberno, p.reviewcomment,p.rdate
                 FROM member m, facilityreview p       
                 WHERE (m.memberno = p.memberno) AND p.culturefno=#{culturefno}

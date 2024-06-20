@@ -2,6 +2,9 @@ package dev.mvc.master;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
+
+import dev.mvc.culturefacility.CulturefacilityVO;
 
 
 
@@ -72,6 +75,29 @@ public interface MasterDAOInter {
    * 로그인 처리
    */
   public int login(HashMap<String, Object> map);
+  
+  /**
+   * 관리자용 검색 목록
+   * select id="list_search" resultType="dev.mvc.cate.CateVO" parameterType="String"
+   * @param map
+   * @return 조회한 레코드 목록
+   */
+  public ArrayList<MasterVO > list_search(String word);    
+      
+  /**
+   * 검색목록 페이징
+   * select id="list_search_paging" resultType="dev.mvc.cate.CateVO" parameterType="Map"
+   * @param map
+   * @return 조회한 레코드 목록
+   */
+  public ArrayList<MasterVO > list_search_paging(Map<String, Object> map);
+  
+  /**
+   * 검색된 레코드 수
+   * @param word
+   * @return
+   */
+  public int list_search_count(String word);
   
  
     

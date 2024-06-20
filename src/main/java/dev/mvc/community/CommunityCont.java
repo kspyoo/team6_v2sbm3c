@@ -132,9 +132,9 @@ public class CommunityCont {
     map.put("now_page", now_page);
 
     // 페이징 목록
-    ArrayList<CommunityVO> list_search_paging = this.comunityProc.list_search_paging(word, now_page,
+    ArrayList<attachmentVO> list2= this.comunityProc.list_search_paging(word, now_page,
         this.record_per_page);
-    model.addAttribute("list_search_paging", list_search_paging);
+    model.addAttribute("list2", list2);
     model.addAttribute("word", word);
 
     // 페이징 버튼 목록
@@ -156,11 +156,31 @@ public class CommunityCont {
   }
 
   @GetMapping("/read")
-  public String read(Model model, int communityno, HttpSession session) {
+  public String read(Model model, @RequestParam(name = "communityno") int communityno, HttpSession session,@RequestParam(name = "now_page", defaultValue = "1") int now_page,
+      @RequestParam(name = "word", defaultValue = "") String word) {
     if (session.getAttribute("memberno") != null) {
       model.addAttribute("memberno", session.getAttribute("memberno"));
       attachmentVO attachmentVO = this.comunityProc.read(communityno);
       model.addAttribute("attachmentVO", attachmentVO);
+
+      ArrayList<attachmentVO> list= this.comunityProc.list_search_paging(word, now_page,
+          this.record_per_page);
+      model.addAttribute("list", list);
+      model.addAttribute("word", word);
+
+      // 페이징 버튼 목록
+      int search_count = this.comunityProc.list_search_count(word);
+
+      String paging = this.comunityProc.pagingBox(now_page, word, "/community/list_search", search_count,
+          this.record_per_page, this.page_per_block);
+      model.addAttribute("paging", paging);
+      model.addAttribute("now_page", now_page);
+
+      model.addAttribute("word", word);
+      model.addAttribute("search_count",search_count);
+      // 일련 변호 생성: 레코드 갯수 - ((현재 페이지수 -1) * 페이지당 레코드 수)
+      int no = search_count - ((now_page - 1) * this.record_per_page);
+      model.addAttribute("no", no);
 
       return "community/read";
     } else {
@@ -170,13 +190,32 @@ public class CommunityCont {
   }
 
   @GetMapping("/update/{communityno}")
-  public String update(Model model, @PathVariable("communityno") int communityno, HttpSession session) {
+  public String update(Model model, @PathVariable("communityno") int communityno, HttpSession session,@RequestParam(name = "now_page", defaultValue = "1") int now_page,
+      @RequestParam(name = "word", defaultValue = "") String word) {
 
     if (session.getAttribute("memberno") != null) {
       model.addAttribute("memberno", session.getAttribute("memberno"));
       attachmentVO attachmentVO = this.comunityProc.read(communityno);
       model.addAttribute("attachmentVO", attachmentVO);
 
+      ArrayList<attachmentVO> list= this.comunityProc.list_search_paging(word, now_page,
+          this.record_per_page);
+      model.addAttribute("list", list);
+      model.addAttribute("word", word);
+
+      // 페이징 버튼 목록
+      int search_count = this.comunityProc.list_search_count(word);
+
+      String paging = this.comunityProc.pagingBox(now_page, word, "/community/list_search", search_count,
+          this.record_per_page, this.page_per_block);
+      model.addAttribute("paging", paging);
+      model.addAttribute("now_page", now_page);
+
+      model.addAttribute("word", word);
+      model.addAttribute("search_count",search_count);
+      // 일련 변호 생성: 레코드 갯수 - ((현재 페이지수 -1) * 페이지당 레코드 수)
+      int no = search_count - ((now_page - 1) * this.record_per_page);
+      model.addAttribute("no", no);
       return "community/update";
     } else {
       return "redirect:/member/login";
@@ -185,10 +224,21 @@ public class CommunityCont {
 
   @PostMapping("/update/{communityno}")
   public String update_process(Model model, @Valid CommunityVO communityVO,
-      @PathVariable("communityno") int communityno, @RequestParam(name = "file") MultipartFile file,
+      @PathVariable("communityno") int communityno, @RequestParam(name = "file", required = false) MultipartFile file,
       HttpSession session) {
     
       model.addAttribute("memberno", session.getAttribute("memberno"));
+      if (session.getAttribute("memberno") != null) {
+      int cnt = this.comunityProc.update(communityVO);
+
+      if (cnt == 1) {
+        model.addAttribute("code", "update_success");
+        model.addAttribute("title", communityVO.getTitle());
+
+      } else {
+        model.addAttribute("code", "update_fail");
+      }
+      model.addAttribute("cnt", cnt);
       if (file.getSize() > 0) {
         CommunityattachmentVO communityattachmentVO = new CommunityattachmentVO();
         String upDir = Communityattachment.getUploadDir();
@@ -201,21 +251,14 @@ public class CommunityCont {
         communityattachmentVO.setCommunityno(communityno);
         this.communityattachmentProc.create_image(communityattachmentVO);
         model.addAttribute("communityattachmentVO", communityattachmentVO);
-      }if (session.getAttribute("memberno") != null) {
-      int cnt = this.comunityProc.update(communityVO);
-
-      if (cnt == 1) {
-        model.addAttribute("code", "update_success");
-        model.addAttribute("title", communityVO.getTitle());
-
-      } else {
-        model.addAttribute("code", "update_fail");
       }
-      model.addAttribute("cnt", cnt);
+      
+      
       return "community/msg";
     } else {
       return "redirect:/member/login";
     }
+     
   }
 
   @GetMapping("/delete/{communityno}")
@@ -254,22 +297,25 @@ public class CommunityCont {
 
     communityattachmentVO = new CommunityattachmentVO();
     model.addAttribute("communityattachmentVO", communityattachmentVO);
-    ArrayList<attachmentVO> list = this.comunityProc.list();
-    model.addAttribute("list", list);
-
+//    ArrayList<attachmentVO> list = this.comunityProc.list();
+//    model.addAttribute("list", list);
+    
+    
     word = Tool.checkNull(word).trim();
     // System.out.println("--> word: " + word);
     HashMap<String, Object> map = new HashMap<String, Object>();
-
+    
+    
     map.put("word", word);
     map.put("now_page", now_page);
-
+    
+    
     // 페이징 목록
-    ArrayList<CommunityVO> list_search_paging = this.comunityProc.list_search_paging(word, now_page,
+    ArrayList<attachmentVO> list = this.comunityProc.list_search_paging(word, now_page,
         this.record_per_page);
-    model.addAttribute("list_search_paging", list_search_paging);
+    model.addAttribute("list", list);
     model.addAttribute("word", word);
-
+   
     // 페이징 버튼 목록
     int search_count = this.comunityProc.list_search_count(word);
 
@@ -277,13 +323,13 @@ public class CommunityCont {
         this.record_per_page, this.page_per_block);
     model.addAttribute("paging", paging);
     model.addAttribute("now_page", now_page);
-
+    
     model.addAttribute("word", word);
-
+    model.addAttribute("search_count",search_count);
     // 일련 변호 생성: 레코드 갯수 - ((현재 페이지수 -1) * 페이지당 레코드 수)
     int no = search_count - ((now_page - 1) * this.record_per_page);
     model.addAttribute("no", no);
-
+    
     return "community/list_search"; // /cate/list_search.html
 
   }

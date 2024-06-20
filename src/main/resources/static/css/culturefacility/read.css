@@ -14,10 +14,12 @@
 .carousel-container {
     display: flex;
     justify-content: center;
+    
+    
     align-items: center;
-    height: 30vh; /* 기본 높이 */
+    height: 60vh; /* 기본 높이 */
 
-    width: 60%;
+    width: 50%;
     margin: 5% auto;
     border: 1.5px solid #8FBFFA;
     border-radius: 5px;
@@ -36,70 +38,70 @@
 
 
 .carousel-control-next-icon {
-    background-image: url(/image/petProfile/right-arrow.png);
+    background-image: url(/image/facilityreview/right-arrow.png);
 }
 
 .carousel-control-prev-icon {
-    background-image: url(/image/petProfile/left-arrow.png);
+    background-image: url(/image/facilityreview/left-arrow.png);
 }
 
 @media (min-width: 700px) {
     .carousel-container {
-        height: 45vh; /* 작은 화면에서의 높이 조정 */
+        height: 35vh; /* 작은 화면에서의 높이 조정 */
     }
 }
 
 @media (min-width: 850px) {
     .carousel-container {
-        height: 48vh; /* 작은 화면에서의 높이 조정 */
+        height: 38vh; /* 작은 화면에서의 높이 조정 */
     }
 }
 
 @media (min-width: 950px) {
     .carousel-container {
-        height: 57vh; /* 작은 화면에서의 높이 조정 */
+        height: 47vh; /* 작은 화면에서의 높이 조정 */
     }
 }
 
 @media (min-width: 1100px) {
     .carousel-container {
-        height: 65vh; /* 작은 화면에서의 높이 조정 */
+        height: 55vh; /* 작은 화면에서의 높이 조정 */
     }
 }
 
 @media (min-width: 1250px) {
     .carousel-container {
-        height: 75vh; /* 작은 화면에서의 높이 조정 */
+        height: 65vh; /* 작은 화면에서의 높이 조정 */
     }
 }
 
 
 @media (min-width: 1400px) {
     .carousel-container {
-        height: 80vh; /* 작은 화면에서의 높이 조정 */
+        height: 70vh; /* 작은 화면에서의 높이 조정 */
     }
 }
 
 @media (min-width: 1550px) {
     .carousel-container {
-        height: 85vh; /* 작은 화면에서의 높이 조정 */
+        height: 75vh; /* 작은 화면에서의 높이 조정 */
     }
 }
 
 @media (min-width: 1700px) {
     .carousel-container {
-        height: 90vh; /* 작은 화면에서의 높이 조정 */
+        height: 80vh; /* 작은 화면에서의 높이 조정 */
     }
 }
 
 @media (min-width: 1850px) {
     .carousel-container {
-        height: 95vh; /* 작은 화면에서의 높이 조정 */
+        height: 85vh; /* 작은 화면에서의 높이 조정 */
     }
 }
 
 @media (min-width: 1920px) {
     .carousel-container {
-        height: 100vh; /* 작은 화면에서의 높이 조정 */
+        height: 90vh; /* 작은 화면에서의 높이 조정 */
     }
 }

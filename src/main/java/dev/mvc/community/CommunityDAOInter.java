@@ -29,7 +29,7 @@ public interface CommunityDAOInter {
   
   public int delete(int communityno);
   
-  public ArrayList<CommunityVO>list_search_paging(Map<String,Object>map);
+  public ArrayList<attachmentVO>list_search_paging(HashMap<String,Object>map);
   
   public int list_search_count(String word);
 }

@@ -181,19 +181,23 @@ DELETE FROM community WHERE EXISTS( SELECT 1 FROM community WHERE communityno = 
 
 
 -- search 첨부파일 join 
-SELECT communityno,title,content,vcnt,rcnt,writedate,tag,memberno,ctypeno, r
-FROM(   
-        SELECT communityno,title,content,vcnt,rcnt,writedate,tag,memberno,ctypeno, rownum as r
-        FROM (
-            SELECT communityno,title,content,vcnt,rcnt,writedate,tag,memberno,ctypeno
-            FROM community             
-            WHERE UPPER(title)LIKE '%'||UPPER('test')||'%'OR UPPER(tag)LIKE '%' ||UPPER('test')
-            ORDER BY communityno ASC
-            )
-        );
-        
-        
-ㄲ        
+SELECT communityno,title,content,vcnt,rcnt,writedate,tag,memberno,ctypeno,r 
+    FROM(
+        SELECT communityno,title,content,vcnt,rcnt,writedate,tag,memberno,ctypeno, rownum as r 
+        FROM(
+            SELECT c.communityno,c.title,c.content,c.vcnt,c.rcnt,c.writedate,c.tag,c.memberno,c.ctypeno,ca.cano, ca.filename, ca.filesize, ca.thumbfile
+            FROM community c LEFT OUTER JOIN communityattachment ca
+            ON c.communityno = ca.communityno
+            WHERE UPPER(title)LIKE '%'||UPPER('12')||'%'OR UPPER(tag)LIKE '%' ||UPPER('12') 
+        )
+)
+WHERE r >= 1 AND  r< 3;
+    
+commit;
+SELECT communityno,title,content,vcnt,rcnt,writedate,tag,memberno,ctypeno
+FROM community
+WHERE UPPER(title)LIKE '%'||UPPER('test')||'%'OR UPPER(tag)LIKE '%' ||UPPER('test')
+ORDER BY communityno ASC;  
 /**********************************/
 /* Table Name: 댓글 */
 /**********************************/
