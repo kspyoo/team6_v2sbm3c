@@ -258,7 +258,7 @@ CREATE TABLE noticeimg(
   FOREIGN KEY (noticeno) REFERENCES notice (noticeno)ON DELETE CASCADE
 );
 
-DROP SEQUENCE NOTICE_SEQ;
+DROP SEQUENCE NOTICEIMG_SEQ;
 
 CREATE SEQUENCE NOTICEIMG_SEQ
     START WITH 1              -- 시작 번호
@@ -336,7 +336,7 @@ FROM login
           OR UPPER(memberno) LIKE '%' || UPPER('하정') || '%') AND memberno != 0;
           
           
-ALTER TABLE MEMBERPROFILE MODIFY (FILE1 VARCHAR2(100));
+ALTER TABLE notice MODIFY (notice VARCHAR2(1000));
 
 SELECT mprofileno, file1, file1saved, thumbfile, filesize, memberno
 FROM memberprofile
@@ -345,3 +345,47 @@ WHERE memberno =42;
 DELETE FROM memberprofile WHERE mprofileno != 162 and memberno = 42;
 
 SELECT * FROM memberprofile ORDER BY MEMBERNO DESC;
+
+
+        SELECT imgno, nfile, filesaved, thumbfile, filesize, noticeno
+        FROM noticeimg
+        WHERE noticeno = 24
+        ORDER BY imgno ASC;
+        
+        
+        
+        
+        
+        
+--likeno
+--noticeno
+---memberno
+--likedate
+
+DROP TABLE sympathy;
+
+CREATE TABLE sympathy(
+		sympathyno                      		NUMBER(10)		NOT NULL 		 PRIMARY KEY,
+		noticeno                    		NUMBER(10)		NOT NULL ,
+    memberno                       		NUMBER(10)		NOT NULL ,
+		sdate                      		date		NOT NULL ,
+  FOREIGN KEY (noticeno) REFERENCES notice (noticeno)ON DELETE CASCADE ,
+  FOREIGN KEY (memberno) REFERENCES member (memberno)ON DELETE CASCADE
+);
+
+DROP SEQUENCE SYMPATHY_SEQ;
+
+CREATE SEQUENCE SYMPATHY_SEQ
+    START WITH 1              -- 시작 번호
+    INCREMENT BY 1          -- 증가값
+    MAXVALUE 9999999999 -- 최대값: 9999999 --> NUMBER(7) 대응
+    CACHE 2                       -- 2번은 메모리에서만 계산
+    NOCYCLE; 
+    
+    
+    
+    SELECT sp.sympathyno, sp.memberno, sp.noticeno, sp.sdate, title, notice, nfile, noticedate
+    FROM sympathy sp
+    LEFT JOIN notice nt ON sp.noticeno = nt.noticeno
+    WHERE memberno=3
+    ORDER BY sympathyno DESC;

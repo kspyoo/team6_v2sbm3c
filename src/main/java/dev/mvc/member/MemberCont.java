@@ -44,25 +44,31 @@ public class MemberCont {
   @Autowired
   @Qualifier("dev.mvc.member.MemberProc")
   private MemberProcInter memberProc;
-  
+
   @Autowired
   @Qualifier("dev.mvc.master.MasterProc")
   private MasterProcInter masterProc;
 
-
   @Autowired
   @Qualifier("dev.mvc.memberprofile.MemberprofileProc")
   private MemberprofileProcInter memberprofileProc;
-  
+
   @Autowired
   @Qualifier("dev.mvc.login.LoginProc")
   private LoginProcInter loginProc;
+
+  /** 페이지당 출력할 레코드 갯수, nowPage는 1부터 시작 */
+  public int record_per_page = 10;
+
+  /** 블럭당 페이지 수, 하나의 블럭은 10개의 페이지로 구성됨 */
+  public int page_per_block = 5;
   
   @Autowired
   Security security;
 
   public MemberCont() {
   }
+
   @GetMapping(value = "/checkID")
   @ResponseBody
   public String checkID(String id) {
@@ -72,16 +78,16 @@ public class MemberCont {
     obj.put("cnt", cnt);
     return obj.toString();
   }
-  
-    @GetMapping(value = "/checkPhone")
-    @ResponseBody
-    public String checkPhone(String phone) {
-      int cnt = this.memberProc.checkPhone(phone);
 
-      JSONObject obj = new JSONObject();
-      obj.put("cnt", cnt);
-      System.out.println("obj Phone : "+ obj);
-      return obj.toString();
+  @GetMapping(value = "/checkPhone")
+  @ResponseBody
+  public String checkPhone(String phone) {
+    int cnt = this.memberProc.checkPhone(phone);
+
+    JSONObject obj = new JSONObject();
+    obj.put("cnt", cnt);
+    System.out.println("obj Phone : " + obj);
+    return obj.toString();
   }
 
   /**
@@ -105,14 +111,14 @@ public class MemberCont {
       memberVO.setStatus("1");
       int cnt = this.memberProc.create(memberVO);
       if (cnt == 1) {
-        
+
         model.addAttribute("code", "create_success");
         model.addAttribute("name", memberVO.getName());
         model.addAttribute("id", memberVO.getId());
         model.addAttribute("phone", memberVO.getPhone());
         memberVO = this.memberProc.readById(memberVO.getId());
         memberprofileProc.create_file(memberVO.getMemberno());
-        
+
       } else {
         model.addAttribute("code", "create_fail");
       }
@@ -193,15 +199,9 @@ public class MemberCont {
    * @return
    */
   @PostMapping(value = "/login")
-  public String login_proc(HttpSession session,
-      HttpServletRequest request,
-      HttpServletResponse response,
-      Model model,
-      String id,
-      String passwd,
-      @RequestParam(value = "id_save", defaultValue = "") String id_save,
-      @RequestParam(value = "passwd_save", defaultValue = "") String passwd_save,
-      MemberprofileVO memberprofileVO) {
+  public String login_proc(HttpSession session, HttpServletRequest request, HttpServletResponse response, Model model,
+      String id, String passwd, @RequestParam(value = "id_save", defaultValue = "") String id_save,
+      @RequestParam(value = "passwd_save", defaultValue = "") String passwd_save, MemberprofileVO memberprofileVO) {
     HashMap<String, Object> map = new HashMap<String, Object>();
     map.put("id", id);
     map.put("passwd", this.security.aesEncode(passwd));
@@ -211,26 +211,26 @@ public class MemberCont {
     if (cnt == 1) {
       MemberVO memberVO = this.memberProc.readById(id);
 
-    // this.memberprofileProc.create_file(memberVO.getMemberno());
-      
-      memberprofileVO =  this.memberprofileProc.read_file(memberVO.getMemberno()).get(0);
-      System.out.println("memberprofileVO : "+ memberprofileVO);
+      // this.memberprofileProc.create_file(memberVO.getMemberno());
+
+      memberprofileVO = this.memberprofileProc.read_file(memberVO.getMemberno()).get(0);
+      System.out.println("memberprofileVO : " + memberprofileVO);
       session.setAttribute("memberno", memberVO.getMemberno());
       session.setAttribute("id", memberVO.getId());
       session.setAttribute("name", memberVO.getName());
-      session.setAttribute("mprofileno",memberprofileVO.getMprofileno());
+      session.setAttribute("mprofileno", memberprofileVO.getMprofileno());
 //      String ip = this.security.aesEncode(request.getRemoteAddr());
       String ip = request.getRemoteAddr();
-      
+
       Date rdate = new Date();
       HashMap<String, Object> login_map = new HashMap<String, Object>();
-      login_map.put("id",id);
-      login_map.put("ip",ip);
+      login_map.put("id", id);
+      login_map.put("ip", ip);
       login_map.put("conndate", rdate);
-      login_map.put("memberno",memberVO.getMemberno());
-      
+      login_map.put("memberno", memberVO.getMemberno());
+
       this.loginProc.create_login_record(login_map);
-      
+
       System.out.println(ip);
 
       if (id_save.equals("Y")) { // id 저장하는 경우
@@ -268,7 +268,6 @@ public class MemberCont {
       ck_passwd_save.setMaxAge(60 * 60 * 24 * 30); // 30 day
       response.addCookie(ck_passwd_save);
 
-      
       return "redirect:/";
     } else {
       model.addAttribute("code", "login_fail");
@@ -302,39 +301,34 @@ public class MemberCont {
   }
 
   @GetMapping(value = "/read")
-  public String read(HttpSession session, Model model, int memberno,MemberprofileVO memberprofileVO,LoginVO loginVO) {
-    
-    if(session.getAttribute("memberno") == null) {
+  public String read(HttpSession session, Model model, int memberno, MemberprofileVO memberprofileVO, LoginVO loginVO) {
+
+    if (session.getAttribute("memberno") == null) {
       return "member/login";
     }
-    
+
     System.out.println(loginVO);
-    
+
     MemberVO memberVO = this.memberProc.read(memberno);
     model.addAttribute("memberVO", memberVO);
-    
+
     System.out.println("확인용 : " + this.memberprofileProc.read_file(memberno));
-    
+
     System.out.println("this.memberProc.read(memberno) : " + this.memberProc.read(memberno));
-    
-    
-    
+
     // MemberProfileVO를 조회하여 모델에 추가
     ArrayList<MemberprofileVO> list = this.memberprofileProc.read_file(memberno);
-    
+
     System.out.println("list : " + list);
-    if(list.size() < 2) {
+    if (list.size() < 2) {
       memberprofileVO = this.memberprofileProc.read_file(memberno).get(0);
       model.addAttribute("memberprofileVO", memberprofileVO);
-      System.out.println("memberprofileVO : "+memberprofileVO);
+      System.out.println("memberprofileVO : " + memberprofileVO);
     } else {
       memberprofileVO = this.memberprofileProc.read_file(memberno).get(1);
       model.addAttribute("memberprofileVO", memberprofileVO);
     }
 
-        
-
-    
     return "member/read";
   }
 
@@ -346,19 +340,19 @@ public class MemberCont {
    * @return 회원 정보
    */
   @GetMapping(value = "/delete")
-  public String delete(HttpSession session,Model model, int memberno, MasterVO masterVO) {
-    
-    if(session.getAttribute("memberno") == null) {
+  public String delete(HttpSession session, Model model, int memberno, MasterVO masterVO) {
+
+    if (session.getAttribute("memberno") == null) {
       return "member/login";
     }
     MemberVO memberVO = this.memberProc.read(memberno);
-    
+
 //    MemberprofileVO memberprofileVO = this.memberprofileProc.read_file(memberno);
     model.addAttribute("memberVO", memberVO);
-    if(masterVO != null) {
+    if (masterVO != null) {
       System.out.println("masterVOno : " + masterVO.getMasterno());
     }
-    
+
 //    model.addAttribute("memberprofileVO",memberprofileVO);
 
     return "member/delete";
@@ -377,7 +371,7 @@ public class MemberCont {
     System.out.println("masterVO2 : " + masterVO);
     if (cnt == 1) {
       model.addAttribute("code", "delete_success");
-      if (masterVO.getMasterno() == 0 ) {
+      if (masterVO.getMasterno() == 0) {
         session.invalidate();
       }
 //      
@@ -416,7 +410,6 @@ public class MemberCont {
 
       model.addAttribute("memberVO", memberVO);
 
-
       return "/member/findId";
     } else {
       model.addAttribute("code", "find_fail");
@@ -438,7 +431,8 @@ public class MemberCont {
   }
 
   @PostMapping("/findPasswdView")
-  public String findPasswd_proc(RedirectAttributes ra, HttpSession session, Model model, String name, String phone, String id) {
+  public String findPasswd_proc(RedirectAttributes ra, HttpSession session, Model model, String name, String phone,
+      String id) {
     HashMap<String, Object> map = new HashMap<String, Object>();
     map.put("name", name);
     map.put("phone", phone);
@@ -456,50 +450,51 @@ public class MemberCont {
       return "member/msg";
     }
   }
-  
+
   @GetMapping("/findPasswd")
-  public String findPasswd(Model model,String id) {
+  public String findPasswd(Model model, String id) {
     model.addAttribute("id", id);
     return "/member/findPasswd";
   }
-  
+
   @PostMapping("/findPasswd")
   public String passwdChangeProc(HttpSession session, Model model, String passwd, String id) {
-      MemberVO memberVO = this.memberProc.readById(id);
-      HashMap<String, Object> map = new HashMap<String, Object>();
-      map.put("memberno", memberVO.getMemberno());
-      map.put("passwd", this.security.aesEncode(passwd));
+    MemberVO memberVO = this.memberProc.readById(id);
+    HashMap<String, Object> map = new HashMap<String, Object>();
+    map.put("memberno", memberVO.getMemberno());
+    map.put("passwd", this.security.aesEncode(passwd));
 
-      int passwd_change_cnt = this.memberProc.passwd_update(map);
-      
-      if (passwd_change_cnt == 1) {
-        
-        model.addAttribute("code", "passwd_change_success");
-        model.addAttribute("cnt", 1);
+    int passwd_change_cnt = this.memberProc.passwd_update(map);
+
+    if (passwd_change_cnt == 1) {
+
+      model.addAttribute("code", "passwd_change_success");
+      model.addAttribute("cnt", 1);
     } else {
-        model.addAttribute("code", "passwd_change_fail");
-        model.addAttribute("cnt", 0);
+      model.addAttribute("code", "passwd_change_fail");
+      model.addAttribute("cnt", 0);
     }
-      return "member/msg";
+    return "member/msg";
   }
 
   /**
    * 패스워드 수정 폼
+   * 
    * @param model
    * @param memberno
    * @return
    */
-  @GetMapping(value="/passwd_update_form")
-  public String passwd_update_form(HttpSession session, Model model) { 
-    if(session.getAttribute("memberno") == null) {
+  @GetMapping(value = "/passwd_update_form")
+  public String passwd_update_form(HttpSession session, Model model) {
+    if (session.getAttribute("memberno") == null) {
       return "member/login";
     }
-    int memberno = (int)session.getAttribute("memberno"); // session에서 가져오기
-    
+    int memberno = (int) session.getAttribute("memberno"); // session에서 가져오기
+
     MemberVO memberVO = this.memberProc.read(memberno);
-    
+
     model.addAttribute("memberVO", memberVO);
-    
+
     return "member/passwd_update_form";
   }
 
@@ -533,12 +528,12 @@ public class MemberCont {
   @PostMapping(value = "/passwd_update_proc")
   public String passwd_update_proc(HttpSession session, Model model, String current_passwd, String passwd) {
 
-    int memberno = (int) session.getAttribute("memberno"); 
+    int memberno = (int) session.getAttribute("memberno");
     HashMap<String, Object> map = new HashMap<String, Object>();
     map.put("memberno", memberno);
-    
-    map.put("passwd", this.security.aesEncode(current_passwd)); 
-    
+
+    map.put("passwd", this.security.aesEncode(current_passwd));
+
     int cnt = this.memberProc.passwd_check(map);
 
     if (cnt == 0) { // 현재 패스워드 불일치
@@ -549,11 +544,11 @@ public class MemberCont {
       HashMap<String, Object> map_new_passwd = new HashMap<String, Object>();
       map_new_passwd.put("memberno", memberno);
       map_new_passwd.put("passwd", this.security.aesEncode(passwd)); // 새로운 패스워드
-      
+
       int passwd_change_cnt = this.memberProc.passwd_update(map_new_passwd);
       MemberVO memberVO = this.memberProc.read(memberno);
       if (passwd_change_cnt == 1) {
-        model.addAttribute("memberVO",memberVO);
+        model.addAttribute("memberVO", memberVO);
         model.addAttribute("code", "passwd_change_success");
 //        model.addAttribute("cnt", 1);
       } else {
@@ -561,9 +556,9 @@ public class MemberCont {
         model.addAttribute("cnt", 0);
       }
     }
-    return "member/msg"; 
+    return "member/msg";
   }
-  
+
 //  @GetMapping(value="/update_file")
 //  public String update_file(HttpSession session, Model model, int memberno) {
 //    MemberVO memberVO = this.memberProc.read(memberno);
@@ -610,57 +605,77 @@ public class MemberCont {
 //    }
 //    return "redirect:/member/msg";
 //  }
-  
-  @GetMapping(value="/list")
-  public String list(HttpSession session, Model model) {
-    if(session.getAttribute("masterno") == null) {
+
+  @GetMapping(value = "/list")
+  public String list(HttpSession session, Model model, String word,
+      @RequestParam(name = "now_page", defaultValue = "1") int now_page) {
+    if (session.getAttribute("masterno") == null) {
       return "master/login";
     }
+
+    word = Tool.checkNull(word).trim();
+    ArrayList<MemberVO> list_paging = this.memberProc.list_paging(word, now_page, this.record_per_page);
+        
+    model.addAttribute("list_paging",list_paging);
     
-      ArrayList<MemberVO> list = this.memberProc.list();
-      int masterno = (int) session.getAttribute("masterno"); 
-      MasterVO masterVO = this.masterProc.read(masterno);
-      
-      for (MemberVO memberVO : list) {
-        int memberno = memberVO.getMemberno();
-        MemberprofileVO memberprofileVO = this.memberprofileProc.read_file(memberno).get(0);
-        memberVO.setMprofileno(memberprofileVO.getMprofileno());
-        int index = list.indexOf(memberVO);
-        list.set(index, memberVO);
-      }
-      
-      model.addAttribute("list", list);
-      model.addAttribute("masterVO", masterVO);
-      
-      return "member/list"; 
+    int masterno = (int) session.getAttribute("masterno");
+    
+    int search_count = this.memberProc.search_count(word);
+    String paging = this.memberProc.pagingBox(now_page, word, "/member/list", search_count, this.record_per_page, this.page_per_block, masterno);
+    
+    model.addAttribute("paging",paging);
+    model.addAttribute("now_page",now_page);
+    
+    model.addAttribute("word",word);
+    
+    int no = search_count - ((now_page - 1) * this.record_per_page);
+    model.addAttribute("no",no);
+    model.addAttribute("all_no",search_count);
+    
+    ArrayList<MemberVO> list = this.memberProc.list();
+    
+    MasterVO masterVO = this.masterProc.read(masterno);
+
+    for (MemberVO memberVO : list) {
+      int memberno = memberVO.getMemberno();
+      MemberprofileVO memberprofileVO = this.memberprofileProc.read_file(memberno).get(0);
+      memberVO.setMprofileno(memberprofileVO.getMprofileno());
+      int index = list.indexOf(memberVO);
+      list.set(index, memberVO);
+    }
+
+    model.addAttribute("list", list);
+    model.addAttribute("masterVO", masterVO);
+
+    return "member/list";
   }
-  
-  @GetMapping(value="/read_data")
-  public String read_data(HttpSession session, Model model, int memberno,MemberprofileVO memberprofileVO,LoginVO loginVO) {
-    
+
+  @GetMapping(value = "/read_data")
+  public String read_data(HttpSession session, Model model, int memberno, MemberprofileVO memberprofileVO,
+      LoginVO loginVO) {
+
     System.out.println(loginVO);
-    
+
     MemberVO memberVO = this.memberProc.read(memberno);
     model.addAttribute("memberVO", memberVO);
-    
+
     System.out.println("확인용 : " + this.memberprofileProc.read_file(memberno));
-    
+
     System.out.println("this.memberProc.read(memberno) : " + this.memberProc.read(memberno));
-    
-    
+
     // MemberProfileVO를 조회하여 모델에 추가
     ArrayList<MemberprofileVO> list = this.memberprofileProc.read_file(memberno);
-    
+
     System.out.println("list : " + list);
-    if(list.size() < 2) {
+    if (list.size() < 2) {
       memberprofileVO = this.memberprofileProc.read_file(memberno).get(0);
       model.addAttribute("memberprofileVO", memberprofileVO);
-      System.out.println("memberprofileVO : "+memberprofileVO);
+      System.out.println("memberprofileVO : " + memberprofileVO);
     } else {
       memberprofileVO = this.memberprofileProc.read_file(memberno).get(1);
       model.addAttribute("memberprofileVO", memberprofileVO);
     }
     return "member/read_data";
   }
-  
+
 }

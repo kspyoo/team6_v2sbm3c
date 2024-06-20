@@ -1,7 +1,5 @@
 <!DOCTYPE html>
-
 <html layout:decorate="~{layout}">
-<!-- layout.html 상속-->
 
 <head>
   <style>
@@ -195,66 +193,60 @@
     }
 
     .delete-btn {
-      position: absolute;
-      top: 5px;
-      right: 5px;
-      background-color: rgba(255, 0, 0, 0.7);
-      color: white;
-      border: none;
-      padding: 3px;
-      cursor: pointer;
-      border-radius: 4px;
-      z-index: 1;
-      /* 다른 요소 위에 표시되도록 설정 */
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background-color: rgba(255, 0, 0, 0.7);
+  color: white;
+  border: none;
+  padding: 3px;
+  cursor: pointer;
+  border-radius: 4px;
+  z-index: 1; /* 다른 요소 위에 표시되도록 설정 */
     }
   </style>
 </head>
 
-<div layout:fragment="content" style="width: 80%; margin: auto">
-  <div class='title_line'>
-    > 글 수정
-  </div>
+<body>
+  <div layout:fragment="content" style="width: 80%; margin: auto">
+    <div class='title_line'>
+      > 글 수정
+    </div>
 
-  <aside class="aside_right">
-    <a href="javascript:location.reload();">새로고침</a>
-    <span class='menu_divide'>│</span>
-  </aside>
+    <div class='menu_line'></div>
 
-  <div class='menu_line'></div>
-
-      <div class="flex-container">
+    <div class="flex-container">
 
       <div class="flex-item">
         <fieldset class="fieldset_basic">
-          <div th:if="${noticeVO != null}">
-            <div th:if="${noticeVO.nfile != null and (noticeVO.nfile.endsWith('jpg') or noticeVO.nfile.endsWith('png') or noticeVO.nfile.endsWith('gif'))}">
+          <div th:if="${noticeimgVO != null}">
+            <div
+              th:if="${noticeimgVO.nfile != null and (noticeimgVO.nfile.endsWith('jpg') or noticeimgVO.nfile.endsWith('png') or noticeimgVO.nfile.endsWith('gif'))}">
               <label>이미지 목록</label>
               <div class="image-grid">
-                <div class="image-grid-item" th:each="noticeVO, status:${list}">
-                  <div th:if="${noticeVO.filesize} > 0 and ${status.index} > 0">
-                    <img th:src="@{|/notice/storage/${noticeVO.file1saved}|}" th:alt="${noticeVO.file1}">
-                    <form method="POST" action="./delete_one" th:id="'deleteForm_' + ${noticeVO.mprofileno}">
-                      <button type="button" class="delete-btn" th:onclick="'confirmDelete(' + ${noticeVO.mprofileno} + ')'">삭제</button>
+                <div class="image-grid-item" th:each="noticeimgVO, status:${list}">
+                  <div th:if="${noticeimgVO.filesize} > 0 and ${status.index} > 0">
+                    <img th:src="@{|/notice/storage/${noticeimgVO.nfile}|}" th:alt="${noticeimgVO.nfile}">
+                    <form method="POST" action="./delete_one" th:id="'deleteForm_' + ${noticeimgVO.imgno}">
+                      <input type="hidden" name="imgno" th:value="${noticeimgVO.imgno}">
+                      <input type="hidden" name="noticeno" th:value="${noticeimgVO.noticeno}">
+                      <button type="button" class="delete-btn"
+                        th:onclick="'confirmDelete(' + ${noticeimgVO.imgno} + ')'">삭제</button>
                     </form>
                   </div>
                 </div>
               </div>
             </div>
-            <div th:if="${memberprofileVO.filesize == 0}" class="default-image-container">
-              <label>기본 이미지</label>
-              <div class="image-grid-item">
-                <img src="/member/images/defaultmember.png">
-              </div>
-            </div>
           </div>
+
+
         </fieldset>
       </div>
 
       <div class="flex-item">
         <fieldset class="fieldset_basic">
           <form name='frm' method='POST' action='./update_file' enctype="multipart/form-data">
-            <input type="hidden" name="memberno" th:value="${memberVO.memberno}">
-            <input type="hidden" name="mprofileno" th:value="${memberprofileVO.mprofileno}">
+            <input type="hidden" name="noticeno" th:value="${noticeVO.noticeno}">
             <label>변경 이미지 선택</label>
 
             <button type="button" id="id_btn_new_file" onclick="id_btn_new_file()"
@@ -275,28 +267,81 @@
       </div>
     </div>
 
-  <form name='frm' method='post' th:object="${NoticeVO}" action='./update'>
-    <input type="hidden" name="noticeno" th:value="${noticeVO.noticeno }">
-    <input type="hidden" name="noticeno" th:value="${noticeVO.noticeno }">
+    <form name='frm' method='post' th:object="${NoticeVO}" action='./update'>
+      <input type="hidden" name="noticeno" th:value="${noticeVO.noticeno}">
+      <div>
+        <label>제목</label>
+        <input type='text' name='title' th:value='${noticeVO.title}' required="required" autofocus="autofocus"
+          class="form-control" style='width: 100%;'>
+      </div>
+      <div>
+        <label>내용</label>
+        <textarea name='notice' required="required" class="form-control" rows="12" style='width: 100%;'
+          th:text='${noticeVO.notice}'></textarea>
+      </div>
+      <div>
+        <label>패스워드</label>
+        <input type='password' name='passwd' th:value='1234' required="required" class="form-control"
+          style='width: 50%;'>
+      </div>
+      <div class="content_body_bottom">
+        <button type="submit" class="btn btn-secondary btn-sm">저장</button>
+      </div>
+    </form>
+  </div>
+</body>
 
-    <div>
-      <label>제목</label>
-      <input type='text' name='title' th:value='${noticeVO.title}' required="required" autofocus="autofocus"
-        class="form-control" style='width: 100%;'>
-    </div>
-    <div>
-      <label>내용</label>
-      <textarea name='notice' required="required" class="form-control" rows="12" style='width: 100%;'
-        th:text='${noticeVO.notice}'></textarea>
-    </div>
-    <div>
-      <label>패스워드</label>
-      <input type='password' name='passwd' th:value='1234' required="required" class="form-control" style='width: 50%;'>
-    </div>
-    <div class="content_body_bottom">
-      <button type="submit" class="btn btn-secondary btn-sm">저장</button>
-    </div>
+</html>
 
-  </form>
+<script>
+  function id_btn_new_file() {
+    $('.file_area').append('<div class="form-inline">' +
+      '<input type="file" name="multiFile" id="multiFile" class="form-control">' +
+      ' <button type="button" class="btn_delete btn btn-sm">삭제</button>' + '</div>');
+  }
 
-</div>
+  $(document).ready(function () {
+    $('#id_btn_new_file').click(id_btn_new_file);
+
+    $('.file_area').on('click', '.btn_delete', function () {
+      $(this).closest('div').remove();
+    });
+  });
+
+  function clearMultiFile() {
+    document.getElementById('multiFile').value = '';
+    document.getElementById('multiFile').removeAttribute('required');
+  }
+
+  function confirmDelete(mprofileno) {
+    if (confirm("정말 삭제하시겠습니까?\n삭제한 이미지는 복구할 수 없습니다.")) {
+      var formId = "deleteForm_" + mprofileno;
+      var form = document.getElementById(formId);
+      if (form) {
+        form.submit();
+      } else {
+        console.error("폼이 존재하지 않습니다:", formId);
+      }
+    } else {
+      return false;
+    }
+  }
+
+  function deleteData() {
+    $.ajax({
+      url: "./delete_one", // 삭제 요청을 보낼 URL
+      method: "POST",
+      data: $("#deleteForm").serialize(), // 폼 데이터 직렬화하여 전송
+      success: function (response) {
+        // 성공적으로 삭제되었을 때 실행할 코드
+        alert("삭제되었습니다.");
+        // 필요하다면 페이지 새로고침 등 추가 작업 수행
+      },
+      error: function (xhr, status, error) {
+        // 삭제 요청이 실패했을 때 실행할 코드
+
+        alert(error);
+      }
+    });
+  }
+</script>

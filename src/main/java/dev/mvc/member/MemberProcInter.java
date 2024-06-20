@@ -2,6 +2,7 @@ package dev.mvc.member;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 
@@ -125,5 +126,20 @@ public interface MemberProcInter {
    */
   public int checkPhone(String phone);
   
+  /**
+   * 검색 목록
+   * @param map
+   * @return
+   */
+  public ArrayList<MemberVO> list_paging(String word, int now_page,int record_per_page);
   
+  /**
+   * 카테고리별 검색된 레코드 갯수
+   * @param map
+   * @return
+   */
+  public int search_count(String word);
+  
+  public String pagingBox(int now_page, String word, String list_file, int search_count, int record_per_page, int page_per_block,int masterno);
+
 }

@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import dev.mvc.memberprofile.Memberprofile;
 import dev.mvc.memberprofile.MemberprofileVO;
 import dev.mvc.noticeimg.NoticeimgProcInter;
 import dev.mvc.noticeimg.NoticeimgVO;
@@ -47,6 +48,12 @@ public class NoticeCont {
 
     System.out.println("now_page : " + now_page);
     ArrayList<NoticeVO> list_all = this.noticeProc.paging(map);
+    for (NoticeVO nvo : list_all) {
+      ArrayList<NoticeimgVO> list = this.noticeimgProc.read_file(nvo.getNoticeno());
+      if(this.noticeimgProc.read_file(nvo.getNoticeno()).size() > 1) {
+        nvo.setNfile(list.get(1).getNfile());
+      }
+    }
     model.addAttribute("list_all", list_all);
 
     model.addAttribute("word", word);
@@ -81,50 +88,60 @@ public class NoticeCont {
   public String create(HttpServletRequest request, HttpSession session, NoticeVO noticeVO, RedirectAttributes ra,
       @RequestParam(value = "multiFile") List<MultipartFile> multiFileList, Model model, NoticeimgVO noticeimgVO) {
 
+    
     int masterno = (int) session.getAttribute("masterno");
     String upDir = Notice.getUploadDir();
-    String nfile =Upload.saveFileSpring(multiFileList.get(0), upDir);
-    
+    String nfile ="";
+
     noticeVO.setMasterno(masterno);
     noticeVO.setNfile(nfile);
+
     int cnt = this.noticeProc.create(noticeVO);
-    
+
     ArrayList<NoticeVO> list = this.noticeProc.list_all();
-    System.out.println("list : " + list);
+
+
     NoticeVO nvo = (NoticeVO) list.get(0);
     
-    // 이미지 시작
+    this.noticeimgProc.create_null(nvo.getNoticeno());
 
-    
+
+    // 이미지 시작
 
     if (multiFileList != null && !multiFileList.isEmpty()) {
       for (MultipartFile mf : multiFileList) {
-        try {
-          String originalFilename = mf.getOriginalFilename();
-          String uniqueFilename = Upload.saveFileSpring(mf, upDir);
+        if(mf.getSize() > 0) {
+          try {
+            String originalFilename = mf.getOriginalFilename();
+            String uniqueFilename = Upload.saveFileSpring(mf, upDir);
 
-          noticeimgVO = new NoticeimgVO();
+            noticeimgVO = new NoticeimgVO();
 
-          String thumbnail = null;
-          if (Tool.isImage(originalFilename)) {
-            thumbnail = Tool.preview(upDir, uniqueFilename, 200, 150);
+            String thumbnail = null;
+            if (Tool.isImage(originalFilename)) {
+              thumbnail = Tool.preview(upDir, uniqueFilename, 200, 150);
+            }
+            int noticeno = nvo.getNoticeno();
+            noticeimgVO.setNoticeno(noticeno);
+            noticeimgVO.setNfile(originalFilename);
+            noticeimgVO.setFilesaved(uniqueFilename);
+            noticeimgVO.setThumbfile(thumbnail);
+            noticeimgVO.setFilesize(mf.getSize());
+
+            System.out.println("noticeimgVO : " + noticeimgVO);
+
+            this.noticeimgProc.create_file(noticeimgVO);
+          } catch (Exception e) {
+            e.printStackTrace();
+            new File(upDir + File.separator + mf.getOriginalFilename()).delete();
           }
-          int noticeno = nvo.getNoticeno();
-          noticeimgVO.setNoticeno(noticeno);
-          noticeimgVO.setNfile(originalFilename);
-          noticeimgVO.setFilesaved(uniqueFilename);
-          noticeimgVO.setThumbfile(thumbnail);
-          noticeimgVO.setFilesize(mf.getSize());
-
-          this.noticeimgProc.create_file(noticeimgVO);
-        } catch (Exception e) {
-          e.printStackTrace();
-          new File(upDir + File.separator + mf.getOriginalFilename()).delete();
         }
+
       }
       // 이미지 종료
     }
-    
+//    this.noticeimgProc.create_file(noticeimgVO);
+
     if (cnt == 1) {
       return "redirect:/notice/list_all";
     } else {
@@ -136,16 +153,18 @@ public class NoticeCont {
   }
 
   @GetMapping(value = "/read")
-  public String read(Model model, Integer noticeno) {
+  public String read(Model model, Integer noticeno, HttpSession session) {
 
     NoticeVO noticeVO = this.noticeProc.read(noticeno);
     ArrayList<NoticeimgVO> list = this.noticeimgProc.read_file(noticeno);
     
-    System.out.println("list : " + list.getClass());
-    
     model.addAttribute("list", list);
-    model.addAttribute("noticeVO", noticeVO);
 
+    model.addAttribute("noticeVO", noticeVO);
+    session.setAttribute("noticeVO", noticeVO);
+    
+    System.out.println("/read noticeVO" + noticeVO);
+    
     return "notice/read";
   }
 
@@ -156,7 +175,18 @@ public class NoticeCont {
     }
 
     NoticeVO noticeVO = this.noticeProc.read(noticeno);
+    NoticeimgVO noticeimgVO = new NoticeimgVO();
+    ArrayList<NoticeimgVO> list = this.noticeimgProc.read_file(noticeno);
+    noticeimgVO.setNoticeno(noticeno);
+    if (list.size() < 2) {
+      noticeimgVO = list.get(0);
+    } else {
+      noticeimgVO = list.get(1);
+    }
+
     model.addAttribute("noticeVO", noticeVO);
+    model.addAttribute("noticeimgVO", noticeimgVO);
+    model.addAttribute("list", list);
     System.out.println("noticeVO : " + noticeVO);
 
     return "notice/update";
@@ -175,12 +205,67 @@ public class NoticeCont {
 
       return "redirect:/notice/list_all";
     } else {
-      ra.addFlashAttribute("code", "passwd_fail");
-      ra.addFlashAttribute("cnt", 0);
-      ra.addAttribute("url", "/notice/msg");
+      model.addAttribute("code", "passwd_not_equal");
+      model.addAttribute("cnt", 0);
+//      ra.addAttribute("url", "/notice/msg");
 
-      return "redirect:/notice/msg";
+      return "/notice/msg";
     }
+  }
+
+  @PostMapping(value = "/update_file")
+  public String update_file(HttpServletRequest request, RedirectAttributes ra, @RequestParam("noticeno") int noticeno,
+      @RequestParam(value = "multiFile") List<MultipartFile> multiFileList, NoticeimgVO noticeimgVO) {
+    String upDir = Notice.getUploadDir();
+
+    if (multiFileList != null && !multiFileList.isEmpty() && !multiFileList.get(0).getOriginalFilename().isEmpty()) {
+
+      for (int i = 0; i < multiFileList.size(); i++) {
+        try {
+          String originalFilename = multiFileList.get(i).getOriginalFilename();
+          String uniqueFilename = Upload.saveFileSpring(multiFileList.get(i), upDir);
+
+          noticeimgVO = new NoticeimgVO();
+
+          String thumbnail = null;
+          if (Tool.isImage(originalFilename)) {
+            thumbnail = Tool.preview(upDir, uniqueFilename, 200, 150);
+          }
+
+          noticeimgVO.setNoticeno(noticeno);
+          noticeimgVO.setNfile(originalFilename);
+          noticeimgVO.setFilesaved(uniqueFilename);
+          noticeimgVO.setThumbfile(thumbnail);
+          noticeimgVO.setFilesize(multiFileList.get(i).getSize());
+
+          this.noticeimgProc.create_file(noticeimgVO);
+
+        } catch (Exception e) { // IOException으로 처리
+          e.printStackTrace();
+          new File(upDir + File.separator + multiFileList.get(i).getOriginalFilename()).delete();
+        }
+
+      }
+    }
+
+    ra.addAttribute("noticeno", noticeno);
+
+    return "redirect:/notice/update";
+  }
+
+  @PostMapping(value = "/delete_one")
+  public String delete_one(@RequestParam("imgno") int imgno, @RequestParam("noticeno") Integer noticeno,
+      RedirectAttributes ra, HttpSession session) {
+    HashMap<String, Object> map = new HashMap<String, Object>();
+
+    map.put("imgno", imgno);
+    map.put("noticeno", noticeno);
+
+    this.noticeimgProc.delete_one(map);
+
+    ra.addAttribute("noticeno", noticeno);
+
+    return "redirect:/notice/update?noticeno=" + noticeno;
   }
 
   @GetMapping(value = "/delete")
@@ -214,6 +299,14 @@ public class NoticeCont {
     map.put("now_page", now_page);
 
     ArrayList<NoticeVO> list_all = this.noticeProc.paging(map);
+    
+    for (NoticeVO nvo : list_all) {
+      ArrayList<NoticeimgVO> list = this.noticeimgProc.read_file(nvo.getNoticeno());
+      if(this.noticeimgProc.read_file(nvo.getNoticeno()).size() > 1) {
+        nvo.setNfile(list.get(1).getNfile());
+      }
+    }
+    
     model.addAttribute("list_all", list_all);
     model.addAttribute("word", word);
 
@@ -231,6 +324,11 @@ public class NoticeCont {
 
     // /templates/contents/list_by_cateno_search_paging_grid.html
     return "notice/list_search_paging_grid";
+  }
+
+  @PostMapping(value = "/sympathy")
+  public String sympathy() {
+    return "/";
   }
 
 }

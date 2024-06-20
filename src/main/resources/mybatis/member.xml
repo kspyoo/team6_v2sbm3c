@@ -8,7 +8,7 @@
     FROM member
     WHERE id=#{id}
   </select>
-  
+
   <!-- 전화번호로 회원가입 중복 확인-->
   <select id="checkPhone" resultType="int" parameterType="String">
     SELECT COUNT(phone) as cnt
@@ -17,7 +17,7 @@
   </select>
 
   <!-- 회원 가입 -->
-  <insert id="create" parameterType="dev.mvc.member.MemberVO" >
+  <insert id="create" parameterType="dev.mvc.member.MemberVO">
     INSERT INTO member(memberno, id, passwd, name, gender, birthday, phone, addr_code, addr_main, addr_detail, joindate, status)
     VALUES (member_seq.nextval, #{id}, #{passwd}, #{name}, #{gender}, #{birthday}, #{phone}, #{addr_code}, #{addr_main},#{addr_detail}, sysdate, #{status})
   </insert>
@@ -35,89 +35,132 @@
     FROM member
     WHERE id=#{id} AND passwd=#{passwd}
   </select>
-  
+
   <!-- 회원 정보 수정 -->
   <update id="update" parameterType="dev.mvc.member.MemberVO">
     UPDATE member 
     SET name=#{name},phone=#{phone}, addr_code=#{addr_code}, addr_main=#{addr_main}, addr_detail=#{addr_detail}
     WHERE memberno=#{memberno}
   </update>
-  
-   <!-- memberno로 회원 정보 조회 -->
+
+  <!-- memberno로 회원 정보 조회 -->
   <select id="read" resultType="dev.mvc.member.MemberVO" parameterType="int">
     SELECT memberno, id, passwd, name, gender, birthday, phone, addr_code, addr_main, addr_detail, joindate, status
     FROM member
     WHERE memberno = #{memberno}
-  </select>  
-  
+  </select>
+
   <!-- 회원 탈퇴 -->
   <delete id="delete" parameterType="int">
     DELETE FROM member 
     WHERE memberno=#{memberno}
   </delete>
-  
+
   <!-- 자식테이블 삭제 -->
   <delete id="delete_FK" parameterType="int">
     DELETE FROM memberprofile 
     WHERE memberno=#{memberno}
   </delete>
-  
+
   <!-- 아이디 찾기 -->
   <select id="findId" resultType="dev.mvc.member.MemberVO">
     SELECT id, name
     FROM member
     WHERE name=#{name} AND phone=#{phone}
-  </select>  
-  
-    <!-- 아이디 유효성 검사 -->
+  </select>
+
+  <!-- 아이디 유효성 검사 -->
   <select id="findIdCheck" resultType="int">
     SELECT COUNT(memberno)
     FROM member
     WHERE name = #{name} AND phone = #{phone}
   </select>
-  
-    <!-- 비밀번호 찾기 -->
+
+  <!-- 비밀번호 찾기 -->
   <select id="findPasswd" resultType="dev.mvc.member.MemberVO">
     SELECT passwd, id, name
     FROM member
     WHERE name=#{name} AND phone=#{phone} AND id=#{id}
-  </select>  
-  
-    <!-- 비밀번호 유효성 검사 -->
+  </select>
+
+  <!-- 비밀번호 유효성 검사 -->
   <select id="findPasswdCheck" resultType="int">
     SELECT COUNT(memberno)
     FROM member
     WHERE name = #{name} AND phone = #{phone} AND id=#{id}
   </select>
-  
-    <!--  현재 패스워드 검사 -->
+
+  <!--  현재 패스워드 검사 -->
   <select id="passwd_check" parameterType="HashMap" resultType="int">
     SELECT COUNT(memberno) as cnt
     FROM member
     WHERE memberno=#{memberno} AND passwd=#{passwd}
   </select>
-   
+
   <!-- 패스워드 변경 -->
   <update id="passwd_update" parameterType="HashMap">
     UPDATE member
     SET passwd=#{passwd}
     WHERE memberno=#{memberno}
   </update>
-  
+
   <!-- 회원 목록 조회 -->
   <select id="list" resultType="dev.mvc.member.MemberVO">
     SELECT memberno, id, passwd, name, gender, birthday, phone, addr_code, addr_main, addr_detail, joindate, status
     FROM member
     ORDER BY id ASC
   </select>
-  
-    <!-- 회원 목록 조회 -->
+
+  <!-- 회원 목록 조회 -->
   <select id="list_no" resultType="dev.mvc.member.MemberVO">
     SELECT memberno, id, passwd, name, gender, birthday, phone, addr_code, addr_main, addr_detail, joindate, status
     FROM member
     WHERE memberno=#{memberno}
   </select>
-  
 
+  <select id="list_paging" resultType="dev.mvc.member.MemberVO" parameterType="Map">
+    SELECT memberno, id, passwd, name, gender, birthday, phone, addr_code, addr_main, addr_detail, joindate, status, r
+   FROM (
+              SELECT memberno, id, passwd, name, gender, birthday, phone, addr_code, addr_main, addr_detail, joindate, status, rownum AS r
+              FROM (
+                        SELECT memberno, id, passwd, name, gender, birthday, phone, addr_code, addr_main, addr_detail, joindate, status
+                        FROM member
+    <choose>
+      <when test="word != null and word !=''">
+                            WHERE (UPPER(memberno) LIKE '%' || UPPER(#{word}) || '%' 
+                            OR UPPER(id) LIKE '%' || UPPER(#{word}) || '%' 
+                            OR UPPER(name) LIKE '%' || UPPER(#{word}) || '%' 
+                            OR UPPER(phone) LIKE '%' || UPPER(#{word}) || '%' 
+                            OR UPPER(addr_main) LIKE '%' || UPPER(#{word}) || '%' 
+                            OR UPPER(joindate) LIKE '%' || UPPER(#{word}) || '%' 
+                            OR UPPER(gender) LIKE '%' || UPPER(#{word}) || '%')
+                          </when>
+    </choose>
+    ORDER BY memberno ASC
+               )                        
+    )
+    WHERE r &gt; = #{start_num} AND r &lt; = #{end_num}
+  </select>
+
+  <!-- 검색 레코드 갯수 -->
+  <select id="search_count" resultType="int" parameterType="String">
+    SELECT COUNT(*) as cnt
+      FROM (
+          SELECT memberno, id, passwd, name, gender, birthday, phone, addr_code, addr_main, addr_detail, joindate, status
+          FROM member
+    <choose>
+      <when test="word != null and word !=''">
+          WHERE (UPPER(memberno) LIKE '%' || UPPER(#{word}) || '%' 
+          OR UPPER(id) LIKE '%' || UPPER(#{word}) || '%' 
+          OR UPPER(name) LIKE '%' || UPPER(#{word}) || '%' 
+          OR UPPER(phone) LIKE '%' || UPPER(#{word}) || '%' 
+          OR UPPER(addr_main) LIKE '%' || UPPER(#{word}) || '%' 
+          OR UPPER(joindate) LIKE '%' || UPPER(#{word}) || '%' 
+          OR UPPER(gender) LIKE '%' || UPPER(#{word}) || '%')
+      </when>
+    </choose>
+    ORDER BY memberno ASC
+      )
+  </select>
 
 </mapper>

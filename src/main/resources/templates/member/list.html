@@ -1,49 +1,25 @@
 <!DOCTYPE html>
 
-<html layout:decorate="~{layout}"> <!-- layout.html 상속-->
+<html layout:decorate="~{layout}">
+<!-- layout.html 상속-->
+
 <div layout:fragment="content" style="width: 80%; margin: auto">
 
-  <div class='title_line'>회원 정보(관리자 전용)</div>
+  <div class='title_line'>회원 정보(관리자 전용)
+    <span th:if="${word!=null and word!=''}" th:text="|[${word}] ${no}건|"></span>
+    <span th:if="${word==null or word==''}" th:text="|${all_no}건|"></span>
+  </div>
 
   <aside class="aside_right">
     <a href="javascript:location.reload();">새로고침</a>
-  </aside> 
-   
+  </aside>
+
   <div class='menu_line'></div>
-       
-  <table class="table table-hover" style='width: 90%; margin-left: auto'>
   
-    <colgroup>
-      <col style='width: 5%;'/>
-      <col style='width: 10%;'/>
-      <col style='width: 15%;'/>
-      <col style='width: 15%;'/>
-      <col style='width: 30%;'/>
-      <col style='width: 15%;'/>
-    </colgroup>
-    <tr>
-      <th class='th_bs'>ID</TH>
-      <th class='th_bs'>성명</th>
-      <th class='th_bs'>전화번호</th>
-      <th class='th_bs'>주소</th>
-      <th class='th_bs'>등록일</th>
-    </tr>
-     <tbody>
-    <tr th:each="memberVO, status:${list}" style="width: 100%;">
-      <td class='td_bs'><a th:href="@{|./read_data?memberno=${memberVO.memberno}&mprofileno=${memberVO.mprofileno}|}" th:text="${memberVO.id}"></a></td>
-      <td class='td_bs'><a th:href="@{|./read_data?memberno=${memberVO.memberno}&mprofileno=${memberVO.mprofileno}|}" th:text="${memberVO.name}"></a></td>
-      <td class='td_basic' th:text="${memberVO.phone.substring(0, 8)}"></td>
-      <td class='td_bs'>
-        <span th:if="${memberVO.addr_main.length() > 15 }" th:text="|${memberVO.addr_main.substring(0, 15) }...|"></span>
-        <span th:unless="${memberVO.addr_main.length() > 15 }" th:text="${memberVO.addr_main}"></span>
-      </td>
-      <td class='td_basic' th:text="${memberVO.joindate.substring(0, 10)}"></td>
-    </tr>
-     </tbody>
-  </table>
-   
+  <div th:replace="~{member/list_search_component::list_search_fragment}"></div>
+  
+
+    <div th:replace="~{member/list_all_component::list_all_fragment}"></div>
 
 </div>
 </html>
-
-

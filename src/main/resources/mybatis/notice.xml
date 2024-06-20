@@ -3,13 +3,13 @@
 <mapper namespace="dev.mvc.notice.NoticeDAOInter">
   <!-- 공지글 등록-->
   <insert id="create" parameterType="dev.mvc.notice.NoticeVO">
-    INSERT INTO notice(noticeno, title, notice, nfile, noticedate, passwd ,masterno)
-    VALUES(notice_seq.nextval, #{title},#{notice},#{nfile},sysdate,#{passwd},#{masterno})
+    INSERT INTO notice(noticeno, title, notice, nfile, noticedate, passwd ,masterno, likecnt)
+    VALUES(notice_seq.nextval, #{title},#{notice},#{nfile},sysdate,#{passwd},#{masterno},0)
   </insert>
 
   <!-- 글 목록-->
   <select id="list_all" resultType="dev.mvc.notice.NoticeVO">
-    SELECT noticeno, title, notice, nfile, noticedate, passwd ,masterno
+    SELECT noticeno, title, notice, nfile, noticedate, passwd ,masterno, likecnt
     FROM notice
     ORDER BY noticeno DESC
   </select>
@@ -27,7 +27,7 @@
 
   <!-- 글 목록-->
   <select id="read" resultType="dev.mvc.notice.NoticeVO" parameterType="int">
-    SELECT noticeno, title, notice, nfile, noticedate, passwd ,masterno
+    SELECT noticeno, title, notice, nfile, noticedate, passwd ,masterno, likecnt
     FROM notice
     WHERE noticeno =#{noticeno}
   </select>
@@ -40,7 +40,7 @@
   </select>
 
   <select id="list_search" resultType="dev.mvc.notice.NoticeVO" parameterType="HashMap">
-    SELECT noticeno, title, notice, nfile, noticedate, passwd ,masterno
+    SELECT noticeno, title, notice, nfile, noticedate, passwd ,masterno, likecnt
     FROM notice
     <choose>
       <when test="word != null or word != ''">
@@ -63,22 +63,29 @@
   </select>
 
   <select id="paging" resultType="dev.mvc.notice.NoticeVO" parameterType="HashMap">
-     SELECT noticeno, title, notice, nfile, noticedate, passwd ,masterno, r
+    SELECT noticeno, title, notice, nfile, noticedate, passwd ,masterno,likecnt, r
      FROM (
-        SELECT noticeno, title, notice, nfile, noticedate, passwd ,masterno, rownum as r
+        SELECT noticeno, title, notice, nfile, noticedate, passwd ,masterno,likecnt, rownum as r
         FROM (
-            SELECT noticeno, title, notice, nfile, noticedate, passwd ,masterno
+            SELECT noticeno, title, notice, nfile, noticedate, passwd ,masterno,likecnt
             FROM notice
-            <choose>
-              <when test="word != null or word != ''">
+    <choose>
+      <when test="word != null or word != ''">
                       WHERE (UPPER(title) Like '%' || UPPER(#{word}) || '%'
                       OR UPPER(notice) Like '%' || UPPER(#{word}) || '%')
               </when>
-            </choose>
-            ORDER BY noticeno DESC
+    </choose>
+    ORDER BY noticeno DESC
         )
      )
-     WHERE <![CDATA[ r >= #{start_num} AND r <= #{end_num} ]]>
+     WHERE
+    <![CDATA[ r >= #{start_num} AND r <= #{end_num} ]]>
   </select>
+
+  <update id="update_likecnt" parameterType="dev.mvc.notice.NoticeVO">
+    UPDATE notice
+    SET likecnt=#{likecnt}
+    WHERE noticeno = #{noticeno}
+  </update>
 
 </mapper>

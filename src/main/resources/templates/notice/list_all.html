@@ -10,6 +10,10 @@
       <a th:href="@{|/notice/create?masterno=${session.masterno}|}">공지사항 등록</a>
       <span class="menu_devide">│</span>
     </span>
+    <span th:if="${session.memberno != null}">
+      <a th:href="@{|/sympathy/read_all?memberno=${session.memberno}|}">공감하는 글</a>
+      <span class='menu_divide'>│</span>
+    </span>
     <a th:href="@{|/notice/list_all?word=${word}&now_page=${now_page}|}">목록형</a>
     <span class="menu_devide">│</span>
     <a th:href="@{|/notice/list_search_paging_grid?word=${word}&now_page=${now_page}|}">갤러리형</a>
@@ -26,29 +30,32 @@
       <col style='width: 10%;' />
       <col style='width: 30%;' />
       <col style='width: 30%;' />
-      <col style='width: 30%;' />
+      <col style='width: 25%;' />
+      <col style='width: 5%;' />
     </colgroup>
     <tr>
       <th class='th_bs'>번호</th>
       <th class='th_bs'>제목</th>
       <th class='th_bs'>내용</th>
       <th class='th_bs'>등록일</th>
+      <th class='th_bs'>공감</th>
     </tr>
 
     <tr th:each="noticeVO, status:${list_all}">
-      <td class='td_left'><a th:href="@{|./read?noticeno=${noticeVO.noticeno}|}" th:text="${status.count}"></a></td>
-      <td class='td_left'><a th:href="@{|./read?noticeno=${noticeVO.noticeno}|}" th:text="${noticeVO.title}"></a></td>
-      <td class='td_left'><a th:href="@{|./read?noticeno=${noticeVO.noticeno}|}" th:text="${noticeVO.notice}"></a></td>
-      <td class='td_left'><a th:href="@{|./read?noticeno=${noticeVO.noticeno}|}" th:text="${noticeVO.noticedate}"></a>
-      </td>
+      <td class='td_bs'><a th:href="@{|./read?noticeno=${noticeVO.noticeno}|}" th:text="${status.count}"></a></td>
+      <td class='td_bs'><a th:href="@{|./read?noticeno=${noticeVO.noticeno}|}" th:text="${noticeVO.title}"></a></td>
+      <td class='td_bs'><a th:href="@{|./read?noticeno=${noticeVO.noticeno}|}">
+          <span th:if="${noticeVO.notice.length() > 20 }" th:text="|${noticeVO.notice.substring(0, 20) }...|"></span>
+          <span th:if="${noticeVO.notice.length() <= 20 }" th:text="|${noticeVO.notice}|"></span>
+        </a></td>
+      <td class='td_bs'><a th:href="@{|./read?noticeno=${noticeVO.noticeno}|}" th:text="${noticeVO.noticedate}"></a></td>
+      <td class='td_bs'><a th:href="@{|./read?noticeno=${noticeVO.noticeno}|}" th:text="${noticeVO.likecnt}"></a></td>
+      
     </tr>
   </table>
 
   <div class="bottom_menu" th:utext="${paging}"></div>
 
-  <div class='bottom_menu'>
-    <button type='button' onclick="location.reload();" class="btn btn-primary btn-sm">새로 고침</button>
-  </div>
 
 </div>
 

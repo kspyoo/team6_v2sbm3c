@@ -12,10 +12,14 @@
       <a th:href="@{|/notice/create?masterno=${session.masterno}|}">공지사항 등록</a>
       <span class="menu_devide">│</span>
     </span>
+    <span th:if="${session.memberno != null}">
+      <a th:href="@{|/sympathy/read_all?memberno=${session.memberno}|}">공감하는 글</a>
+      <span class='menu_divide'>│</span>
+    </span>
     <a th:href="@{|/notice/list_search_paging_grid|}">갤러리형</a>
     <span class='menu_divide'>│</span>
     <a href="javascript:location.reload();">새로고침</a>
-    
+
   </aside>
 
   <div th:replace="~{notice/list_search_component::list_search_fragment}"></div>
@@ -45,12 +49,12 @@
       <td class='td_left'><a th:href="@{|./read?noticeno=${noticeVO.noticeno}|}" th:text="${noticeVO.noticedate}"></a>
       </td>
     </tr>
-    
-    
 
-  <!-- 페이지 버튼 목록 출력 시작 -->
-  <div class="bottom_menu" th:utext="${paging}"></div>
-  <!-- 페이지 버튼 목록 출력 종료 -->
+
+
+    <!-- 페이지 버튼 목록 출력 시작 -->
+    <div class="bottom_menu" th:utext="${paging}"></div>
+    <!-- 페이지 버튼 목록 출력 종료 -->
 
 </div>
 

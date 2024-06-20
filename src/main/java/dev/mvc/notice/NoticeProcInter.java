@@ -56,4 +56,11 @@ public interface NoticeProcInter {
 
   String pagingBox(int now_page, String word, String list_file, int search_count, int record_per_page,
       int page_per_block);
+  
+  /**
+   * 수정
+   * @param noticeVO
+   * @return
+   */
+  public int update_likecnt(NoticeVO noticeVO);
 }

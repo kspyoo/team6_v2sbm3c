@@ -7,6 +7,11 @@
         INSERT INTO noticeimg (imgno, nfile, filesaved, thumbfile, filesize, noticeno)
         VALUES (NOTICEIMG_SEQ.nextval,#{nfile}, #{filesaved}, #{thumbfile}, #{filesize}, #{noticeno})
     </insert>
+    
+      <insert id="create_null" parameterType="dev.mvc.noticeimg.NoticeimgVO">
+        INSERT INTO noticeimg (imgno, noticeno)
+        VALUES (NOTICEIMG_SEQ.nextval, #{noticeno})
+    </insert>
 
   <!-- 파일 수정 -->
   <update id="update_file" parameterType="dev.mvc.noticeimg.NoticeimgVO">
@@ -14,6 +19,11 @@
         SET file1=#{file1}, file1saved=#{file1saved}, thumbfile=#{thumbfile}, filesize=#{filesize}
         WHERE memberno = #{memberno}
     </update>
+    
+      <insert id="create_others" parameterType="dev.mvc.noticeimg.NoticeimgVO">
+        INSERT INTO noticeimg (imgno, nfile, filesaved, thumbfile, filesize, noticeno)
+        VALUES (NOTICEIMG_SEQ.nextval,#{nfile}, #{filesaved}, #{thumbfile}, #{filesize}, #{noticeno})
+    </insert>
 
   <!-- 일반적인 조회 -->
   <select id="read_file" resultType="dev.mvc.noticeimg.NoticeimgVO" parameterType="int">
@@ -22,25 +32,9 @@
         WHERE noticeno = #{noticeno}
         ORDER BY imgno ASC
     </select>
-
-  <!-- 회원 탈퇴 -->
-  <delete id="delete_FK" parameterType="int">
-        DELETE FROM memberprofile
-        WHERE memberno=#{memberno}
+    
+      <delete id="delete_one" parameterType="HashMap">
+        DELETE FROM noticeimg
+        WHERE noticeno=#{noticeno} AND imgno=#{imgno}
     </delete>
-
-  <delete id="delete_others" parameterType="int">
-        DELETE FROM memberprofile
-        WHERE memberno=#{memberno} AND mprofileno!=#{mprofileno}
-    </delete>
-
-  <delete id="delete_one" parameterType="int">
-        DELETE FROM memberprofile
-        WHERE memberno=#{memberno} AND mprofileno=#{mprofileno}
-    </delete>
-
-  <insert id="create_other_file" parameterType="dev.mvc.noticeimg.NoticeimgVO">
-        INSERT INTO memberprofile(mprofileno, file1, file1saved, thumbfile, filesize, memberno)
-        VALUES (memberprofile_seq.nextval, #{file1}, #{file1saved}, #{thumbfile}, #{filesize}, #{memberno})
-    </insert>
 </mapper>

@@ -2,6 +2,7 @@ package dev.mvc.member;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 
@@ -122,6 +123,20 @@ public interface MemberDAOInter {
    * @return 중복 아이디 갯수, 1: 중복, 0: 중복 없음
    */
   public int checkPhone(String phone);
+  
+  /**
+   * 검색 목록
+   * @param map
+   * @return
+   */
+  public ArrayList<MemberVO> list_paging(Map<String, Object> map);
+  
+  /**
+   * 카테고리별 검색된 레코드 갯수
+   * @param map
+   * @return
+   */
+  public int search_count(String word);
   
 }
 

@@ -54,5 +54,12 @@ public interface NoticeDAOInter {
   
   public ArrayList<NoticeVO> paging(HashMap<String, Object> map);
   
+  /**
+   * 수정
+   * @param noticeVO
+   * @return
+   */
+  public int update_likecnt(NoticeVO noticeVO);
+  
   
 }

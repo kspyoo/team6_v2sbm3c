@@ -1,89 +1,79 @@
-package dev.mvc.notice;
+package dev.mvc.sympathy;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
-import dev.mvc.member.MemberDAOInter;
-import dev.mvc.member.MemberProcInter;
-import dev.mvc.member.MemberVO;
-import dev.mvc.memberprofile.MemberprofileProcInter;
 import dev.mvc.memberprofile.MemberprofileVO;
+import dev.mvc.notice.Notice;
+import dev.mvc.notice.NoticeVO;
+import dev.mvc.tool.Security;
 
-@Service("dev.mvc.notice.NoticeProc")
-public class NoticeProc implements NoticeProcInter {
-  
+@Component("dev.mvc.sympathy.SympathyProc")
+public class SympathyProc implements SympathyProcInter {
+
   @Autowired
-  private NoticeDAOInter noticeDAO;
+  private SympathyDAOInter sympathyDAO;
 
-  public NoticeProc() {
-    
+  public SympathyProc() {
   }
 
   @Override
-  public ArrayList<NoticeVO> list_all() {
-    ArrayList<NoticeVO> list_all = this.noticeDAO.list_all();
-    return list_all;
-  }
-
-  @Override
-  public int create(NoticeVO noticeVO) {
-    int cnt = this.noticeDAO.create(noticeVO);
+  public int create(SympathyVO sympathyVO) {
+    int cnt = this.sympathyDAO.create(sympathyVO);
     return cnt;
   }
 
   @Override
-  public NoticeVO read(int noticeno) {
-    NoticeVO noticeVO = this.noticeDAO.read(noticeno);
-    return noticeVO;
-  }
-
-  @Override
-  public int update(NoticeVO noticeVO) {
-    int cnt = this.noticeDAO.update(noticeVO);
-    return cnt;
-  }
-
-  @Override
-  public int password_check(HashMap<String, Object> hashMap) {
-    int cnt = this.noticeDAO.password_check(hashMap);
-    return cnt;
-  }
-
-  @Override
-  public int delete(int noticeno) {
-    int cnt = this.noticeDAO.delete(noticeno);
+  public int read(HashMap<String, Object> map) {
+    int cnt = this.sympathyDAO.read(map);
     return cnt;
   }
   
   @Override
-  public ArrayList<NoticeVO> list_search(HashMap<String, Object> map){
-    ArrayList<NoticeVO> list = this.noticeDAO.list_search(map);
+  public int read_nt(int noticeno) {
+    int cnt = this.sympathyDAO.read_nt(noticeno);
+    return cnt;
+  }
+
+  @Override
+  public int delete(HashMap<String, Object> map) {
+    int cnt = this.sympathyDAO.delete(map);
+    return cnt;
+  }
+
+  @Override
+  public ArrayList<SympathynoticeVO> read_all(int memberno) {
+    ArrayList<SympathynoticeVO> read_all = this.sympathyDAO.read_all(memberno);
+    return read_all;
+  }
+
+  @Override
+  public ArrayList<SympathynoticeVO> list_search(HashMap<String, Object> map) {
+    ArrayList<SympathynoticeVO> list= this.sympathyDAO.list_search(map);
     return list;
   }
   
   @Override
-  public int list_search_count(HashMap<String,Object> map) {
-    int cnt = this.noticeDAO.list_search_count(map);
+  public int list_search_count(HashMap<String, Object> map) {
+    int cnt = this.sympathyDAO.list_search_count(map);
     return cnt;
   }
-  
+
   @Override
-  public ArrayList<NoticeVO> paging(HashMap<String, Object> map) {
-    int begin_of_page = ((int)map.get("now_page") - 1) * Notice.RECORD_PER_PAGE;
-  
+  public ArrayList<SympathynoticeVO> paging(HashMap<String, Object> map) {
+    int begin_of_page = ((int)map.get("now_page") - 1) * Sympathy.RECORD_PER_PAGE;
+    
     int start_num = begin_of_page + 1;
-    int end_num = begin_of_page + Notice.RECORD_PER_PAGE;
+    int end_num = begin_of_page + Sympathy.RECORD_PER_PAGE;
     
     map.put("start_num", start_num);
     map.put("end_num", end_num);
     System.out.println("map : " + map);
-    ArrayList<NoticeVO> list = this.noticeDAO.paging(map);
+    ArrayList<SympathynoticeVO> list = this.sympathyDAO.paging(map);
     
     return list;
   }
@@ -157,10 +147,6 @@ public class NoticeProc implements NoticeProcInter {
     return str.toString();
   }
 
-  @Override
-  public int update_likecnt(NoticeVO noticeVO) {
-    int cnt = this.noticeDAO.update_likecnt(noticeVO);
-    return cnt;
-  }
+
 
 }

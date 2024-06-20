@@ -1,0 +1,54 @@
+<div th:fragment="list_all_fragment">
+  <div style="width: 100%; margin: 0 auto">
+    <table class="table table-hover">
+      <colgroup>
+        <col style='width: 5%;' />
+        <col style='width: 10%;' />
+        <col style='width: 15%;' />
+        <col style='width: 15%;' />
+        <col style='width: 30%;' />
+        <col style='width: 15%;' />
+      </colgroup>
+      <thead>
+        <tr>
+          <th class='th_bs'>ID</TH>
+          <th class='th_bs'>성명</th>
+          <th class='th_bs'>성별</th>
+          <th class='th_bs'>전화번호</th>
+          <th class='th_bs'>주소</th>
+          <th class='th_bs'>등록일</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr th:each="memberVO, status:${list_paging}" style="width: 100%;">
+          <td class='td_bs'><a
+              th:href="@{|./read_data?memberno=${memberVO.memberno}&mprofileno=${memberVO.mprofileno}|}"
+              th:text="${memberVO.id}"></a></td>
+          <td class='td_bs'><a
+              th:href="@{|./read_data?memberno=${memberVO.memberno}&mprofileno=${memberVO.mprofileno}|}"
+              th:text="${memberVO.name}"></a></td>
+          <td class='td_bs'><a
+              th:href="@{|./read_data?memberno=${memberVO.memberno}&mprofileno=${memberVO.mprofileno}|}"
+              th:text="${memberVO.gender}"></a></td>
+          <td class='td_bs'><a
+              th:href="@{|./read_data?memberno=${memberVO.memberno}&mprofileno=${memberVO.mprofileno}|}"
+              th:text="${memberVO.phone.substring(0, 8)}"></a></td>
+          <td class='td_bs'><a
+              th:href="@{|./read_data?memberno=${memberVO.memberno}&mprofileno=${memberVO.mprofileno}|}">
+              <span th:if="${memberVO.addr_main.length() > 15 }"
+                th:text="|${memberVO.addr_main.substring(0, 15) }...|"></span>
+              <span th:unless="${memberVO.addr_main.length() > 15 }" th:text="${memberVO.addr_main}"></span>
+            </a>
+          </td>
+          <td class='td_bs'><a
+              th:href="@{|./read_data?memberno=${memberVO.memberno}&mprofileno=${memberVO.mprofileno}|}"
+              th:text="${memberVO.joindate.substring(0, 10)}"></a></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- 페이지 버튼 목록 출력 시작 -->
+    <div class="bottom_menu" th:utext="${paging}"></div>
+    <!-- 페이지 버튼 목록 출력 종료 -->
+  </div>
+</div>

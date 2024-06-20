@@ -90,6 +90,14 @@
               id_msg.classList.add('span_info');
               document.getElementById('passwd').focus();
             }
+
+            if (id.value.trim().length > 30) {
+              id_msg.innerHTML = '30자 이상 입력 불가능 합니다.';
+              id_msg.classList.add('span_warning');    // class 적용
+              id.focus();
+
+              return false;  // 회원 가입 진행 중지
+            }
           })
           .catch(error => { // 서버 다운등 통신 에러
             console.error('Error:', error);
@@ -171,13 +179,36 @@
         id.focus();
 
         return false;  // 회원 가입 진행 중지
+      }
 
+      if (id.value.trim().length > 30) {
+        id_msg.innerHTML = '30자 이상 입력 불가능합니다.';
+        id_msg.classList.add('span_warning');    // class 적용
+        id.focus();
+
+        return false;  // 회원 가입 진행 중지
+      }
+
+      if (birthday.value.trim().length > 15) {
+        birthday_msg.innerHTML = '정상적인 입력이 아닙니다.';
+        birthday_msg.classList.add('span_warning');    // class 적용
+        birthday.focus();
+
+        return false;  // 회원 가입 진행 중지
       }
 
       // 패스워드를 정상적으로 2번 입력했는지 확인
       let passwd = document.getElementById('passwd');
       let passwd2 = document.getElementById('passwd2');
       let passwd2_msg = document.getElementById('passwd2_msg');
+
+      if (passwd.value.trim().length > 50) {
+        passwd_msg.innerHTML = '50자 이상 입력 불가능합니다.';
+        passwd_msg.classList.add('span_warning');    // class 적용
+        id.focus();
+
+        return false;  // 회원 가입 진행 중지
+      }
 
       passwd2_msg.innerHTML = '';
 
@@ -202,6 +233,14 @@
         return false;  // 회원 가입 진행 중지
       }
 
+      if (name.value.trim().length > 15) {
+        name_msg.innerHTML = '정상적인 입력이 아닙니다.';
+        name_msg.classList.add('span_warning');    // class 적용
+        name.focus();
+
+        return false;  // 회원 가입 진행 중지
+      }
+
       let phone = document.getElementById('phone');
       let phone_msg = document.getElementById('phone_msg');
 
@@ -211,8 +250,48 @@
         phone.focus();
 
         return false;  // 회원 가입 진행 중지
-
       }
+      if (phone.value.trim().length > 14) {
+        phone_msg.innerHTML = '14자 이상 입력 불가능합니다.';
+        phone_msg.classList.add('span_warning');    // class 적용
+        phone.focus();
+
+        return false;  // 회원 가입 진행 중지
+      }
+
+      let addr_code = document.getElementById('addr_code');
+      let addr_main = document.getElementById('addr_main');
+      let addr_detail = document.getElementById('addr_detail');
+
+      let addr_code_msg = document.getElementById('addr_code_msg');
+      let addr_main_msg = document.getElementById('addr_main_msg');
+      let addr_detail_msg = document.getElementById('addr_detail_msg');
+
+      if (addr_code > 8) {
+        addr_code_msg.innerHTML = '8자 이상 입력 불가능합니다.';
+        addr_code_msg.classList.add('span_warning');    // class 적용
+        addr_code.focus();
+
+        return false;  // 회원 가입 진행 중지
+      }
+
+      if (addr_main > 30) {
+        addr_main_msg.innerHTML = '30자 이상 입력 불가능합니다.';
+        addr_main_msg.classList.add('span_warning');    // class 적용
+        addr_main.focus();
+
+        return false;  // 회원 가입 진행 중지
+      }
+
+      if (addr_detail > 30) {
+        addr_detail_msg.innerHTML = '30자 이상 입력 불가능합니다.';
+        addr_detail_msg.classList.add('span_warning');    // class 적용
+        addr_detail.focus();
+
+        return false;  // 회원 가입 진행 중지
+      }
+
+
 
       document.getElementById('frm').submit(); // required="required" 작동 안됨.
     }    
@@ -244,6 +323,7 @@
         <label for="passwd" style="width: 150px; margin-right: 10px;">패스워드*</label>
         <input type='password' name='passwd' id='passwd' value='1234' required="required" placeholder="패스워드"
           class="form-control form-control-sm" style="width: 30%;">
+        <span id='passwd_msg'></span>
       </div>
 
       <div style="display: flex; align-items: center; margin-bottom: 10px; width: 100%;">
@@ -272,6 +352,7 @@
         <input type='date' name='birthday' id='birthday' value='2024-05-14' required="required" placeholder="생년월일"
           class="form-control form-control-sm" style="width: 30%; margin-right: 10px;">
         예) 2024-05-14
+        <span id='birthday_msg' value=""></span>
       </div>
 
       <div style="display: flex; align-items: center; margin-bottom: 10px; width: 100%;">
@@ -290,18 +371,21 @@
           class="form-control form-control-sm" style="width: 30%; margin-right: 10px;">
         <button type="button" id="btn_DaumPostcode" onclick="DaumPostcode()" class="btn btn-primary btn-sm">우편번호
           찾기</button>
+        <span id='addr_code_msg'></span>
       </div>
 
       <div style="display: flex; align-items: center; margin-bottom: 10px; width: 100%;">
         <label for="addr_main" style="width: 150px; margin-right: 10px;">주소</label>
         <input type='text' name='addr_main' id='addr_main' value='' placeholder="주소(선택)"
           class="form-control form-control-sm" style="width: 30%;">
+        <span id='addr_main_msg'></span>
       </div>
 
       <div style="display: flex; align-items: center; margin-bottom: 10px; width: 100%;">
         <label for="addr_detail" style="width: 150px; margin-right: 10px;">상세 주소</label>
         <input type='text' name='addr_detail' id='addr_detail' value='' placeholder="상세 주소(선택)"
           class="form-control form-control-sm" style="width: 30%;">
+        <span id='addr_detail_msg'></span>
       </div>
 
 

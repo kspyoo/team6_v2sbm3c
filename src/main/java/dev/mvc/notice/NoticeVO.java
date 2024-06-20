@@ -27,6 +27,8 @@ public class NoticeVO {
   private String noticedate;
   /** 비밀 번호*/
   private String passwd;
+  /** PK*/
+  private int likecnt;
   /** FK*/
   private Integer masterno=0;
 }
