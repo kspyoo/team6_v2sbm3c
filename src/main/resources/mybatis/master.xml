@@ -65,4 +65,47 @@
   </update>
 
 
+	<!-- 관리자용 검색 목록, Map은 VO class보다 적은 변수의 전달시 사용 -->
+
+	<select id="list_search" resultType="dev.mvc.master.MasterVO" parameterType="String">
+		SELECT masterno, masterid, masterpasswd,mastername
+    FROM master
+		<if test="word != null and word != ''">
+      WHERE UPPER(masterid) LIKE '%' || UPPER(#{word}) || '%'  
+      	OR UPPER(mastername) LIKE '%' || UPPER(#{word}) || '%' 
+    </if>
+		ORDER BY masterno ASC
+	</select>
+
+	<!--페이징-->
+	<select id="list_search_paging" resultType="dev.mvc.master.MasterVO" parameterType="Map">
+		SELECT masterno, masterid, masterpasswd,mastername,r
+    FROM (
+        SELECT masterno, masterid, masterpasswd,mastername, rownum as r
+        FROM (
+            SELECT masterno, masterid, masterpasswd,mastername
+            FROM master
+		<if test="word != null and word != ''">
+     	 WHERE UPPER(masterid) LIKE '%' || UPPER(#{word}) || '%'  
+      		OR UPPER(mastername) LIKE '%' || UPPER(#{word}) || '%' 
+            </if>
+		ORDER BY masterno ASC
+        )
+    )
+    WHERE r &gt; = #{start_num} AND r &lt; = #{end_num}
+		<!-- WHERE r >= 1 AND r <= 3 -->
+	</select>
+
+	<!-- 검색된 레코드 수 -->
+	<select id="list_search_count" resultType="int" parameterType="String">
+		SELECT COUNT(*) as cnt
+    FROM master
+		<if test="word != null and word != ''">
+     	 WHERE UPPER(masterid) LIKE '%' || UPPER(#{word}) || '%'  
+      		OR UPPER(mastername) LIKE '%' || UPPER(#{word}) || '%'
+    </if>
+		ORDER BY masterno ASC
+	</select>
+
+
 </mapper>

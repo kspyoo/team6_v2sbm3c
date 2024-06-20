@@ -347,7 +347,7 @@ public class CulturefacilityCont {
    * @return
    */
   @GetMapping(value = "/list_search")
-  public String list_search(Model model, CulturefacilityVO culturefacilityVOVO, String word,
+  public String list_search(Model model, CulturefacilityVO culturefacilityVO, String word,
       @RequestParam(name = "now_page", defaultValue = "1") int now_page) {
     // cateVO.setNamesub("-"); // 폼 초기값 설정
     word = Tool.checkNull(word).trim();

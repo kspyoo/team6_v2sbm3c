@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,11 +17,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-
+import dev.mvc.culturefacility.CulturefacilityVO;
 import dev.mvc.master.MasterVO;
 import dev.mvc.masterlogin.MasterloginProcInter;
 import dev.mvc.member.MemberVO;
 import dev.mvc.tool.Security;
+import dev.mvc.tool.Tool;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -37,6 +39,12 @@ public class MasterCont {
   @Autowired
   @Qualifier("dev.mvc.masterlogin.MasterloginProc")
   private MasterloginProcInter masterloginProc;
+  
+  /** 페이지당 출력할 레코드 갯수, nowPage는 1부터 시작 */
+  public int record_per_page = 10;
+
+  /** 블럭당 페이지 수, 하나의 블럭은 10개의 페이지로 구성됨 */
+  public int page_per_block = 10;
   
   @Autowired
   Security security;
@@ -64,12 +72,45 @@ public class MasterCont {
    * @return
    */
   @GetMapping(value = "/create") // http://localhost:1521/master/create
-  public String create_form(Model model, MasterVO masterVO) {
+  public String create_form(Model model, MasterVO masterVO,
+                            @RequestParam(name = "word", defaultValue = "") String word
+          ) {
+    ArrayList<MasterVO> list = this.masterProc.list_search(word);
+    model.addAttribute("list", list);
     return "master/create"; // /template/master/create.html
   }
 
   @PostMapping(value = "/create")
-  public String create_proc(Model model, MasterVO masterVO) {
+  public String create_proc(Model model, MasterVO masterVO, BindingResult bindingResult,  
+                            @RequestParam(name = "word", defaultValue = "") String word,
+                            @RequestParam(name = "now_page", defaultValue = "1") int now_page) {
+    
+    
+    if (bindingResult.hasErrors()) {
+      // 유효성 검증 오류가 발생한 경우, 오류 메시지를 모델에 추가
+      model.addAttribute("bindingResult", bindingResult);
+      // 페이징 목록
+      ArrayList<MasterVO> list = this.masterProc.list_search_paging(word, now_page,
+          this.record_per_page);
+      model.addAttribute("list", list);
+
+      // 페이징 버튼 목록
+      int search_count = this.masterProc.list_search_count(word);
+
+      // 일련 변호 생성: 레코드 갯수 - ((현재 페이지수 -1) * 페이지당 레코드 수)
+      int no = search_count - ((now_page - 1) * this.record_per_page);
+      model.addAttribute("no", no);
+
+      String paging = this.masterProc.pagingBox(now_page, word, "master/list", search_count,
+          this.record_per_page, this.page_per_block);
+      model.addAttribute("paging", paging);
+      model.addAttribute("now_page", now_page);
+
+      return "master/list"; // /templates/cate/list_search.html
+    }
+
+    
+    
     int checkID_cnt = this.masterProc.checkID(masterVO.getMasterid());
 
     if (checkID_cnt == 0) {
@@ -95,10 +136,34 @@ public class MasterCont {
    * @return
    */
   @GetMapping(value = "/list")
-  public String list(HttpSession session,Model model) {
-    ArrayList<MasterVO> list = this.masterProc.list();
-
+  public String list(HttpSession session,Model model,String word,
+      @RequestParam(name = "now_page", defaultValue = "1") int now_page) {
+    
     if (session.getAttribute("masterno") != null){
+    word = Tool.checkNull(word).trim();
+    // System.out.println("--> word: " + word);
+
+    // 페이징 목록
+    ArrayList<MasterVO> list = this.masterProc.list_search_paging(word, now_page,
+        this.record_per_page);
+    model.addAttribute("list", list);
+
+    // 페이징 버튼 목록
+    int search_count = this.masterProc.list_search_count(word);
+    String paging = this.masterProc.pagingBox(now_page, word, "/master/list", search_count,
+        this.record_per_page, this.page_per_block);
+    model.addAttribute("paging", paging);
+    model.addAttribute("now_page", now_page);
+
+    model.addAttribute("word", word);
+
+    // 일련 변호 생성: 레코드 갯수 - ((현재 페이지수 -1) * 페이지당 레코드 수)
+    int no = search_count - ((now_page - 1) * this.record_per_page);
+    model.addAttribute("no", no);
+    
+    ArrayList<MasterVO> list1 = this.masterProc.list();
+
+   
       model.addAttribute("list", list);
       return "master/list";
   }else{
@@ -115,11 +180,32 @@ public class MasterCont {
    * @return
    */
   @GetMapping(value="/read")
-  public String read(HttpSession session, Model model, int masterno) {
+  public String read(HttpSession session, Model model, int masterno,
+      @RequestParam(name = "word", defaultValue = "") String word,
+      @RequestParam(name = "now_page", defaultValue = "1") int now_page) {
 
       
       MasterVO masterVO = this.masterProc.read(masterno);
       model.addAttribute("masterVO", masterVO);
+      
+      // 페이징 목록
+      ArrayList<MasterVO> list = this.masterProc.list_search_paging(word, now_page,
+          this.record_per_page);
+      model.addAttribute("list", list);
+
+      // 페이징 버튼 목록
+      int search_count = this.masterProc.list_search_count(word);
+      String paging = this.masterProc.pagingBox(now_page, word, "/master/list", search_count,
+          this.record_per_page, this.page_per_block);
+      model.addAttribute("paging", paging);
+      model.addAttribute("now_page", now_page);
+
+      model.addAttribute("word", word);
+
+      // 일련 변호 생성: 레코드 갯수 - ((현재 페이지수 -1) * 페이지당 레코드 수)
+      int no = search_count - ((now_page - 1) * this.record_per_page);
+      model.addAttribute("no", no);
+
       
       return "master/read";  // templates/member/myPetInfo.html
             
@@ -136,12 +222,35 @@ public class MasterCont {
    * @return
    */
   @GetMapping(value = "/delete")
-  public String delete(HttpSession session,Model model, int masterno) {
+  public String delete(HttpSession session,Model model, int masterno,
+      @RequestParam(name = "word", defaultValue = "") String word,
+      @RequestParam(name = "now_page", defaultValue = "1") int now_page) {
     System.out.println("->delete masterno:" + masterno);
 
     MasterVO masterVO = this.masterProc.read(masterno);
     if (session.getAttribute("masterno") != null){
       model.addAttribute("masterVO", masterVO);
+      
+      // 페이징 목록
+      ArrayList<MasterVO> list = this.masterProc.list_search_paging(word, now_page,
+          this.record_per_page);
+      model.addAttribute("list", list);
+
+      // 페이징 버튼 목록
+      int search_count = this.masterProc.list_search_count(word);
+      String paging = this.masterProc.pagingBox(now_page, word, "/master/list", search_count,
+          this.record_per_page, this.page_per_block);
+      model.addAttribute("paging", paging);
+      model.addAttribute("now_page", now_page);
+
+      model.addAttribute("word", word);
+
+      // 일련 변호 생성: 레코드 갯수 - ((현재 페이지수 -1) * 페이지당 레코드 수)
+      int no = search_count - ((now_page - 1) * this.record_per_page);
+      model.addAttribute("no", no);
+      
+      
+      
       return "master/delete";
   }else{
       return "redirect:/master/login";
@@ -154,8 +263,22 @@ public class MasterCont {
   * @return
   */
   @PostMapping(value = "/delete")
-  public String delete_process(Model model, Integer masterno) {
+  public String delete_process(Model model, Integer masterno,
+      @RequestParam(name = "word", defaultValue = "") String word,
+      @RequestParam(name = "now_page", defaultValue = "1") int now_page) {
     int cnt = this.masterProc.delete(masterno);
+    
+
+    // ----------------------------------------------------------------------------------------------------------
+    // 마지막 페이지에서 모든 레코드가 삭제되면 페이지수를 1 감소 시켜야함.
+    int search_cnt = this.masterProc.list_search_count(word);
+    if (search_cnt % this.record_per_page == 0) {
+      now_page = now_page - 1;
+      if (now_page < 1) {
+        now_page = 1; // 최소 시작 페이지
+      }
+    }
+    // ----------------------------------------------------------------------------------------------------------
 
     if (cnt == 1) {
       return "redirect:/master/list";

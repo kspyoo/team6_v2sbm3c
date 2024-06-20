@@ -13,6 +13,7 @@ CREATE TABLE CULTUREFACILITY(
 		PA                            		VARCHAR2(30)		 NOT NULL,
         CULTURECATE                         VARCHAR2(200)		 NOT NULL,
         CHOMEPAGE                           VARCHAR2(200)		 NULL,
+       // rcnt                                NUMBER(10)        NOT NULL,
 		MASTERNO                      		NUMBER(10)		 NULL ,
   FOREIGN KEY (MASTERNO) REFERENCES MASTER (MASTERNO)
 );
@@ -30,6 +31,7 @@ COMMENT ON COLUMN CULTUREFACILITY.OPERATINGTIME is '운영시간';
 COMMENT ON COLUMN CULTUREFACILITY.PA is '주차가능여부';
 COMMENT ON COLUMN CULTUREFACILITY.CULTURECATE is '문화시설 카테고리';
 COMMENT ON COLUMN CULTUREFACILITY.CHOMEPAGE is '문화시설 홈페이지 정보';
+//COMMENT ON COLUMN CULTUREFACILITY.rcnt is '후기수';
 COMMENT ON COLUMN CULTUREFACILITY.MASTERNO is '관리자번호';
 
 DROP SEQUENCE culturefacility_seq;
@@ -82,6 +84,16 @@ SELECT culturefno, cname, raddress, latitude, longitude, addr_code, phone, close
 FROM culturefacility
 WHERE raddress LIKE '%도로%'
 ORDER BY culturefno ASC;
+
+1) 댓글수 증가
+UPDATE culturefacility
+SET rcnt = rcnt + 1
+WHERE culturefno = 1;
+
+2) 댓글수 감소
+UPDATE culturefacility
+SET rcnt = rcnt - 1
+WHERE culturefno = 1;   
 
 
 commit;

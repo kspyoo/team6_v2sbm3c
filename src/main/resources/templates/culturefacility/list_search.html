@@ -2,7 +2,7 @@
 
 <html layout:decorate="~{layout}">
 <!-- layout.html 상속-->
-<div layout:fragment="content">
+<div layout:fragment="content"  style="width: 80%; margin: auto">
 	<div class="title_line">
 		&nbsp;&nbsp;문화시설 검색
 		<span th:if="${word!=null and word!=''}" th:text="|${word} ${no} 건|">
