@@ -2,6 +2,7 @@ package dev.mvc.reply;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 //CREATE TABLE REPLY(
 //    REPLYNO                           NUMBER(10)     NULL      PRIMARY KEY,
@@ -14,6 +15,7 @@ import lombok.Setter;
 //);
 @Getter
 @Setter
+@ToString
 public class ReplyVO {
   private int replyno;
   private String content;

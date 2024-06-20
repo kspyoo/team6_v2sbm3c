@@ -27,19 +27,17 @@
  DELETE FROM community WHERE EXISTS( SELECT 1 FROM community WHERE communityno=#{communityno})and communityno=#{communityno}
  </delete>
  
-<select id="list_search_paging" resultType="dev.mvc.community.CommunityVO" parameterType="HashMap">
+<select id="list_search_paging" resultType="dev.mvc.community.attachmentVO" parameterType="HashMap">
 SELECT communityno,title,content,vcnt,rcnt,writedate,tag,memberno,ctypeno, r
 FROM(   
       SELECT communityno,title,content,vcnt,rcnt,writedate,tag,memberno,ctypeno, rownum as r
       FROM (
-            SELECT communityno,title,content,vcnt,rcnt,writedate,tag,memberno,ctypeno
-            FROM community   
-        <choose>     
-            <otherwise> 
+            SELECT c.communityno,c.title,c.content,c.vcnt,c.rcnt,c.writedate,c.tag,c.memberno,c.ctypeno,ca.cano, ca.filename, ca.filesize, ca.thumbfile
+            FROM community c LEFT OUTER JOIN communityattachment ca
+            ON c.communityno = ca.communityno   
+            <if test="word != null and word != ''">
                 WHERE UPPER(title)LIKE '%'||UPPER(#{word})||'%'OR UPPER(tag)LIKE '%' || UPPER(#{word})  
-          </otherwise>
-        </choose>
-        ORDER BY communityno ASC  
+            </if>
          )
 )
 WHERE <![CDATA[ r >= #{start_num} AND r <= #{end_num} ]]>

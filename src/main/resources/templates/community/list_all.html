@@ -34,7 +34,7 @@
 
 
     <tr th:each="communityVO,status:${list}"
-    th:attr="onclick=|location.href='/community/read?communityno=${communityVO.communityno}'|" style="cursor: pointer; height: 90px;">
+    th:attr="onclick=|location.href='/community/read?communityno=${communityVO.communityno}&word=${word}&now_page=${now_page}'|" style="cursor: pointer; height: 90px;">
       <td class='td_basic' style="vertical-align: middle; text-align:center;">
         <div
           th:if="${(communityVO.filename != null) and (communityVO.filename.endsWith('jpg') or communityVO.filename.endsWith('png')  or communityVO.filename.endsWith('gif'))}">

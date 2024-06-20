@@ -19,7 +19,7 @@ public interface CommunityProcInter {
   
   public int delete(int communityno);
   
-  public ArrayList<CommunityVO>list_search_paging(String word, int now_page, int record_per_page);
+  public ArrayList<attachmentVO>list_search_paging(String word, int now_page, int record_per_page);
   
   /** 
    * SPAN태그를 이용한 박스 모델의 지원, 1 페이지부터 시작 

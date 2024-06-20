@@ -2,7 +2,9 @@
 
 <html layout:decorate="~{layout}">
 <!-- layout.html 상속-->
+
 <div layout:fragment="content">
+
   <div class='title_line'>
     <span class="title_line_text"></span>
 
@@ -28,23 +30,23 @@
           <div
             th:if="${(attachmentVO.filename != null) and (attachmentVO.filename.endsWith('jpg') or attachmentVO.filename.endsWith('png')  or attachmentVO.filename.endsWith('gif'))}">
             <img th:src="@{|/communityattachment/storage/${attachmentVO.filename}|}"
-              style="width:50%; float:left; margin-top:0.5%; margin-right:1%;">
+              style="width:30%; float:left; margin-top:0.5%; margin-right:1%;">
           </div>
-            <div th:if="${attachmentVO.filename == null}">
-          <img src="/communityattachment/storage/none1.png" style="width: 120px; height: 90px;">
-        </div>
-      
-            <span style="font-size: 1.5em; font-weight: bold;"
-              th:utext="${#strings.replace(attachmentVO.title, '\n', '<br/>')}"></span>
-            <span style="font-size: 1em;" th:text="${attachmentVO.writedate }"></span><br>
+          <div th:if="${attachmentVO.filename == null}">
+            <img src="/communityattachment/storage/none1.png" style="width: 120px; height: 90px;">
+          </div>
 
-            <!-- <span th:utext="${#strings.replace(yourTextVariable, '\n', '<br/>')}"></span> -->
-            <!-- th:utext: html 그대로 출력, string:thymeleaf 제공 객체 -->
-            <div th:utext="${#strings.replace(attachmentVO.content, '\n', '<br/>')}"></div> -->
-            <!-- <div style="white-space: pre-warp;">
+          <span style="font-size: 1.5em; font-weight: bold;"
+            th:utext="${#strings.replace(attachmentVO.title, '\n', '<br/>')}"></span>
+          <span style="font-size: 1em;" th:text="${attachmentVO.writedate }"></span><br>
+
+          <!-- <span th:utext="${#strings.replace(yourTextVariable, '\n', '<br/>')}"></span> -->
+          <!-- th:utext: html 그대로 출력, string:thymeleaf 제공 객체 -->
+          <div th:utext="${#strings.replace(attachmentVO.content, '\n', '<br/>')}"></div> -->
+          <!-- <div style="white-space: pre-warp;">
           <span th:text="${contentsVO.content}"></span>
          </div>-->
-          </div>
+        </div>
 
       </li>
 
@@ -58,7 +60,6 @@
           <span th:text="|(${attachmentVO.filesize})|"></span>
         </div>
       </li>
-
 
 
 
@@ -181,7 +182,7 @@
               fetch("/reply/update", {
                 "method": "post",
                 "headers": {"Content-Type": "application/json"},
-                body: JSON.stringify({"replyno": replyno, "memberno": memberno, "content": content})
+                body: JSON.stringify({"replyno": replyno, "memberno": memberno, "content": content},"[${communityno:attachmentVO.communityno}]")
               })
                 .then((response) => response.json())
                 .then((data) => {
@@ -252,8 +253,66 @@
             });
 
         }
- 
-                
+
+        // 수정 폼 
+        function reply_update(replyno) {
+          let replyno_tag = document.getElementById('replyno')
+          let memberno_tag = document.getElementById('memberno')
+          let content_tag = document.getElementById('content')
+
+          // fetch로 데이터 읽어 오기
+          fetch("/reply/read?replyno=" + replyno, {
+            "method": "get",
+            "headers": {"Content-Type": "application/json"},
+             //body: JSON.stringify({"communityno": "[[${attachmentVO.communityno}]]"})
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              // alert(data['res']['content']);
+              replyno_tag.value = data['res']['replyno'];
+              memberno_tag.value = data['res']['memberno'];
+              content_tag.value = data['res']['content'];
+              content_tag.focus();
+              btn_visible('update');
+            });
+
+        }
+        // 삭제 폼 + 삭제 처리
+          function reply_delete(replyno) {
+            let content_tag = document.getElementById('content');
+            
+            // fetch로 데이터 읽어 오기
+            fetch("/reply/read?replyno=" + replyno, {
+              "method": "get", 
+              "headers": {"Content-Type": "application/json"},
+               //body: JSON.stringify({"communityno": "[[${attachmentVO.communityno}]]"})
+            })
+            .then((response) => response.json())
+            .then((data) => {
+              let sw = confirm("「" + data['res']['content'] + "」 삭제하시려면 확인 버튼을 누르세요. 삭제후 복구 할 수 없습니다." );
+              if (sw == true) {
+                // alert('삭제를 진행합니다.');
+                fetch("/reply/delete", {
+                    "method": "post", 
+                    "headers": {"Content-Type": "application/json"},
+                     body: JSON.stringify({"replyno": replyno, "memberno": data['res']['memberno']},{"communityno": "[[${attachmentVO.communityno}]]"})
+                })
+                .then((response) => response.json())
+                .then((data) => {
+                  if (data['res'] == 1) {
+                    list_by_communityno_join(); // 목록 출력
+                    content_tag.value='';
+                    content_tag.focus();
+                    alert('댓글을 삭제했습니다.');
+                  } else {
+                    alert('댓글 삭제에 실패했습니다. 잠시후 다시 시도해주세요.');
+                  }
+                });
+              } else {
+                alert('삭제를 취소 했습니다.');
+              }
+            });
+          }
         // 버튼 출력
         function btn_visible(sw) {
           let btn_create = document.getElementById("btn_create");
@@ -271,7 +330,8 @@
           }
 
         }
-      </script>
+</script>
+
       <li class="li_none">
           <div style='width: 100%; margin: 0px auto; clear: both;'>
                 <form name='frm_reply' id='frm_reply'>
@@ -299,12 +359,10 @@
                   </div>  
             </div>
       </li>  
-      <!-- ------------------------------ 댓글 영역 종료 ------------------------------  -->
-
-
+     
     </ul>
   </fieldset>
-
 </div>
+
 
 </html>
