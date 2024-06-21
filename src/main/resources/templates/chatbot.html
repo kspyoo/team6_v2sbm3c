@@ -77,6 +77,55 @@
             text-decoration: underline; /* 밑줄 출력 */
             color: #FFFFFF;
         }
+
+        .progress{
+            width: 100px;
+            border-radius: 15px;
+        }
+
+        .typingIndicatorBubble {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 40px;
+            margin: 0px 8px;
+            border-radius: 12px;
+        }
+
+        .typingIndicatorBubbleDot {
+            width: 4px;
+            height: 4px;
+            margin-right: 4px;
+            background-color: #57585a;
+            border-radius: 50%;
+            animation-name: bounce;
+            animation-duration: 1.3s;
+            animation-timing-function: linear;
+            animation-iteration-count: infinite;
+        }
+
+        .typingIndicatorBubbleDot:first-of-type {
+            margin: 0px 4px;
+        }
+
+        .typingIndicatorBubbleDot:nth-of-type(2) {
+            animation-delay: 0.15s;
+        }
+
+        .typingIndicatorBubbleDot:nth-of-type(3) {
+            animation-delay: 0.3s;
+        }
+
+        @keyframes bounce {
+            0%,
+            60%,
+            100% {
+                transform: translateY(0);
+            }
+            30% {
+                transform: translateY(-4px);
+            }
+        }
     </style>
 </head>
 <body>
@@ -144,6 +193,8 @@
                 res = data['response'];
 
                 if(res != null && res.trim() != null){
+                    progress_tag.remove();
+
                     let responseMessage = document.createElement('p');
                     responseMessage.className = 'receive_msg';
                     responseMessage.innerHTML = res;
@@ -153,7 +204,17 @@
                 document.querySelector('.chat-container').scrollTop = document.querySelector('.chat-container').scrollHeight;
             });
 
+        let progress_tag = document.createElement("div");
+        progress_tag.classList.add('receive_msg', 'progress', 'typingIndicatorBubble');
+        progress_tag.id='progress';
 
+        progress_tag.innerHTML = '<div class="typingIndicatorBubbleDot"></div>\n' +
+            '      <div class="typingIndicatorBubbleDot"></div>\n' +
+            '      <div class="typingIndicatorBubbleDot"></div>';
+
+        chatting_pannel.appendChild(progress_tag);
+
+        document.querySelector('.chat-container').scrollTop = document.querySelector('.chat-container').scrollHeight;
     }
 </script>
 </body>
