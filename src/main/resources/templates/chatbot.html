@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>챗봇</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+
+    <style>
+        *{
+            margin:0;
+            padding:0;
+        }
+        .chat-container {
+            width: 100%;
+            height: 550px;
+            overflow: auto;
+            margin-bottom: 5px;
+        }
+
+        .container {
+            width: 100%;
+            margin: 0 auto;
+            padding: 10px
+        }
+        .top_banner{
+            text-align: right;
+            padding: 2%;
+            color: white;
+            margin-bottom: 20px;
+            background-color: #323232;
+        }
+        .chatting_pannel { /* 투명도 지정: linear-gradient(rgba(255,255,255,0.6),rgba(255,255,255,0.6)) */
+            padding: 5px 25px;
+        }
+        .chatting_pannel p{
+            font-size: 16px;
+            border-radius: 15px;
+            display: inline-block;
+            padding: 7px 1.5%;
+        }
+        input {
+            width: 60%;
+            outline: none;
+        }
+        .send_msg{
+            text-align: right;
+            color: #000000;
+            background-color: white;
+            margin-left: 40%;
+            border: 1px solid;
+        }
+        .receive_msg{
+            text-align: left;
+            color: #000000ab;
+            background-color: #92c7ff87;
+            margin-right: 40%;
+        }
+
+        a:link{  /* 방문전 상태 */
+            text-decoration: none; /* 밑줄 삭제 */
+            color: #FFFFFF;
+        }
+
+        a:visited{  /* 방문후 상태 */
+            text-decoration: none; /* 밑줄 삭제 */
+            color: #FFFFFF;
+        }
+
+        a:hover{  /* A 태그에 마우스가 올라간 상태 */
+            text-decoration: underline; /* 밑줄 출력 */
+            color: #FFFFFF;
+        }
+
+        a:active{  /* A 태그를 클릭한 상태 */
+            text-decoration: underline; /* 밑줄 출력 */
+            color: #FFFFFF;
+        }
+    </style>
+</head>
+<body>
+<div id="container" class="">
+    <div class="top_banner">
+        <h3 style="float: left">챗봇에게 무엇이든 물어보세요!</h3>
+        <button id="closeBtn" class=""
+                style='font-size: 20px; width: 6%; background-color: #323232; color: white; border: 0px;'>X</button>
+    </div>
+    <div class="chat-container">
+        <div id="chatting_pannel" class="chatting_pannel">
+            <p class="receive_msg">저에게 장소를 추천받거나 해당 장소의 정보를 물어보시면 답변해 드려요!</p>
+        </div>
+    </div>
+    <div class="d-flex justify-content-center">
+        <input id="question" name='question' placeholder="보내실 메시지를 입력하세요."
+               value="안녕하세요." style='margin-top: 3px; padding: 1%; border: 1.5px solid; border-radius: 8px 0px 0px 8px; border-right: 0px;'>
+        <button id="sendBtn" class="btn btn-info btn-sm"
+                style='padding: 0px 5px;margin-top: 3px;margin-right: 5px;width: 10%;border-radius: 0px 8px 8px 0px;background-color: white;border: 1.5px solid;border-left: 0px;'>전송</button>
+    </div>
+</div>
+<script type="text/javascript">
+    window.onload = () => {
+        // 키이벤트 처리
+        document.getElementById('question').addEventListener('keydown', function(event) {
+            if (event.keyCode === 13) { // Enter
+                send();
+            }
+        });
+
+        document.getElementById("sendBtn").addEventListener('click', function() {
+            send();
+        });
+
+        document.getElementById('closeBtn').addEventListener('click', function() {
+            window.close(); // window.open()으로 열린 창만 닫음.
+        });
+    };
+
+    function send() {
+        let question = document.getElementById("question").value;
+        if (question == ''){
+            return false
+        }
+        let chatting_pannel = document.getElementById("chatting_pannel");
+        let newMessage = document.createElement("div");
+        newMessage.style.textAlign = "right";
+        newMessage.innerHTML = "<p class='send_msg'>" + question + "</p>";
+        chatting_pannel.appendChild(newMessage);
+
+        document.getElementById('question').value = "";
+        document.querySelector('.chat-container').scrollTop = document.querySelector('.chat-container').scrollHeight;
+
+        let params = question;
+
+        let url = "http://192.168.12.141:5000/chatbot";
+
+        fetch("http://192.168.12.141:5000/chatbot", {
+            method: "post",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({"question" : params})
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                res = data['response'];
+
+                if(res != null && res.trim() != null){
+                    let responseMessage = document.createElement('p');
+                    responseMessage.className = 'receive_msg';
+                    responseMessage.innerHTML = res;
+                    chatting_pannel.appendChild(responseMessage);
+                    chatting_pannel.appendChild(document.createElement('br'));
+                }
+                document.querySelector('.chat-container').scrollTop = document.querySelector('.chat-container').scrollHeight;
+            });
+
+
+    }
+</script>
+</body>
+</html>

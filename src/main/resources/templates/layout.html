@@ -11,6 +11,7 @@
 <script type="text/JavaScript" src="http://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
 <link href="/css/style.css" rel="Stylesheet" type="text/css"> <!-- /static 기준 -->
+  <link href="/css/layout.css" rel="Stylesheet" type="text/css">
 <link rel="shortcut icon" href="/images/star.png" />
 
 </head>
@@ -21,14 +22,25 @@
   
   <div style="margin-top: 100px;">
     <th:block layout:fragment="content"></th:block> <!-- 각 파일의 내용 출력 -->
-  </div> <!-- content_body 종료 --> 
+  </div> <!-- content_body 종료 -->
+  <div class="fixed-btn-container">
+    <div class="chatbot-box">
+      <button class="chatbot-btn" id="chatbot"><img src="/image/layout/chatbot-shadow.png" style="width: 60%; margin-left: 3px;"></button>
+    </div>
+  </div>
+  <script>
+    window.addEventListener('load', () => {
+      document.getElementById('chatbot').addEventListener('click',()=>{
+        window.open('/chatbot')
+      })
+    })
+  </script>
   
   <div class='bottom_menu'>
     <hr>
     Copyright K Digital, 국가기간 전략산업 직종 직업 훈련 All rights reserved.
   </div>
 
-</div> <!-- container_main 종료 -->   
-
+</div> <!-- container_main 종료 -->
 </body>
 </html>
