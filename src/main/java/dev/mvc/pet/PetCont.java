@@ -1,6 +1,8 @@
 package dev.mvc.pet;
 
 import dev.mvc.petprofile.PetProfileProcInter;
+import dev.mvc.pettype.PetTypeProcInter;
+import dev.mvc.pettype.PetTypeVO;
 import jakarta.servlet.http.HttpSession;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,9 +25,16 @@ public class PetCont {
     @Qualifier("dev.mvc.petprofile.PetProfileProc")
     private PetProfileProcInter petProfileProc;
 
+    @Autowired
+    @Qualifier("dev.mvc.pettype.PetTypeProc")
+    private PetTypeProcInter PetTypeProc;
+
     @GetMapping("/create")
-    public String createForm(HttpSession session){
+    public String createForm(HttpSession session, Model model){
         if (session.getAttribute("memberno") != null) {
+            ArrayList<PetTypeVO> petTypeList = this.PetTypeProc.list();
+            model.addAttribute("petTypeList", petTypeList);
+
             return "pet/create";
         }else{
             return "redirect:/member/login";
@@ -60,6 +69,9 @@ public class PetCont {
         if (session.getAttribute("memberno") != null) {
             model.addAttribute("petNo", petNo);
 
+            ArrayList<PetTypeVO> petTypeList = this.PetTypeProc.list();
+            model.addAttribute("petTypeList", petTypeList);
+
             return "pet/myPetInfo";
         }else{
             return "redirect:/member/login";
@@ -69,6 +81,9 @@ public class PetCont {
     @GetMapping("/read")
     public String read(@RequestParam(defaultValue = "0") int petNo, Model model){
         model.addAttribute("petNo", petNo);
+
+        ArrayList<PetTypeVO> petTypeList = this.PetTypeProc.list();
+        model.addAttribute("petTypeList", petTypeList);
 
         return "pet/read";
     }
@@ -137,6 +152,10 @@ public class PetCont {
     public String list(@RequestParam(defaultValue = "0") int memberNo, HttpSession session, Model model){
         ArrayList<PetJoinVO> petVOList = new ArrayList<PetJoinVO>();
         int cnt = 0;
+
+        ArrayList<PetTypeVO> petTypeList = this.PetTypeProc.list();
+        model.addAttribute("petTypeList", petTypeList);
+
         if (String.valueOf(memberNo).equals("0")){ // 보고싶은 회원번호가 없는경우
             if (session.getAttribute("memberno") != null){ // 본인의 리스트를 볼 경우
                 int myMemberNo = (int) session.getAttribute("memberno");
@@ -147,9 +166,6 @@ public class PetCont {
                 model.addAttribute("memberNo", myMemberNo);
                 model.addAttribute("cnt", cnt);
                 model.addAttribute("petVOList", petVOList);
-
-                System.out.println("svfilename => " + petVOList.get(0).getSvFileName());
-                System.out.println("PetName => " + petVOList.get(0).getPetName());
 
                 return "pet/list";
             }else{ // 받아온 회원번호도 없고 로그인도 안된경우

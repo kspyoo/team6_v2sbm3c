@@ -15,8 +15,21 @@
         </aside>
         <div class="menu_line"></div>
 
-        <div>
-            <span>총 모집글 수 [[${my_list_all_count}]]</span>
+<!--        <div>-->
+<!--            <span>총 모집글 수 [[${my_list_all_count}]]</span>-->
+<!--        </div>-->
+
+        <div class="row">
+            <div class="col-6">
+                <span th:if="${searchWord == ''}">총 모집글 수 [[${my_list_all_count}]]</span>
+                <span th:if="${searchWord != ''}">검색결과 [[${my_list_all_count}]] </span>
+            </div>
+            <div class="col-6" style="text-align: right">
+                <div class="search-box">
+                    <input name="searchWord" placeholder="검색어 입력" id="searchWord" class="search-input" th:value="${searchWord != ''? searchWord : ''}">
+                    <button id="search-btn" class="search-btn" type="button">검색</button>
+                </div>
+            </div>
         </div>
 
         <table class="table table-hover" style="margin: 20px auto">
@@ -193,6 +206,7 @@
                                 }
                             });
                         }
+
                     });
                 </script>
             </tr>
@@ -211,6 +225,32 @@
 
                 }
             }
+
+            document.getElementById('search-btn').addEventListener('click', ()=>{
+                let searchWord = document.getElementById('searchWord').value.trim();
+                if (searchWord == '' || searchWord == null){
+                    alert('검색어를 입력하세요!');
+                    document.getElementById('searchWord').focus();
+                    return false;
+                }else{
+                    let url = 'http://localhost:9093/mateCommunity/my_list_all?searchWord='+ searchWord;
+                    location.href = url;
+                }
+            })
+
+            document.getElementById('searchWord').addEventListener('keypress', (e)=>{
+                if(e.key === 'Enter'){
+                    let searchWord = document.getElementById('searchWord').value.trim();
+                    if (searchWord == '' || searchWord == null){
+                        alert('검색어를 입력하세요!');
+                        document.getElementById('searchWord').focus();
+                        return false;
+                    }else{
+                        let url = 'http://localhost:9093/mateCommunity/my_list_all?searchWord='+ searchWord;
+                        location.href = url;
+                    }
+                }
+            })
         </script>
     </div>
 </div>

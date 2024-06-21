@@ -262,7 +262,7 @@ public class MateCommunityProc implements MateCommunityProcInter {
     }
 
     @Override
-    public ArrayList<MateCommunityJoinVO> my_list_all(int now_page, int record_per_page, int memberNo) {
+    public ArrayList<MateCommunityJoinVO> my_list_all(int now_page, int record_per_page, int memberNo, String searchWord) {
         // 페이지의 시작 번호
         // ex) 현재페이지 : 2, 페이지당 게시글 갯수 : 3
         // (2 - 1) * 3
@@ -286,6 +286,7 @@ public class MateCommunityProc implements MateCommunityProcInter {
         map.put("memberNo",memberNo);
         map.put("start_num", start_num);
         map.put("end_num", end_num);
+        map.put("searchWord", searchWord);
 
         ArrayList<MateCommunityJoinVO> myListAll = this.mateCommunityDAO.my_list_all(map);
         return myListAll;

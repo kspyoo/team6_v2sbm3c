@@ -25,9 +25,10 @@
             <label for="petTypeNo" class="me-2 col-2 pt-1" style="width: 10.333333%;">종류</label>
             <select name="petTypeNo" id="petTypeNo" class="select_type col-3">
 <!--                <option value="select" th:selected="${petTypeNo}==0">게시판을 선택해주세요.</option>-->
-                <option value="1" selected>강아지</option>
-                <option value="2">고양이</option>
-                <option value="3">기타 반려동물</option>
+<!--                <option value="1" selected>강아지</option>-->
+<!--                <option value="2">고양이</option>-->
+<!--                <option value="3">기타 반려동물</option>-->
+                <option th:each="petTypeVO:${petTypeList}" th:value="${petTypeVO.petTypeNo}">[[${petTypeVO.petType}]]</option>
             </select>
 
             <div class="col-5 pt-1 ms-2">

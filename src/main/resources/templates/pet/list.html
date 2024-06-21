@@ -36,9 +36,11 @@
             <div class="col-7 mt-4 mb-3 row">
                 <div class="row align-items-center">
                     <div class="col-4 font-size">이름 : [[${petVO.petName}]]</div>
-                    <div class="col-4 font-size" th:if="${petVO.petTypeNo==1}">종 : 강아지</div>
-                    <div class="col-4 font-size" th:if="${petVO.petTypeNo==2}">종 : 고양이</div>
-                    <div class="col-4 font-size" th:if="${petVO.petTypeNo==3}">종 : 기타</div>
+<!--                    <div class="col-4 font-size" th:if="${petVO.petTypeNo==1}" >종 : 강아지</div>-->
+<!--                    <div class="col-4 font-size" th:if="${petVO.petTypeNo==2}">종 : 고양이</div>-->
+<!--                    <div class="col-4 font-size" th:if="${petVO.petTypeNo==3}">종 : 기타</div>-->
+                    <div class="font-size" th:classappend="${petVO.petTypeNo == petTypeVO.petTypeNo?'col-4':''}" th:each="petTypeVO:${petTypeList}"
+                         th:if="${petVO.petTypeNo == petTypeVO.petTypeNo}">[[${petTypeVO.petType}]]</div>
                     <div class="col-4 font-size" th:id="'age-'+${petVO.petNo}"></div>
                 </div>
                 <div class="pet_detail">
@@ -94,6 +96,7 @@
                 document.getElementById('pet_info_list').style.height="auto";
                 document.getElementById('pet_info_list').style.paddingBottom="10px";
             }
+
         }
     </script>
 

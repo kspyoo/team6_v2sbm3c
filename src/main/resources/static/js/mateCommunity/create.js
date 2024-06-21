@@ -15,6 +15,7 @@ function empty_check(){
     let walkingM = document.getElementById('walkingM');
     let content = document.getElementById('content');
     let searchTag = document.getElementById('searchTag');
+    let amOrPm = document.querySelector('input[name="amOrPm"]:checked');
 
     if (title.value.trim() == ""){
         alert('제목을 입력해주세요!')
@@ -38,6 +39,9 @@ function empty_check(){
     } else if (searchTag.value.trim() == ""){
         alert('검색태그를 최소 한개이상 입력해주세요!')
         searchTag.focus();
+        return false;
+    } else if (amOrPm.value.trim() == ""){
+        alert('오전 오후를 선택해주세요!')
         return false;
     }
 }

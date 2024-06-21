@@ -123,7 +123,7 @@ public interface MateCommunityProcInter {
      * @param memberNo        조회할 회원번호
      * @return
      */
-    public ArrayList<MateCommunityJoinVO> my_list_all(int now_page, int record_per_page, int memberNo);
+    public ArrayList<MateCommunityJoinVO> my_list_all(int now_page, int record_per_page, int memberNo, String searchWord);
 
     /**
      * 자신의 게시글 개수

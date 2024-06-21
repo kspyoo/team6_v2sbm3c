@@ -139,13 +139,19 @@
 
                     document.getElementById('name').value = data.petName;
 
-                    if (data.petTypeNo == 1) {
-                        document.getElementById('petType').appendChild(document.createTextNode('강아지'));
-                    } else if (data.petTypeNo == 2) {
-                        document.getElementById('petType').appendChild(document.createTextNode('고양이'));
-                    } else if (data.petTypeNo == 3) {
-                        document.getElementById('petType').appendChild(document.createTextNode('기타'));
-                    }
+                    [# th:each="petTypeVO : ${petTypeList}"]
+                     if ([[${petTypeVO.petTypeNo}]] == data.petTypeNo){
+                         document.getElementById('petType').appendChild(document.createTextNode([[${petTypeVO.petType}]]));
+                     }
+                    [/]
+                    //
+                    // if (data.petTypeNo == 1) {
+                    //     document.getElementById('petType').appendChild(document.createTextNode('강아지'));
+                    // } else if (data.petTypeNo == 2) {
+                    //     document.getElementById('petType').appendChild(document.createTextNode('고양이'));
+                    // } else if (data.petTypeNo == 3) {
+                    //     document.getElementById('petType').appendChild(document.createTextNode('기타'));
+                    // }
 
                     if (data.petGender == "M") {
                         document.getElementById('gender').appendChild(document.createTextNode('수 (Male)'));

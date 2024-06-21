@@ -28,9 +28,11 @@
             <label for="petTypeNo" class="me-2 pe-2">게시판 종류</label>
             <select name="petTypeNo" id="petTypeNo" class="ms-5 select_type">
 <!--                <option value="select" th:selected="${petTypeNo}==0">게시판을 선택해주세요.</option>-->
-                <option value="1" th:selected="${petTypeNo}==1 or ${petTypeNo}==0">강아지 산책메이트</option>
-                <option value="2" th:selected="${petTypeNo}==2">고양이 산책메이트</option>
-                <option value="3" th:selected="${petTypeNo}==3">기타 반려동물 산책메이트</option>
+<!--                <option value="1" th:selected="${petTypeNo}==1 or ${petTypeNo}==0">강아지 산책메이트</option>-->
+<!--                <option value="2" th:selected="${petTypeNo}==2">고양이 산책메이트</option>-->
+<!--                <option value="3" th:selected="${petTypeNo}==3">기타 반려동물 산책메이트</option>-->
+                <option th:each="petTypeVO:${petTypeList}" th:value="${petTypeVO.petTypeNo}"
+                        th:selected="${petTypeNo == petTypeVO.petTypeNo}">[[${petTypeVO.petType}]] 산책메이트</option>
             </select>
         </div>
 
@@ -67,7 +69,7 @@
             <div class="col-3 ps-3 pt-1">
                 <span class="check_type">
 
-                    <input type="radio" name="amOrPm" value="AM" id="AM">
+                    <input type="radio" name="amOrPm" value="AM" id="AM" checked>
                     <label for="AM" class="align-middle" ></label>
                     <span class="align-middle">오전</span>
 

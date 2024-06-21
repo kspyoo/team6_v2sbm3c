@@ -88,7 +88,7 @@ public class MateCommunityCont {
 //        model.addAttribute("menu", menu);
 
             System.out.println((int) session.getAttribute("memberno"));
-            ArrayList<MateCommunityJoinVO> my_list_all = this.mateCommunityProc.my_list_all(now_page, MateCommunity.RECORD_PER_PAGE, (int) session.getAttribute("memberno"));
+            ArrayList<MateCommunityJoinVO> my_list_all = this.mateCommunityProc.my_list_all(now_page, MateCommunity.RECORD_PER_PAGE, (int) session.getAttribute("memberno"), searchWord);
             model.addAttribute("my_list_all", my_list_all);
 
             // 특정 목록 카테고리 개수
@@ -165,6 +165,9 @@ public class MateCommunityCont {
         if (session.getAttribute("memberno")!=null) {
             model.addAttribute("petTypeNo", petTypeNo);
             model.addAttribute("memberNo", session.getAttribute("memberno"));
+
+            ArrayList<PetTypeVO> petTypeList = this.PetTypeProc.list();
+            model.addAttribute("petTypeList", petTypeList);
 
             return "mateCommunity/create";
         }else{

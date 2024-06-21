@@ -32,8 +32,17 @@
         </aside>
         <div class="menu_line"></div>
 
-        <div>
-            <span>총 모집글 수 [[${mateCommunity_cnt}]]</span>
+        <div class="row">
+            <div class="col-6">
+                <span th:if="${searchWord == ''}">총 모집글 수 [[${mateCommunity_cnt}]]</span>
+                <span th:if="${searchWord != ''}">검색결과 [[${mateCommunity_cnt}]] </span>
+            </div>
+            <div class="col-6" style="text-align: right">
+                <div class="search-box">
+                    <input name="searchWord" placeholder="검색어 입력" id="searchWord" class="search-input" th:value="${searchWord != ''? searchWord : ''}">
+                    <button id="search-btn" class="search-btn" type="button">검색</button>
+                </div>
+            </div>
         </div>
 
         <table class="table table-hover" style="margin: 20px auto">
@@ -61,15 +70,16 @@
             <tr th:each="mateCommunityVO:${list_all}" style="cursor: pointer;"
                 th:attr="onclick=|location.href='/mateCommunity/read?mCommunityNo=${mateCommunityVO.mCommunityNo}&now_page=${now_page}&searchWord=${searchWord}'|">
                 <td class="td_basic" style="text-align: center;">
-                    <span th:if="${mateCommunityVO.petTypeNo == 1}">
-                        강아지
-                    </span>
-                    <span th:if="${mateCommunityVO.petTypeNo == 2}">
-                        고양이
-                    </span>
-                    <span th:if="${mateCommunityVO.petTypeNo == 3}">
-                        기타
-                    </span>
+<!--                    <span th:if="${mateCommunityVO.petTypeNo == 1}">-->
+<!--                        강아지-->
+<!--                    </span>-->
+<!--                    <span th:if="${mateCommunityVO.petTypeNo == 2}">-->
+<!--                        고양이-->
+<!--                    </span>-->
+<!--                    <span th:if="${mateCommunityVO.petTypeNo == 3}">-->
+<!--                        기타-->
+<!--                    </span>-->
+                    <span th:each="petTypeVO:${petTypeList}" th:text="${petTypeVO.petTypeNo == mateCommunityVO.petTypeNo? petTypeVO.petType:''}"></span>
                 </td>
 
                 <td class="td_left align-middle">
@@ -139,6 +149,31 @@
                 if([[${list_all.size()}]] < 10){
                     document.getElementById('list_all').style.height = "641.898px";
                 }
+                document.getElementById('search-btn').addEventListener('click', ()=>{
+                    let searchWord = document.getElementById('searchWord').value.trim();
+                    if (searchWord == '' || searchWord == null){
+                        alert('검색어를 입력하세요!');
+                        document.getElementById('searchWord').focus();
+                        return false;
+                    }else{
+                        let url = 'http://localhost:9093/mateCommunity/list_all?searchWord='+ searchWord;
+                        location.href = url;
+                    }
+                })
+
+                document.getElementById('searchWord').addEventListener('keypress', (e)=>{
+                    if(e.key === 'Enter'){
+                        let searchWord = document.getElementById('searchWord').value.trim();
+                        if (searchWord == '' || searchWord == null){
+                            alert('검색어를 입력하세요!');
+                            document.getElementById('searchWord').focus();
+                            return false;
+                        }else{
+                            let url = 'http://localhost:9093/mateCommunity/list_all?searchWord='+ searchWord;
+                            location.href = url;
+                        }
+                    }
+                })
             }
         </script>
     </div>

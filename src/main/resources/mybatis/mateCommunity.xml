@@ -18,6 +18,14 @@
                         (select count(ANO) from MATEAPPLY ma where mc.MCOMMUNITYNO = ma.MCOMMUNITYNO and ma.ASTATUS='ACCEPTED') as acceptCnt
                  FROM MATECOMMUNITY mc
                  WHERE mc.MEMBERNO=#{memberNo}
+                <choose>
+                    <when test="searchWord != null or searchWord != ''"> <!-- 검색하지 않는 경우 -->
+                        and( UPPER(title) LIKE '%' || UPPER(#{searchWord}) || '%'
+                        OR UPPER(content) LIKE '%' || UPPER(#{searchWord}) || '%'
+                        OR UPPER(STARTINGP) LIKE '%' || UPPER(#{searchWord}) || '%'
+                        OR UPPER(SEARCHTAG) LIKE '%' || UPPER(#{searchWord}) || '%')
+                    </when>
+                </choose>
                  ORDER BY MCOMMUNITYNO desc
             )
         ) WHERE r &gt;= #{start_num} AND r &lt;= #{end_num}
