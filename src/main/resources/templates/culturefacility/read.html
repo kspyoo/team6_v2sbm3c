@@ -20,7 +20,7 @@
 			<span class="menu_devide">│</span>
 			<a href="/culturefacility/create">등록</a>
 			<span class="menu_devide">│</span>
-			<a th:href="@{|/culturefacility/update/${culturefacilityVO.culturefno}?word=${word}&now_page=${now_page}|}">수정</a>
+			<a th:href="@{|/culturefacility/update/${culturefacilityVO.culturefno}?word=${word}&now_page=${now_page}|}">수정 /사진 추가</a>
 			<span class="menu_devide">│</span>
 			<a th:href="@{|/culturefacility/delete/${culturefacilityVO.culturefno}?word=${word}&now_page=${now_page}|}">삭제</a>
 		</th:block>
@@ -35,7 +35,7 @@
 
 
 
-	<!-- 사진 자동 슬라이드 -->
+
 	<!-- 사진 자동 슬라이드 -->
 	<div class="carousel-container" th:if="${list_images.size() > 1}">
 		<div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
