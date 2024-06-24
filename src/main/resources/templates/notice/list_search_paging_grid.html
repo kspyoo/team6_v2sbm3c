@@ -52,7 +52,7 @@
         <span th:text="${noticeVO.title}" style="font-weight: bold;"></span><br>
         <span th:if="${noticeVO.notice.length() > 20 }" th:text="|${noticeVO.notice.substring(0, 20) }...|"></span>
         <span th:if="${noticeVO.notice.length() <= 20 }" th:text="|${noticeVO.notice}|"></span>
-        <br><span th:text="|♡:${noticeVO.likecnt}|" style="font-weight: bold;"></span>
+        <br><span th:text="|♥:${noticeVO.likecnt}|" style="font-weight: bold;"></span>
       </div>
 
       <div style="width: 100%; text-align: right;"></div>

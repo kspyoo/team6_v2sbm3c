@@ -78,7 +78,7 @@
             </div>
           </div>
           <a th:href="@{|../memberprofile/update_file?memberno=${memberVO.memberno}|}">
-            <button type="button" class="btn btn-secondary btn-sm" style="margin-top: 10px;">파일 수정</button>
+            <button type="button" class="btn" style="margin-top: 10px; border: 2px solid black;">파일 수정</button>
           </a>
         </div>
 
@@ -100,7 +100,7 @@
               <label for="passwd" style="width: 150px; margin-right: 10px;">비밀번호</label>
               <button type="button"
                 th:attr="onclick=|location.href='./passwd_update_form?memberno=${memberVO.memberno}'|"
-                class="btn btn-primary btn-sm">비밀번호 변경</button>
+                class="btn" style="border: 2px solid black; padding:4px;">비밀번호 변경</button>
               <span id='passwd_msg'></span>
             </div>
 
@@ -125,7 +125,7 @@
               <label for="addr_code" style="width: 150px; margin-right: 10px;">우편 번호</label>
               <input type='text' name='addr_code' id='addr_code' th:value='${memberVO.addr_code}' placeholder="우편번호"
                 class="form-control form-control-sm" style="width: 30%; margin-right: 10px;">
-              <button type="button" id="btn_DaumPostcode" onclick="DaumPostcode()" class="btn btn-primary btn-sm">우편번호
+              <button type="button" id="btn_DaumPostcode" onclick="DaumPostcode()" class="btn"  style="border: 2px solid black; padding:4px;" >우편번호
                 찾기</button>
             </div>
 
@@ -240,10 +240,10 @@
         <!-- ------------------------------ DAUM 우편번호 API 종료 ------------------------------ -->
 
         <div class="content_body_bottom">
-          <button type="button" onclick="send();" class="btn btn-secondary btn-sm">저장</button>
-          <button type="button" onclick="history.back();" class="btn btn-secondary btn-sm">취소</button>
+          <button type="button" onclick="send();" class="btn"  style="border: 2px solid black; padding:4px">저장</button>
+          <button type="button" onclick="history.back();" class="btn"  style="border: 2px solid black; padding:4px">취소</button>
           <button type="button" th:attr="onclick=|location.href='./delete?memberno=${memberVO.memberno}'|"
-            class="btn btn-secondary btn-sm">삭제</button>
+            class="btn"  style="border: 2px solid black; padding:4px">삭제</button>
         </div>
 
 

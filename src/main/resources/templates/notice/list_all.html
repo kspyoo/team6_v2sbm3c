@@ -42,15 +42,21 @@
     </tr>
 
     <tr th:each="noticeVO, status:${list_all}">
-      <td class='td_bs'><a th:href="@{|./read?noticeno=${noticeVO.noticeno}|}" th:text="${status.count}"></a></td>
-      <td class='td_bs'><a th:href="@{|./read?noticeno=${noticeVO.noticeno}|}" th:text="${noticeVO.title}"></a></td>
+      <td class='td_bs'><a th:href="@{|./read?noticeno=${noticeVO.noticeno}|}"><span
+            th:text="${status.count}"></span></a></td>
+      <td class='td_bs'><a th:href="@{|./read?noticeno=${noticeVO.noticeno}|}"><span
+            th:text="${noticeVO.title}"></span></a></td>
+
       <td class='td_bs'><a th:href="@{|./read?noticeno=${noticeVO.noticeno}|}">
           <span th:if="${noticeVO.notice.length() > 20 }" th:text="|${noticeVO.notice.substring(0, 20) }...|"></span>
           <span th:if="${noticeVO.notice.length() <= 20 }" th:text="|${noticeVO.notice}|"></span>
         </a></td>
-      <td class='td_bs'><a th:href="@{|./read?noticeno=${noticeVO.noticeno}|}" th:text="${noticeVO.noticedate}"></a></td>
-      <td class='td_bs'><a th:href="@{|./read?noticeno=${noticeVO.noticeno}|}" th:text="${noticeVO.likecnt}"></a></td>
-      
+
+      <td class='td_bs'><a th:href="@{|./read?noticeno=${noticeVO.noticeno}|}"><span
+            th:text="${noticeVO.noticedate}"></span></a></td>
+      <td class='td_bs'><a th:href="@{|./read?noticeno=${noticeVO.noticeno}|}"><span
+            th:text="${noticeVO.likecnt}"></span></a></td>
+
     </tr>
   </table>
 

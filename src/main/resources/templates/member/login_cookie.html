@@ -63,17 +63,16 @@
     <form name="frm" id="frm" th:object="${memberVO}" method="post" action="/member/login">
       <div>
         <label for="id">아이디(이메일)*</label> <!-- th:value="${ck_id}"-->
-        <input type="text" name="id" id="id" value="1234" autofocus="autofocus"
+        <input type="text" name="id" id="id" th:value="${ck_id}" autofocus="autofocus"
                class="form-control fom-control-sm" style="width: 100%;">
-        <label><input type="checkbox" name="id_save" id="id_save" value="Y" th:checked="${ck_id_save == 'Y'}"> 저장<label>       
+        <label><input type="checkbox" name="id_save" id="id_save" value="Y" th:checked="${ck_id_save == 'Y'}">아이디 기억<label>       
         <span id='id_msg'></span>  
       </div>
       
       <div class="form-group">
         <label for="passwd">패스워드*</label> <!-- th:value="${ck_passwd}"-->
-        <input type='password' name='passwd' id='passwd' value="1234" required="required" 
-                  placeholder="패스워드" class="form-control form-control-sm" style="width: 100%;">
-        <label><input type="checkbox" name="passwd_save" id="passwd_save" value="Y" th:checked="${ck_passwd_save == 'Y'}"> 저장<label>          
+        <input type='password' name='passwd' id='passwd' value="" required="required" 
+                  placeholder="패스워드" class="form-control form-control-sm" style="width: 100%;">      
         <span id='passwd_msg'></span>
       </div>
 

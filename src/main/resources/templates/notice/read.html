@@ -277,16 +277,12 @@
             </div>
           </div>
         </div>
-        <div th:if="${list.size} > 0" style="width: 100%; height: 100px; display: flex; justify-content: center; align-items: center;">
+        <div th:if="${list.size} < 2 " style="width: 100%; height: 100px; display: flex; justify-content: center; align-items: center;">
           <img src="/notice/images/defaultnotice.png" style="max-height: 100%; max-width: 100%;">
-          
         </div>
       </div>
 
       <div class="right-column">
-
-
-
 
         <fieldset class="fieldset_basic">
           <ul>
@@ -299,7 +295,7 @@
             </li>
 
             <div style='margin-top: 20px; text-align: center;'>
-              <button type="button" id="Like" class="btn like-button">
+              <button type="button" id="Like" class="btn" style="border: 2px solid black;">
                 <span class="heart">&#x2661;</span> <!-- Empty heart symbol -->
                 <span id="likecnt"></span>
               </button>
