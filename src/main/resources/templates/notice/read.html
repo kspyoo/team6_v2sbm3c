@@ -259,6 +259,8 @@
         <a th:href="@{|/notice/delete?noticeno=${noticeVO.noticeno}|}">삭제</a>
         <span class='menu_divide'>│</span>
       </span>
+      <a href="javascript:window.history.back();">뒤로가기</a>
+      <span class='menu_divide'>│</span>
       <a href="javascript:location.reload();">새로고침</a>
     </aside>
 
@@ -274,6 +276,10 @@
               <span style="font-size: 1.5em; font-weight: bold;" th:text="${noticeimgVO.nfile}"></span>
             </div>
           </div>
+        </div>
+        <div th:if="${list.size} > 0" style="width: 100%; height: 100px; display: flex; justify-content: center; align-items: center;">
+          <img src="/notice/images/defaultnotice.png" style="max-height: 100%; max-width: 100%;">
+          
         </div>
       </div>
 
@@ -297,7 +303,7 @@
                 <span class="heart">&#x2661;</span> <!-- Empty heart symbol -->
                 <span id="likecnt"></span>
               </button>
-              
+
             </div>
           </ul>
         </fieldset>
@@ -315,17 +321,17 @@
     let Like = document.getElementById('Like');
     let ismember = '[[${session.memberno}]]';
     let likecnt = document.getElementById('likecnt');
-    
 
-   
-      fetch("/sympathy/read", {
+
+
+    fetch("/sympathy/read", {
       method: "post",
       headers: {"Content-Type": "application/json"},
       body: JSON.stringify({"noticeno": "[[${noticeVO.noticeno}]]", "memberno": "[[${session.memberno}]]"})
     })
       .then((response) => response.json())
       .then((data) => {
-        
+
         if (data.res == 1) {
           isLike = true;
           Like.classList.add('liked');
@@ -335,7 +341,7 @@
         }
         likecnt.innerText = data.likecnt;
       });
-    
+
 
     Like.addEventListener('click', () => {
 

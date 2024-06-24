@@ -45,8 +45,13 @@
 
           <div th:case="passwd_change_success">
             <span class="span_success">패스워드 변경을 실행했습니다.</span><br>
-            <button type="button" th:attr="onclick=|location.href='./read?memberno=${memberVO.memberno}'|"
+            <button type="button" href="/member/login"
               class="btn btn-secondary btn-sm" style="margin-top:10px ;">돌아가기</button>
+          </div>
+
+          <div th:case="find_passwd_change_success">
+            <span class="span_success">패스워드 변경을 실행했습니다.</span><br>
+            <button type="button" onclick="location.href='/member/login'" class="btn btn-secondary btn-sm" style="margin-top: 10px;">로그인</button>
           </div>
 
           <div th:case="passwd_change_fail">

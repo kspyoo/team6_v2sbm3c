@@ -246,6 +246,16 @@ CREATE SEQUENCE NOTICE_SEQ
     CACHE 2                       -- 2번은 메모리에서만 계산
     NOCYCLE;     
     
+ALTER TABLE notice ADD Likecnt NUMBER(10) DEFAULT 0 NOT NULL;
+    
+    
+    
+    
+    
+    
+    
+    
+    
 DROP TABLE noticeimg;
 
 CREATE TABLE noticeimg(
@@ -389,3 +399,5 @@ CREATE SEQUENCE SYMPATHY_SEQ
     LEFT JOIN notice nt ON sp.noticeno = nt.noticeno
     WHERE memberno=3
     ORDER BY sympathyno DESC;
+    
+    DROP TABLE EMPLOYEE;

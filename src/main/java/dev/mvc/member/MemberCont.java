@@ -468,8 +468,7 @@ public class MemberCont {
 
     if (passwd_change_cnt == 1) {
 
-      model.addAttribute("code", "passwd_change_success");
-      model.addAttribute("cnt", 1);
+      model.addAttribute("code", "find_passwd_change_success");
     } else {
       model.addAttribute("code", "passwd_change_fail");
       model.addAttribute("cnt", 0);

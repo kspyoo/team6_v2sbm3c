@@ -48,10 +48,6 @@
         <span th:text="${noticeVO.nfile}"></span>
       </div>
 
-      <div th:if="${noticeVO == null}"
-        style="width: 100%; height: 100px; display: flex; justify-content: center; align-items: center;">
-        <img src="/contents/images/none1.png" style="max-height: 100%; max-width: 100%;">
-      </div>
       <div>
         <span th:text="${noticeVO.title}" style="font-weight: bold;"></span><br>
         <span th:if="${noticeVO.notice.length() > 20 }" th:text="|${noticeVO.notice.substring(0, 20) }...|"></span>
