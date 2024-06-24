@@ -24,6 +24,7 @@
             margin: 0 auto;
             padding: 10px
         }
+
         .top_banner{
             text-align: right;
             padding: 2%;
@@ -142,9 +143,9 @@
     </div>
     <div class="d-flex justify-content-center">
         <input id="question" name='question' placeholder="보내실 메시지를 입력하세요."
-               value="안녕하세요." style='margin-top: 3px; padding: 1%; border: 1.5px solid; border-radius: 8px 0px 0px 8px; border-right: 0px;'>
+               value="종로에 있는 카페 추천해줘" style='margin-top: 3px; padding: 1%; border: 1.5px solid; border-radius: 8px 0px 0px 8px; border-right: 0px;'>
         <button id="sendBtn" class="btn btn-info btn-sm"
-                style='padding: 0px 5px;margin-top: 3px;margin-right: 5px;width: 10%;border-radius: 0px 8px 8px 0px;background-color: white;border: 1.5px solid;border-left: 0px;'>전송</button>
+                style='padding: 0px 5px;margin-top: 3px;margin-right: 5px;width: 10%;border-radius: 0px 8px 8px 0px;background-color: white;border: 1.5px solid black;border-left: 0px; color: #2196f3;'>전송</button>
     </div>
 </div>
 <script type="text/javascript">
@@ -183,7 +184,7 @@
 
         let url = "http://15.164.40.179:5000/chatbot";
 
-        fetch("http://192.168.12.141:5000/chatbot", {
+        fetch(url, {
             method: "post",
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify({"question" : params})
