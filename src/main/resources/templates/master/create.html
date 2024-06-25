@@ -144,8 +144,8 @@
 	<div style="width: 80%; margin: 0px auto ">
 		<form name="frm" id="frm" th:object="${masterVO}" method="post" action="/master/create">
 			<div>
-				<label for="masterid">관리자 아이디(이메일)*</label>
-				<input type="text" name="masterid" id="masterid" value="" autofocus="autofocus"
+				<label for="masterid">관리자 아이디(이메일)</label>
+				<input type="text" name="masterid" id="masterid" value="" placeholder="관리자 아이디(이메일)" autofocus="autofocus"
 					class="form-control fom-control-sm" style="width: 50%;" th:field="*{masterid}">
 				<button type='button' id="btn_checkID" onclick="checkID()" class="btn btn-primary btn-sm"
 					style="margin-top: 4px;">중복확인</button>
@@ -153,20 +153,20 @@
 			</div>
 
 			<div class="form-group">
-				<label for="masterpasswd">관리자 패스워드*</label>
+				<label for="masterpasswd">관리자 패스워드</label>
 				<input type='password' name='masterpasswd' id='masterpasswd' value='' required="required"
 					placeholder="관리자 패스워드" class="form-control form-control-sm" style="width:30%;">
 			</div>
 
 			<div class="form-group">
-				<label for="masterpasswd2">관리자 패스워드 확인*</label>
+				<label for="masterpasswd2">관리자 패스워드 확인</label>
 				<input type='password' name='masterpasswd2' id='masterpasswd2' value='' required="required"
 					placeholder="관리자패스워드 확인" class="form-control form-control-sm" style="width:30%;">
 				<span id='masterpasswd2_msg'></span>
 			</div>
 
 			<div class="form-group">
-				<label for="mastername">성명*</label>
+				<label for="mastername">성명</label>
 				<input type='text' name='mastername' id='mastername' value='' required="required" placeholder="성명"
 					class="form-control form-control-sm" style="width: 30%;">
 				<span id='mastername_msg'></span>
