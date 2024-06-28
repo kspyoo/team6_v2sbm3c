@@ -346,7 +346,7 @@ FROM login
           OR UPPER(memberno) LIKE '%' || UPPER('하정') || '%') AND memberno != 0;
           
           
-ALTER TABLE notice MODIFY (notice VARCHAR2(1000));
+ALTER TABLE notice MODIFY (title VARCHAR2(50));
 
 SELECT mprofileno, file1, file1saved, thumbfile, filesize, memberno
 FROM memberprofile
