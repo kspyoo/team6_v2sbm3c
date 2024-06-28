@@ -9,7 +9,7 @@
   </head>
 
   <body>
-    <div class="title_line">회원 가입(*: 필수)</div>
+    <div class="title_line">아이디 찾기</div>
     <aside class="aside_right">
       <a href="javascript:location.reload();">새로고침</a>
       <span class='menu_divide'>│</span>
@@ -17,10 +17,6 @@
     </aside>
 
 
-
-    <div>
-      <h1 class="h4 text-gray-900 mb-2" style="width: 80%;margin: 20px auto;">아이디 찾기</h1>
-    </div>
 
     <div class='menu_line'></div>
 
@@ -41,7 +37,7 @@
         </div>
 
         <div class="content_body_bottom">
-          <button type="button" onclick="submit();" class="btn btn-secondary btn-sm">아이디 찾기</button>
+          <button type="button" onclick="secursys();" class="btn btn-secondary btn-sm">아이디 찾기</button>
           <button type="button" onclick="history.back();" class="btn btn-secondary btn-sm">취소</button>
         </div>
 
@@ -49,7 +45,28 @@
       </form>
     </div>
 
+    <script type="module">
+      import {secur} from './secur.js';
+
+      function secursys() {
+        let obj;
+        let arrayobj = ["name", "phone"];
+
+        for (let i = 0; i < arrayobj.length; i++) {
+          obj = document.getElementById(arrayobj[i]);
+          if (secur(obj) == false) {
+            return false;
+          }
+        }
+        document.getElementById('frm').submit();
+      }
+      window.secursys = secursys;
+
+    </script>
+
   </body>
 </div>
+
+
 
 </html>

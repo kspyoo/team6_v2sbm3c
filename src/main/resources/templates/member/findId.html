@@ -8,7 +8,7 @@
     </head>
 
     <body>
-        <div class="title_line">회원 가입(*: 필수)</div>
+        <div class="title_line">아이디 찾기</div>
         <aside class="aside_right">
             <a href="javascript:location.reload();">새로고침</a>
             <span class='menu_divide'>│</span>
@@ -17,9 +17,6 @@
 
         <div class='menu_line'></div>
 
-        <div>
-                  <h1 class="h4 text-gray-900 mb-2" style="width: 80%;margin: 20px auto;">아이디 찾기</h1>
-        </div>
 
         <div style="width: 30%; margin: 0px auto ">
             <h3>
@@ -29,12 +26,18 @@
                 </div>
             </h3>
             <button type="button" onclick="location.href='/member/login'" class="btn btn-secondary btn-sm">로그인</button>
-            <button type="button" onclick="location.href='/member/findPasswdView'" class="btn btn-secondary btn-sm">비밀번호 찾기</button>
+            <button type="button" onclick="location.href='/member/findPasswdView'" class="btn btn-secondary btn-sm">비밀번호 재설정</button>
 
         </div>
 
         
     </body>
 </div>
+
+<script>
+        export function globalFunction() {
+            alert("globalFunction");
+        }
+</script>
 
 </html>
