@@ -550,6 +550,7 @@ public class MemberCont {
         model.addAttribute("memberVO", memberVO);
         model.addAttribute("code", "passwd_change_success");
 //        model.addAttribute("cnt", 1);
+        session.invalidate();
       } else {
         model.addAttribute("code", "passwd_change_fail");
         model.addAttribute("cnt", 0);
