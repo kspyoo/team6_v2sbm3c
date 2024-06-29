@@ -95,4 +95,11 @@ public class PetTypeCont {
 
         return json.toString();
     }
+
+    @GetMapping("/cate_list")
+    @ResponseBody
+    public ArrayList<PetTypeVO> cateList(){
+        ArrayList<PetTypeVO> petTypeVO = this.petTypeProc.list();
+        return petTypeVO;
+    }
 }
