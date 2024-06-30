@@ -69,11 +69,25 @@ public class MateCommunityAPICont {
     }
 
     @GetMapping(value={"/page_count/{cateNo}/{searchWord}", "/page_count/{cateNo}"})
-    public String pageCount(@PathVariable(name = "cateNo") int cateNo,
+    public ResponseEntity<Map<String, Object>> pageCount(@PathVariable(name = "cateNo") int cateNo,
                             @PathVariable(name = "searchWord", required = false) String searchWord){
-        int page_count = this.mateCommunityProc.list_all_count(searchWord);
+        searchWord = Tool.checkNull(searchWord).trim();
+        int page_count = 1;
 
-        return "";
+        if (cateNo == 0){
+            page_count = this.mateCommunityProc.list_all_count(searchWord);
+        }else{
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("petTypeNo", cateNo);
+            map.put("searchWord", searchWord);
+            page_count = this.mateCommunityProc.list_all_by_petTypeNo_count(map);
+        }
+
+        page_count = (int) Math.ceil((float)page_count/MateCommunity.RECORD_PER_PAGE);
+
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("pagingCount", page_count);
+        return ResponseEntity.status(HttpStatus.OK).body(map);
     }
 
     // 게시글 전체 리스트 조회 + 페이징 + 검색

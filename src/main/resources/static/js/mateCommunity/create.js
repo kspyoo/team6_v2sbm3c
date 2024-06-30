@@ -79,13 +79,15 @@ function send(){
 }
 
 window.onload = () => {
+    let day = new Date().setDate(new Date().getDate() + 1)
+
     let assembleDate = document.querySelector('#assembleDate');
-    assembleDate.value = new Date().toISOString().substring(0, 10);
+    assembleDate.value = new Date(day).toISOString().substring(0, 10);
 
     let offset = 1000 * 60 * 60 * 9 // 9시간 밀리세컨트 값
     let today = new Date(Date.now() + offset)
 
-    assembleDate.setAttribute('min', today.toISOString().substring(0,10));
+    assembleDate.setAttribute('min', new Date(day).toISOString().substring(0, 10));
 
     today.setMonth(today.getMonth()+1)
     today.setDate(today.getDate()-1)
