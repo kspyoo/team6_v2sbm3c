@@ -26,7 +26,7 @@ public class CommunityVO {
   private String writedate;
   private String tag="";
   private int memberno;
-  private int ctypeno = 3;
+  private int ctypeno;
   
   
   

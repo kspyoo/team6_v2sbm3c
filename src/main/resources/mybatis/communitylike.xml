@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dev.mvc.communitylike.CommunityLikeDAOInter">
+<insert id="create" parameterType="HashMap">
+  INSERT INTO COMMUNITYLIKE(rcnt,rcntdate,communityno,memberno)
+  VALUES(COMMUNITYLIKE_SEQ.nextval,sysdate,#{communityno},#{memberno})
+</insert>
+
+<select id="read" resultType="dev.mvc.communitylike.CommunityLikeVO" parameterType="HashMap">
+SELECT rcnt,rcntdate,communityno,memberno
+FROM communitylike
+WHERE memberno=#{memberno} AND communityno=#{communityno}
+</select>
+
+
+<update id="add_update" parameterType="HashMap">
+UPDATE communitylike
+SET rcnt = #{rcnt} + 1
+WHERE memberno=#{memberno} AND communityno=#{communityno}
+</update>
+
+<update id="del_update" parameterType="HashMap">
+UPDATE communitylike
+SET rcnt = 0
+WHERE memberno=#{memberno} AND communityno=#{communityno}
+</update>
+
+<select id="rcnt_count" resultType="int" parameterType="HashMap">
+ SELECT COUNT(rcnt) as cnt 
+ FROM communitylike
+ WHERE memberno=#{memberno} AND communityno=#{communityno}
+</select> 
+
+
+<delete id="delete" parameterType="int">
+DELETE FROM communitylike WHERE memberno=#{memberno} AND rcnt=#{rcnt}
+</delete>
+
+</mapper>

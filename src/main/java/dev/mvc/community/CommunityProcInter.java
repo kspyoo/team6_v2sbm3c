@@ -38,4 +38,8 @@ public interface CommunityProcInter {
 
   
   public int list_search_count(String word);
+  
+  public int vcnt(int communityno);
+  
+  public int rcnt(int communityno);
 }

@@ -26,6 +26,9 @@
   <fieldset class="fieldset_basic">
     <ul>
       <li class="li_none">
+        <img src="/image/community/vcnt.png" style="width: 2%;">
+        <div th:text="${attachmentVO.vcnt}"></div>
+      <li class="li_none">
         <div style="width: 100%; word-break: break-all;">
           <div
             th:if="${(attachmentVO.filename != null) and (attachmentVO.filename.endsWith('jpg') or attachmentVO.filename.endsWith('png')  or attachmentVO.filename.endsWith('gif'))}">
@@ -60,17 +63,60 @@
           <span th:text="|(${attachmentVO.filesize})|"></span>
         </div>
       </li>
+      <li class="li_none">
+        <div style="width:80%;">
+          <form name="frm_like" id="frm_like">
+            <input type="hidden" name="memberno" id="memberno" value="">
+            <input type="hidden" name="communityno" id="communityno" value="">
+        </form>
+        </div>
 
-
-
-      <!-- ------------------------------ 댓글 영역 시작 ------------------------------ -->
-      <script>
+        <div class="like">
+          <span id="rcnt_tag">
+            <img src="/image/communitylike/empty_heart.png" style="width: 3%;"id="rcnt">
+          </span>
+          <span id="like_cnt" th:text="${rcnt_count}"></span>
+        </div>
+        
+      </li>
+      <!--  ----------------------------좋아요 ---------------------------- -->
+     <script>
         let reply_data; // 댓글 500건 저장
         let reply_now_page = 1; // 댓글 현재 페이지
       </script>
-
+     
       <script>
         window.onload = () => {
+          let rcnt = document.getElementById('rcnt');
+          let frm_like = document.getElementById('frm_like');
+          let communityno = document.getElementById('communityno');
+          let memberno = '[[${session.memberno}]]'; //  javascript -> Thymeleaf -> session
+          rcnt.addEventListener('click',() => {
+            if (!memberno) {
+              alert('로그인해야 합니다.');
+            } else {
+              console.log(rcnt);
+              fetch("/communitylike/read?communityno=[[${attachmentVO.communityno}]]", {
+                method: "get",
+                headers: {"Content-Type": "application/json"},
+              })
+                .then((response) => response.json())
+                .then((data) => {
+                  if (data.rcnt == 0) {
+                    rcnt = "/image/communitylike/empty_heart.png"
+                    console.log(data);
+                  } else {
+
+                    rcnt = "/image/communitylike/full_heart.png"
+                    console.log(data);
+                  }
+                  rcnt.innerText = data.rcnt
+                });
+            }
+          });
+        
+        
+        
           let content_tag = document.getElementById('content');
           let btn_create_tag = document.getElementById('btn_create'); // 등록
           let btn_add_tag = document.getElementById('btn_add'); // 더보기
@@ -182,7 +228,7 @@
               fetch("/reply/update", {
                 "method": "post",
                 "headers": {"Content-Type": "application/json"},
-                body: JSON.stringify({"replyno": replyno, "memberno": memberno, "content": content},"[${communityno:attachmentVO.communityno}]")
+                body: JSON.stringify({"replyno": replyno, "memberno": memberno, "content": content}, "[${communityno:attachmentVO.communityno}]")
               })
                 .then((response) => response.json())
                 .then((data) => {
@@ -203,7 +249,7 @@
           });
 
           list_by_communityno_join(); // 목록 출력
-        } // window.onload END
+       } // window.onload END
 
         // 목록 출력
         // 5건 미만이면 5회 미만 순환, 5건 이상 5회 순환
@@ -264,7 +310,7 @@
           fetch("/reply/read?replyno=" + replyno, {
             "method": "get",
             "headers": {"Content-Type": "application/json"},
-             //body: JSON.stringify({"communityno": "[[${attachmentVO.communityno}]]"})
+            //body: JSON.stringify({"communityno": "[[${attachmentVO.communityno}]]"})
           })
             .then((response) => response.json())
             .then((data) => {
@@ -278,41 +324,41 @@
 
         }
         // 삭제 폼 + 삭제 처리
-          function reply_delete(replyno) {
-            let content_tag = document.getElementById('content');
-            
-            // fetch로 데이터 읽어 오기
-            fetch("/reply/read?replyno=" + replyno, {
-              "method": "get", 
-              "headers": {"Content-Type": "application/json"},
-               //body: JSON.stringify({"communityno": "[[${attachmentVO.communityno}]]"})
-            })
+        function reply_delete(replyno) {
+          let content_tag = document.getElementById('content');
+
+          // fetch로 데이터 읽어 오기
+          fetch("/reply/read?replyno=" + replyno, {
+            "method": "get",
+            "headers": {"Content-Type": "application/json"},
+            //body: JSON.stringify({"communityno": "[[${attachmentVO.communityno}]]"})
+          })
             .then((response) => response.json())
             .then((data) => {
-              let sw = confirm("「" + data['res']['content'] + "」 삭제하시려면 확인 버튼을 누르세요. 삭제후 복구 할 수 없습니다." );
+              let sw = confirm("「" + data['res']['content'] + "」 삭제하시려면 확인 버튼을 누르세요. 삭제후 복구 할 수 없습니다.");
               if (sw == true) {
                 // alert('삭제를 진행합니다.');
                 fetch("/reply/delete", {
-                    "method": "post", 
-                    "headers": {"Content-Type": "application/json"},
-                     body: JSON.stringify({"replyno": replyno, "memberno": data['res']['memberno']},{"communityno": "[[${attachmentVO.communityno}]]"})
+                  "method": "post",
+                  "headers": {"Content-Type": "application/json"},
+                  body: JSON.stringify({"replyno": replyno, "memberno": data['res']['memberno']}, {"communityno": "[[${attachmentVO.communityno}]]"})
                 })
-                .then((response) => response.json())
-                .then((data) => {
-                  if (data['res'] == 1) {
-                    list_by_communityno_join(); // 목록 출력
-                    content_tag.value='';
-                    content_tag.focus();
-                    alert('댓글을 삭제했습니다.');
-                  } else {
-                    alert('댓글 삭제에 실패했습니다. 잠시후 다시 시도해주세요.');
-                  }
-                });
+                  .then((response) => response.json())
+                  .then((data) => {
+                    if (data['res'] == 1) {
+                      list_by_communityno_join(); // 목록 출력
+                      content_tag.value = '';
+                      content_tag.focus();
+                      alert('댓글을 삭제했습니다.');
+                    } else {
+                      alert('댓글 삭제에 실패했습니다. 잠시후 다시 시도해주세요.');
+                    }
+                  });
               } else {
                 alert('삭제를 취소 했습니다.');
               }
             });
-          }
+        }
         // 버튼 출력
         function btn_visible(sw) {
           let btn_create = document.getElementById("btn_create");
@@ -330,7 +376,58 @@
           }
 
         }
-</script>
+
+      </script>
+      <!--      <script>
+        window.onload = () => {
+          let rcnt = document.getElementById('rcnt');
+          let rcntdate = document.getElementById('rcntdate');
+          let memberno = '[[${session.memberno}]]';
+
+
+          // 좋아요 상태 확인
+          fetch("/communitylike/read", {
+            method: "post",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({"rcnt": rcnt, "memberno": "[[${session.memberno}]]"})
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              if (data.res === 1) {
+                rcnt.classList.add('rcnt');
+                rcnt.innerHTML = "<img src='/images/full_heart' style='width:10%;'>";
+              } else {
+                rcnt.classList.remove('rcnt');
+                rcnt.innerHTML = "<img src='/images/empty_heart' style='width:10%;'>";
+              }
+              rcnt.innerText = data.rcnt;
+            });
+
+          // 좋아요 클릭 이벤트
+          rcnt.addEventListener('click', () => {
+            if (!memberno) {
+              alert('로그인해야 합니다.');
+            } else {
+              fetch("/communitylike/create", {
+                method: "post",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({"rcnt": rcnt})
+              })
+                .then((response) => response.json())
+                .then((data) => {
+                  if (data.res === 1) {
+                    rcnt.classList.add('rcnt');
+                    rcnt.innerHTML = "<img src='/images/full_heart' style='width:10%;'>";
+                  } else {
+                    rcnt.classList.remove('rcnt');
+                    rcnt.innerHTML = "<img src='/images/empty_heart' style='width:10%;'>";
+                  }
+                  rcnt.innerText = data.rcnt;
+                });
+            }
+          });
+        }
+      </script>-->
 
       <li class="li_none">
           <div style='width: 100%; margin: 0px auto; clear: both;'>
@@ -359,7 +456,7 @@
                   </div>  
             </div>
       </li>  
-     
+
     </ul>
   </fieldset>
 </div>
