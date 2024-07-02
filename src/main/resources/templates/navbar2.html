@@ -8,7 +8,7 @@
 			</button>
 
 			<div class="navbar-collapse collapse" id="navbarsExample07" style="">
-				<ul class="navbar-nav ms-auto mb-lg-0 me-3">
+				<ul class="navbar-nav ms-auto mb-lg-0 me-2">
 <!--					<li class="nav-item">-->
 <!--						<a class="nav-link active a_button" aria-current="page" href="#">함께 갈 수 있는곳</a>-->
 <!--					</li>-->
@@ -25,7 +25,7 @@
 						<a class="nav-link a_button" aria-current="page"  href="/community/list_all">정보 공유</a>
 					</li>
 				</ul>
-				<div class="nav-item dropdown pt-2 pb-2" th:if="${session.memberno == null} and ${session.masterno == null}">
+				<div class="nav-item dropdown pt-2 pb-2 me-2" th:if="${session.memberno == null} and ${session.masterno == null}">
 					<a class="dropdown-toggle" href="#" id="dropdown1" data-bs-toggle="dropdown" aria-expanded="false">로그인</a>
 					<ul class="dropdown-menu" aria-labelledby="dropdown1">
 						<li><a class="dropdown-item a_button" href="/member/login">로그인</a></li>

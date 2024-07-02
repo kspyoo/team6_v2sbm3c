@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@CrossOrigin("http://localhost:3000")
 @RestController
 @RequestMapping("/api/mateCommunity")
 public class MateCommunityAPICont {
@@ -70,123 +71,34 @@ public class MateCommunityAPICont {
 
     @GetMapping(value={"/page_count/{cateNo}/{searchWord}", "/page_count/{cateNo}"})
     public ResponseEntity<Map<String, Object>> pageCount(@PathVariable(name = "cateNo") int cateNo,
-                            @PathVariable(name = "searchWord", required = false) String searchWord){
+                            @PathVariable(name = "searchWord", required = false) String searchWord) {
         searchWord = Tool.checkNull(searchWord).trim();
         int page_count = 1;
 
-        if (cateNo == 0){
+        if (cateNo == 0) {
             page_count = this.mateCommunityProc.list_all_count(searchWord);
-        }else{
+        } else {
             Map<String, Object> map = new HashMap<String, Object>();
             map.put("petTypeNo", cateNo);
             map.put("searchWord", searchWord);
             page_count = this.mateCommunityProc.list_all_by_petTypeNo_count(map);
         }
 
-        page_count = (int) Math.ceil((float)page_count/MateCommunity.RECORD_PER_PAGE);
+        page_count = (int) Math.ceil((float) page_count / MateCommunity.RECORD_PER_PAGE);
 
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("pagingCount", page_count);
         return ResponseEntity.status(HttpStatus.OK).body(map);
     }
 
-    // 게시글 전체 리스트 조회 + 페이징 + 검색
-    @GetMapping("/ㅋ")
-    public String my_list_all(Model model, HttpSession session,
-                           @RequestParam(name = "searchWord", defaultValue = "") String searchWord,
-                           @RequestParam(name = "now_page", defaultValue = "1") int now_page){
-        if(session.getAttribute("memberno")!=null) {
-            searchWord = Tool.checkNull(searchWord).trim();
+    @GetMapping("/isRecruited/{memberNo}/{mCommunityNo}")
+    public ResponseEntity<Map<String, Object>> isRecruited(@PathVariable("memberNo") int memberNo, @PathVariable("mCommunityNo") int mCommunityNo){
+        int isRecruited = this.mateApplyProc.isRecruited(memberNo, mCommunityNo);
 
-//        ArrayList<PartCateVOMenu> menu = this.partCateProc.menu();
-//        model.addAttribute("menu", menu);
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("isRecruited", isRecruited);
 
-            System.out.println((int) session.getAttribute("memberno"));
-            ArrayList<MateCommunityJoinVO> my_list_all = this.mateCommunityProc.my_list_all(now_page, MateCommunity.RECORD_PER_PAGE, (int) session.getAttribute("memberno"), searchWord);
-            model.addAttribute("my_list_all", my_list_all);
-
-            // 특정 목록 카테고리 개수
-            int my_list_all_count = this.mateCommunityProc.my_list_all_count((int) session.getAttribute("memberno"));
-            model.addAttribute("my_list_all_count", my_list_all_count);
-
-            // 리스트 일련변호
-            // 레코드 갯수 - ((현재 페이지 - 1) * 페이지당 레코드 갯수)
-            int myListIndex = (my_list_all_count - ((now_page - 1) * MateCommunity.RECORD_PER_PAGE));
-            model.addAttribute("myListIndex", myListIndex);
-
-            // 페이징 버튼 목록
-            String paging = this.mateCommunityProc.list_all_pagingBox(
-                    now_page, searchWord, "/mateCommunity/my_list_all", my_list_all_count, MateCommunity.RECORD_PER_PAGE, MateCommunity.PAGE_PER_BLOCK);
-
-            model.addAttribute("paging", paging);
-            model.addAttribute("searchWord", searchWord);
-            model.addAttribute("now_page", now_page);
-
-            return "mateCommunity/my_list_all";
-        }else{
-            return "redirect:/member/login";
-        }
-    }
-
-    // 게시글 카테고리마다 리스트 조회 + 페이징 + 검색
-    @GetMapping("/list_all_byPetTypeNo")
-    public String list_all_byPetTypeNo(Model model, HttpSession session, int petTypeNo,
-                           @RequestParam(name = "searchWord", defaultValue = "") String searchWord,
-                           @RequestParam(name = "now_page", defaultValue = "1") int now_page){
-        searchWord = Tool.checkNull(searchWord).trim();
-
-        ArrayList<PetTypeVO> petTypeList = this.PetTypeProc.list();
-        model.addAttribute("petTypeList", petTypeList);
-
-        ArrayList<MateCommunityVO> list_all_byPetTypeNo = this.mateCommunityProc.list_all_byPetTypeNo(
-                now_page, MateCommunity.RECORD_PER_PAGE, searchWord, petTypeNo);
-        model.addAttribute("list_all_byPetTypeNo", list_all_byPetTypeNo);
-
-//        System.out.println("리스트 조회 완료");
-
-        // 특정 목록 카테고리 개수
-        Map<String,Object> petType_count_map = new HashMap<String, Object>();
-        petType_count_map.put("petTypeNo", petTypeNo);
-        petType_count_map.put("searchWord", searchWord);
-        int petTypeNo_count = this.mateCommunityProc.list_all_by_petTypeNo_count(petType_count_map);
-        model.addAttribute("petTypeNo_count", petTypeNo_count);
-
-//        System.out.println("리스트 개수 조회");
-
-        // 리스트 일련변호
-        // 레코드 갯수 - ((현재 페이지 - 1) * 페이지당 레코드 갯수)
-        int petTypeNoIndex = (petTypeNo_count - ((now_page - 1) * MateCommunity.RECORD_PER_PAGE));
-        model.addAttribute("petTypeNoIndex", petTypeNoIndex);
-
-        // 페이징 버튼 목록
-        String paging = this.mateCommunityProc.list_all_byPetTypeNo_pagingBox(
-                now_page, searchWord, "/mateCommunity/list_all_byPetTypeNo",
-                petTypeNo_count, MateCommunity.RECORD_PER_PAGE, MateCommunity.PAGE_PER_BLOCK, petTypeNo);
-
-//        System.out.println("페이징 제작 완료");
-
-        model.addAttribute("paging", paging);
-        model.addAttribute("searchWord", searchWord);
-        model.addAttribute("now_page", now_page);
-        model.addAttribute("petTypeNo", petTypeNo);
-
-        return "mateCommunity/list_all_byPetTypeNo";
-    }
-
-    // 게시글 작성 폼
-    @GetMapping("/create")
-    public String createForm(Model model, HttpSession session, int petTypeNo){
-        if (session.getAttribute("memberno")!=null) {
-            model.addAttribute("petTypeNo", petTypeNo);
-            model.addAttribute("memberNo", session.getAttribute("memberno"));
-
-            ArrayList<PetTypeVO> petTypeList = this.PetTypeProc.list();
-            model.addAttribute("petTypeList", petTypeList);
-
-            return "mateCommunity/create";
-        }else{
-            return "redirect:/member/login";
-        }
+        return ResponseEntity.status(HttpStatus.OK).body(map);
     }
 
     // 게시글 작성
@@ -221,25 +133,24 @@ public class MateCommunityAPICont {
     }
 
     // 게시글 조회
-    @GetMapping("/read")
-    public String read(Model model, int mCommunityNo, HttpSession session,
-                       @RequestParam(name = "petTypeNo", defaultValue = "0") int petTypeNo,
-                       @RequestParam(name = "searchWord", defaultValue = "") String searchWord,
-                       @RequestParam(name = "now_page", defaultValue = "1") int now_page){
-        int isRecruited = 0;
-        if(session.getAttribute("memberno") != null) {
-            isRecruited = this.mateApplyProc.isRecruited((int) session.getAttribute("memberno"), mCommunityNo);
-        }
+    @GetMapping("/read/{mCommunityNo}")
+    public ResponseEntity<MateCommunityJoinVO> read(@PathVariable("mCommunityNo") int mCommunityNo){
         this.mateCommunityProc.viewCnt_up(mCommunityNo);
+
         MateCommunityJoinVO mateCommunityVO= this.mateCommunityProc.read_content(mCommunityNo);
+        System.out.println(mateCommunityVO.getMCommunityNo());
 
-        model.addAttribute("mateCommunityVO", mateCommunityVO);
-        model.addAttribute("searchWord", searchWord);
-        model.addAttribute("now_page", now_page);
-        model.addAttribute("petTypeNo", petTypeNo);
-        model.addAttribute("isRecruited", isRecruited);
+        return ResponseEntity.status(HttpStatus.OK).body(mateCommunityVO);
+    }
 
-        return "mateCommunity/read";
+    @GetMapping("/viewCnt_up/{mCommunityNo}")
+    public ResponseEntity<Map<String, Object>> viewCnt_up(@PathVariable("mCommunityNo") int mCommunityNo){
+        int result = this.mateCommunityProc.viewCnt_up(mCommunityNo);
+
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("result", result);
+
+        return ResponseEntity.status(HttpStatus.OK).body(map);
     }
 
     // 게시글 수정 폼
