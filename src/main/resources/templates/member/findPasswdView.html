@@ -1,58 +1,171 @@
-<!-- src/main/resources/templates/member/findIdResult.html -->
 <!DOCTYPE html>
-<html layout:decorate="~{layout}"> <!-- layout.html 상속-->
+<html layout:decorate="~{layout}">
+<!-- layout.html 상속 -->
+
 <div layout:fragment="content" style="width: 80%; margin: auto">
-<head>
+
+  <head>
     <title>Find Password</title>
-</head>
-<body>
+    <style>
+      .form-group {
+        margin-bottom: 15px;
+        /* 각 입력 그룹 사이의 간격 */
+      }
+
+      .input-group {
+        display: flex;
+        align-items: center;
+        /* 요소들을 세로 중앙에 정렬 */
+        gap: 10px;
+        /* 입력 필드와 버튼 사이의 간격 */
+      }
+
+      .input-group input {
+        flex: 1;
+        /* 입력 필드가 가용 공간을 최대한 차지 */
+        min-width: 0;
+        /* 입력 필드가 축소될 때 과도한 최소 너비 방지 */
+      }
+
+      .input-group button {
+        white-space: nowrap;
+        /* 버튼 텍스트 줄바꿈 방지 */
+      }
+
+      .content-wrapper {
+        width: 30%;
+        margin: 0 auto;
+        padding: 20px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      .content-body-bottom {
+        display: flex;
+        justify-content: flex-end;
+        /* 버튼들을 오른쪽에 정렬 */
+        gap: 10px;
+      }
+    </style>
+  </head>
+
+  <script>
+    function acceptnum_func() {
+      let email = document.getElementById('email');
+      if (email.value.indexOf('@') === -1) {
+        alert("맞지 않는 형식입니다.");
+        return false;
+      }
+      let accept_email = document.getElementById('accept_email');
+      accept_email.style.display = 'flex';
+
+      let url = './acceptnum?toemail=' + email.value;
+
+      fetch(url, {
+        method: 'GET',
+      })
+        .then(response => response.json())
+        .then(rdata => {
+          alert(rdata.num);
+          return rdata.num;
+        })
+        .catch(error => { // 서버 다운등 통신 에러
+          console.error('Error:', error);
+        });
+    }
+
+    function emailequal() {
+      let email_equal = document.getElementById('email_equal');
+      let email_msg = document.getElementById('email_msg');
+      let accept_email = document.getElementById('accept_email');
+      
+      let url = './checknum?checknum=' + email_equal.value;
+      fetch(url, {
+        method: 'GET',
+      })
+        .then(response => response.json())
+        .then(rdata => {
+          if (rdata.cnt == 0) {
+            email_msg.classList.remove('span_info');
+            email_msg.innerHTML = '인증번호가 일치하지 않습니다.';
+            email_msg.classList.add('span_warning');
+            return false;
+          } else {
+            email_msg.innerHTML = '';
+            email_msg.classList.remove('span_warning');
+            email_msg.innerHTML = '인증이 완료되었습니다.';
+            email_msg.classList.add('span_info');
+            accept_email.style.display = 'none';
+            return true;
+          }
+        })
+    }
+  </script>
+
+  <body>
     <div class="title_line">비밀번호 재설정</div>
     <aside class="aside_right">
-        <a href="javascript:location.reload();">새로고침</a>
-        <span class='menu_divide'>│</span>
-        <a href='./create'>회원 가입</a>
+      <a href="javascript:location.reload();">새로고침</a>
+      <span class='menu_divide'>│</span>
+      <a href='./create'>회원 가입</a>
     </aside>
 
     <div class='menu_line'></div>
 
-  
+    <!-- 스타일을 적용한 컨테이너 div -->
     <div style="width: 30%; margin: 0px auto ">
       <form name="frm" id="frm" th:object="${memberVO}" method="post" action="/member/findPasswdView">
-      
-        <div>
-          <label for="id">아이디</label>
-          <input type="text" name="id" id="id" value="1234" autofocus="autofocus"
-                 class="form-control fom-control-sm" style="width: 100%;">
-          <span id='id_msg'></span>  
-        </div>
-      
-        <div>
-          <label for="name">이 름</label>
-          <input type="text" name="name" id="name" value="하정우"
-                 class="form-control fom-control-sm" style="width: 100%;">
-          <span id='name_msg'></span>  
-        </div>
-        
+        <!-- 이메일 입력 필드와 인증번호 발송 버튼 -->
         <div class="form-group">
-          <label for="phone">전화번호</label> 
-          <input type='phone' name='phone' id='phone' value='010-1234-5678' required="required" 
-                    placeholder="패스워드" class="form-control form-control-sm" style="width: 100%;">
+
+          <label for="email">이메일</label><span id="email_msg" style="margin-left: 10px;"></span>
+          <div class="input-group">
+            <input type="text" name="email" id="email" value="vkjiu486@gmail.com" autofocus="autofocus"
+              class="form-control form-control-sm">
+            <button type='button' id="acceptnum_btn" onclick="acceptnum_func()" class="btn btn-primary btn-sm">인증번호
+              발송</button>
+              
+          </div>
+        </div>
+
+        <div class="input-group" style="display: none; width: 40%;" id="accept_email">
+          <input type="text" name="email_equal" id="email_equal" autofocus="autofocus" placeholder="인증번호"
+            class="form-control form-control-sm">
+          <button type='button' id="emailequal_btn" onclick="emailequal()" class="btn btn-primary btn-sm">확인</button>
+          
+        </div>
+
+        <!-- 아이디 입력 필드 -->
+        <div class="form-group">
+          <label for="id">아이디</label>
+          <input type="text" name="id" id="id" value="1234" class="form-control form-control-sm">
+          <span id='id_msg'></span>
+        </div>
+
+        <!-- 이름 입력 필드 -->
+        <div class="form-group">
+          <label for="name">이름</label>
+          <input type="text" name="name" id="name" value="하정우" class="form-control form-control-sm">
+          <span id='name_msg'></span>
+        </div>
+
+        <!-- 전화번호 입력 필드 -->
+        <div class="form-group">
+          <label for="phone">전화번호</label>
+          <input type='phone' name='phone' id='phone' value='010-1234-5678' required="required" placeholder="전화번호"
+            class="form-control form-control-sm">
           <span id='phone_msg'></span>
         </div>
-        
 
-  
-        <div class="content_body_bottom">
+        <!-- 하단의 버튼들 -->
+        <div class="content-body-bottom">
           <button type="submit" class="btn btn-secondary btn-sm">비밀번호 재설정</button>
           <button type="button" onclick="history.back();" class="btn btn-secondary btn-sm">취소</button>
         </div>
-  
-  
       </form>
     </div>
-
-</body>
+  </body>
 </div>
+
 </html>
-
-

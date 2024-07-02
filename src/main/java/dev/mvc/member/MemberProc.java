@@ -82,8 +82,8 @@ public class MemberProc implements MemberProcInter {
   }
 
   @Override
-  public MemberVO findId(@Param("name") String name, @Param("phone") String phone) {
-    MemberVO memberVO = this.memberDAO.findId(name,phone);
+  public MemberVO findId(HashMap<String, Object> map) {
+    MemberVO memberVO = this.memberDAO.findId(map);
     return memberVO;
   }
   
@@ -94,8 +94,8 @@ public class MemberProc implements MemberProcInter {
   }
   
   @Override
-  public MemberVO findPasswd(@Param("name") String name, @Param("phone") String phone, @Param("id") String id) {
-    MemberVO memberVO = this.memberDAO.findId(name,phone);
+  public MemberVO findPasswd(HashMap<String, Object> map) {
+    MemberVO memberVO = this.memberDAO.findId(map);
     return memberVO;
   }
   

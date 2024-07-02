@@ -67,7 +67,7 @@ public interface MemberDAOInter {
    * @param phone
    * @return
    */
-  public MemberVO findId(@Param("name") String name, @Param("phone") String phone);
+  public MemberVO findId(HashMap<String, Object> map);
   
   /**
    * 아이디 찾기
@@ -82,7 +82,7 @@ public interface MemberDAOInter {
    * @param phone
    * @return
    */
-  public MemberVO findPasswd(@Param("name") String name, @Param("phone") String phone, @Param("id") String id);
+  public MemberVO findPasswd(HashMap<String, Object> map);
   
   /**
    * 비밀번호 찾기

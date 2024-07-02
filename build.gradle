@@ -45,6 +45,7 @@ dependencies {
   implementation 'org.apache.tomcat.embed:tomcat-embed-jasper'
   // https://mvnrepository.com/artifact/javax.mail/javax.mail-api 
   implementation 'javax.mail:javax.mail-api:1.6.2'
+  implementation 'org.springframework.boot:spring-boot-starter-mail'
 }
 
 tasks.named('bootBuildImage') {

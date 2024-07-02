@@ -51,8 +51,6 @@
     }
 
     function checkID() {
-      //location.href = "/member/findIdView";
-
       let id = document.getElementById('id');
       let id_msg = document.getElementById('id_msg');
 
@@ -85,6 +83,7 @@
               id_msg.innerHTML = '이미 사용중인 ID(이메일) 입니다.<br>다른 ID(이메일)을 지정해주세요.';
               id_msg.classList.add('span_warning');
               id.focus();
+              return false;
             } else { // 아이디 중복 안됨.
               id_msg.innerHTML = '사용 가능한 ID(이메일) 입니다.';
               id_msg.classList.add('span_info');
@@ -147,8 +146,6 @@
               phone_msg.innerHTML = '이미 사용중인 전화번호 입니다.';
               phone_msg.classList.add('span_warning');
               phone.focus();
-
-
             } else { // 아이디 중복 안됨.
               phone_msg.innerHTML = '사용 가능한 전화번호 입니다.';
               phone_msg.classList.add('span_info');
@@ -169,7 +166,72 @@
       }
     }
 
+    function acceptnum_func() {
+      let acceptnum = document.getElementById('acceptnum');
+      let email = document.getElementById('email');
+      let email_msg = document.getElementById('email_msg');
+      let acceptnum_msg = document.getElementById('acceptnum_msg');
+      
+      acceptnum_msg.innerHTML = '';
+      acceptnum_msg.classList.remove('span_warning');
+
+      if (email.value.trim() === '') {
+        email_msg.innerHTML = '필수 입력 항목입니다.';
+        email_msg.classList.add('span_warning');
+        return false;
+      } else if (email.value.indexOf('@') === -1) {
+        email_msg.innerHTML = '';
+        email_msg.classList.remove('span_warning');
+        alert("맞지 않는 형식입니다.");
+        return false;
+      }
+      email_msg.innerHTML = '';
+      email_msg.classList.remove('span_warning');
+
+      let accept_email = document.getElementById('accept_email');
+      accept_email.style.display = 'flex';
+
+      let url = './acceptnum?toemail=' + email.value;
+
+      fetch(url, {
+        method: 'GET',
+      })
+        .then(response => response.json())
+        .then(rdata => {
+          alert(rdata.num);
+          return rdata.num;
+        })
+        .catch(error => { // 서버 다운등 통신 에러
+          console.error('Error:', error);
+        });
+      // ---------------------------------------------------------------------------------------
+      // fetch 관련 종료
+      // ---------------------------------------------------------------------------------------
+    }
+
+    function emailequal() {
+      let acceptnum = document.getElementById('acceptnum');
+
+      let url = './checknum?checknum=' + acceptnum.value;
+      fetch(url, {
+        method: 'GET',
+      })
+        .then(response => response.json())
+        .then(rdata => {
+          if (rdata.cnt == 0) {
+            acceptnum_msg.innerHTML = '인증번호가 일치하지 않습니다.';
+            acceptnum_msg.classList.add('span_warning');
+            return false;
+          } else {
+            acceptnum_msg.innerHTML = '';
+            acceptnum_msg.classList.remove('span_warning');
+            return true;
+          }
+        })
+    }
+
     function send() { // 회원 가입 처리
+
       let id = document.getElementById('id');
       let id_msg = document.getElementById('id_msg');
 
@@ -290,10 +352,25 @@
 
         return false;  // 회원 가입 진행 중지
       }
+      let accept_email = document.getElementById('accept_email');
+      if (accept_email.style.display == 'none') {
+        let acceptnum_valid = acceptnum_func(); // 인증번호 발송
+      }
+      let id_valid = checkID();
+      let email_valid = emailequal(); // 인증번호 확인
+      
+      
+      
+      let phone_valid = checkPhone();
 
-
-
-      document.getElementById('frm').submit(); // required="required" 작동 안됨.
+      // 모든 필드 유효성 검사 통과 여부 확인
+      if (id_valid && email_valid && phone_valid) {
+        // 회원 가입 폼 제출
+        document.getElementById('frm').submit();
+      } else {
+        // 필드 중 하나라도 유효성 검사를 통과하지 못한 경우
+        alert('입력 항목을 다시 확인해주세요.');
+      }
     }    
   </script>
 
@@ -310,7 +387,7 @@
 
     <form name="frm" id="frm" th:object="${memberVO}" method="post" action="/member/create">
       <div style="display: flex; align-items: center; margin-bottom: 10px; width: 100%;">
-        <label for="id" style="width: 150px; margin-right: 10px;">아이디(이메일)*</label>
+        <label for="id" style="width: 150px; margin-right: 10px;">아이디*</label>
         <input type="text" name="id" id="id" value="" autofocus="autofocus" class="form-control form-control-sm"
           style="width: 30%; margin-right: 10px;" th:field="*{id}">
         <button type='button' id="btn_checkID" onclick="checkID()" class="btn btn-primary btn-sm"
@@ -318,6 +395,23 @@
         <span id='id_msg'></span>
       </div>
 
+      <div style="display: flex; align-items: center; margin-bottom: 10px; width: 100%;">
+        <label for="email" style="width: 150px; margin-right: 10px;">이메일*</label>
+        <input type='email' name='email' id='email' value='' required="required" placeholder="이메일"
+          class="form-control form-control-sm" style="width: 30%;margin-right: 10px;">
+        <button type='button' id="acceptnum_btn" onclick="acceptnum_func()" class="btn btn-primary btn-sm"
+          style="margin-right: 10px;">인증번호 발송</button>
+        <span id='email_msg'></span>
+      </div>
+
+      <div id='accept_email' style="display:none; align-items: center; margin-bottom: 10px; width: 100%;">
+        <label for="accept_email" style="width: 150px; margin-right: 10px;"></label>
+        <input type='acceptnum' name='acceptnum' id='acceptnum' value='' required="required" placeholder="인증번호"
+          class="form-control form-control-sm" style="width: 30%; margin-right: 10px;">
+        <button type='button' id="checknum" onclick="emailequal()" class="btn btn-primary btn-sm"
+          style="margin-right: 10px;">확 인</button>
+        <span id='acceptnum_msg'></span>
+      </div>
 
       <div style="display: flex; align-items: center; margin-bottom: 10px; width: 100%;">
         <label for="passwd" style="width: 150px; margin-right: 10px;">패스워드*</label>

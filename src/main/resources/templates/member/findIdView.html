@@ -23,8 +23,14 @@
     <div style="width: 30%; margin: 0px auto; margin-top: 10px; ">
       <form name="frm" id="frm" th:object="${memberVO}" method="post" action="/member/findIdView">
         <div>
+          <label for="email">이메일</label>
+          <input type="text" name="email" id="email" value="vkjiu486@gmail.com" autofocus="autofocus" class="form-control fom-control-sm"
+            style="width: 80%;">
+        </div>
+
+        <div>
           <label for="name">이 름</label>
-          <input type="text" name="name" id="name" value="하정우" autofocus="autofocus" class="form-control fom-control-sm"
+          <input type="text" name="name" id="name" value="하정우" class="form-control fom-control-sm"
             style="width: 80%;">
           <span id='name_msg'></span>
         </div>

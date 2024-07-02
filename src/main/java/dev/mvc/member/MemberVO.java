@@ -45,6 +45,8 @@ public class MemberVO {
    * 1 : 정상 회원, 2 : 휴면 계정, 3 : 탈퇴 회원
    * */
   private String status = ""; 
+  /** 가입일 */
+  private String email = "";
   
   /** 회원 번호 */
   private int mprofileno=0;

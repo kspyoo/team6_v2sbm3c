@@ -51,6 +51,12 @@
 
             <div
               style="display: flex; align-items: center; margin-bottom: 10px; width: 100%; border-bottom: 1px solid #ccc; padding-bottom: 10px;">
+              <label for="email" style="width: 150px; margin-right: 10px;">아이디</label>
+              <span id="email" style="width: 30%; margin-right: 10px;">[[${memberVO.email}]]</span>
+            </div>
+
+            <div
+              style="display: flex; align-items: center; margin-bottom: 10px; width: 100%; border-bottom: 1px solid #ccc; padding-bottom: 10px;">
               <label for="name" style="width: 150px; margin-right: 10px;">성명</label>
               <label name='phone' id='phone' th:text='${memberVO.name}' style="width: 30%; margin-right: 10px;"></label>
               <span id='name_msg'></span>

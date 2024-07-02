@@ -97,10 +97,16 @@
 
             <div
               style="display: flex; align-items: center; margin-bottom: 10px; width: 100%; border-bottom: 1px solid #ccc; padding-bottom: 10px;">
+              <label for="email" style="width: 150px; margin-right: 10px;">이메일</label>
+              <span id="email" style="width: 30%; margin-right: 10px;">[[${memberVO.email}]]</span>
+            </div>
+
+            <div
+              style="display: flex; align-items: center; margin-bottom: 10px; width: 100%; border-bottom: 1px solid #ccc; padding-bottom: 10px;">
               <label for="passwd" style="width: 150px; margin-right: 10px;">비밀번호</label>
               <button type="button"
-                th:attr="onclick=|location.href='./passwd_update_form?memberno=${memberVO.memberno}'|"
-                class="btn" style="border: 2px solid black; padding:4px;">비밀번호 변경</button>
+                th:attr="onclick=|location.href='./passwd_update_form?memberno=${memberVO.memberno}'|" class="btn"
+                style="border: 2px solid black; padding:4px;">비밀번호 변경</button>
               <span id='passwd_msg'></span>
             </div>
 
@@ -125,7 +131,8 @@
               <label for="addr_code" style="width: 150px; margin-right: 10px;">우편 번호</label>
               <input type='text' name='addr_code' id='addr_code' th:value='${memberVO.addr_code}' placeholder="우편번호"
                 class="form-control form-control-sm" style="width: 30%; margin-right: 10px;">
-              <button type="button" id="btn_DaumPostcode" onclick="DaumPostcode()" class="btn"  style="border: 2px solid black; padding:4px;" >우편번호
+              <button type="button" id="btn_DaumPostcode" onclick="DaumPostcode()" class="btn"
+                style="border: 2px solid black; padding:4px;">우편번호
                 찾기</button>
             </div>
 
@@ -240,10 +247,11 @@
         <!-- ------------------------------ DAUM 우편번호 API 종료 ------------------------------ -->
 
         <div class="content_body_bottom">
-          <button type="button" onclick="send();" class="btn"  style="border: 2px solid black; padding:4px">저장</button>
-          <button type="button" onclick="history.back();" class="btn"  style="border: 2px solid black; padding:4px">취소</button>
-          <button type="button" th:attr="onclick=|location.href='./delete?memberno=${memberVO.memberno}'|"
-            class="btn"  style="border: 2px solid black; padding:4px">삭제</button>
+          <button type="button" onclick="send();" class="btn" style="border: 2px solid black; padding:4px">저장</button>
+          <button type="button" onclick="history.back();" class="btn"
+            style="border: 2px solid black; padding:4px">취소</button>
+          <button type="button" th:attr="onclick=|location.href='./delete?memberno=${memberVO.memberno}'|" class="btn"
+            style="border: 2px solid black; padding:4px">삭제</button>
         </div>
 
 

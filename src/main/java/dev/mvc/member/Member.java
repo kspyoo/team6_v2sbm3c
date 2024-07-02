@@ -6,4 +6,6 @@ public class Member {
   /** 블럭당 페이지 수*/
   public static int PAGE_PER_BLOCK = 10;
   
+  
+  
 }

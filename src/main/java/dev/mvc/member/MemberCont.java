@@ -33,6 +33,7 @@ import dev.mvc.tool.OpenAPI;
 import dev.mvc.tool.Security;
 import dev.mvc.tool.Tool;
 import dev.mvc.tool.Upload;
+import jakarta.mail.MessagingException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -44,6 +45,9 @@ public class MemberCont {
   @Autowired
   @Qualifier("dev.mvc.member.MemberProc")
   private MemberProcInter memberProc;
+  
+  @Autowired
+  private Email email;
 
   @Autowired
   @Qualifier("dev.mvc.master.MasterProc")
@@ -86,7 +90,42 @@ public class MemberCont {
 
     JSONObject obj = new JSONObject();
     obj.put("cnt", cnt);
-    System.out.println("obj Phone : " + obj);
+    return obj.toString();
+  }
+  
+  @GetMapping(value = "/acceptnum")
+  @ResponseBody
+  public String acceptnum(HttpSession session,String toemail) {
+    JSONObject obj = new JSONObject();
+    System.out.println("toemail : " + toemail);
+    
+    try {
+      String num = email.sendEmail(toemail);
+
+      obj.put("num", num);
+      session.setAttribute("obj", obj);
+      
+    } catch (MessagingException e) {
+      e.printStackTrace();
+    }
+    
+    return obj.toString();
+  }
+  
+  @GetMapping(value = "/checknum")
+  @ResponseBody
+  public String checknum(HttpSession session,String checknum) {
+    JSONObject obj = new JSONObject();
+  
+    obj = (JSONObject) session.getAttribute("obj");
+    String num = (String) obj.get("num");
+
+    if (num.equals(checknum)) {
+      obj.put("cnt", 1);
+    } else {
+      obj.put("cnt",0);
+    }
+    
     return obj.toString();
   }
 
@@ -155,7 +194,7 @@ public class MemberCont {
     // Cookie
     Cookie[] cookies = request.getCookies();
     Cookie cookie = null;
-
+    
     String ck_id = ""; // id 저장
     String ck_id_save = ""; // id 저장 여부를 체크
     String ck_passwd = ""; // passwd 저장
@@ -210,6 +249,12 @@ public class MemberCont {
     model.addAttribute("cnt", cnt);
     if (cnt == 1) {
       MemberVO memberVO = this.memberProc.readById(id);
+      try {
+        String acceptnum = email.sendEmail(memberVO.getEmail());
+      } catch (MessagingException e) {
+        e.printStackTrace();
+      }
+      
 
       // this.memberprofileProc.create_file(memberVO.getMemberno());
 
@@ -396,17 +441,18 @@ public class MemberCont {
   }
 
   @PostMapping("/findIdView")
-  public String findId_proc(HttpSession session, Model model, String name, String phone) {
+  public String findId_proc(HttpSession session, Model model, String name, String phone,String email) {
     HashMap<String, Object> map = new HashMap<String, Object>();
     map.put("name", name);
     map.put("phone", phone);
+    map.put("email", email);
 
     int cnt = this.memberProc.findIdCheck(map);
 
     model.addAttribute("cnt", cnt);
 
     if (cnt == 1) {
-      MemberVO memberVO = this.memberProc.findId(name, phone);
+      MemberVO memberVO = this.memberProc.findId(map);
 
       model.addAttribute("memberVO", memberVO);
 
@@ -431,12 +477,13 @@ public class MemberCont {
   }
 
   @PostMapping("/findPasswdView")
-  public String findPasswd_proc(RedirectAttributes ra, HttpSession session, Model model, String name, String phone,
+  public String findPasswd_proc(RedirectAttributes ra, HttpSession session, Model model, String name, String phone, String email,
       String id) {
     HashMap<String, Object> map = new HashMap<String, Object>();
     map.put("name", name);
     map.put("phone", phone);
     map.put("id", id);
+    map.put("email", email);
 
     int cnt = this.memberProc.findPasswdCheck(map);
 
@@ -612,10 +659,16 @@ public class MemberCont {
     if (session.getAttribute("masterno") == null) {
       return "master/login";
     }
-
+    
     word = Tool.checkNull(word).trim();
     ArrayList<MemberVO> list_paging = this.memberProc.list_paging(word, now_page, this.record_per_page);
         
+    for (MemberVO mvo : list_paging) {
+      //mvo.setEmail("vkjiu486@gmail.com");
+      System.out.println("email : " + mvo.getEmail());
+    }
+    
+    
     model.addAttribute("list_paging",list_paging);
     
     int masterno = (int) session.getAttribute("masterno");

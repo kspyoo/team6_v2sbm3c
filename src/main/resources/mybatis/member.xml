@@ -18,13 +18,13 @@
 
   <!-- 회원 가입 -->
   <insert id="create" parameterType="dev.mvc.member.MemberVO">
-    INSERT INTO member(memberno, id, passwd, name, gender, birthday, phone, addr_code, addr_main, addr_detail, joindate, status)
-    VALUES (member_seq.nextval, #{id}, #{passwd}, #{name}, #{gender}, #{birthday}, #{phone}, #{addr_code}, #{addr_main},#{addr_detail}, sysdate, #{status})
+    INSERT INTO member(memberno, id, passwd, name, gender, birthday, phone, addr_code, addr_main, addr_detail, joindate, status, email)
+    VALUES (member_seq.nextval, #{id}, #{passwd}, #{name}, #{gender}, #{birthday}, #{phone}, #{addr_code}, #{addr_main},#{addr_detail}, sysdate, #{status},#{email})
   </insert>
 
   <!-- id(이메일)로 회원 정보 조회 -->
   <select id="readById" resultType="dev.mvc.member.MemberVO" parameterType="String">
-    SELECT memberno, id, passwd, name, gender, birthday, phone, addr_code, addr_main, addr_detail, joindate, status
+    SELECT memberno, id, passwd, name, gender, birthday, phone, addr_code, addr_main, addr_detail, joindate, status, email
     FROM member
     WHERE id = #{id}
   </select>
@@ -45,7 +45,7 @@
 
   <!-- memberno로 회원 정보 조회 -->
   <select id="read" resultType="dev.mvc.member.MemberVO" parameterType="int">
-    SELECT memberno, id, passwd, name, gender, birthday, phone, addr_code, addr_main, addr_detail, joindate, status
+    SELECT memberno, id, passwd, name, gender, birthday, phone, addr_code, addr_main, addr_detail, joindate, status, email
     FROM member
     WHERE memberno = #{memberno}
   </select>
@@ -64,30 +64,30 @@
 
   <!-- 아이디 찾기 -->
   <select id="findId" resultType="dev.mvc.member.MemberVO">
-    SELECT id, name
+    SELECT id, name, email
     FROM member
-    WHERE name=#{name} AND phone=#{phone}
+    WHERE name=#{name} AND phone=#{phone} AND email=#{email}
   </select>
 
   <!-- 아이디 유효성 검사 -->
   <select id="findIdCheck" resultType="int">
     SELECT COUNT(memberno)
     FROM member
-    WHERE name = #{name} AND phone = #{phone}
+    WHERE name = #{name} AND phone = #{phone} AND email=#{email}
   </select>
 
   <!-- 비밀번호 찾기 -->
   <select id="findPasswd" resultType="dev.mvc.member.MemberVO">
-    SELECT passwd, id, name
+    SELECT passwd, id, name, email
     FROM member
-    WHERE name=#{name} AND phone=#{phone} AND id=#{id}
+    WHERE name=#{name} AND phone=#{phone} AND id=#{id} AND email=#{email}
   </select>
 
   <!-- 비밀번호 유효성 검사 -->
   <select id="findPasswdCheck" resultType="int">
     SELECT COUNT(memberno)
     FROM member
-    WHERE name = #{name} AND phone = #{phone} AND id=#{id}
+    WHERE name = #{name} AND phone = #{phone} AND id=#{id} AND email=#{email}
   </select>
 
   <!--  현재 패스워드 검사 -->
@@ -106,24 +106,24 @@
 
   <!-- 회원 목록 조회 -->
   <select id="list" resultType="dev.mvc.member.MemberVO">
-    SELECT memberno, id, passwd, name, gender, birthday, phone, addr_code, addr_main, addr_detail, joindate, status
+    SELECT memberno, id, passwd, name, gender, birthday, phone, addr_code, addr_main, addr_detail, joindate, status, email
     FROM member
     ORDER BY id ASC
   </select>
 
   <!-- 회원 목록 조회 -->
   <select id="list_no" resultType="dev.mvc.member.MemberVO">
-    SELECT memberno, id, passwd, name, gender, birthday, phone, addr_code, addr_main, addr_detail, joindate, status
+    SELECT memberno, id, passwd, name, gender, birthday, phone, addr_code, addr_main, addr_detail, joindate, status, email
     FROM member
     WHERE memberno=#{memberno}
   </select>
 
   <select id="list_paging" resultType="dev.mvc.member.MemberVO" parameterType="Map">
-    SELECT memberno, id, passwd, name, gender, birthday, phone, addr_code, addr_main, addr_detail, joindate, status, r
+    SELECT memberno, id, passwd, name, gender, birthday, phone, addr_code, addr_main, addr_detail, joindate, status, email , r
    FROM (
-              SELECT memberno, id, passwd, name, gender, birthday, phone, addr_code, addr_main, addr_detail, joindate, status, rownum AS r
+              SELECT memberno, id, passwd, name, gender, birthday, phone, addr_code, addr_main, addr_detail, joindate, status, email , rownum AS r
               FROM (
-                        SELECT memberno, id, passwd, name, gender, birthday, phone, addr_code, addr_main, addr_detail, joindate, status
+                        SELECT memberno, id, passwd, name, gender, birthday, phone, addr_code, addr_main, addr_detail, joindate, status, email
                         FROM member
     <choose>
       <when test="word != null and word !=''">
@@ -146,7 +146,7 @@
   <select id="search_count" resultType="int" parameterType="String">
     SELECT COUNT(*) as cnt
       FROM (
-          SELECT memberno, id, passwd, name, gender, birthday, phone, addr_code, addr_main, addr_detail, joindate, status
+          SELECT memberno, id, passwd, name, gender, birthday, phone, addr_code, addr_main, addr_detail, joindate, status, email
           FROM member
     <choose>
       <when test="word != null and word !=''">
@@ -162,5 +162,6 @@
     ORDER BY memberno ASC
       )
   </select>
+  
 
 </mapper>
