@@ -1,0 +1,421 @@
+<html layout:decorate="~{layout}"> <!-- layout.html 상속 -->
+<div layout:fragment="content" style="padding-top: 20px; margin-bottom: 30px;">
+    <link href="/css/chat/chat.css" rel="Stylesheet" type="text/css">
+    <link href="/css/chat/list.css" rel="Stylesheet" type="text/css">
+    <div id="list_all" style="width:80%; margin: auto; height: auto; overflow: hidden">
+        <div class='title_line' style="margin-bottom: 0;">
+            개인 채팅
+        </div>
+        <div class="row" id="chatting_list_1" >
+            <!-- 채팅방 리스트. db에서 한번이라도 채팅을 주고받은 내역이있는 유저와의 채팅방 리스트 -->
+            <ul class="col-4 chat-ul" id="chat_list" style="overflow: auto">
+
+            </ul>
+            <!-- 채팅내역이 없는경우 -->
+            <div class="col-4" style="height: 600px; border-right: #9AC7FA 2px solid; display: none;" id="empty_list">
+                <div>
+                    채팅 내역이 없습니다.
+                </div>
+            </div>
+            <!-- 채팅방. 위의 리스트중 하나를 누르면 채팅방이 display:flex가 되며 채팅내역을 불러와 이전 채팅내역도 볼수있고 소켓연결후 메세지를 보냄-->
+            <div class="col-8" id="chat" style="display:none;">
+                <input type="hidden" id="chatRoomNo">
+                <div class="chat-title" id="chat-title">
+                    <span class="name" id="name"></span>
+                </div>
+                <div class="chat-container" style="height: 450px; padding: 10px 0; overflow: auto; margin-bottom: 10px;">
+                    <div id="chatting_pannel" class="chatting_pannel">
+
+                    </div>
+                </div>
+                <div style="height: 90px; border: 1px solid #a7cefb; border-radius: 3px; padding: 5px 0 5px 0;">
+                    <textarea class="" style='width: 80%; resize: none; height: 100%; border: 0 solid; padding: 0 10px 0 10px; float: left; border-radius: 3px; outline: none' id="message"
+                              placeholder="메세지를 입력해주세요"></textarea>
+                    <div style="width: 20%; height: 100%;float: right">
+                        <button style="width: 50%; height: 80%; background-color: white; border: 0 solid; border-radius: 3px;margin: 10px auto;display: block; color: silver;"
+                                id="send_btn" disabled>전송</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-8" id="empty_chat" style="display:none; text-align: center; margin-top: 250px;">
+               <div>
+                   목록에서 채팅방을 선택해주세요.
+               </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.0/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+    <script th:inline="javascript">
+        var stompClient = null;
+
+        function connect(chatRoomNo) {
+            var socket = new SockJS('/ws');
+            stompClient = Stomp.over(socket);
+
+            stompClient.connect({}, function (frame) {
+                // 사용자 개인 큐 주제를 구독
+                for(let i=0; i<chatRoomNo.length;i++) {
+                    stompClient.subscribe(`/topic/messages/${chatRoomNo[i]}`, function (sendMsg) {
+                        // 해당 주제로 메세지가 전달됐을때 실행되는 부분
+                        let message = JSON.parse(sendMsg.body);
+                        let now_chatRoom = document.getElementById('chatRoomNo').value;
+
+                        if (message.sender != [[${session.memberno}]] && now_chatRoom == chatRoomNo[i]) {
+                            fetch(`http://localhost:9093/chatting/readMsg?chatRoomNo=${chatRoomNo[i]}`);
+
+                            createReceiverMsg(message.content, message.regdate);
+                            fetch(`http://localhost:9093/chatting/countAndMsg?chatRoomNo=${chatRoomNo[i]}`)
+                            .then(response => response.json())
+                            .then(response => {
+                                document.getElementById('time'+chatRoomNo[i]).innerText=response.regdate.toString().substring(0,10);
+                                document.getElementById('lastMsg'+chatRoomNo[i]).innerText=response.content;
+                            });
+                        }else if(message.sender != [[${session.memberno}]] && now_chatRoom != chatRoomNo[i]){
+                            fetch(`http://localhost:9093/chatting/countAndMsg?chatRoomNo=${chatRoomNo[i]}`)
+                            .then(response => response.json())
+                            .then(response => {
+                                document.getElementById('time'+chatRoomNo[i]).innerText=response.regdate.toString().substring(0,10);
+                                document.getElementById('lastMsg'+chatRoomNo[i]).innerText=response.content;
+                                document.getElementById('count'+chatRoomNo[i]).innerText=response.count;
+                            });
+                        }
+                    });
+                }
+
+            });
+        }
+
+        function send(){
+            let content = document.getElementById('message').value;
+            document.getElementById('message').value = '';
+            let sender = [[${session.memberno}]];
+            console.log(sender)
+            let chatRoomNo = parseInt(document.getElementById('chatRoomNo').value);
+
+            if(sender == null){
+                location.reload();
+            }
+
+            let messageForm = JSON.stringify({'sender':sender, 'chatRoomNo':chatRoomNo, 'content':content})
+
+            let day = new Date();
+            let year = day.getFullYear();
+            let month = day.getMonth()+1;
+            let date = day.getDate();
+            let hour = day.getHours()
+            let min = day.getMinutes();
+
+            let regdate =`${year}.${month}.${date} ${hour}:${min}`
+
+            stompClient.send(`/app/chat/${chatRoomNo}`, {}, messageForm);
+            createSenderMsg(content, regdate);
+        }
+
+        function disconnect() {
+            if (stompClient != null) {
+                stompClient.disconnect();
+            }
+        }
+
+        function msgList(chatRoomNo){
+            fetch(`http://localhost:9093/chatting/msgList?chatRoomNo=${chatRoomNo}`, {
+                method: 'GET'
+            })
+            .then(response => response.json())
+            .then(rdata => {
+                for (let i=0;i<rdata.length;i++){
+                    let msg = rdata[i]
+
+                    if (i==0){
+                        let date = msg.regdate.toString().split(" ")[0]
+                        createDate(date);
+                    }else{
+                        let today = rdata[i].regdate.toString().split(" ")[0];
+                        let date_today = new Date(today);
+
+                        let yesterday = rdata[i-1].regdate.toString().split(" ")[0];
+                        let date_yesterday = new Date(yesterday);
+
+                        if (date_today > date_yesterday){
+                            createDate(today);
+                        }
+                    }
+
+                    if(msg.sender == [[${session.memberno}]]){
+                        console.log('보낸 메세지')
+                        createSenderMsg(msg.content, msg.regdate);
+                    }else{
+                        createReceiverMsg(msg.content, msg.regdate);
+                    }
+                }
+            })
+
+            document.querySelector('.chat-container').scrollTop = document.querySelector('.chat-container').scrollHeight;
+        }
+
+        function createDate(date){
+            let div = document.createElement("div");
+            div.style.textAlign="center";
+            div.innerText=`------------------ ${date} ------------------`
+
+            document.getElementById('chatting_pannel').appendChild(div);
+        }
+
+        function createSenderMsg(content, regDate){
+            const div = document.createElement("div");
+            div.classList.add("sender");
+
+            const msg = document.createElement("div");
+            msg.classList.add("send_msg");
+            msg.innerText = content;
+            div.appendChild(msg);
+
+            regDate = regDate.toString().split(" ")[1];
+            hour = regDate.split(":")[0]
+            minute = regDate.split(":")[1]
+
+            if (parseInt(hour) > 12) {
+                regDate = 'PM ' + `${parseInt(hour) - 12}` + " : " + minute;
+            }else if(parseInt(hour) == 12){
+                regDate = 'AM ' + `0${parseInt(hour) - 12}` + " : " + minute;
+            }else{
+                regDate = 'AM ' + hour + " : " + minute;
+            }
+
+            const time = document.createElement("div");
+            time.classList.add("sender_time");
+            time.innerText = regDate;
+            div.appendChild(time);
+
+            document.getElementById('chatting_pannel').appendChild(div);
+            document.querySelector('.chat-container').scrollTop = document.querySelector('.chat-container').scrollHeight;
+        }
+
+        function createReceiverMsg(content, regDate){
+            const div = document.createElement("div");
+            div.classList.add("receiver");
+
+            const msg = document.createElement("div");
+            msg.classList.add("receive_msg");
+            msg.innerText = content;
+            div.appendChild(msg);
+
+            regDate = regDate.toString().split(" ")[1];
+            hour = regDate.split(":")[0]
+            minute = regDate.split(":")[1]
+
+            if (parseInt(hour) > 12) {
+                regDate = 'PM ' + `${parseInt(hour) - 12}` + " : " + minute;
+            }else if(parseInt(hour) == 12){
+                regDate = 'AM ' + `0${parseInt(hour) - 12}` + " : " + minute;
+            }else{
+                regDate = 'AM ' + hour + " : " + minute;
+            }
+
+            const time = document.createElement("div");
+            time.classList.add("receiver_time")
+            time.innerText = regDate;
+            div.appendChild(time);
+
+            document.getElementById('chatting_pannel').appendChild(div);
+            document.querySelector('.chat-container').scrollTop = document.querySelector('.chat-container').scrollHeight;
+        }
+
+        function createLi(chatRoomNo){
+            const li = document.createElement("li");
+            li.setAttribute('id', chatRoomNo);
+
+            li.classList.add('row', 'chat-list');
+            li.value = chatRoomNo;
+
+            document.getElementById('chat_list').appendChild(li);
+        }
+
+        function createName(id, name){
+            const div = document.createElement("div");
+            div.classList.add("col-6");
+            div.style.display = "flex";
+
+            const span = document.createElement("span");
+            span.classList.add("chat-name");
+            span.id="name"+id;
+
+            const text = document.createTextNode(name);
+            span.appendChild(text);
+            div.appendChild(span);
+
+            document.getElementById(id).appendChild(div);
+        }
+
+        function createTime(id, time){
+            const div = document.createElement("div");
+            div.classList.add("col-6");
+            div.style.display = "flex";
+
+            const span = document.createElement("span");
+            span.classList.add("chat-time");
+            span.id="time"+id;
+
+            time = time.toString().substring(0,10);
+
+            const text = document.createTextNode(time);
+            span.appendChild(text);
+            div.appendChild(span);
+
+            document.getElementById(id).appendChild(div);
+        }
+
+        function createLastMsg(id, msg){
+            const div = document.createElement("div");
+            div.classList.add("col-9");
+            div.style.display = "flex";
+
+            const span = document.createElement("span");
+            span.classList.add("chat-last");
+            span.id="lastMsg"+id;
+
+            if (msg.length>10){
+                msg = msg.toString().substring(0,7) + '...'
+            }else if(msg.length = 0){
+                msg = "마지막 메세지가 없습니다."
+            }
+
+            const text = document.createTextNode(msg);
+            span.appendChild(text);
+            div.appendChild(span);
+
+            document.getElementById(id).appendChild(div);
+        }
+
+        function createCount(id, count){
+            const div = document.createElement("div");
+            div.classList.add("col-3");
+            div.style.display = "flex";
+
+            const span = document.createElement("span");
+            span.classList.add("chat-last-cnt");
+            span.id="count"+id;
+
+            const text = document.createTextNode(count);
+            span.appendChild(text);
+            div.appendChild(span);
+
+            document.getElementById(id).appendChild(div);
+        }
+
+        window.onload = function() {
+            // connect();
+
+            fetch("http://localhost:9093/chatting/list", {
+                method: 'GET'
+            })
+            .then(response => response.json())
+            .then(rdata => {
+                if(rdata.length > 0) {
+                    document.getElementById('empty_list').style.display="none";
+                    document.getElementById('chat_list').style.display='block';
+                    let chatRoomList = [];
+                    for(let i=0; i<rdata.length; i++){
+                        let chat = rdata[i].chatroomuserid;
+                        let mem = rdata[i].member;
+
+                        let chatRoomNo = chat.chatroomno;
+                        let name = mem.name;
+                        chatRoomList.push(chatRoomNo);
+
+                        createLi(chatRoomNo);
+                        createName(chatRoomNo, name);
+                        document.getElementById(chatRoomNo).addEventListener('click',()=>{
+                            fetch(`http://localhost:9093/chatting/readMsg?chatRoomNo=${chatRoomNo}`);
+
+                            document.getElementById('count'+chatRoomNo).innerText = 0;
+
+                            document.getElementById('empty_chat').style.display='none';
+                            // disconnect();
+                            // connect(chatRoomNo);
+                            document.querySelectorAll('.chat-list').forEach(li => {
+                                li.style.backgroundColor = '';
+                            });
+
+                            document.getElementById(chatRoomNo).style.backgroundColor="rgba(154, 199, 250, 0.3)";
+
+                            document.getElementById('chat').style.display='block';
+                            document.getElementById('name').innerText=name+'님';
+                            document.getElementById('chatRoomNo').value = chatRoomNo;
+
+                            let chatting_pannel = document.getElementById('chatting_pannel');
+                            while(chatting_pannel.firstChild){
+                                chatting_pannel.removeChild(chatting_pannel.firstChild);
+                            }
+
+                            msgList(chatRoomNo);
+                        })
+
+                        fetch(`http://localhost:9093/chatting/countAndMsg?chatRoomNo=${chatRoomNo}`)
+                            .then(response => response.json())
+                            .then(response => {
+                                createTime(chatRoomNo,response.regdate);
+                                createLastMsg(chatRoomNo,response.content);
+                                createCount(chatRoomNo,response.count);
+                            });
+                    }
+                    console.log(chatRoomList);
+                    connect(chatRoomList);
+
+                }else{
+                    document.getElementById('empty_list').style.display="block";
+                    document.getElementById('chat_list').style.display='none';
+                }
+            })
+
+            // html 접근을 내정보에서 들어온 경우 왼쪽에 채팅 목록만 띄워줌
+            if([[${chatRoomNo}]] == 0){
+                document.getElementById('empty_chat').style.display='block'
+            }else{
+                document.getElementById('chat').style.display='block'
+            }
+
+            document.getElementById('send_btn').addEventListener('click',()=>{
+                let msg = document.getElementById('message');
+
+                if (msg.value.length > 0){
+                    send();
+                }
+            })
+
+            document.getElementById('message').addEventListener('input',()=>{
+                console.log('입력 감지');
+
+                let msg = document.getElementById('message');
+                let send_btn = document.getElementById('send_btn');
+
+                if (msg.value.length > 0){
+                    send_btn.style.color="#339bf4";
+                    send_btn.removeAttribute("disabled");
+                }else{
+                    send_btn.style.color="silver";
+                    send_btn.setAttribute("disabled","disabled");
+                }
+            });
+
+            document.getElementById('message').addEventListener('keypress', (event) => {
+                if (event.key === 'Enter') {
+                    let msg = document.getElementById('message');
+
+                    if (msg.value.length > 0){
+                        send();
+                    }
+                }
+            });
+        };
+
+        window.onresize=()=>{
+            var innerwidth = window.innerWidth
+            const chatting_list1 = document.getElementById('chatting_list_1');
+
+            innerwidth <= '950'?chatting_list1.style.display='none':chatting_list1.style.display='flex';
+        };
+    </script>
+</div>
+</html>
