@@ -199,6 +199,18 @@ public class CommunityProc implements CommunityProcInter {
     int  cnt = this.communityDAO.list_search_count(word);
     return cnt;
   }
+
+  @Override
+  public int vcnt(int communityno) {
+    int cnt = this.communityDAO.vcnt(communityno);
+    return cnt;
+  }
+
+  @Override
+  public int rcnt(int communityno) {
+    int rcnt = this.communityDAO.rcnt(communityno);
+    return rcnt;
+  }
   
   
 }

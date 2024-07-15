@@ -1,6 +1,7 @@
 package dev.mvc.community;
 
 import java.util.ArrayList;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,4 +33,11 @@ public interface CommunityDAOInter {
   public ArrayList<attachmentVO>list_search_paging(HashMap<String,Object>map);
   
   public int list_search_count(String word);
+  
+  public int vcnt(int communityno);
+  
+  public int rcnt(int communityno);
+  
 }
+
+

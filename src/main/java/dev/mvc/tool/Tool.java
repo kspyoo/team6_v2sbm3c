@@ -13,6 +13,22 @@ import java.util.Date;
 import java.util.Random;
 
 public class Tool {
+    public static String getDateAndTime(){
+        Date today = new Date();
+        SimpleDateFormat date = new SimpleDateFormat("yyyy.MM.dd");
+        SimpleDateFormat time = new SimpleDateFormat("HH:mm:ss");
+
+        return date.format(today) + " " + time.format(today);
+    }
+
+    public static String getDate(){
+        Date today = new Date();
+        SimpleDateFormat date = new SimpleDateFormat("yyyy.MM.dd");
+
+        String today_str = date.format(today);
+
+        return today_str;
+    }
     /**
      * FileUpload 1.2, 1.3 한글 변환
      * @param str

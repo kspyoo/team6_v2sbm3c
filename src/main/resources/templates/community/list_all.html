@@ -8,10 +8,10 @@
   </div>
 
   <aside class="aside_right">
-  <a href="/community/create">등록</a>
+    <a href="/community/create">등록</a>
     <span class="menu_devide">│</span>
     </span>
-  
+
     <a href="javascript:location.reload();">새로고침</a>
     <span class='menu_divide'>│</span>
   </aside>
@@ -34,7 +34,8 @@
 
 
     <tr th:each="communityVO,status:${list}"
-    th:attr="onclick=|location.href='/community/read?communityno=${communityVO.communityno}&word=${word}&now_page=${now_page}'|" style="cursor: pointer; height: 90px;">
+      th:attr="onclick=|location.href='/community/read?communityno=${communityVO.communityno}&word=${word}&now_page=${now_page}'|"
+      style="cursor: pointer; height: 90px;">
       <td class='td_basic' style="vertical-align: middle; text-align:center;">
         <div
           th:if="${(communityVO.filename != null) and (communityVO.filename.endsWith('jpg') or communityVO.filename.endsWith('png')  or communityVO.filename.endsWith('gif'))}">
@@ -52,14 +53,14 @@
       </td>
 
 
-      <td class='td_left' >
+      <td class='td_left'>
         <span th:text="${communityVO.title}" style="font-weight: bold;"></span><br>
         <!--<span th:text="|&nbsp;${communityVO.wrirtedate.substring(0,10)}|"> </span><br> -->
         <span th:if="${communityVO.content.length() > 160 }"
           th:text="|${communityVO.content.substring(0, 160) }...|"></span>
         <span th:if="${communityVO.content.length() <= 160 }" th:text="|${communityVO.content}|"></span>
 
-
+      
 
 
 
@@ -67,12 +68,11 @@
       <td colspan="2" style="text-align: center;">작성된 글이 없습니다.</td>
     </tr>
 
-
-
-
-
     </tr>
   </table>
+
+  
+
 
   <div class='bottom_menu'>
     <button type='button' onclick="location.reload();" class="btn btn-primary btn-sm">새로 고침</button>

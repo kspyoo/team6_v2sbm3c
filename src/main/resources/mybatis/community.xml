@@ -74,6 +74,19 @@ ON c.communityno = ca.communityno
 WHERE c.communityno = #{communityno}
 </select>
 
+<!-- 조회수 -->
+<update id="vcnt" parameterType="int">
+UPDATE community 
+SET VCNT = VCNT + 1
+WHERE communityno=#{communityno} 
+</update>
+
+<update id="rcnt" parameterType="int">
+UPDATE community 
+SET RCNT = RCNT + 1
+WHERE communityno=#{communityno} 
+</update>
+
 
 </mapper>
 

@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout}"> <!-- layout.html 상속 -->
+<div layout:fragment="content" style="padding-top: 20px;">
+    <link href="/css/mateCommunity/list.css" rel="Stylesheet" type="text/css">
+    <div id="list_all" style="width:80%; margin: auto; height: auto; overflow: hidden">
+        <div class='title_line'>
+            <span style="font-size: 20px;" th:each="petTypeVO:${petTypeList}" th:text="${petTypeVO.petTypeNo == petTypeNo ? petTypeVO.petType:''}">
+            </span>
+             산책 메이트 모집
+        </div>
+
+        <div class="row mb-3 text-center">
+            <a href="/mateCommunity/list_all" class="col pt-3 themed-grid-col cate-off">
+                전체
+            </a>
+            <a th:href="@{|/mateCommunity/list_all_byPetTypeNo?petTypeNo=${petTypeVO.petTypeNo}|}" class="col pt-3 themed-grid-col" th:each="petTypeVO:${petTypeList}"
+                    th:classappend="${petTypeVO.petTypeNo == petTypeNo ? 'cate-on':'cate-off'}">
+                [[${petTypeVO.petType}]]
+            </a>
+        </div>
+
+        <aside class="aside_right" th:if="${session.memberno != null}">
+            <a href="javascript:location.reload();">새로고침</a>
+            <span class='menu_divide'>│</span>
+            <a th:href="@{|./create?petTypeNo=${petTypeNo}|}">글 등록</a>
+            <span class='menu_divide'>│</span>
+            <a th:href="@{|/mateApply/my_list_all|}">내 게시글</a>
+            <span class='menu_divide'>│</span>
+            <a th:href="@{|/mateApply/applyList?petTypeNo=${petTypeNo}&now_page=${now_page}|}">내 신청내역</a>
+            <span class='menu_divide'>│</span>
+            <a th:href="@{|/mateReview/myList|}">내 후기 </a>
+        </aside>
+        <aside class="aside_right" th:if="${session.memberno == null}">
+            <a href="javascript:location.reload();">새로고침</a>
+        </aside>
+        <div class="menu_line"></div>
+
+        <div>
+            <span>총 모집글 수 [[${petTypeNo_count}]]</span>
+        </div>
+
+        <table class="table table-hover" style="margin: 20px auto">
+            <colgroup>
+                <col style="width: 15%;"></col>
+                <col style="width: 35%;"></col>
+                <col style="width: 15%;"></col>
+                <col style="width: 15%;"></col>
+                <col style="width: 20%;"></col>
+    <!--            <col style="width: 15%;"></col>-->
+                <!--            <col style="width: 10%;"></col>-->
+            </colgroup>
+            <thead>
+            <tr>
+                <th class="th_bs" style='text-align: center; border-right: 1px solid;'>분류</th>
+                <th class="th_bs" style='text-align: center; border-right: 1px solid;'>제목</th>
+                <th class="th_bs" style='text-align: center; border-right: 1px solid;'>모집 인원</th>
+                <th class="th_bs" style='text-align: center; border-right: 1px solid;'>모집 상태</th>
+                <th class="th_bs" style='text-align: center;'>작성일</th>
+    <!--            <th class="th_bs" style='text-align: center;'>관리</th>-->
+                <!--            <th class="th_bs" style='text-align: center;'>기타</th>-->
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="mateCommunityVO:${list_all_byPetTypeNo}" style="cursor: pointer;"
+                th:attr="onclick=|location.href='/mateCommunity/read?mCommunityNo=${mateCommunityVO.mCommunityNo}&petTypeNo=${petTypeNo}&now_page=${now_page}&searchWord=${searchWord}'|">
+                <td class="td_basic" style="text-align: center;">
+                    <span th:if="${mateCommunityVO.petTypeNo == 1}">
+                        강아지
+                    </span>
+                    <span th:if="${mateCommunityVO.petTypeNo == 2}">
+                        고양이
+                    </span>
+                    <span th:if="${mateCommunityVO.petTypeNo == 3}">
+                        기타
+                    </span>
+                </td>
+
+                <td class="td_left align-middle">
+                    <span th:text="${mateCommunityVO.title}" style="font-weight: bold; margin-left: 10px;"></span>
+                </td>
+
+                <td class="td_left align-middle" style="text-align: center;">
+                    <span th:text="${mateCommunityVO.walkingM}"></span> 명
+                </td>
+
+                <td class="td_left align-middle" style="text-align: center;">
+                    <span th:id="'current_status' + ${mateCommunityVO.MCommunityNo}" style="font-weight: bold"></span>
+                </td>
+
+                <td class="td_left align-middle" style="text-align: center;">
+                    <span th:id="'rdate'+${mateCommunityVO.mCommunityNo}" th:text="${mateCommunityVO.WDate.substring(0, 10)}" style="font-weight: normal"></span>
+                </td>
+
+    <!--            <td class="td_bs" style="text-align: center;">-->
+    <!--                <a th:href="@{|/mateCommunity/delete?mCommunityNo=${mateCommunityVO.mCommunityNo}|}" title="삭제">-->
+    <!--                    <img src="/images/delete.png" class="icon">-->
+    <!--                </a>-->
+    <!--            </td>-->
+
+                <script th:inline="javascript">
+                    window.addEventListener('load', function() {
+                        // 집합 날짜가 현재 날짜보다 작을경우(과거)
+                        if (new Date([[${mateCommunityVO.assembleTime.split(" ")}]][0]) < new Date()){
+                            let status = document.getElementById('current_status' + [[${mateCommunityVO.MCommunityNo}]]);
+                            status.innerText = '모집 종료';
+                        } else{
+                            let status = document.getElementById('current_status' + [[${mateCommunityVO.MCommunityNo}]]);
+                            if ([[${mateCommunityVO.status}]] == 0){
+                                status.innerText = '모집중';
+                            } else if([[${mateCommunityVO.status}]] == 1) {
+                                status.innerText = '모집 마감';
+                            }
+                        }
+
+                        let today = new Date();
+
+                        let year = today.getFullYear();
+                        let month = ('0' + (today.getMonth() + 1)).slice(-2);
+                        let day = ('0' + today.getDate()).slice(-2);
+
+                        let dateString = year + '-' + month  + '-' + day;
+
+                        let rdate = document.getElementById('rdate'+[[${mateCommunityVO.mCommunityNo}]]).innerText;
+
+                        console.log(dateString, rdate);
+
+                        if (dateString==rdate){
+                            document.getElementById('rdate'+[[${mateCommunityVO.mCommunityNo}]]).innerHTML = [[${mateCommunityVO.WDate.substring(11, 16)}]];
+                        }
+                    });
+                </script>
+            </tr>
+            </tbody>
+        </table>
+        <div th:if="${petTypeNo_count==0}" style="text-align: center; padding: 160px;">
+            <span>작성된 게시글이 없습니다.</span><br>
+            <span>첫 게시글을 작성해주세요!</span>
+        </div>
+        <div class="Bottom_menu" th:utext="${paging}"></div>
+        <script th:inline="javascript">
+            window.onload = () =>{
+                if([[${list_all_byPetTypeNo.size()}]] < 10){
+                    document.getElementById('list_all').style.height = "641.898px";
+                }
+            }
+        </script>
+    </div>
+</div>

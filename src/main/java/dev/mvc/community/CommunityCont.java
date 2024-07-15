@@ -62,7 +62,8 @@ public class CommunityCont {
     
     if (session.getAttribute("memberno") != null) {
       model.addAttribute("memberno", session.getAttribute("memberno"));
-
+      
+      
       
       model.addAttribute("communityVO", communityVO);
       
@@ -119,10 +120,12 @@ public class CommunityCont {
 
   @GetMapping("/list_all")
   public String list_all(Model model, @RequestParam(name = "now_page", defaultValue = "1") int now_page,
-      @RequestParam(name = "word", defaultValue = "") String word) {
+      @RequestParam(name = "word", defaultValue = "") String word){
 
+    
     ArrayList<attachmentVO> list = this.comunityProc.list();
     model.addAttribute("list", list);
+    
 
     word = Tool.checkNull(word).trim();
     // System.out.println("--> word: " + word);
@@ -157,12 +160,17 @@ public class CommunityCont {
 
   @GetMapping("/read")
   public String read(Model model, @RequestParam(name = "communityno") int communityno, HttpSession session,@RequestParam(name = "now_page", defaultValue = "1") int now_page,
-      @RequestParam(name = "word", defaultValue = "") String word) {
+      @RequestParam(name = "word", defaultValue = "") String word  ) {
     if (session.getAttribute("memberno") != null) {
       model.addAttribute("memberno", session.getAttribute("memberno"));
       attachmentVO attachmentVO = this.comunityProc.read(communityno);
       model.addAttribute("attachmentVO", attachmentVO);
 
+      
+     int cnt = this.comunityProc.vcnt(communityno);
+      model.addAttribute("cnt",cnt);
+
+      
       ArrayList<attachmentVO> list= this.comunityProc.list_search_paging(word, now_page,
           this.record_per_page);
       model.addAttribute("list", list);
@@ -333,4 +341,6 @@ public class CommunityCont {
     return "community/list_search"; // /cate/list_search.html
 
   }
+  
+  
 }

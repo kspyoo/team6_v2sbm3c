@@ -61,6 +61,7 @@ public class CateCommunityCont {
     ArrayList<CateCommunityVO>list = this.catecomunityProc.list_all();  
     model.addAttribute("list",list);
   
+    
   return "catecommunity/list_all";
   }
   
@@ -104,20 +105,20 @@ public class CateCommunityCont {
   @PostMapping(value = "/delete/{ctypeno}")
   public String delete_process(Model model, @Valid CateCommunityVO cateCommunityVO,
       @PathVariable("ctypeno") Integer ctypeno) {
-    System.out.println("여기인가1?");
+    
     int cnt =this.catecomunityProc.delete(ctypeno);
     model.addAttribute("ctypeno",ctypeno);
-    System.out.println("여기인가2?");
+    
     if(cnt == 1 ) {
       model.addAttribute("cdoe", "delete_success");
       model.addAttribute("title", cateCommunityVO.getTypename());
       System.out.println();
     } else {
       model.addAttribute("code", "delete_fail");
-      System.out.println("여기인가3?");
+    
     }
     model.addAttribute("cnt", cnt);
-    System.out.println("여기인가4?");
+    
     return "community/msg";
     
   }
