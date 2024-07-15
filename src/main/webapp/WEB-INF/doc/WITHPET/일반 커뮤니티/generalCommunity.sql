@@ -62,6 +62,8 @@ SELECT * FROM communitycate;
 /* Table Name: 일반 커뮤니티 */
 /**********************************/
 DROP TABLE COMMUNITY;
+ALTER TABLE COMMUNITY ADD CONSTRAINT uq_community_rcnt UNIQUE (rcnt);
+
 CREATE TABLE COMMUNITY(
     COMMUNITYNO                       NUMBER(10)     NOT NULL    PRIMARY KEY,
     TITLE                             VARCHAR2(100)    NOT NULL,
@@ -109,7 +111,7 @@ SELECT * FROM community;
 -- READ: 조회
 SELECT communityno,title,content,vcnt,rcnt,writedate,tag,memberno,ctypeno
 FROM community
-WHERE communityno=2;
+WHERE communityno=43;
 
 -- UPDATE: 수정
     UPDATE community
@@ -152,6 +154,8 @@ RIGHT OUTER JOIN communityattachment ca
 ON c.communityno = ca.communityno;
 
 
+SELECT * FROM community;
+
 
 SELECT c.communityno,c.title,c.content,c.vcnt,c.rcnt,c.writedate,c.tag,c.memberno,c.ctypeno,ca.cano, ca.filename, ca.filesize, ca.thumbfile,ca.communityno 
 FROM community c
@@ -177,7 +181,7 @@ WHERE communityno=32;
     commit;
 
 SELECT * FROM community;
-DELETE FROM community WHERE EXISTS( SELECT 1 FROM community WHERE communityno = 14)and communityno = 14;
+DELETE FROM community WHERE EXISTS( SELECT 1 FROM community WHERE communityno = 27)and communityno = 27;
 
 
 -- search 첨부파일 join 
@@ -346,29 +350,91 @@ commit;
 
 --좋아요 테이블 생성
 DROP TABLE COMMUNITYLIKE;
+DROP TABLE COMMUNITYLIKE CASCADE CONSTRAINTS; -- 자식 무시하고 삭제 가능
+
 CREATE TABLE COMMUNITYLIKE(
-    RCNT            NUMBER(10)  NOT NULL    PRIMARY KEY,
-    RCNTDATE        DATE   NOT NULL,
-    COMMUNITYNO                       NUMBER(10)     NOT NULL,
-    MEMBERNO                          NUMBER(10)     NOT NULL,
-  FOREIGN KEY (COMMUNITYNO) REFERENCES COMMUNITY (COMMUNITYNO),
-  FOREIGN KEY (MEMBERNO) REFERENCES member (MEMBERNO)
+    RCNT            NUMBER(10)     NOT NULL PRIMARY KEY,
+    LIKECHECK       NUMBER(10)     DEFAULT 0 NULL,
+    RCNTDATE        DATE           NOT NULL,
+    COMMUNITYNO     NUMBER(10)     NOT NULL,
+    MEMBERNO        NUMBER(10)     NOT NULL,
+  FOREIGN KEY (COMMUNITYNO) REFERENCES COMMUNITY (COMMUNITYNO)ON DELETE CASCADE ,
+  FOREIGN KEY (MEMBERNO) REFERENCES member (MEMBERNO)ON DELETE CASCADE 
 );
 
 COMMENT ON TABLE COMMUNITYLIKE is '좋아요';
 COMMENT ON COLUMN COMMUNITYLIKE.RCNT is '좋아요 수 ';
+COMMENT ON COLUMN COMMUNITYLIKE.LIKECHECK is '좋아요 확인';
 COMMENT ON COLUMN COMMUNITYLIKE.RCNTDATE is '좋아요 날짜';
 COMMENT ON COLUMN COMMUNITYLIKE.COMMUNITYNO is '게시글 번호';
 COMMENT ON COLUMN COMMUNITYLIKE.MEMBERNO is '회원 번호';
 
 
-DROP SEQUENCE COMMUNITYLIKE_SEQ;
+DROP SEQUENCE COMMUNITYLIKE_SEQ;    
 CREATE SEQUENCE COMMUNITYLIKE_SEQ
   START WITH 1         
   INCREMENT BY 1       
   MAXVALUE 9999999999  
   CACHE 2             
   NOCYCLE;            
-  
-      INSERT INTO COMMUNITYLIKE(rcnt,rcntdate,communityno,memberno)
-      VALUES(COMMUNITYLIKE_SEQ.nextval,sysdate,1,3);
+
+-- 좋아요 수 생성   
+INSERT INTO COMMUNITYLIKE(rcnt,likecheck,rcntdate,communityno,memberno)
+VALUES(0,0,sysdate,4,3);
+commit;
+-- 좋아요 수 삭제 
+DELETE communitylike WHERE memberno=3 AND communityno=4;
+
+
+--좋아요 수 증가 
+UPDATE communitylike
+SET likecheck = likecheck + 1 
+WHERE memberno=3 AND communityno=4;
+commit;
+-- 좋아요 수 감소 
+UPDATE communitylike
+SET likecheck = 0
+WHERE memberno=3 AND communityno=4;
+
+
+SELECT rcnt,likecheck,rcntdate,communityno,memberno
+FROM communitylike
+WHERE memberno=3 AND communityno=4;
+
+
+SELECT COUNT(likecheck) as cnt
+FROM communitylike
+WHERE memberno=3;
+
+SELECT rcnt,rcntdate,communityno,memberno
+FROM communitylike
+WHERE memberno=3;
+
+SELECT rcnt,likecheck,rcntdate,communityno,memberno
+FROM communitylike
+WHERE communityno=4;
+
+SELECT count(likecheck) as cnt 
+from communitylike
+WHERE memberno=3 AND communityno=4;
+
+
+
+
+SELECT * FROM community;
+commit;
+
+SELECT l.rcnt,l.rcntdate,l.communityno,l.memberno,c.communityno,c.title,c.content,c.vcnt,c.rcnt,c.writedate,c.tag,c.memberno,c.ctypeno
+FROM communitylike l 
+LEFT OUTER JOIN community c
+ON l.communityno = c.communityno
+WHERE l.communityno=43;
+
+SELECT 
+    c.communityno AS c_communityno, c.title, c.content, c.vcnt, c.rcnt AS c_rcnt, c.writedate, c.tag, c.memberno AS c_memberno, c.ctypeno, cl.rcnt AS cl_rcnt, cl.rcntdate, cl.communityno AS cl_communityno, cl.memberno AS cl_memberno
+FROM communitylike cl
+LEFT OUTER JOIN community c
+ON cl.communityno = c.communityno
+WHERE memberno = 3;
+
+SELECT communityno,title,content,vcnt,rcnt,writedate,tag,memberno,ctypeno

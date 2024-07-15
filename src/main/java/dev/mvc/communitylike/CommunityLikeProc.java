@@ -1,5 +1,6 @@
 package dev.mvc.communitylike;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,29 +15,29 @@ public class CommunityLikeProc implements CommunityLikeProcInter {
     
   }
   @Override
-  public int create(HashMap<String, Object>map) {
-    int cnt = this.communityLikeDAO.create(map);
+  public int create(CommunityLikeVO communityLikeVO) {
+    int cnt = this.communityLikeDAO.create(communityLikeVO);
     return cnt;
   }
   
   @Override
-  public int delete(int rcnt) {
-    int cnt =this.communityLikeDAO.delete(rcnt);
+  public int delete(int rcntno) {
+    int cnt =this.communityLikeDAO.delete(rcntno);
     return cnt;
   }
   @Override
-  public CommunityLikeVO read(HashMap<String, Object>map) {
-    CommunityLikeVO communityLikeVO = this.communityLikeDAO.read(map);
-    return communityLikeVO;
-  }
-  @Override
-  public int add_update(HashMap<String, Object> map) {
-    int cnt = this.communityLikeDAO.add_update(map);
+  public int read(HashMap<String, Object>map) {
+    int cnt = this.communityLikeDAO.read(map);
     return cnt;
   }
   @Override
-  public int del_update(HashMap<String, Object> map) {
-    int cnt = this.communityLikeDAO.del_update(map);
+  public int like_check(HashMap<String, Object> map) {
+    int cnt = this.communityLikeDAO.like_check(map);
+    return cnt;
+  }
+  @Override
+  public int like_check_cancel(HashMap<String, Object> map) {
+    int cnt = this.communityLikeDAO.like_check_cancel(map);
     return cnt;
   }
   @Override
@@ -44,5 +45,14 @@ public class CommunityLikeProc implements CommunityLikeProcInter {
     int cnt =this.communityLikeDAO.rcnt_count(map);
     return cnt;
   }
+  @Override
+  public CommunityLikeVO read_all(HashMap<String, Object> map) {
+    CommunityLikeVO communityLikeVO = this.communityLikeDAO.read_all(map);
+    return communityLikeVO;
+  }
+  
+  
+  
+  
 
 }

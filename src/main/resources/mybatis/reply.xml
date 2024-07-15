@@ -46,12 +46,12 @@ WHERE (m.memberno = r.memberno) AND r.communityno= #{communityno}
 ORDER BY r.replyno DESC
 </select>
 
-  <select id="list_by_communityno_join_500" resultType="dev.mvc.reply.ReplyVO" parameterType="int">
-SELECT replyno,content,rdate,communityno,memberno,r
+  <select id="list_by_communityno_join_500" resultType="dev.mvc.reply.ReplyMemberVO" parameterType="int">
+SELECT id, name, replyno,content,rdate,communityno,memberno,r
 FROM (
-        SELECT replyno,content,rdate,communityno,memberno,rownum as r
+        SELECT id, name, replyno,content,rdate,communityno,memberno,rownum as r
         FROM (
-                SELECT m.id,
+                SELECT m.id,m.name,
                 p.replyno,p.content,p.rdate,p.communityno,p.memberno
                 FROM member m, reply p
                 WHERE (m.memberno = p.memberno) AND p.communityno=#{communityno}

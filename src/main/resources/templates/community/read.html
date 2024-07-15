@@ -68,55 +68,74 @@
           <form name="frm_like" id="frm_like">
             <input type="hidden" name="memberno" id="memberno" value="">
             <input type="hidden" name="communityno" id="communityno" value="">
-        </form>
+          </form>
         </div>
 
-        <div class="like">
+        <div class="flike">
           <span id="rcnt_tag">
-            <img src="/image/communitylike/empty_heart.png" style="width: 3%;"id="rcnt">
+            <a href='javascript: like_func();'>
+              <img src="/image/communitylike/empty_heart.png" style="width: 3%;"th:if="${communitLikeVO.likecheck ==0}"
+                id="Like">
+                <img src="/image/communitylike/full_heart.png" style="width: 3%;"th:if="${communitLikeVO.likecheck ==1}" >
+            </a>
           </span>
-          <span id="like_cnt" th:text="${rcnt_count}"></span>
+          <span th:text="${attachmentVO.rcnt}" id="rcnt"></span>
         </div>
-        
+
       </li>
       <!--  ----------------------------좋아요 ---------------------------- -->
-     <script>
+      <script>
         let reply_data; // 댓글 500건 저장
         let reply_now_page = 1; // 댓글 현재 페이지
       </script>
-     
-      <script>
-        window.onload = () => {
-          let rcnt = document.getElementById('rcnt');
-          let frm_like = document.getElementById('frm_like');
-          let communityno = document.getElementById('communityno');
-          let memberno = '[[${session.memberno}]]'; //  javascript -> Thymeleaf -> session
-          rcnt.addEventListener('click',() => {
-            if (!memberno) {
-              alert('로그인해야 합니다.');
-            } else {
-              console.log(rcnt);
-              fetch("/communitylike/read?communityno=[[${attachmentVO.communityno}]]", {
-                method: "get",
-                headers: {"Content-Type": "application/json"},
-              })
-                .then((response) => response.json())
-                .then((data) => {
-                  if (data.rcnt == 0) {
-                    rcnt = "/image/communitylike/empty_heart.png"
-                    console.log(data);
-                  } else {
 
-                    rcnt = "/image/communitylike/full_heart.png"
-                    console.log(data);
-                  }
-                  rcnt.innerText = data.rcnt
-                });
-            }
+      <script>
+        
+
+        function like_func() {
+
+          let frm_like = document.getElementById('frm_like');
+          let Like = document.getElementById('Like');
+          let rcnt = document.getElementById('rcnt');
+          let memberno = '[[${session.memberno}]]'; //  javascript -> Thymeleaf -> session
+          let communityno = '[[${attachmentVO.communityno}]]';
+           
+          
+          
+          let id = '[[${session.id}]]'; //  javascript -> Thymeleaf -> session
+          if (id == '') {
+            alert('로그인해야 댓글을 입력 할 수 있습니다.');
+            location.href = "/member/login?url=/community/read?communityno=[[${attachmentVO.communityno}]]%26word=[[${word}]]%26now_page=[[${now_page}]]";
+          }
+
+          $.ajax({
+            url: "/communitylike/like",
+            type: "GET",
+            datatype: "json",
+            data: 'communityno=' + communityno + '&memberno=' + memberno ,
+            success: function (data) {
+              //let msg = '';
+              //msg += data.msg;
+              //alert(msg);
+              console.log(Like);
+              if (data.rcnt_count == 0) {
+                Like.src = "/image/communitylike/empty_heart.png";
+                
+                
+              } else {
+                Like.src = "/image/communitylike/full_heart.png";
+              }
+              $('#Like', frm_like).attr('src', Like);
+              $('#rcnt').html(data.rcnt);
+              $('#likecheck').html(data.likecheck);
+              $('#rcnt_count').html(data.rcnt_count);
+            },
+
           });
-        
-        
-        
+        }
+
+        window.onload = () => {
+
           let content_tag = document.getElementById('content');
           let btn_create_tag = document.getElementById('btn_create'); // 등록
           let btn_add_tag = document.getElementById('btn_add'); // 더보기
@@ -249,7 +268,7 @@
           });
 
           list_by_communityno_join(); // 목록 출력
-       } // window.onload END
+        } // window.onload END
 
         // 목록 출력
         // 5건 미만이면 5회 미만 순환, 5건 이상 5회 순환
@@ -282,10 +301,10 @@
                 // let row = data['res'][i];
                 let row = reply_data[i];
                 msg += "<div id='" + row.replyno + "' style='border-bottom: solid 1px #EEEEEE; margin-bottom: 10px;'>";
-                msg += "<span style='font-weight: bold;'>" + row.id + "</span>";
+                msg += "<span style='font-weight: bold;'>" + row.name + "(" + row.id + ")" + "</span>";
                 msg += "  " + row.rdate;
 
-                if ('[[${session.memberno}]]' == row.memberno) { // 글쓴이 일치여부 확인, 본인의 글만 삭제 가능함 ★
+                if ('[[${session.memberno}]]' == row.memberno|| '[[${session.masterno}]]' != '') { // 글쓴이 일치여부 확인, 본인의 글만 삭제 가능함 ★
                   msg += " <a href='javascript:reply_update(" + row.replyno + ")'><img src='/reply/images/update.png' style='width: 16px;'></a>";
                   msg += " <a href='javascript:reply_delete(" + row.replyno + ")'><img src='/reply/images/delete.png' style='width: 16px;'></a>";
                 }
@@ -378,56 +397,7 @@
         }
 
       </script>
-      <!--      <script>
-        window.onload = () => {
-          let rcnt = document.getElementById('rcnt');
-          let rcntdate = document.getElementById('rcntdate');
-          let memberno = '[[${session.memberno}]]';
 
-
-          // 좋아요 상태 확인
-          fetch("/communitylike/read", {
-            method: "post",
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify({"rcnt": rcnt, "memberno": "[[${session.memberno}]]"})
-          })
-            .then((response) => response.json())
-            .then((data) => {
-              if (data.res === 1) {
-                rcnt.classList.add('rcnt');
-                rcnt.innerHTML = "<img src='/images/full_heart' style='width:10%;'>";
-              } else {
-                rcnt.classList.remove('rcnt');
-                rcnt.innerHTML = "<img src='/images/empty_heart' style='width:10%;'>";
-              }
-              rcnt.innerText = data.rcnt;
-            });
-
-          // 좋아요 클릭 이벤트
-          rcnt.addEventListener('click', () => {
-            if (!memberno) {
-              alert('로그인해야 합니다.');
-            } else {
-              fetch("/communitylike/create", {
-                method: "post",
-                headers: {"Content-Type": "application/json"},
-                body: JSON.stringify({"rcnt": rcnt})
-              })
-                .then((response) => response.json())
-                .then((data) => {
-                  if (data.res === 1) {
-                    rcnt.classList.add('rcnt');
-                    rcnt.innerHTML = "<img src='/images/full_heart' style='width:10%;'>";
-                  } else {
-                    rcnt.classList.remove('rcnt');
-                    rcnt.innerHTML = "<img src='/images/empty_heart' style='width:10%;'>";
-                  }
-                  rcnt.innerText = data.rcnt;
-                });
-            }
-          });
-        }
-      </script>-->
 
       <li class="li_none">
           <div style='width: 100%; margin: 0px auto; clear: both;'>

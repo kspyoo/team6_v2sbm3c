@@ -22,11 +22,11 @@ public class CommunityVO {
   private String title ="";
   private String content= "";
   private int vcnt = 1;
-  private int rcnt =1;
+  private int rcnt;
   private String writedate;
   private String tag="";
   private int memberno;
-  private int ctypeno;
+  private int ctypeno=3;
   
   
   
