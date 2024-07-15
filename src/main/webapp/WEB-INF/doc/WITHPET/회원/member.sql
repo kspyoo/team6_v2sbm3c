@@ -81,11 +81,14 @@ CREATE TABLE PETTYPE(
 
 
 ALTER TABLE PETTYPE ADD regdate DATE DEFAULT sysdate NOT NULL ;
+ALTER TABLE MEMBER ADD email VARCHAR2(30);
 update PETTYPE set MASTERNO=6;
 
 COMMENT ON TABLE PETTYPE is '반려동물 분류';
 COMMENT ON COLUMN PETTYPE.PETTYPENO is '분류 번호';
 COMMENT ON COLUMN PETTYPE.PETTYPE is '반려동물 종류';
+
+update MEMBER set email='vkjiu486@gmail.com';
 
 DROP SEQUENCE PETTYPE_SEQ;
 
@@ -286,7 +289,7 @@ VALUES (memberprofile_seq.nextval,42);
 INSERT INTO Memberprofile (MPROFILENO,memberno)
 VALUES (memberprofile_seq.nextval,76);
   
-ALTER TABLE member MODIFY (gender VARCHAR2(10));
+ALTER TABLE member MODIFY (email VARCHAR2(30));
 ALTER TABLE login MODIFY (conndate VARCHAR2(30));
 ALTER TABLE login MODIFY (ip VARCHAR2(40));
 ALTER TABLE login MODIFY (memberno NUMBER(10) NULL);
