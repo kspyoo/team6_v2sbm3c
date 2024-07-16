@@ -171,7 +171,7 @@
       let email = document.getElementById('email');
       let email_msg = document.getElementById('email_msg');
       let acceptnum_msg = document.getElementById('acceptnum_msg');
-      
+
       acceptnum_msg.innerHTML = '';
       acceptnum_msg.classList.remove('span_warning');
 
@@ -211,6 +211,7 @@
 
     function emailequal() {
       let acceptnum = document.getElementById('acceptnum');
+      let email_msg = document.getElementById('email_msg');
 
       let url = './checknum?checknum=' + acceptnum.value;
       fetch(url, {
@@ -225,6 +226,9 @@
           } else {
             acceptnum_msg.innerHTML = '';
             acceptnum_msg.classList.remove('span_warning');
+            accept_email.style.display = 'none';
+            email_msg.innerHTML = '인증 완료';
+            email_msg.classList.add('span_info');
             return true;
           }
         })
@@ -337,8 +341,8 @@
         return false;  // 회원 가입 진행 중지
       }
 
-      if (addr_main > 30) {
-        addr_main_msg.innerHTML = '30자 이상 입력 불가능합니다.';
+      if (addr_main > 50) {
+        addr_main_msg.innerHTML = '50자 이상 입력 불가능합니다.';
         addr_main_msg.classList.add('span_warning');    // class 적용
         addr_main.focus();
 
@@ -356,21 +360,8 @@
       if (accept_email.style.display == 'none') {
         let acceptnum_valid = acceptnum_func(); // 인증번호 발송
       }
-      let id_valid = checkID();
-      let email_valid = emailequal(); // 인증번호 확인
-      
-      
-      
-      let phone_valid = checkPhone();
 
-      // 모든 필드 유효성 검사 통과 여부 확인
-      if (id_valid && email_valid && phone_valid) {
-        // 회원 가입 폼 제출
-        document.getElementById('frm').submit();
-      } else {
-        // 필드 중 하나라도 유효성 검사를 통과하지 못한 경우
-        alert('입력 항목을 다시 확인해주세요.');
-      }
+      document.getElementById('frm').submit();
     }    
   </script>
 
@@ -547,12 +538,12 @@
                 */
 
                 // 우편번호와 주소 정보를 해당 필드에 넣는다.
-                document.getElementById('zipcode').value = data.zonecode; // 우편번호
-                document.getElementById("address1").value = addr;  // 주소
+                document.getElementById('addr_code').value = data.zonecode; // 우편번호
+                document.getElementById("addr_main").value = addr;  // 주소
 
-                document.getElementById("address2").innerHTML = ""; // 상세 주소 지우기
+                document.getElementById("addr_detail").innerHTML = ""; // 상세 주소 지우기
                 // 커서를 상세주소 필드로 이동한다.
-                document.getElementById("address2").focus();  // 상세 주소로 포커스 이동
+                document.getElementById("addr_detail").focus();  // 상세 주소로 포커스 이동
 
                 // iframe을 넣은 element를 안보이게 한다.
                 // (autoClose:false 기능을 이용한다면, 아래 코드를 제거해야 화면에서 사라지지 않는다.)
