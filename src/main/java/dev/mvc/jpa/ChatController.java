@@ -129,8 +129,13 @@ public class ChatController {
             json.put("regdate", msg.getRegdate());
             json.put("count", cnt);
         }else{
-            json.put("content", msg.getContent());
-            json.put("regdate", msg.getRegdate());
+            if (msg == null){
+                json.put("content", "마지막 메세지없음");
+                json.put("regdate", "");
+            }else {
+                json.put("content", msg.getContent());
+                json.put("regdate", msg.getRegdate());
+            }
             json.put("count", cnt);
         }
 
