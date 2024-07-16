@@ -206,10 +206,18 @@ public class CommunityProc implements CommunityProcInter {
     return cnt;
   }
 
+  
+
   @Override
-  public int rcnt(int communityno) {
-    int rcnt = this.communityDAO.rcnt(communityno);
-    return rcnt;
+  public int rcnt_add(HashMap<String, Object> map) {
+    int cnt = this.communityDAO.rcnt_add(map);
+    return cnt;
+  }
+
+  @Override
+  public int rcnt_del(HashMap<String, Object> map) {
+    int cnt =this.communityDAO.rcnt_del(map);
+    return cnt;
   }
   
   

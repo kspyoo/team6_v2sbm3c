@@ -41,5 +41,7 @@ public interface CommunityProcInter {
   
   public int vcnt(int communityno);
   
-  public int rcnt(int communityno);
+  public int rcnt_add(HashMap<String, Object>map);
+  
+  public int rcnt_del(HashMap<String, Object>map);
 }

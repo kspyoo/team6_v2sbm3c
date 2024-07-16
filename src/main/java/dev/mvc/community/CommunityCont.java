@@ -21,6 +21,8 @@ import dev.mvc.catecommunity.CateCommunityVO;
 import dev.mvc.communityattachment.Communityattachment;
 import dev.mvc.communityattachment.CommunityattachmentProcInter;
 import dev.mvc.communityattachment.CommunityattachmentVO;
+import dev.mvc.communitylike.CommunityLikeProcInter;
+import dev.mvc.communitylike.CommunityLikeVO;
 import dev.mvc.member.MemberProcInter;
 import dev.mvc.tool.Tool;
 import dev.mvc.tool.Upload;
@@ -46,6 +48,9 @@ public class CommunityCont {
   @Qualifier("dev.mvc.catecommunity.CateCommunityProc")
   private CateCommunityProcInter catecomunityProc;
 
+  @Autowired
+  @Qualifier("dev.mvc.communitylike.CommunityLikeProc")
+  private CommunityLikeProcInter communityLikeProc;
   /** 페이지당 출력할 레코드 갯수, nowPage는 1부터 시작 */
   public int record_per_page = 10;
 
@@ -160,13 +165,16 @@ public class CommunityCont {
 
   @GetMapping("/read")
   public String read(Model model, @RequestParam(name = "communityno") int communityno, HttpSession session,@RequestParam(name = "now_page", defaultValue = "1") int now_page,
-      @RequestParam(name = "word", defaultValue = "") String word  ) {
+      @RequestParam(name = "word", defaultValue = "") String word, CommunityLikeVO communityLikeVO  ) {
     if (session.getAttribute("memberno") != null) {
       model.addAttribute("memberno", session.getAttribute("memberno"));
       attachmentVO attachmentVO = this.comunityProc.read(communityno);
       model.addAttribute("attachmentVO", attachmentVO);
 
       
+     int likecheck = communityLikeVO.getLikecheck();
+     model.addAttribute("likecheck",likecheck);
+     
      int cnt = this.comunityProc.vcnt(communityno);
       model.addAttribute("cnt",cnt);
 

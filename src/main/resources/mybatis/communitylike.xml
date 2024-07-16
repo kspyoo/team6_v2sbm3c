@@ -1,39 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="dev.mvc.communitylike.CommunityLikeDAOInter">
-<insert id="create" parameterType="HashMap">
-  INSERT INTO COMMUNITYLIKE(rcnt,rcntdate,communityno,memberno)
-  VALUES(COMMUNITYLIKE_SEQ.nextval,sysdate,#{communityno},#{memberno})
-</insert>
 
-<select id="read" resultType="dev.mvc.communitylike.CommunityLikeVO" parameterType="HashMap">
-SELECT rcnt,rcntdate,communityno,memberno
-FROM communitylike
-WHERE memberno=#{memberno} AND communityno=#{communityno}
-</select>
+    <insert id="create" parameterType="dev.mvc.communitylike.CommunityLikeVO">
+        INSERT INTO COMMUNITYLIKE(rcnt, likecheck, rcntdate, communityno, memberno)
+        VALUES (0,0,sysdate,#{communityno},#{memberno})
+    </insert>
+    <select id="read_all" resultType="dev.mvc.communitylike.CommunityLikeVO" parameterType="HashMap">
+    SELECT rcnt,likecheck,rcntdate,communityno,memberno
+    FROM communitylike  
+    WHERE memberno=#{memberno} AND communityno=#{communityno}
+    </select>
 
+    <select id="read" resultType="int" parameterType="HashMap">
+        SELECT COUNT(rcnt) as rcnt
+        FROM communitylike
+        WHERE memberno=#{memberno} AND communityno=#{communityno}
+    </select>
 
-<update id="add_update" parameterType="HashMap">
-UPDATE communitylike
-SET rcnt = #{rcnt} + 1
-WHERE memberno=#{memberno} AND communityno=#{communityno}
-</update>
+    <update id="like_check" parameterType="HashMap">
+        UPDATE communitylike
+        SET likecheck = likecheck + 1
+        WHERE memberno=#{memberno} AND communityno=#{communityno}
+    </update>
 
-<update id="del_update" parameterType="HashMap">
-UPDATE communitylike
-SET rcnt = 0
-WHERE memberno=#{memberno} AND communityno=#{communityno}
-</update>
+    <update id="like_check_cancel" parameterType="HashMap">
+        UPDATE communitylike
+        SET likecheck = 0
+        WHERE memberno=#{memberno} AND communityno=#{communityno}
+    </update>
 
-<select id="rcnt_count" resultType="int" parameterType="HashMap">
- SELECT COUNT(rcnt) as cnt 
- FROM communitylike
- WHERE memberno=#{memberno} AND communityno=#{communityno}
-</select> 
+    <select id="rcnt_count" resultType="int" parameterType="HashMap">
+        SELECT COUNT(likecheck) as cnt
+        FROM communitylike
+        WHERE communityno=#{communityno} AND memberno=#{memberno}
+    </select>
 
-
-<delete id="delete" parameterType="int">
-DELETE FROM communitylike WHERE memberno=#{memberno} AND rcnt=#{rcnt}
-</delete>
+    <delete id="delete" parameterType="HashMap">
+        DELETE FROM communitylike
+        WHERE memberno=#{memberno} AND rcntno=#{rcntno}
+    </delete>
 
 </mapper>

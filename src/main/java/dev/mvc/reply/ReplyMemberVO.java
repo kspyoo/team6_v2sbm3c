@@ -9,6 +9,8 @@ public class ReplyMemberVO {
   
   private String id = "";
   
+  private String name = "";
+  
   private int replyno;
   
   private int communityno;

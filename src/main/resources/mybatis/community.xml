@@ -81,12 +81,16 @@ SET VCNT = VCNT + 1
 WHERE communityno=#{communityno} 
 </update>
 
-<update id="rcnt" parameterType="int">
+<update id="rcnt_add" parameterType="HashMap">
 UPDATE community 
-SET RCNT = RCNT + 1
-WHERE communityno=#{communityno} 
+SET RCNT = rcnt+1
+WHERE communityno=#{communityno} AND memberno=#{memberno}
 </update>
-
+<update id="rcnt_del" parameterType="HashMap">
+UPDATE community 
+SET RCNT = rcnt -1
+WHERE communityno=#{communityno} AND memberno=#{memberno} 
+</update>
 
 </mapper>
 
