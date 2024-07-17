@@ -32,7 +32,7 @@
               th:text="${memberVO.gender}"></a></td>
           <td class='td_bs'><a
               th:href="@{|./read_data?memberno=${memberVO.memberno}&mprofileno=${memberVO.mprofileno}|}"
-              th:text="${memberVO.phone.substring(0, 8)}"></a></td>
+              th:text="${memberVO.phone}"></a></td>
           <td class='td_bs'><a
               th:href="@{|./read_data?memberno=${memberVO.memberno}&mprofileno=${memberVO.mprofileno}|}">
               <span th:if="${memberVO.addr_main.length() > 15 }"

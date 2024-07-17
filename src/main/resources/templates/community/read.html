@@ -2,8 +2,25 @@
 
 <html layout:decorate="~{layout}">
 <!-- layout.html 상속-->
+<div layout:fragment="content" style="width:80%; margin: auto; height: auto; overflow: hidden; padding-top: 20px;">
+    <script type="text/css" src="/css/community/read.css"></script>
+    <div class='title_line'>
+        <span class="title_line_text">게시글 조회</span>
+    </div>
 
-<div layout:fragment="content">
+    <aside class="aside_right" th:if="${session.memberno==attachmentVO.memberno}">
+        <a href="/community/list_all">목록</a>
+        <span class="menu_devide">│</span>
+        <a th:href="@{|/community/update/${attachmentVO.communityno}|}">수정</a>
+        <span class="menu_devide">│</span>
+        <a th:href="@{|/community/delete/${attachmentVO.communityno}|}">삭제</a>
+        <span class="menu_devide">│</span>
+        <a href="javascript: location.reload();">새로 고침</a>
+    </aside>
+    <aside class="aside_right" th:if="${session.memberno!=attachmentVO.memberno}">
+        <a href="/community/list_all">목록</a>
+    </aside>
+
 
   <div class='title_line'>
     <span class="title_line_text"></span>
@@ -414,21 +431,432 @@
                 style='display: none;'>&nbsp;&nbsp;삭&nbsp;&nbsp;제&nbsp;&nbsp;</button>
               <button type='button' id='btn_cancel'
                 style='display: none;'>&nbsp;&nbsp;취&nbsp;&nbsp;소&nbsp;&nbsp;</button>
-            </div>
-                  </form>
-                <div id='reply_list' data-replypage='1'>  
-            <!-- 목록 -->
-                   등록된 댓글이 없습니다.
-                 
-          </div>
-                <div id='reply_list_btn' style='border: none'>
-                      <button id='btn_add' style='width: 100%;'>더보기 ▽</button>
-                  </div>  
-            </div>
-      </li>  
 
-    </ul>
-  </fieldset>
+    <div class='menu_line'></div>
+    <fieldset class="">
+        <div class="row mb-3 pb-3" style="border-bottom: 3px solid rgba(33, 150, 243, 0.95);">
+            <div class="col-4">
+                <span style="font-size: 1.5em; font-weight: bold;"
+                    th:utext="${#strings.replace(attachmentVO.title, '\n', '<br/>')}"></span>
+
+            </div>
+
+            <div class="col-4" style="text-align: right">
+                <span>작성일 | </span>
+                <span style="font-size: 1em;" th:text="${attachmentVO.writedate }"></span><br>
+            </div>
+<!--                <img src="/image/community/vcnt.png" style="width: 2%;">-->
+            <div class="col-4" style="text-align: right">
+                <span>조회수 | </span>
+                <span th:text="${attachmentVO.vcnt}"></span>
+            </div>
+        </div>
+
+        <div style="width: 100%; word-break: break-all; height: 300px;">
+            <div th:utext="${#strings.replace(attachmentVO.content, '\n', '<br/>')}"></div>
+        </div>
+
+        <div th:if="${(attachmentVO.filename != null) and (attachmentVO.filename.endsWith('jpg')
+                        or attachmentVO.filename.endsWith('png')  or attachmentVO.filename.endsWith('gif'))}">
+            <img th:src="@{|/communityattachment/storage/${attachmentVO.filename}|}"
+                 style="width:30%; float:left; margin-top:0.5%; margin-right:1%;">
+        </div>
+
+        <div th:if="${attachmentVO.filename == null}">
+        </div>
+
+
+        <div class="li_none" th:if="${attachmentVO.filesize > 0}">
+            <div>
+                <!-- ServletRegister.java: registrationBean.addUrlMappings("/download"); -->
+                첨부 파일: <a
+                    th:href="@{|/download?dir=/communityattachmentVO/storage&filename=${attachmentVO.filename}&downname=${attachmentVO.filename}|}"
+                    th:text="|${attachmentVO.filename}|"> </a>
+                <span th:text="|(${attachmentVO.filesize})|"></span>
+            </div>
+        </div>
+        <div class="li_none">
+            <div style="width:80%;">
+                <form name="frm_like" id="frm_like">
+                    <input type="hidden" name="memberno" id="memberno" value="">
+                    <input type="hidden" name="communityno" id="communityno" value="">
+                </form>
+            </div>
+
+            <div class="flike">
+                <span id="rcnt_tag">
+                  <a href='javascript: like_func();'>
+                    <img src="/image/communitylike/empty_heart.png" style="width: 3%;" th:if="${likecheck ==0}"
+                         id="Like">
+                      <img src="/image/communitylike/full_heart.png" style="width: 3%;" th:if="${likecheck ==1}">
+                  </a>
+                </span>
+                <span th:text="${attachmentVO.rcnt}" id="rcnt"></span>
+            </div>
+
+        </div>
+
+        <div class='menu_line'></div>
+
+        <!--  ----------------------------좋아요 ---------------------------- -->
+        <script>
+            let reply_data; // 댓글 500건 저장
+            let reply_now_page = 1; // 댓글 현재 페이지
+        </script>
+
+        <script>
+
+
+            function like_func() {
+
+                let frm_like = document.getElementById('frm_like');
+                let Like = document.getElementById('Like');
+                let rcnt = document.getElementById('rcnt');
+                let memberno = '[[${session.memberno}]]'; //  javascript -> Thymeleaf -> session
+                let communityno = '[[${attachmentVO.communityno}]]';
+
+
+                let id = '[[${session.id}]]'; //  javascript -> Thymeleaf -> session
+                if (id == '') {
+                    alert('로그인해야 댓글을 입력 할 수 있습니다.');
+                    location.href = "/member/login?url=/community/read?communityno=[[${attachmentVO.communityno}]]%26word=[[${word}]]%26now_page=[[${now_page}]]";
+                }
+
+                $.ajax({
+                    url: "/communitylike/like",
+                    type: "GET",
+                    datatype: "json",
+                    data: 'communityno=' + communityno + '&memberno=' + memberno,
+                    success: function (data) {
+                        //let msg = '';
+                        //msg += data.msg;
+                        //alert(msg);
+                        console.log(Like);
+                        if (data.rcnt_count == 0) {
+                            Like.src = "/image/communitylike/empty_heart.png";
+
+
+                        } else {
+                            Like.src = "/image/communitylike/full_heart.png";
+                        }
+                        $('#Like', frm_like).attr('src', Like);
+                        $('#rcnt').html(data.rcnt);
+                        $('#likecheck').html(data.likecheck);
+                        $('#rcnt_count').html(data.rcnt_count);
+                    },
+
+                });
+            }
+
+            window.onload = () => {
+
+                let content_tag = document.getElementById('content');
+                let btn_create_tag = document.getElementById('btn_create'); // 등록
+                let btn_add_tag = document.getElementById('btn_add'); // 더보기
+                let reply_list_tag = document.getElementById('reply_list'); // 목록 출력 panel
+
+                let btn_save_tag = document.getElementById("btn_save");      // 수정 저장
+                let replyno_tag = document.getElementById("replyno");         // 수정할 레코드 번호
+                let memberno_tag = document.getElementById("memberno");  // 댓글 작성 회원 번호
+
+                let btn_delete_tag = document.getElementById("btn_delete"); // 삭제 처리
+                let btn_cancel_tag = document.getElementById("btn_cancel"); // 수정/삭제 취소
+
+                // 댓글 입력
+                content_tag.addEventListener('click', () => {
+                    let id = '[[${session.id}]]'; //  javascript -> Thymeleaf -> session
+                    // alert('Click!: ' + id);
+                    if (id == '') {
+                        alert('로그인해야 댓글을 입력 할 수 있습니다.');
+                        location.href = "/member/login?url=/community/read?communityno=[[${attachmentVO.communityno}]]%26word=[[${word}]]%26now_page=[[${now_page}]]";
+                    } else {
+                        // alert('로그인 됨');
+                        // content_tag.focus();
+                    }
+                });
+
+                btn_create_tag.addEventListener('click', () => {
+                    let content = content_tag.value.trim();
+
+                    if (content.length == 0) {
+                        alert('내용이 없습니다. 내용을 입력해주세요.');
+                    } else {
+                        // alert('content: ' + content_tag.value);
+                        // {"sentence":"안녕하세요.","language":"영어","age":"25"}
+                        // console.log(JSON.stringify({sentence, language, age}))
+                        // return;
+
+                        // Spring Security를 사용하지 않고 CORS 설정시 접근 안됨.
+                        // fetch("http://127.0.0.1:9091/reply/create", {
+                        fetch("/reply/create", {
+                            "method": "post",
+                            "headers": {"Content-Type": "application/json"},
+                            body: JSON.stringify({"communityno": "[[${attachmentVO.communityno}]]", "content": content})
+                        })
+                            .then((response) => response.json())
+                            .then((data) => {
+                                list_by_communityno_join(); // 목록 출력
+                                content_tag.value = '';
+                                content_tag.focus();
+                            });
+
+                        // result_animation_tag.innerHTML = '<img src="/static/images/progress.gif" style="width: 15%; margin-top: 0px;">';
+
+                    }
+
+                });
+
+                // 페이징 처리
+                // 자바 스크립트는 변수명에 '-' 사용 못함.
+                btn_add_tag.addEventListener('click', () => {
+                    // 현재 페이지보다 레코드 갯수가 더 많은 경우만 실행
+                    if (reply_data.length > reply_now_page * 5) { // 5, 10, 15, 20, 25 X
+                        // let data_replypage = reply_list.getAttribute('data-replypage');
+                        // console.log('-> data_replypage typeof:' + typeof data_replypage );
+                        let start = 0; // 출력 순환 시작 index
+                        let end = 0;  // 출력 순환 종료 index
+                        if (reply_data.length > 5) {
+                            start = reply_now_page * 5;
+                            end = (reply_now_page * 5) + 5; // 시작 index + 페이지 당 레코드 수
+
+                            let msg = '';
+                            let page_div = document.createElement('div'); // 글내용
+                            for (let i = start; i < end; i++) { // 5 ~ 9, 10 탈출
+                                if (i == reply_data.length) { // 모든 태그를 출력한 이후인지 검사
+                                    break;
+                                }
+
+                                let row = reply_data[i];
+                                msg += "<div id='" + row.replyno + "' style='border-bottom: solid 1px #EEEEEE; margin-bottom: 10px;'>";
+                                msg += "<span style='font-weight: bold;'>" + row.id + "</span>";
+                                msg += "  " + row.rdate;
+
+                                if ('[[${session.memberno}]]' == row.memberno) { // 글쓴이 일치여부 확인, 본인의 글만 삭제 가능함 ★
+                                    msg += " <a href='javascript:reply_update(" + row.replyno + ")'><img src='/reply/images/update.png' style='width: 16px;'></a>";
+                                    msg += " <a href='javascript:reply_delete(" + row.replyno + ")'><img src='/reply/images/delete.png' style='width: 16px;'></a>";
+                                }
+                                msg += "  " + "<br>";
+                                msg += row.content;
+                                msg += "</div>";
+
+                            }
+                            page_div.innerHTML = msg; //  페이지에 속한 레코드들 추가
+                            reply_list_tag.appendChild(page_div);
+
+                            reply_now_page = reply_now_page + 1;
+                        }
+
+                    }
+                });
+
+                // 수정 처리
+                btn_save_tag.addEventListener('click', () => {
+                    let replyno = replyno_tag.value;
+                    let content = content_tag.value.trim();
+                    let memberno = memberno_tag.value;
+
+                    if (content.length == 0) {
+                        alert('내용이 없습니다. 내용을 입력해주세요.');
+                    } else {
+                        fetch("/reply/update", {
+                            "method": "post",
+                            "headers": {"Content-Type": "application/json"},
+                            body: JSON.stringify({
+                                "replyno": replyno,
+                                "memberno": memberno,
+                                "content": content
+                            }, "[${communityno:attachmentVO.communityno}]")
+                        })
+                            .then((response) => response.json())
+                            .then((data) => {
+                                if (data['res'] == 0) {
+                                    alert('댓글 수정에 실패 했습니다.\n 잠시후 다시 시도해 주세요(관리자: 02-123-1234)');
+                                } else {
+                                    list_by_communityno_join(); // 목록 출력
+                                    content_tag.value = '';
+                                    content_tag.focus();
+                                    btn_visible('default');
+                                }
+                            });
+
+                        // result_animation_tag.innerHTML = '<img src="/static/images/progress.gif" style="width: 15%; margin-top: 0px;">';
+
+                    }
+
+                });
+
+                list_by_communityno_join(); // 목록 출력
+            } // window.onload END
+
+            // 목록 출력
+            // 5건 미만이면 5회 미만 순환, 5건 이상 5회 순환
+            function list_by_communityno_join() { // 목록 출력
+                let cnt = 0; // 출력 순환 횟수
+
+                // Spring Security를 사용하지 않고 CORS 설정시 접근 안됨.
+                // fetch("http://127.0.0.1:9091/reply/create", {
+                fetch("/reply/list_by_communityno_join?communityno=[[${attachmentVO.communityno}]]", {
+                    "method": "get"
+                })
+                    .then((response) => response.json())
+                    .then((data) => {
+                        reply_data = data['res'];
+                        // alert(reply_data.length);
+                        // return;
+                        if (reply_data.length > 5) {
+                            cnt = 5;
+                        } else {
+                            cnt = reply_data.length;
+                        }
+
+                        // console.log('-> cnt: ' + cnt);
+
+                        // alert('res: ' + data['res']);
+                        // result_tag.value = data['res'];
+                        // result_animation_tag.innerHTML = '';
+                        let msg = '';
+                        for (let i = 0; i < cnt; i++) {
+                            // let row = data['res'][i];
+                            let row = reply_data[i];
+                            msg += "<div id='" + row.replyno + "' style='border-bottom: solid 1px #EEEEEE; margin-bottom: 10px;'>";
+                            msg += "<span style='font-weight: bold;'>" + row.name + "(" + row.id + ")" + "</span>";
+                            msg += "  " + row.rdate;
+
+                            if ('[[${session.memberno}]]' == row.memberno || '[[${session.masterno}]]' != '') { // 글쓴이 일치여부 확인, 본인의 글만 삭제 가능함 ★
+                                msg += " <a href='javascript:reply_update(" + row.replyno + ")'><img src='/reply/images/update.png' style='width: 16px;'></a>";
+                                msg += " <a href='javascript:reply_delete(" + row.replyno + ")'><img src='/reply/images/delete.png' style='width: 16px;'></a>";
+                            }
+                            msg += "  " + "<br>";
+                            msg += row.content;
+                            msg += "</div>";
+                        }
+
+                        document.getElementById("reply_list").innerHTML = msg;
+
+                    });
+
+            }
+
+            // 수정 폼
+            function reply_update(replyno) {
+                let replyno_tag = document.getElementById('replyno')
+                let memberno_tag = document.getElementById('memberno')
+                let content_tag = document.getElementById('content')
+
+                // fetch로 데이터 읽어 오기
+                fetch("/reply/read?replyno=" + replyno, {
+                    "method": "get",
+                    "headers": {"Content-Type": "application/json"},
+                    //body: JSON.stringify({"communityno": "[[${attachmentVO.communityno}]]"})
+                })
+                    .then((response) => response.json())
+                    .then((data) => {
+                        // alert(data['res']['content']);
+                        replyno_tag.value = data['res']['replyno'];
+                        memberno_tag.value = data['res']['memberno'];
+                        content_tag.value = data['res']['content'];
+                        content_tag.focus();
+                        btn_visible('update');
+                    });
+
+            }
+
+            // 삭제 폼 + 삭제 처리
+            function reply_delete(replyno) {
+                let content_tag = document.getElementById('content');
+
+                // fetch로 데이터 읽어 오기
+                fetch("/reply/read?replyno=" + replyno, {
+                    "method": "get",
+                    "headers": {"Content-Type": "application/json"},
+                    //body: JSON.stringify({"communityno": "[[${attachmentVO.communityno}]]"})
+                })
+                    .then((response) => response.json())
+                    .then((data) => {
+                        let sw = confirm("「" + data['res']['content'] + "」 삭제하시려면 확인 버튼을 누르세요. 삭제후 복구 할 수 없습니다.");
+                        if (sw == true) {
+                            // alert('삭제를 진행합니다.');
+                            fetch("/reply/delete", {
+                                "method": "post",
+                                "headers": {"Content-Type": "application/json"},
+                                body: JSON.stringify({
+                                    "replyno": replyno,
+                                    "memberno": data['res']['memberno']
+                                }, {"communityno": "[[${attachmentVO.communityno}]]"})
+                            })
+                                .then((response) => response.json())
+                                .then((data) => {
+                                    if (data['res'] == 1) {
+                                        list_by_communityno_join(); // 목록 출력
+                                        content_tag.value = '';
+                                        content_tag.focus();
+                                        alert('댓글을 삭제했습니다.');
+                                    } else {
+                                        alert('댓글 삭제에 실패했습니다. 잠시후 다시 시도해주세요.');
+                                    }
+                                });
+                        } else {
+                            alert('삭제를 취소 했습니다.');
+                        }
+                    });
+            }
+
+            // 버튼 출력
+            function btn_visible(sw) {
+                let btn_create = document.getElementById("btn_create");
+                let btn_save = document.getElementById("btn_save");
+                let btn_cancel = document.getElementById("btn_cancel");
+
+                if (sw == 'update') {
+                    btn_create.style.display = 'none'; // hidden
+                    btn_save.style.display = ''; // show
+                    btn_cancel.style.display = '';
+                } else if (sw == 'default') {
+                    btn_create.style.display = '';
+                    btn_save.style.display = 'none';
+                    btn_cancel.style.display = 'none';
+                }
+
+            }
+
+        </script>
+
+
+        <div class="li_none">
+            <div style='width: 700px; margin: 0px auto; clear: both;'>
+                <form name='frm_reply' id='frm_reply'
+                      style="width: 100%; height: 80px; border: #92C7FF 1.5px solid; border-radius: 5px; margin: 20px 0px;">
+                    <input type='hidden' name='memberno' id='memberno' value=''>
+                    <input type='hidden' name='replyno' id='replyno' value=''>
+
+                    <textarea name='content' id='content' class=""
+                            style='width: 90%; height: 100%; resize: none; border: 0 solid; float: left; outline: none; border-radius: 5px; padding : 10px;'
+                            placeholder="댓글 작성, 로그인해야 등록 할 수 있습니다." autofocus='autofocus'></textarea>
+
+                    <div style='text-align: center; width: 10%; float:right; height: 100%'>
+                        <button type='button' id='btn_create'
+                                style="width: 100%; height: 100%; background-color: #92c7ff; border: 0;">&nbsp;&nbsp;등&nbsp;&nbsp;록&nbsp;&nbsp;</button>
+                        <button type='button' id='btn_save'
+                                style='display: none; width: 100%; height: 100%; background-color: #92c7ff; border: 0;'>&nbsp;&nbsp;저&nbsp;&nbsp;장&nbsp;&nbsp;</button>
+                        <button type='button' id='btn_delete'
+                                style='display: none; width: 100%; height: 100%; background-color: #92c7ff; border: 0;'>&nbsp;&nbsp;삭&nbsp;&nbsp;제&nbsp;&nbsp;
+                        </button>
+                        <button type='button' id='btn_cancel'
+                                style='display: none; width: 100%; height: 100%; background-color: #92c7ff; border: 0;'>&nbsp;&nbsp;취&nbsp;&nbsp;소&nbsp;&nbsp;
+                        </button>
+                    </div>
+                </form>
+                <div id='reply_list' data-replypage='1' style="margin: 50px 0;">
+                    <!-- 목록 -->
+                    등록된 댓글이 없습니다.
+                </div>
+                <div id='reply_list_btn' style='border: none; width: 45%;margin: 0 auto;height: 40px;'>
+                    <button id='btn_add'
+                            style='width: 100%; height: 100%; border: 0 solid; border-radius: 3px; background-color: #f3f3f3;'>더보기 ▽</button>
+                </div>
+            </div>
+        </div>
+    </fieldset>
 </div>
 
 

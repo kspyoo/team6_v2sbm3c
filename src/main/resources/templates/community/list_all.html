@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html layout:decorate="~{layout}">
 <!-- layout.html 상속-->
-<div layout:fragment="content">
+<div layout:fragment="content" style="padding-top: 20px; width: 80%; margin: 0 auto;">
+  <script src="/css/community/list.css"></script>
 
   <div class='title_line'>
-    <span class="title_line_text"></span>
+    <span class="title_line_text">정보 공유</span>
   </div>
 
   <aside class="aside_right">
@@ -13,25 +14,25 @@
     </span>
 
     <a href="javascript:location.reload();">새로고침</a>
-    <span class='menu_divide'>│</span>
   </aside>
 
+  <div class='menu_line'></div>
   <!-- /contents/list_search_component.html 파일의 list_search_fragment import -->
   <div th:replace="~{community/list_search_component::list_search_fragment}"></div>
 
-  <div class='menu_line'></div>
-
-  <table class="table table-striped" style='width: 80%; margin: 0 auto;'>
+  <table class="table table-hover" style='margin:20px auto;'>
     <colgroup>
       <col style='width: 10%;' />
-      <col style='width: 90%;' />
+      <col style='width: 70%;' />
+      <col style='width: 20%;' />
     </colgroup>
+    <thead>
     <tr>
-      <th class='th_bs'>파일</TH>
-      <th class='th_bs'>제목</th>
+      <th class='th_bs' style="border-right: 1px solid;">파일</TH>
+      <th class='th_bs' style="border-right: 1px solid;">제목</th>
+      <th class='th_bs'>작성일자</th>
     </tr>
-
-
+    </thead>
 
     <tr th:each="communityVO,status:${list}"
       th:attr="onclick=|location.href='/community/read?communityno=${communityVO.communityno}&word=${word}&now_page=${now_page}'|"
@@ -39,7 +40,7 @@
       <td class='td_basic' style="vertical-align: middle; text-align:center;">
         <div
           th:if="${(communityVO.filename != null) and (communityVO.filename.endsWith('jpg') or communityVO.filename.endsWith('png')  or communityVO.filename.endsWith('gif'))}">
-          <img th:src="@{|/communityattachment/storage/${communityVO.thumbfile}|}" style="width: 120px; height: 90px;">
+          <img th:src="@{|/communityattachment/storage/${communityVO.thumbfile}|}" style="width: 100px; height: 100px;">
         </div>
 
         <div
@@ -48,35 +49,27 @@
         </div>
 
         <div th:if="${communityVO.filename == null}">
-          <img src="/communityattachment/storage/none1.png" style="width: 120px; height: 90px;">
+           <img src="/image/pet/No_Image.png" style="width: 100px; height: 100px;"/>
         </div>
       </td>
 
-
-      <td class='td_left'>
+      <td class='td_left' style="vertical-align: middle;">
         <span th:text="${communityVO.title}" style="font-weight: bold;"></span><br>
-        <!--<span th:text="|&nbsp;${communityVO.wrirtedate.substring(0,10)}|"> </span><br> -->
-        <span th:if="${communityVO.content.length() > 160 }"
-          th:text="|${communityVO.content.substring(0, 160) }...|"></span>
-        <span th:if="${communityVO.content.length() <= 160 }" th:text="|${communityVO.content}|"></span>
+<!--        &lt;!&ndash;<span th:text="|&nbsp;${communityVO.wrirtedate.substring(0,10)}|"> </span><br> &ndash;&gt;-->
+<!--        <span th:if="${communityVO.content.length() > 160 }"-->
+<!--          th:text="|${communityVO.content.substring(0, 160) }...|"></span>-->
+<!--        <span th:if="${communityVO.content.length() <= 160 }" th:text="|${communityVO.content}|"></span>-->
+      </td>
 
-      
-
-
-
+      <td class="" style="text-align: center; vertical-align: middle;">
+        <span th:text="${communityVO.writedate.substring(0,10)}" style="font-weight: bold;"></span>
+      </td>
+    </tr>
     <tr th:if="${list.size() == 0}">
       <td colspan="2" style="text-align: center;">작성된 글이 없습니다.</td>
     </tr>
-
-    </tr>
   </table>
 
-  
-
-
-  <div class='bottom_menu'>
-    <button type='button' onclick="location.reload();" class="btn btn-primary btn-sm">새로 고침</button>
-  </div>
   <!-- 페이지 버튼 목록 출력 시작 -->
   <div class="bottom_menu" th:utext="${paging}"></div>
   <!-- 페이지 버튼 목록 출력 종료 -->

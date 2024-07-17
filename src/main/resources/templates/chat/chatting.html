@@ -59,25 +59,37 @@
                     stompClient.subscribe(`/topic/messages/${chatRoomNo[i]}`, function (sendMsg) {
                         // 해당 주제로 메세지가 전달됐을때 실행되는 부분
                         let message = JSON.parse(sendMsg.body);
-                        let now_chatRoom = document.getElementById('chatRoomNo').value;
+                        let now_chatRoom = parseInt(document.getElementById('chatRoomNo').value);
+                        let loggedInUser = parseInt([[${session.memberno}]]);
 
-                        if (message.sender != [[${session.memberno}]] && now_chatRoom == chatRoomNo[i]) {
+                        if (parseInt(message.sender) !== loggedInUser && now_chatRoom === chatRoomNo[i]) {
+                            console.log("다맞음");
                             fetch(`http://localhost:9093/chatting/readMsg?chatRoomNo=${chatRoomNo[i]}`);
 
                             createReceiverMsg(message.content, message.regdate);
                             fetch(`http://localhost:9093/chatting/countAndMsg?chatRoomNo=${chatRoomNo[i]}`)
                             .then(response => response.json())
                             .then(response => {
-                                document.getElementById('time'+chatRoomNo[i]).innerText=response.regdate.toString().substring(0,10);
+                                let msgTime = amOrPm(response.regdate);
+                                document.getElementById('time'+chatRoomNo[i]).innerText=msgTime;
                                 document.getElementById('lastMsg'+chatRoomNo[i]).innerText=response.content;
                             });
-                        }else if(message.sender != [[${session.memberno}]] && now_chatRoom != chatRoomNo[i]){
+                        }else if(parseInt(message.sender) !== loggedInUser && now_chatRoom !== chatRoomNo[i]){
                             fetch(`http://localhost:9093/chatting/countAndMsg?chatRoomNo=${chatRoomNo[i]}`)
                             .then(response => response.json())
                             .then(response => {
-                                document.getElementById('time'+chatRoomNo[i]).innerText=response.regdate.toString().substring(0,10);
+                                let msgTime = amOrPm(response.regdate);
+                                document.getElementById('time'+chatRoomNo[i]).innerText=msgTime;
                                 document.getElementById('lastMsg'+chatRoomNo[i]).innerText=response.content;
                                 document.getElementById('count'+chatRoomNo[i]).innerText=response.count;
+                            });
+                        }else if(parseInt(message.sender) === loggedInUser && now_chatRoom === chatRoomNo[i]){
+                            fetch(`http://localhost:9093/chatting/countAndMsg?chatRoomNo=${chatRoomNo[i]}`)
+                            .then(response => response.json())
+                            .then(response => {
+                                let msgTime = amOrPm(response.regdate);
+                                document.getElementById('time' + chatRoomNo[i]).innerText = msgTime;
+                                document.getElementById('lastMsg' + chatRoomNo[i]).innerText = response.content;
                             });
                         }
                     });
@@ -86,29 +98,31 @@
             });
         }
 
-        function send(){
+        function send() {
             let content = document.getElementById('message').value;
             document.getElementById('message').value = '';
             let sender = [[${session.memberno}]];
-            console.log(sender)
             let chatRoomNo = parseInt(document.getElementById('chatRoomNo').value);
 
-            if(sender == null){
+            if (sender == null) {
+                alert("세션이 만료되었습니다. 다시 로그인해주세요.");
                 location.reload();
+                return;
             }
 
-            let messageForm = JSON.stringify({'sender':sender, 'chatRoomNo':chatRoomNo, 'content':content})
+            let messageForm = JSON.stringify({'sender': sender, 'chatRoomNo': chatRoomNo, 'content': content});
 
             let day = new Date();
             let year = day.getFullYear();
-            let month = day.getMonth()+1;
-            let date = day.getDate();
-            let hour = day.getHours()
-            let min = day.getMinutes();
+            let month = (day.getMonth() + 1).toString().padStart(2, '0');
+            let date = day.getDate().toString().padStart(2, '0');
+            let hour = day.getHours().toString().padStart(2, '0');
+            let min = day.getMinutes().toString().padStart(2, '0');
 
-            let regdate =`${year}.${month}.${date} ${hour}:${min}`
+            let regdate = `${year}.${month}.${date} ${hour}:${min}`;
 
             stompClient.send(`/app/chat/${chatRoomNo}`, {}, messageForm);
+
             createSenderMsg(content, regdate);
         }
 
@@ -257,13 +271,41 @@
             span.classList.add("chat-time");
             span.id="time"+id;
 
-            time = time.toString().substring(0,10);
+            // time = time.toString().substring(0,10);
+            time = amOrPm(time);
 
             const text = document.createTextNode(time);
             span.appendChild(text);
             div.appendChild(span);
 
             document.getElementById(id).appendChild(div);
+        }
+
+        function amOrPm(time){
+            let msgTime;
+            let receiveTime = new Date(time.replace(/\./g, '/'));
+
+            // 현재 시간을 구합니다.
+            let today = new Date();
+            // 오늘 날짜의 자정 시각을 계산합니다.
+            let todayMidnight = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+
+            if (receiveTime >= todayMidnight) {
+                let hours = receiveTime.getHours();
+                let minutes = receiveTime.getMinutes().toString().padStart(2, '0');
+                let period = hours < 12 ? "오전" : "오후";
+
+                // 12시간제 변환
+                if (hours == 0) hours = 12;
+                else if (hours > 12) hours -= 12;
+
+                msgTime = `${period} ${hours}:${minutes}`;
+            } else {
+                // 오늘 이전의 날짜라면 원래 날짜 형식을 그대로 표시합니다.
+                msgTime = time.substring(5, 16).replace('.', '/');
+            }
+
+            return msgTime;
         }
 
         function createLastMsg(id, msg){
@@ -381,6 +423,7 @@
 
                 if (msg.value.length > 0){
                     send();
+                    msg.value = '';
                 }
             })
 
@@ -401,10 +444,12 @@
 
             document.getElementById('message').addEventListener('keypress', (event) => {
                 if (event.key === 'Enter') {
+                    event.preventDefault(); // 기본 동작 방지
                     let msg = document.getElementById('message');
 
                     if (msg.value.length > 0){
                         send();
+                        msg.value = '';
                     }
                 }
             });
