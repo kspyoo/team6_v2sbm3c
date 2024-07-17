@@ -105,6 +105,9 @@
             let date = day.getDate();
             let hour = day.getHours()
             let min = day.getMinutes();
+            if (min < 10){
+                min = '0'+min;
+            }
 
             let regdate =`${year}.${month}.${date} ${hour}:${min}`
 
