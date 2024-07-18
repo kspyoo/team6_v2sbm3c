@@ -77,7 +77,7 @@ public class MateCommunityCont {
     }
 
     // 게시글 전체 리스트 조회 + 페이징 + 검색
-    @GetMapping("/ㅋ")
+    @GetMapping("/my_list_all")
     public String my_list_all(Model model, HttpSession session,
                            @RequestParam(name = "searchWord", defaultValue = "") String searchWord,
                            @RequestParam(name = "now_page", defaultValue = "1") int now_page){
