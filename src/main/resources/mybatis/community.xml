@@ -4,7 +4,7 @@
 <mapper namespace="dev.mvc.community.CommunityDAOInter">
   <insert id="create" parameterType="dev.mvc.community.CommunityVO">
   INSERT INTO COMMUNITY(communityno,title,content,vcnt,rcnt,writedate,tag,memberno,ctypeno)
-  VALUES(COMMUNITY_SEQ.nextval,#{title},#{content},#{vcnt},0,sysdate,#{tag},#{memberno},#{ctypeno})
+  VALUES(COMMUNITY_SEQ.nextval,#{title},#{content},#{vcnt},#{rcnt},sysdate,#{tag},#{memberno},#{ctypeno})
   </insert>
 <!--   <select id="list" resultType="dev.mvc.community.CommunityVO">
     SELECT communityno,title,content,vcnt,rcnt,writedate,tag,memberno,ctypeno
@@ -83,12 +83,12 @@ WHERE communityno=#{communityno}
 
 <update id="rcnt_add" parameterType="HashMap">
 UPDATE community 
-SET RCNT = rcnt+1
+SET rcnt = rcnt + 1
 WHERE communityno=#{communityno} AND memberno=#{memberno}
 </update>
 <update id="rcnt_del" parameterType="HashMap">
 UPDATE community 
-SET RCNT = rcnt -1
+SET rcnt = rcnt -1
 WHERE communityno=#{communityno} AND memberno=#{memberno} 
 </update>
 

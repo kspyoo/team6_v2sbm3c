@@ -165,12 +165,19 @@ public class CommunityCont {
 
   @GetMapping("/read")
   public String read(Model model, @RequestParam(name = "communityno") int communityno, HttpSession session,@RequestParam(name = "now_page", defaultValue = "1") int now_page,
-      @RequestParam(name = "word", defaultValue = "") String word, CommunityLikeVO communityLikeVO  ) {
+      @RequestParam(name = "word", defaultValue = "") String word, CommunityLikeVO communityLikeVO ) {
     if (session.getAttribute("memberno") != null) {
       model.addAttribute("memberno", session.getAttribute("memberno"));
       attachmentVO attachmentVO = this.comunityProc.read(communityno);
       model.addAttribute("attachmentVO", attachmentVO);
 
+      HashMap<String, Object>map = new HashMap<>();
+      map.put("communityno", communityno);
+      map.put("memberno", session.getAttribute("memberno"));
+      int rcnt_count = this.communityLikeProc.rcnt_count(map);
+      model.addAttribute("rcnt_count",rcnt_count);
+      System.out.println(rcnt_count);
+      
       
      int likecheck = communityLikeVO.getLikecheck();
      model.addAttribute("likecheck",likecheck);

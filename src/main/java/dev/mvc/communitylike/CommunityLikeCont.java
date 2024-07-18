@@ -33,7 +33,7 @@ public class CommunityLikeCont {
   @GetMapping(value = "/like")
   public String like(int communityno, HttpSession session, CommunityLikeVO communityLikeVO, Model model) {
     System.out.println("communitylike created");
-
+    
     int memberno = (int) session.getAttribute("memberno");
 
     JSONObject json = new JSONObject();
@@ -41,14 +41,15 @@ public class CommunityLikeCont {
     HashMap<String, Object> map = new HashMap<>();
     map.put("communityno", communityno);
     map.put("memberno", memberno);
-
+      
     
     CommunityLikeVO existingLike = this.communityLikeProc.read_all(map);
 
     // 게시물의 현재 좋아요 수를 읽어옵니다.
     attachmentVO attachmentVO = this.communityProc.read(communityno);
     int rcnt = attachmentVO.getRcnt(); // 게시판 좋아요 수
-
+    
+    
     if (existingLike == null) {
       // 처음 좋아요를 누르는 경우
       communityLikeVO.setLikecheck(1);
@@ -61,19 +62,23 @@ public class CommunityLikeCont {
         // 좋아요 추가
         likecheck++;
         rcnt++;
+        
         this.communityLikeProc.like_check(map);
         this.communityProc.rcnt_add(map);
         System.out.println("likecheck" + likecheck);
         System.out.println("rcnt" + rcnt);
+        
         model.addAttribute("likecheck",likecheck);
       } else {
         // 좋아요 취소
         likecheck--;
         rcnt--;
+        
         this.communityLikeProc.like_check_cancel(map);
         this.communityProc.rcnt_del(map);
         System.out.println("likecheck" + likecheck);
         System.out.println("rcnt" + rcnt);
+        
         model.addAttribute("likecheck",likecheck);
       }
       communityLikeVO.setLikecheck(likecheck);

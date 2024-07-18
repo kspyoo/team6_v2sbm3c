@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 
 <html layout:decorate="~{layout}"><!--layout.html 상속-->
-<div layout:fragment="content">
+<div layout:fragment="content"style="margin:0; margin-left:5%; margin-right:5%;" >
   <div class="title_line">게시판 목록</div>
 <table class="table table-hover">
 <colgroup>
@@ -22,8 +22,8 @@
   <td class="td_bs"><a th:href="@{|./read/${cateCommunityVO.ctypeno}|}" style="display: block;" th:text="${cateCommunityVO.cnt}"></a></td>
   <td class="td_bs"><a th:href="@{|./read/${cateCommunityVO.ctypeno}|}" style="display: block;" th:text="${cateCommunityVO.typename}"></a></td>
  <td class="td_bs">
-  <a th:href="@{|/catecommunity/update/${cateCommunityVO.ctypeno}|}"><img src="/image/cate/update.png" class="icon"></a>
-  <a th:href="@{|/catecommunity/delete/${cateCommunityVO.ctypeno}|}"><img src="/image/cate/delete.png" class="icon"></a>
+  <a th:href="@{|/catecommunity/update/${cateCommunityVO.ctypeno}|}"><img src="/image/cate/update.png" style="width:33px;"></a>
+  <a th:href="@{|/catecommunity/delete/${cateCommunityVO.ctypeno}|}"><img src="/image/cate/delete.png" style="width:33px;"></a>
  </td>
   </tr>
   </tbody>

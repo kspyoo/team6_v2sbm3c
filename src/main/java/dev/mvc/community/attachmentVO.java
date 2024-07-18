@@ -26,7 +26,7 @@ public class attachmentVO {
   private String title ="";
   private String content= "";
   private int vcnt = 1;
-  private int rcnt;
+  private int rcnt=0;
   private String writedate;
   private String tag="";
   private int memberno ;

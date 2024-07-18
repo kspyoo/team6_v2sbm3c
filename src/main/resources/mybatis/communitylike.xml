@@ -4,7 +4,7 @@
 
     <insert id="create" parameterType="dev.mvc.communitylike.CommunityLikeVO">
         INSERT INTO COMMUNITYLIKE(rcnt, likecheck, rcntdate, communityno, memberno)
-        VALUES (0,0,sysdate,#{communityno},#{memberno})
+        VALUES (COMMUNITYLIKE_SEQ.nextval,0,sysdate,#{communityno},#{memberno})
     </insert>
     <select id="read_all" resultType="dev.mvc.communitylike.CommunityLikeVO" parameterType="HashMap">
     SELECT rcnt,likecheck,rcntdate,communityno,memberno
