@@ -17,7 +17,7 @@ public class Email {
   private JavaMailSender javaMailSender;
   
   public String sendEmail(String toAddr) throws MessagingException {
-    String fromAddr = "vkjiu486@gmail.com";
+    String fromAddr = "";
     
     MimeMessage mimeMessage = javaMailSender.createMimeMessage();
     MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
